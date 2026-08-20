@@ -1,0 +1,45 @@
+﻿# Dependencies
+node_modules/
+pharmatrace-vn-backend/node_modules/
+pharmatrace-vn-frontend/node_modules/
+
+# Production & Build outputs
+dist/
+pharmatrace-vn-backend/dist/
+pharmatrace-vn-frontend/.next/
+pharmatrace-vn-frontend/out/
+pharmatrace-vn-frontend/build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+pharmatrace-vn-backend/.env
+pharmatrace-vn-frontend/.env.local
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS System Files
+.DS_Store
+Thumbs.db
+
+# Logs & Debug
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Prisma
+pharmatrace-vn-backend/prisma/generated/
+
+# Uploads & Temporary files
+pharmatrace-vn-backend/uploads/*
+!pharmatrace-vn-backend/uploads/.gitkeep
