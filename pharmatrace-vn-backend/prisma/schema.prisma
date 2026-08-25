@@ -9,97 +9,83 @@ datasource db {
 
 model packaging_specifications {
   id                   Int                    @id @default(autoincrement())
-  name                 String                 @unique @db.VarChar(50)
+  unit_name            String                 @db.VarChar(50)
   description          String?
   cart_items           cart_items[]
-  facility_inventories facility_inventories[]
+  inventories          inventories[]
   medicines            medicines[]
   order_items          order_items[]
   purchase_order_items purchase_order_items[]
 }
 
 model categories {
-  id          Int         @id @default(autoincrement())
-  name        String      @unique @db.VarChar(100)
-  description String?
-  icon        String?     @db.VarChar(100)
-  medicines   medicines[]
+  id            Int         @id @default(autoincrement())
+  category_name String      @db.VarChar(100)
+  description   String?
+  icon          String?     @db.VarChar(100)
+  medicines     medicines[]
 }
 
 model facilities {
-  id                   Int                    @id @default(autoincrement())
-  name                 String                 @db.VarChar(150)
-  type                 String                 @db.VarChar(50)
-  address              String?
-  phone                String?                @db.VarChar(20)
-  email                String?                @db.VarChar(100)
-  latitude             Decimal?               @db.Decimal(10, 7)
-  longitude            Decimal?               @db.Decimal(10, 7)
-  created_at           DateTime?              @default(now()) @db.Timestamp(6)
-  employees            employees[]
-  facility_inventories facility_inventories[]
-  inventory_transactions inventory_transactions[]
-  medicine_batches     medicine_batches[]
-  medicine_boxes       medicine_boxes[]
-  orders               orders[]
-  purchase_orders_supplier    purchase_orders[] @relation("po_supplier")
-  purchase_orders_destination purchase_orders[] @relation("po_destination")
-  shipping_packages    shipping_packages[]
-  users                users[]
-}
-
-model users {
-  id                     Int                      @id @default(autoincrement())
-  username               String                   @unique @db.VarChar(50)
-  password               String                   @db.VarChar(255)
-  full_name              String                   @db.VarChar(100)
-  email                  String?                  @unique @db.VarChar(100)
-  phone                  String?                  @db.VarChar(20)
-  role                   String                   @default("CUSTOMER") @db.VarChar(50)
-  status                 String?                  @default("ACTIVE") @db.VarChar(50)
-  facility_id            Int?
-  created_at             DateTime?                @default(now()) @db.Timestamp(6)
-  articles               articles[]
-  cash_flow_transactions cash_flow_transactions[]
-  customers              customers?
-  employees              employees?
-  inventory_transactions inventory_transactions[]
-  prescriptions          prescriptions[]
-  purchase_orders        purchase_orders[]
-  facilities             facilities?              @relation(fields: [facility_id], references: [id], onUpdate: NoAction)
-  verification_logs      verification_logs[]
+  id                       Int               @id @default(autoincrement())
+  facility_name            String            @db.VarChar(150)
+  facility_type            String            @db.VarChar(50)
+  address                  String?
+  phone_number             String?           @db.VarChar(20)
+  email                    String?           @db.VarChar(100)
+  latitude                 Decimal?          @db.Decimal(10, 7)
+  longitude                Decimal?          @db.Decimal(10, 7)
+  created_at               DateTime?         @default(now()) @db.Timestamp(6)
+  batches                  batches[]
+  employees                employees[]
+  inventories              inventories[]
+  inventory_logs           inventory_logs[]
+  medicine_boxes           medicine_boxes[]
+  orders                   orders[]
+  purchase_orders_supplier purchase_orders[] @relation("po_supplier")
+  sscc_cartons             sscc_cartons[]
 }
 
 model customers {
-  id                 Int                  @id @default(autoincrement())
-  user_id            Int?                 @unique
-  membership_tier    String?              @default("BRONZE") @db.VarChar(50)
-  reward_points      Int?                 @default(0)
-  default_address    String?
-  created_at         DateTime?            @default(now()) @db.Timestamp(6)
-  cart_items         cart_items[]
-  customer_debts     customer_debts[]
-  users              users?               @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  loyalty_point_logs loyalty_point_logs[]
-  orders             orders[]
-  prescriptions      prescriptions[]
-  product_reviews    product_reviews[]
-  return_orders      return_orders[]
+  id                  Int                   @id @default(autoincrement())
+  membership_tier     String?               @default("BRONZE") @db.VarChar(50)
+  reward_points       Int?                  @default(0)
+  default_address     String?
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  full_name           String?               @db.VarChar(100)
+  phone_number        String?               @db.VarChar(20)
+  email               String?               @db.VarChar(100)
+  password_hash       String?               @db.VarChar(255)
+  status              String?               @default("ACTIVE") @db.VarChar(20)
+  accounts_receivable accounts_receivable[]
+  cart_items          cart_items[]
+  loyalty_point_logs  loyalty_point_logs[]
+  orders              orders[]
+  prescriptions       prescriptions[]
+  reviews             reviews[]
 }
 
 model employees {
-  id          Int         @id @default(autoincrement())
-  user_id     Int?        @unique
-  facility_id Int?
-  job_title   String?     @db.VarChar(100)
-  hire_date   DateTime?   @default(now()) @db.Date
-  facilities  facilities? @relation(fields: [facility_id], references: [id], onUpdate: NoAction)
-  users       users?      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id              Int               @id @default(autoincrement())
+  facility_id     Int?
+  job_title       String?           @db.VarChar(100)
+  joined_date     DateTime?         @default(dbgenerated("CURRENT_DATE")) @db.Date
+  full_name       String?           @db.VarChar(100)
+  email           String?           @db.VarChar(100)
+  password_hash   String?           @db.VarChar(255)
+  role            String?           @db.VarChar(50)
+  status          String?           @default("ACTIVE") @db.VarChar(20)
+  created_at      DateTime?         @default(now()) @db.Timestamp(6)
+  articles        articles[]
+  facilities      facilities?       @relation(fields: [facility_id], references: [id], onUpdate: NoAction)
+  inventory_logs  inventory_logs[]
+  prescriptions   prescriptions[]
+  purchase_orders purchase_orders[]
 }
 
 model medicines {
   id                       Int                       @id @default(autoincrement())
-  name                     String                    @db.VarChar(255)
+  medicine_name            String                    @db.VarChar(255)
   category_id              Int?
   packaging_id             Int?
   registration_number      String?                   @db.VarChar(100)
@@ -108,167 +94,98 @@ model medicines {
   manufacturer             String?                   @db.VarChar(150)
   country_of_origin        String?                   @db.VarChar(100)
   unit_price               Decimal                   @default(0) @db.Decimal(15, 2)
-  sale_price               Decimal?                  @db.Decimal(15, 2)
+  promotional_price        Decimal?                  @db.Decimal(15, 2)
   image_url                String?
-  description              String?
-  drug_details             Json?                     @default("{}")
-  is_prescription_required Boolean?                  @default(false)
+  short_description        String?
+  details                  Json?                     @default("{}")
+  is_prescription          Boolean?                  @default(false)
   status                   String?                   @default("ACTIVE") @db.VarChar(50)
   created_at               DateTime?                 @default(now()) @db.Timestamp(6)
+  batches                  batches[]
   cart_items               cart_items[]
-  facility_inventories     facility_inventories[]
-  inventory_transactions   inventory_transactions[]
-  medicine_batches         medicine_batches[]
+  inventories              inventories[]
+  inventory_logs           inventory_logs[]
   categories               categories?               @relation(fields: [category_id], references: [id], onUpdate: NoAction)
   packaging_specifications packaging_specifications? @relation(fields: [packaging_id], references: [id], onUpdate: NoAction)
   order_items              order_items[]
-  product_reviews          product_reviews[]
   purchase_order_items     purchase_order_items[]
-  return_order_items       return_order_items[]
-}
-
-model medicine_batches {
-  id                   Int                    @id @default(autoincrement())
-  batch_number         String                 @unique @db.VarChar(100)
-  medicine_id          Int?
-  manufacturer_id      Int?
-  manufacturing_date   DateTime               @db.Date
-  expiry_date          DateTime               @db.Date
-  initial_quantity     Int                    @default(0)
-  current_quantity     Int                    @default(0)
-  status               String?                @default("NORMAL") @db.VarChar(50)
-  co_cq_certificate    String?
-  created_at           DateTime?              @default(now()) @db.Timestamp(6)
-  facilities           facilities?            @relation(fields: [manufacturer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  medicines            medicines?             @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  medicine_boxes       medicine_boxes[]
-  purchase_order_items purchase_order_items[]
-  shipping_packages    shipping_packages[]
-}
-
-model shipping_packages {
-  id                  Int               @id @default(autoincrement())
-  sscc_code           String            @unique @db.VarChar(50)
-  batch_id            Int?
-  current_facility_id Int?
-  status              String?           @default("PACKED") @db.VarChar(50)
-  box_count           Int?              @default(0)
-  created_at          DateTime?         @default(now()) @db.Timestamp(6)
-  medicine_boxes      medicine_boxes[]
-  medicine_batches    medicine_batches? @relation(fields: [batch_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  facilities          facilities?       @relation(fields: [current_facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reviews                  reviews[]
 }
 
 model medicine_boxes {
-  uid                 String             @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  uid                 String         @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   batch_id            Int?
-  shipping_package_id Int?
+  carton_id           Int?
   current_facility_id Int?
-  secret_code_hash    String?            @db.VarChar(255)
-  status              String?            @default("IN_STOCK") @db.VarChar(50)
+  status              String?        @default("IN_STOCK") @db.VarChar(50)
   signature           String?
   public_key          String?
-  activated_at        DateTime?          @db.Timestamp(6)
-  created_at          DateTime?          @default(now()) @db.Timestamp(6)
+  created_at          DateTime?      @default(now()) @db.Timestamp(6)
   fraud_alerts        fraud_alerts[]
-  medicine_batches    medicine_batches?  @relation(fields: [batch_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  facilities          facilities?        @relation(fields: [current_facility_id], references: [id], onUpdate: NoAction)
-  shipping_packages   shipping_packages? @relation(fields: [shipping_package_id], references: [id], onUpdate: NoAction)
-  verification_logs   verification_logs[]
-}
-
-model facility_inventories {
-  id                       Int                       @id @default(autoincrement())
-  facility_id              Int?
-  medicine_id              Int?
-  packaging_id             Int?
-  stock_quantity           Int                       @default(0)
-  reserved_quantity        Int?                      @default(0)
-  updated_at               DateTime?                 @default(now()) @db.Timestamp(6)
-  facilities               facilities?               @relation(fields: [facility_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  medicines                medicines?                @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  packaging_specifications packaging_specifications? @relation(fields: [packaging_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@unique([facility_id, medicine_id, packaging_id], map: "uq_facility_inventory")
-}
-
-model inventory_transactions {
-  id                 Int         @id @default(autoincrement())
-  facility_id        Int?
-  medicine_id        Int?
-  transaction_type   String      @db.VarChar(50)
-  change_quantity    Int
-  previous_quantity  Int
-  remaining_quantity Int
-  reference_code     String?     @db.VarChar(100)
-  note               String?
-  performed_by_id    Int?
-  created_at         DateTime?   @default(now()) @db.Timestamp(6)
-  facilities         facilities? @relation(fields: [facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  medicines          medicines?  @relation(fields: [medicine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users              users?      @relation(fields: [performed_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  medicine_batches    batches?       @relation(fields: [batch_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sscc_cartons        sscc_cartons?  @relation(fields: [carton_id], references: [id], onUpdate: NoAction)
+  facilities          facilities?    @relation(fields: [current_facility_id], references: [id], onUpdate: NoAction)
+  qr_scan_logs        qr_scan_logs[]
 }
 
 model prescriptions {
-  id                      Int        @id @default(autoincrement())
-  customer_id             Int?
-  doctor_name             String?    @db.VarChar(100)
-  hospital_clinic         String?    @db.VarChar(150)
-  diagnosis               String?
-  prescription_image_url  String?
-  status                  String?    @default("PENDING") @db.VarChar(50)
-  pharmacist_note         String?
+  id                        Int        @id @default(autoincrement())
+  customer_id               Int?
+  prescribing_doctor        String?    @db.VarChar(100)
+  medical_facility          String?    @db.VarChar(150)
+  diagnosis                 String?
+  prescription_image_url    String?
+  status                    String?    @default("PENDING_APPROVAL") @db.VarChar(50)
+  pharmacist_note           String?
   approved_by_pharmacist_id Int?
-  issued_date             DateTime?  @db.Date
-  created_at              DateTime?  @default(now()) @db.Timestamp(6)
-  orders                  orders[]
-  users                   users?     @relation(fields: [approved_by_pharmacist_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  customers               customers? @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  prescribed_date           DateTime?  @db.Date
+  created_at                DateTime?  @default(now()) @db.Timestamp(6)
+  orders                    orders[]
+  users                     employees? @relation(fields: [approved_by_pharmacist_id], references: [id], onUpdate: NoAction)
+  customers                 customers? @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model vouchers {
-  id                 Int       @id @default(autoincrement())
-  code               String    @unique @db.VarChar(50)
-  discount_type      String?   @default("PERCENT") @db.VarChar(20)
-  discount_value     Decimal   @db.Decimal(15, 2)
-  min_order_value    Decimal?  @default(0) @db.Decimal(15, 2)
-  max_discount_amount Decimal? @db.Decimal(15, 2)
-  total_quantity     Int?      @default(100)
-  used_quantity      Int?      @default(0)
-  start_date         DateTime? @db.Timestamp(6)
-  end_date           DateTime? @db.Timestamp(6)
-  status             String?   @default("ACTIVE") @db.VarChar(50)
+  id                  Int       @id @default(autoincrement())
+  voucher_code        String    @unique @db.VarChar(50)
+  discount_type       String?   @default("PERCENT") @db.VarChar(20)
+  discount_value      Decimal   @db.Decimal(15, 2)
+  min_order_value     Decimal?  @default(0) @db.Decimal(15, 2)
+  max_discount_amount Decimal?  @db.Decimal(15, 2)
+  total_quantity      Int?      @default(100)
+  used_quantity       Int?      @default(0)
+  start_date          DateTime? @db.Timestamp(6)
+  end_date            DateTime? @db.Timestamp(6)
+  status              String?   @default("ACTIVE") @db.VarChar(50)
 }
 
 model orders {
-  id                     Int                      @id @default(autoincrement())
-  order_code             String                   @unique @db.VarChar(50)
-  customer_id            Int?
-  source_facility_id     Int?
-  prescription_id        Int?
-  subtotal_amount        Decimal                  @default(0) @db.Decimal(15, 2)
-  shipping_fee           Decimal?                 @default(0) @db.Decimal(15, 2)
-  discount_amount        Decimal?                 @default(0) @db.Decimal(15, 2)
-  reward_points_used     Int?                     @default(0)
-  total_amount           Decimal                  @default(0) @db.Decimal(15, 2)
-  payment_method         String?                  @default("COD") @db.VarChar(50)
-  payment_status         String?                  @default("UNPAID") @db.VarChar(50)
-  order_status           String?                  @default("PENDING") @db.VarChar(50)
-  shipping_address       String?
-  recipient_phone        String?                  @db.VarChar(20)
-  recipient_name         String?                  @db.VarChar(100)
-  bank_transaction_code  String?                  @unique @db.VarChar(100)
-  note                   String?
-  created_at             DateTime?                @default(now()) @db.Timestamp(6)
-  cash_flow_transactions cash_flow_transactions[]
-  customer_debts         customer_debts[]
-  loyalty_point_logs     loyalty_point_logs[]
-  order_items            order_items[]
-  customers              customers?               @relation(fields: [customer_id], references: [id], onUpdate: NoAction)
-  prescriptions          prescriptions?           @relation(fields: [prescription_id], references: [id], onUpdate: NoAction)
-  facilities             facilities?              @relation(fields: [source_facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  return_orders          return_orders[]
-  shipments              shipments?
+  id                  Int                   @id @default(autoincrement())
+  order_code          String                @unique @db.VarChar(50)
+  customer_id         Int?
+  export_facility_id  Int?
+  prescription_id     Int?
+  subtotal_amount     Decimal               @default(0) @db.Decimal(15, 2)
+  shipping_fee        Decimal?              @default(0) @db.Decimal(15, 2)
+  discount_amount     Decimal?              @default(0) @db.Decimal(15, 2)
+  used_points         Int?                  @default(0)
+  total_amount        Decimal               @default(0) @db.Decimal(15, 2)
+  payment_method      String?               @default("COD") @db.VarChar(50)
+  payment_status      String?               @default("UNPAID") @db.VarChar(50)
+  order_status        String?               @default("PENDING") @db.VarChar(50)
+  shipping_address    String?
+  recipient_phone     String?               @db.VarChar(20)
+  recipient_name      String?               @db.VarChar(100)
+  note                String?
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  accounts_receivable accounts_receivable[]
+  cashbook_logs       cashbook_logs[]
+  loyalty_point_logs  loyalty_point_logs[]
+  order_items         order_items[]
+  customers           customers?            @relation(fields: [customer_id], references: [id], onUpdate: NoAction)
+  facilities          facilities?           @relation(fields: [export_facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  prescriptions       prescriptions?        @relation(fields: [prescription_id], references: [id], onUpdate: NoAction)
+  shipments           shipments?
 }
 
 model order_items {
@@ -279,7 +196,7 @@ model order_items {
   quantity                 Int                       @default(1)
   unit_price               Decimal                   @default(0) @db.Decimal(15, 2)
   total_price              Decimal                   @default(0) @db.Decimal(15, 2)
-  box_uids                 String[]                  @default([]) @db.Uuid
+  assigned_uids            String[]                  @default([]) @db.Uuid
   medicines                medicines?                @relation(fields: [medicine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orders                   orders?                   @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   packaging_specifications packaging_specifications? @relation(fields: [packaging_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -299,49 +216,35 @@ model cart_items {
   @@unique([customer_id, medicine_id, packaging_id], map: "uq_cart_item")
 }
 
-model product_reviews {
-  id          Int        @id @default(autoincrement())
-  customer_id Int?
-  medicine_id Int?
-  rating      Int?
-  content     String?
-  images      String[]
-  created_at  DateTime?  @default(now()) @db.Timestamp(6)
-  customers   customers? @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  medicines   medicines? @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
 model articles {
-  id              Int       @id @default(autoincrement())
-  title           String    @db.VarChar(255)
-  slug            String    @unique @db.VarChar(255)
+  id              Int        @id @default(autoincrement())
+  title           String     @db.VarChar(255)
+  qtyug           String     @unique @db.VarChar(255)
   summary         String?
   content         String
   cover_image_url String?
   author_id       Int?
-  view_count      Int?      @default(0)
-  status          String?   @default("PUBLISHED") @db.VarChar(50)
-  created_at      DateTime? @default(now()) @db.Timestamp(6)
-  users           users?    @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  view_count      Int?       @default(0)
+  status          String?    @default("PUBLISHED") @db.VarChar(50)
+  created_at      DateTime?  @default(now()) @db.Timestamp(6)
+  users           employees? @relation(fields: [author_id], references: [id], onUpdate: NoAction)
 }
 
 model purchase_orders {
   id                     Int                    @id @default(autoincrement())
   po_code                String                 @unique @db.VarChar(50)
   supplier_id            Int
-  destination_facility_id Int?
-  created_by_id          Int?
+  created_by_employee_id Int?
   total_amount           Decimal?               @default(0) @db.Decimal(15, 2)
   status                 String?                @default("PENDING") @db.VarChar(50)
   note                   String?
-  po_date                DateTime?              @default(now()) @db.Timestamp(6)
-  created_at             DateTime?              @default(now()) @db.Timestamp(6)
-  cash_flow_transactions cash_flow_transactions[]
+  received_at            DateTime?              @default(now()) @db.Timestamptz(6)
+  created_at             DateTime?              @default(now()) @db.Timestamptz(6)
+  accounts_payable       accounts_payable[]
+  cashbook_logs          cashbook_logs[]
   purchase_order_items   purchase_order_items[]
-  users                  users?                 @relation(fields: [created_by_id], references: [id], onUpdate: NoAction)
-  destination_facility   facilities?            @relation("po_destination", fields: [destination_facility_id], references: [id], onUpdate: NoAction)
+  employees              employees?             @relation(fields: [created_by_employee_id], references: [id], onUpdate: NoAction)
   supplier               facilities             @relation("po_supplier", fields: [supplier_id], references: [id], onUpdate: NoAction)
-  supplier_debts         supplier_debts[]
 
   @@index([status], map: "idx_po_status")
   @@index([supplier_id], map: "idx_po_supplier")
@@ -349,166 +252,934 @@ model purchase_orders {
 
 model purchase_order_items {
   id                       Int                       @id @default(autoincrement())
-  purchase_order_id        Int
+  po_id                    Int
   medicine_id              Int
   batch_id                 Int?
   packaging_id             Int?
-  ordered_quantity         Int
-  received_quantity        Int?                      @default(0)
+  quantity                 Int
   unit_price               Decimal                   @db.Decimal(12, 2)
-  total_price              Decimal                   @db.Decimal(15, 2)
-  medicine_batches         medicine_batches?         @relation(fields: [batch_id], references: [id], onUpdate: NoAction)
+  total_price              Decimal?                  @default(dbgenerated("((quantity)::numeric * unit_price)")) @db.Decimal(15, 2)
+  medicine_batches         batches?                  @relation(fields: [batch_id], references: [id], onUpdate: NoAction)
   medicines                medicines                 @relation(fields: [medicine_id], references: [id], onUpdate: NoAction)
   packaging_specifications packaging_specifications? @relation(fields: [packaging_id], references: [id], onUpdate: NoAction)
-  purchase_orders          purchase_orders           @relation(fields: [purchase_order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  purchase_orders          purchase_orders           @relation(fields: [po_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([medicine_id], map: "idx_po_items_medicine")
-  @@index([purchase_order_id], map: "idx_po_items_po")
+  @@index([medicine_id], map: "idx_po_items_medicine_id")
+  @@index([po_id], map: "idx_po_items_po_id")
 }
 
 model shipments {
-  id                      Int       @id @default(autoincrement())
-  order_id                Int       @unique
-  tracking_number         String    @unique @db.VarChar(50)
-  courier_name            String    @default("GiaoHangNhanh") @db.VarChar(100)
-  shipment_status         String    @default("PENDING_PICKUP") @db.VarChar(50)
-  pickup_date             DateTime? @db.Timestamp(6)
-  estimated_delivery_date DateTime? @db.Timestamp(6)
-  actual_delivery_date    DateTime? @db.Timestamp(6)
-  cod_amount              Decimal   @default(0) @db.Decimal(15, 2)
-  cod_status              String    @default("UNRECONCILED") @db.VarChar(50)
-  cod_reconciled_at       DateTime? @db.Timestamp(6)
-  note                    String?
-  created_at              DateTime? @default(now()) @db.Timestamp(6)
-  updated_at              DateTime? @default(now()) @db.Timestamp(6)
-  orders                  orders    @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                    Int       @id @default(autoincrement())
+  order_id              Int       @unique
+  tracking_number       String    @unique @db.VarChar(50)
+  courier_name          String    @default("EXPRESS_LOGISTICS") @db.VarChar(100)
+  shipping_status       String    @default("PENDING_PICKUP") @db.VarChar(50)
+  picked_up_at          DateTime? @db.Timestamp(6)
+  estimated_delivery_at DateTime? @db.Timestamp(6)
+  actual_delivery_at    DateTime? @db.Timestamp(6)
+  cod_amount            Decimal   @default(0) @db.Decimal(15, 2)
+  cod_settlement_status String    @default("UNSETTLED") @db.VarChar(50)
+  cod_settled_at        DateTime? @db.Timestamp(6)
+  note                  String?
+  created_at            DateTime? @default(now()) @db.Timestamp(6)
+  updated_at            DateTime? @default(now()) @db.Timestamp(6)
+  orders                orders    @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([cod_status], map: "idx_shipments_cod_status")
-  @@index([order_id], map: "idx_shipments_order")
-}
-
-model verification_logs {
-  id                  Int             @id @default(autoincrement())
-  uid                 String          @db.Uuid
-  user_id             Int?
-  latitude            Decimal?        @db.Decimal(10, 7)
-  longitude           Decimal?        @db.Decimal(10, 7)
-  ip_address          String?         @db.VarChar(50)
-  user_agent          String?
-  scan_timestamp      DateTime?       @default(now()) @db.Timestamp(6)
-  verification_result String?         @default("AUTHENTIC_FIRST_TIME") @db.VarChar(50)
-  risk_score          Int?            @default(0)
-  medicine_boxes      medicine_boxes  @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
-  users               users?          @relation(fields: [user_id], references: [id], onUpdate: NoAction)
-
-  @@index([uid], map: "idx_verification_logs_uid")
+  @@index([cod_settlement_status], map: "idx_shipments_cod_status")
+  @@index([order_id], map: "idx_shipments_order_id")
 }
 
 model fraud_alerts {
-  id                 Int             @id @default(autoincrement())
-  uid                String?         @db.Uuid
-  alert_type         String          @db.VarChar(100)
-  severity           String?         @default("MEDIUM") @db.VarChar(50)
-  description        String?
-  latitude_1         Decimal?        @db.Decimal(10, 7)
-  longitude_1        Decimal?        @db.Decimal(10, 7)
-  latitude_2         Decimal?        @db.Decimal(10, 7)
-  longitude_2        Decimal?        @db.Decimal(10, 7)
-  distance_km        Float?
-  time_diff_minutes  Float?
-  velocity_kmh       Float?
-  resolution_status  String?         @default("OPEN") @db.VarChar(50)
-  created_at         DateTime?       @default(now()) @db.Timestamp(6)
-  medicine_boxes     medicine_boxes? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+  id                   Int             @id @default(autoincrement())
+  uid                  String?         @db.Uuid
+  fraud_type           String          @db.VarChar(100)
+  severity_level       String?         @default("WARNING") @db.VarChar(50)
+  description          String?
+  latitude_1           Decimal?        @db.Decimal(10, 7)
+  longitude_1          Decimal?        @db.Decimal(10, 7)
+  latitude_2           Decimal?        @db.Decimal(10, 7)
+  longitude_2          Decimal?        @db.Decimal(10, 7)
+  distance_km          Float?
+  time_delta_minutes   Float?
+  calculated_speed_kmh Float?
+  resolution_status    String?         @default("UNRESOLVED") @db.VarChar(50)
+  created_at           DateTime?       @default(now()) @db.Timestamp(6)
+  medicine_boxes       medicine_boxes? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([uid], map: "idx_fraud_alerts_uid")
 }
 
 model loyalty_point_logs {
-  id               Int        @id @default(autoincrement())
+  id               Int       @id @default(autoincrement())
   customer_id      Int
   order_id         Int?
-  transaction_type String     @db.VarChar(50)
+  transaction_type String    @db.VarChar(50)
   points           Int
   description      String?
-  created_at       DateTime?  @default(now()) @db.Timestamp(6)
-  customers        customers  @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  orders           orders?    @relation(fields: [order_id], references: [id], onUpdate: NoAction)
+  created_at       DateTime? @default(now()) @db.Timestamptz(6)
+  customers        customers @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  orders           orders?   @relation(fields: [order_id], references: [id], onUpdate: NoAction)
 
-  @@index([customer_id], map: "idx_point_logs_customer")
+  @@index([customer_id], map: "idx_loyalty_logs_customer_id")
+  @@index([order_id], map: "idx_loyalty_logs_order_id")
 }
 
-model return_orders {
-  id                 Int                  @id @default(autoincrement())
-  rma_code           String               @unique @db.VarChar(50)
-  order_id           Int
-  customer_id        Int
-  reason             String
-  return_status      String?              @default("PENDING") @db.VarChar(50)
-  refund_amount      Decimal?             @default(0) @db.Decimal(15, 2)
-  note               String?
-  created_at         DateTime?            @default(now()) @db.Timestamp(6)
-  return_order_items return_order_items[]
-  customers          customers            @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  orders             orders               @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@index([order_id], map: "idx_return_orders_order")
-}
-
-model return_order_items {
-  id              Int           @id @default(autoincrement())
-  return_order_id Int
-  medicine_id     Int
-  quantity        Int
-  reason          String?
-  medicines       medicines     @relation(fields: [medicine_id], references: [id], onUpdate: NoAction)
-  return_orders   return_orders @relation(fields: [return_order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-}
-
-model cash_flow_transactions {
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model accounts_payable {
   id                Int              @id @default(autoincrement())
-  transaction_code  String           @unique @db.VarChar(50)
-  transaction_type  String           @db.VarChar(20)
-  category          String           @db.VarChar(50)
-  amount            Decimal          @db.Decimal(15, 2)
-  counterparty_type String?          @default("OTHER") @db.VarChar(30)
-  counterparty_name String?          @db.VarChar(255)
+  supplier_name     String           @db.VarChar(255)
+  po_id             Int?
+  total_due_amount  Decimal          @db.Decimal(15, 2)
+  paid_amount       Decimal?         @default(0) @db.Decimal(15, 2)
+  remaining_balance Decimal?         @default(dbgenerated("(total_due_amount - paid_amount)")) @db.Decimal(15, 2)
+  due_date          DateTime?        @db.Timestamptz(6)
+  status            String?          @default("UNPAID") @db.VarChar(50)
+  created_at        DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime?        @default(now()) @db.Timestamptz(6)
+  purchase_orders   purchase_orders? @relation(fields: [po_id], references: [id], onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model accounts_receivable {
+  id                Int       @id @default(autoincrement())
+  customer_id       Int
   order_id          Int?
-  purchase_order_id Int?
-  payment_method    String?          @default("BANK_TRANSFER") @db.VarChar(50)
+  total_due_amount  Decimal   @db.Decimal(15, 2)
+  paid_amount       Decimal?  @default(0) @db.Decimal(15, 2)
+  remaining_balance Decimal?  @default(dbgenerated("(total_due_amount - paid_amount)")) @db.Decimal(15, 2)
+  due_date          DateTime? @db.Timestamptz(6)
+  status            String?   @default("UNPAID") @db.VarChar(50)
+  created_at        DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime? @default(now()) @db.Timestamptz(6)
+  customers         customers @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  orders            orders?   @relation(fields: [order_id], references: [id], onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model baiviet {
+  id                Int       @id @default(autoincrement())
+  tieu_de           String    @db.VarChar(255)
+  anh_bia           String?
+  noi_dung          String
+  ngay_dang         DateTime? @default(now()) @db.Timestamp(6)
+  nhan_vien_dang_id Int?
+  nhanvien          nhanvien? @relation(fields: [nhan_vien_dang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model batches {
+  id                   Int                    @id @default(autoincrement())
+  batch_number         String                 @unique @db.VarChar(100)
+  medicine_id          Int?
+  manufacturer_id      Int?
+  production_date      DateTime               @db.Date
+  expiry_date          DateTime               @db.Date
+  initial_quantity     Int                    @default(0)
+  remaining_quantity   Int                    @default(0)
+  status               String?                @default("ACTIVE") @db.VarChar(50)
+  certificate_co_cq    String?
+  created_at           DateTime?              @default(now()) @db.Timestamp(6)
+  facilities           facilities?            @relation(fields: [manufacturer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  medicines            medicines?             @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  medicine_boxes       medicine_boxes[]
+  purchase_order_items purchase_order_items[]
+  sscc_cartons         sscc_cartons[]
+}
+
+model canhbao_gianlan {
+  id                               Int        @id @default(autoincrement())
+  uid                              String?    @db.Uuid
+  loai_gian_lan                    String     @db.VarChar(100)
+  muc_do_nghiem_trong              String?    @default("CANH_BAO") @db.VarChar(50)
+  mo_ta                            String?
+  latitude_1                       Decimal?   @db.Decimal(10, 7)
+  longitude_1                      Decimal?   @db.Decimal(10, 7)
+  latitude_2                       Decimal?   @db.Decimal(10, 7)
+  longitude_2                      Decimal?   @db.Decimal(10, 7)
+  khoang_cach_km                   Float?
+  thoi_gian_giua_hai_lan_quet_phut Float?
+  van_toc_kmh                      Float?
+  trang_thai_xu_ly                 String?    @default("CHUA_XU_LY") @db.VarChar(50)
+  ngay_tao                         DateTime?  @default(now()) @db.Timestamp(6)
+  nhatky_id                        Int?
+  hop_thuoc_uid                    String?    @db.Uuid
+  loai_canh_bao                    String?    @db.VarChar(100)
+  muc_do_rui_ro                    String?    @default("Warning") @db.VarChar(50)
+  toa_do_lat_truoc                 Decimal?   @db.Decimal(10, 7)
+  toa_do_lng_truoc                 Decimal?   @db.Decimal(10, 7)
+  toa_do_lat_sau                   Decimal?   @db.Decimal(10, 7)
+  toa_do_lng_sau                   Decimal?   @db.Decimal(10, 7)
+  thoi_gian_chenh_phut             Float?
+  trang_thai                       String?    @default("Moi") @db.VarChar(50)
+  mahop_uid                        mahop_uid? @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([uid], map: "idx_canhbao_gianlan_uid")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cashbook_logs {
+  id                 Int              @id @default(autoincrement())
+  transaction_code   String           @unique @db.VarChar(50)
+  transaction_type   String           @db.VarChar(20)
+  category           String           @db.VarChar(50)
+  amount             Decimal          @db.Decimal(15, 2)
+  party_type         String?          @default("OTHER") @db.VarChar(30)
+  party_name         String?          @db.VarChar(255)
+  order_id           Int?
+  po_id              Int?
+  payment_method     String?          @default("BANK_TRANSFER") @db.VarChar(50)
+  note               String?
+  transaction_date   DateTime?        @default(now()) @db.Timestamptz(6)
+  created_by_user_id Int?
+  orders             orders?          @relation(fields: [order_id], references: [id], onUpdate: NoAction)
+  purchase_orders    purchase_orders? @relation(fields: [po_id], references: [id], onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model chitietdonhang {
+  id                     Int             @id @default(autoincrement())
+  don_hang_id            Int?
+  duoc_pham_id           Int?
+  quy_cach_id            Int?
+  so_luong               Int
+  don_gia                Decimal         @db.Decimal(12, 2)
+  don_vi_xuat_id         Int?
+  gia_goc_luc_mua        Decimal?        @default(0) @db.Decimal(12, 2)
+  phan_tram_giam_luc_mua Int?            @default(0)
+  donhang                donhang?        @relation(fields: [don_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  donvi                  donvi?          @relation(fields: [don_vi_xuat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  duocpham               duocpham?       @relation(fields: [duoc_pham_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  quycachdonggoi         quycachdonggoi? @relation(fields: [quy_cach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([duoc_pham_id], map: "idx_chitietdonhang_duocpham")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model chitietgiohang {
+  id             Int             @id @default(autoincrement())
+  khach_hang_id  Int?
+  duoc_pham_id   Int?
+  quy_cach_id    Int?
+  so_luong       Int
+  ngay_them      DateTime?       @default(now()) @db.Timestamp(6)
+  duocpham       duocpham?       @relation(fields: [duoc_pham_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  quycachdonggoi quycachdonggoi? @relation(fields: [quy_cach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  khachhang      khachhang?      @relation(fields: [khach_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_chitiet_khachhang")
+
+  @@unique([khach_hang_id, duoc_pham_id, quy_cach_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model chitietphieunhap {
+  id             Int             @id @default(autoincrement())
+  phieu_nhap_id  Int
+  duoc_pham_id   Int
+  lo_thuoc_id    Int?
+  quy_cach_id    Int?
+  so_luong       Int
+  don_gia        Decimal         @db.Decimal(12, 2)
+  thanh_tien     Decimal?        @default(dbgenerated("((so_luong)::numeric * don_gia)")) @db.Decimal(15, 2)
+  duocpham       duocpham        @relation(fields: [duoc_pham_id], references: [id], onUpdate: NoAction)
+  lothuoc        lothuoc?        @relation(fields: [lo_thuoc_id], references: [id], onUpdate: NoAction)
+  phieunhap      phieunhap       @relation(fields: [phieu_nhap_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  quycachdonggoi quycachdonggoi? @relation(fields: [quy_cach_id], references: [id], onUpdate: NoAction)
+
+  @@index([duoc_pham_id], map: "idx_chitietphieunhap_duocpham")
+  @@index([phieu_nhap_id], map: "idx_chitietphieunhap_phieunhap")
+}
+
+model chitietphieutrahang {
+  id                Int             @id @default(autoincrement())
+  phieu_tra_hang_id Int?
+  duoc_pham_id      Int?
+  quy_cach_id       Int?
+  so_luong          Int
+  duocpham          duocpham?       @relation(fields: [duoc_pham_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  phieutrahang      phieutrahang?   @relation(fields: [phieu_tra_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  quycachdonggoi    quycachdonggoi? @relation(fields: [quy_cach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cong_no_khach_hang {
+  id             Int       @id @default(autoincrement())
+  khach_hang_id  Int
+  don_hang_id    Int?
+  tong_tien_no   Decimal   @db.Decimal(15, 2)
+  da_thanh_toan  Decimal?  @default(0) @db.Decimal(15, 2)
+  con_no         Decimal?  @default(dbgenerated("(tong_tien_no - da_thanh_toan)")) @db.Decimal(15, 2)
+  han_thanh_toan DateTime? @db.Timestamptz(6)
+  trang_thai     String?   @default("ChuaThanhToan") @db.VarChar(50)
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+  donhang        donhang?  @relation(fields: [don_hang_id], references: [id], onUpdate: NoAction)
+  khachhang      khachhang @relation(fields: [khach_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cong_no_nha_cung_cap {
+  id               Int        @id @default(autoincrement())
+  nha_cung_cap_ten String     @db.VarChar(255)
+  don_nhap_id      Int?
+  tong_tien_no     Decimal    @db.Decimal(15, 2)
+  da_thanh_toan    Decimal?   @default(0) @db.Decimal(15, 2)
+  con_no           Decimal?   @default(dbgenerated("(tong_tien_no - da_thanh_toan)")) @db.Decimal(15, 2)
+  han_thanh_toan   DateTime?  @db.Timestamptz(6)
+  trang_thai       String?    @default("ChuaThanhToan") @db.VarChar(50)
+  created_at       DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?  @default(now()) @db.Timestamptz(6)
+  phieunhap        phieunhap? @relation(fields: [don_nhap_id], references: [id], onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model danhgia_sanpham {
+  id            Int        @id @default(autoincrement())
+  khach_hang_id Int?
+  duoc_pham_id  Int?
+  so_sao        Int?
+  noi_dung      String?
+  hinh_anh      String[]
+  ngay_tao      DateTime?  @default(now()) @db.Timestamp(6)
+  duocpham      duocpham?  @relation(fields: [duoc_pham_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  khachhang     khachhang? @relation(fields: [khach_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model danhgiasanpham {
+  id            Int        @id @default(autoincrement())
+  duoc_pham_id  Int?
+  khach_hang_id Int?
+  so_sao        Int
+  noi_dung      String?
+  ngay_danh_gia DateTime?  @default(now()) @db.Timestamp(6)
+  duocpham      duocpham?  @relation(fields: [duoc_pham_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  khachhang     khachhang? @relation(fields: [khach_hang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([khach_hang_id, duoc_pham_id], map: "uq_khachhang_duocpham_danhgia")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model danhmuc {
+  id              Int        @id @default(autoincrement())
+  ten_danh_muc    String     @unique @db.VarChar(255)
+  danh_muc_cha_id Int?
+  hinh_anh_icon   String?
+  thu_tu_hien_thi Int?       @default(0)
+  trang_thai      Boolean?   @default(true)
+  danhmuc         danhmuc?   @relation("danhmucTodanhmuc", fields: [danh_muc_cha_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_danhmuc   danhmuc[]  @relation("danhmucTodanhmuc")
+  duocpham        duocpham[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model donhang {
+  id                     Int                  @id @default(autoincrement())
+  khach_hang_id          Int?
+  ngay_dat_hang          DateTime?            @default(now()) @db.Timestamp(6)
+  tong_tien              Decimal              @db.Decimal(12, 2)
+  phi_van_chuyen         Decimal?             @default(0) @db.Decimal(12, 2)
+  ma_giam_gia            String?              @db.VarChar(50)
+  diem_su_dung           Int?                 @default(0)
+  tien_giam_tu_diem      Decimal?             @default(0) @db.Decimal(12, 2)
+  dia_chi_giao_hang      String
+  ma_giao_dich_ngan_hang String?              @unique(map: "uq_ma_giao_dich_ngan_hang", where: raw("(ma_giao_dich_ngan_hang IS NOT NULL)")) @db.VarChar(100)
+  trang_thai_don         String?              @default("ChoXacNhan") @db.VarChar(50)
+  phuong_thuc_thanh_toan String?              @default("COD") @db.VarChar(50)
+  trang_thai_thanh_toan  String?              @default("ChuaThanhToan") @db.VarChar(50)
+  tien_giam_tu_voucher   Decimal?             @default(0) @db.Decimal(12, 2)
+  chitietdonhang         chitietdonhang[]
+  cong_no_khach_hang     cong_no_khach_hang[]
+  khachhang              khachhang?           @relation(fields: [khach_hang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  hopthuoc               hopthuoc[]
+  lichsu_tichdiem        lichsu_tichdiem[]
+  phieutrahang           phieutrahang[]
+  so_quy_thu_chi         so_quy_thu_chi[]
+  toathuoc               toathuoc[]
+  vanchuyen              vanchuyen?
+
+  @@index([ngay_dat_hang], map: "idx_donhang_choxacnhan_ngay", where: raw("((trang_thai_don)::text = 'ChoXacNhan'::text)"))
+  @@index([ngay_dat_hang], map: "idx_donhang_doanhthu_thucte", where: raw("((trang_thai_don)::text = 'HoanThanh'::text)"))
+  @@index([khach_hang_id], map: "idx_donhang_khachhang")
+  @@index([khach_hang_id, trang_thai_don], map: "idx_donhang_khachhang_trangthai")
+  @@index([ngay_dat_hang], map: "idx_donhang_ngaydat")
+  @@index([trang_thai_don, ngay_dat_hang(sort: Desc)], map: "idx_donhang_trangthai_ngay")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model donvi {
+  id                                                 Int              @id @default(autoincrement())
+  ten_don_vi                                         String           @unique @db.VarChar(255)
+  loai_don_vi                                        String?          @db.VarChar(50)
+  dia_chi                                            String?
+  toa_do_lat                                         Decimal?         @db.Decimal(10, 8)
+  toa_do_lng                                         Decimal?         @db.Decimal(11, 8)
+  la_don_vi_noi_bo                                   Boolean?         @default(true)
+  chitietdonhang                                     chitietdonhang[]
+  duocpham                                           duocpham[]
+  hopthuoc                                           hopthuoc[]
+  kienhang                                           kienhang[]
+  kienhang_sscc                                      kienhang_sscc[]
+  lichsu_tonkho                                      lichsu_tonkho[]
+  lichsuphanphoi_lichsuphanphoi_den_don_vi_idTodonvi lichsuphanphoi[] @relation("lichsuphanphoi_den_don_vi_idTodonvi")
+  lichsuphanphoi_lichsuphanphoi_tu_don_vi_idTodonvi  lichsuphanphoi[] @relation("lichsuphanphoi_tu_don_vi_idTodonvi")
+  mahop_uid                                          mahop_uid[]
+  nguoidung                                          nguoidung[]
+  nhanvien                                           nhanvien[]
+  phieunhap                                          phieunhap[]
+  tonkho                                             tonkho[]
+  tonkho_donvi                                       tonkho_donvi[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+model duocpham {
+  id                  Int                   @id @default(autoincrement())
+  ten_thuoc           String                @db.VarChar(255)
+  so_dang_ky          String?               @unique @db.VarChar(100)
+  danh_muc_id         Int?
+  don_vi_san_xuat_id  Int?
+  hinh_anh_url        String?
+  la_thuoc_ke_don     Boolean?              @default(false)
+  mo_ta_ngan          String?
+  chi_tiet_thuoc      Json?
+  trang_thai          Boolean?              @default(true)
+  slug                String?               @unique(map: "uq_duocpham_slug") @db.VarChar(255)
+  so_luong_da_ban     Int?                  @default(0)
+  diem_danh_gia       Decimal?              @default(0.0) @db.Decimal(2, 1)
+  ngay_cap_nhat_moi   DateTime?             @db.Timestamp(6)
+  trang_thai_duyet    String?               @default("ChoDuyet") @db.VarChar(20)
+  hoat_chat           String?
+  ham_luong           String?               @db.VarChar(100)
+  hang_san_xuat       String?               @db.VarChar(150)
+  nuoc_san_xuat       String?               @db.VarChar(100)
+  chitietdonhang      chitietdonhang[]
+  chitietgiohang      chitietgiohang[]
+  chitietphieunhap    chitietphieunhap[]
+  chitietphieutrahang chitietphieutrahang[]
+  danhgia_sanpham     danhgia_sanpham[]
+  danhgiasanpham      danhgiasanpham[]
+  danhmuc             danhmuc?              @relation(fields: [danh_muc_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  donvi               donvi?                @relation(fields: [don_vi_san_xuat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  giohang             giohang[]
+  lichsu_tonkho       lichsu_tonkho[]
+  lothuoc             lothuoc[]
+  quycachdonggoi      quycachdonggoi[]
+  sanphamyeuthich     sanphamyeuthich[]
+  tonkho              tonkho[]
+  tonkho_donvi        tonkho_donvi[]
+
+  @@index([danh_muc_id], map: "idx_duocpham_danhmuc")
+  @@index([chi_tiet_thuoc], map: "idx_duocpham_jsonb", type: Gin)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model giohang {
+  id             Int             @id @default(autoincrement())
+  khach_hang_id  Int?
+  duoc_pham_id   Int?
+  quy_cach_id    Int?
+  so_luong       Int             @default(1)
+  ngay_tao       DateTime?       @default(now()) @db.Timestamp(6)
+  duocpham       duocpham?       @relation(fields: [duoc_pham_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  khachhang      khachhang?      @relation(fields: [khach_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  quycachdonggoi quycachdonggoi? @relation(fields: [quy_cach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([khach_hang_id, duoc_pham_id, quy_cach_id], map: "uq_giohang_item")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model hopthuoc {
+  uid                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lo_thuoc_id          Int?
+  don_vi_hien_tai_id   Int?
+  don_hang_id          Int?
+  trang_thai           String?          @default("TrongKho") @db.VarChar(50)
+  kien_hang_id         Int?
+  secret_pin_hash      String?          @db.VarChar(64)
+  ngay_kich_hoat       DateTime?        @db.Timestamp(6)
+  so_lan_quet_pin      Int?             @default(0)
+  trang_thai_kich_hoat String?          @default("ChuaKichHoat") @db.VarChar(50)
+  donhang              donhang?         @relation(fields: [don_hang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  donvi                donvi?           @relation(fields: [don_vi_hien_tai_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  kienhang             kienhang?        @relation(fields: [kien_hang_id], references: [id], onUpdate: NoAction)
+  lothuoc              lothuoc?         @relation(fields: [lo_thuoc_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lichsuphanphoi       lichsuphanphoi[]
+  nhatkyxacthuc        nhatkyxacthuc[]
+
+  @@index([don_hang_id], map: "idx_hopthuoc_donhang")
+  @@index([kien_hang_id], map: "idx_hopthuoc_kienhang")
+  @@index([lo_thuoc_id], map: "idx_hopthuoc_lothuoc")
+  @@index([trang_thai], map: "idx_hopthuoc_trangthai")
+}
+
+model inventories {
+  id                       Int                       @id @default(autoincrement())
+  facility_id              Int?
+  medicine_id              Int?
+  packaging_id             Int?
+  stock_quantity           Int                       @default(0)
+  reserved_quantity        Int?                      @default(0)
+  updated_at               DateTime?                 @default(now()) @db.Timestamp(6)
+  facilities               facilities?               @relation(fields: [facility_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  medicines                medicines?                @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  packaging_specifications packaging_specifications? @relation(fields: [packaging_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([facility_id, medicine_id, packaging_id], map: "uq_facility_inventory")
+}
+
+model inventory_logs {
+  id                Int         @id @default(autoincrement())
+  facility_id       Int?
+  medicine_id       Int?
+  transaction_type  String      @db.VarChar(50)
+  quantity_changed  Int
+  previous_quantity Int
+  new_quantity      Int
+  reference_code    String?     @db.VarChar(100)
   note              String?
-  transaction_date  DateTime?        @default(now()) @db.Timestamp(6)
-  created_by_id     Int?
-  users             users?           @relation(fields: [created_by_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  orders            orders?          @relation(fields: [order_id], references: [id], onUpdate: NoAction)
-  purchase_orders   purchase_orders? @relation(fields: [purchase_order_id], references: [id], onUpdate: NoAction)
+  performed_by_id   Int?
+  created_at        DateTime?   @default(now()) @db.Timestamp(6)
+  facilities        facilities? @relation(fields: [facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  medicines         medicines?  @relation(fields: [medicine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users             employees?  @relation(fields: [performed_by_id], references: [id], onUpdate: NoAction)
 }
 
-model customer_debts {
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model khachhang {
+  id                 Int                  @id @default(autoincrement())
+  ho_ten             String               @db.VarChar(255)
+  so_dien_thoai      String               @unique @db.VarChar(20)
+  email              String?              @unique @db.VarChar(255)
+  mat_khau_hash      String               @db.VarChar(255)
+  dia_chi_mac_dinh   String?
+  diem_tich_luy      Int?                 @default(0)
+  hang_thanh_vien    String?              @default("????????????ng") @db.VarChar(50)
+  ngay_tao           DateTime?            @default(now()) @db.Timestamp(6)
+  trang_thai         Boolean?             @default(true)
+  diem_tich_luy_tong Int?                 @default(0)
+  chitietgiohang     chitietgiohang[]
+  cong_no_khach_hang cong_no_khach_hang[]
+  danhgia_sanpham    danhgia_sanpham[]
+  danhgiasanpham     danhgiasanpham[]
+  donhang            donhang[]
+  giohang            giohang[]
+  lichsu_tichdiem    lichsu_tichdiem[]
+  phieutrahang       phieutrahang[]
+  sanphamyeuthich    sanphamyeuthich[]
+  toathuoc           toathuoc[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model khuyenmai {
+  id                 Int      @id @default(autoincrement())
+  ma_code            String   @unique @db.VarChar(50)
+  loai_giam_gia      String?  @db.VarChar(50)
+  gia_tri            Decimal  @db.Decimal(12, 2)
+  don_hang_toi_thieu Decimal? @default(0) @db.Decimal(12, 2)
+  ngay_bat_dau       DateTime @db.Timestamp(6)
+  ngay_ket_thuc      DateTime @db.Timestamp(6)
+  so_luong_gioi_han  Int?
+  so_luong_da_dung   Int?     @default(0)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model kienhang {
+  id               Int        @id @default(autoincrement())
+  ma_sscc          String     @unique @db.VarChar(100)
+  loai_kien        String?    @db.VarChar(50)
+  don_vi_so_huu_id Int?
+  ngay_tao         DateTime?  @default(now()) @db.Timestamp(6)
+  trang_thai       String?    @default("SanSang") @db.VarChar(50)
+  hopthuoc         hopthuoc[]
+  donvi            donvi?     @relation(fields: [don_vi_so_huu_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model kienhang_sscc {
+  id                 Int         @id @default(autoincrement())
+  ma_sscc            String      @unique @db.VarChar(50)
+  lo_thuoc_id        Int?
+  don_vi_hien_tai_id Int?
+  trang_thai         String?     @default("DONG_GOI") @db.VarChar(50)
+  so_luong_hop       Int?        @default(0)
+  ngay_tao           DateTime?   @default(now()) @db.Timestamp(6)
+  donvi              donvi?      @relation(fields: [don_vi_hien_tai_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  lothuoc            lothuoc?    @relation(fields: [lo_thuoc_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  mahop_uid          mahop_uid[]
+}
+
+model lichsu_quet_qr {
+  id             Int        @id @default(autoincrement())
+  uid            String     @db.Uuid
+  nguoi_dung_id  Int?
+  latitude       Decimal?   @db.Decimal(10, 7)
+  longitude      Decimal?   @db.Decimal(10, 7)
+  dia_chi_ip     String?    @db.VarChar(50)
+  user_agent     String?
+  thoi_gian_quet DateTime?  @default(now()) @db.Timestamp(6)
+  ket_qua        String?    @default("HOP_LE") @db.VarChar(50)
+  diem_rui_ro    Int?       @default(0)
+  nguoidung      nguoidung? @relation(fields: [nguoi_dung_id], references: [id], onUpdate: NoAction)
+  mahop_uid      mahop_uid  @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([uid], map: "idx_lichsu_quet_qr_uid")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model lichsu_tichdiem {
+  id             Int       @id @default(autoincrement())
+  khach_hang_id  Int
+  don_hang_id    Int?
+  loai_giao_dich String    @db.VarChar(50)
+  so_diem        Int
+  mo_ta          String?
+  ngay_tao       DateTime? @default(now()) @db.Timestamptz(6)
+  donhang        donhang?  @relation(fields: [don_hang_id], references: [id], onUpdate: NoAction)
+  khachhang      khachhang @relation(fields: [khach_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([don_hang_id], map: "idx_tichdiem_donhang")
+  @@index([khach_hang_id], map: "idx_tichdiem_khachhang")
+}
+
+model lichsu_tonkho {
+  id                 Int        @id @default(autoincrement())
+  don_vi_id          Int?
+  duoc_pham_id       Int?
+  loai_bien_dong     String     @db.VarChar(50)
+  so_luong_thay_doi  Int
+  so_luong_truoc     Int
+  so_luong_sau       Int
+  ma_tham_chieu      String?    @db.VarChar(100)
+  ghi_chu            String?
+  nguoi_thuc_hien_id Int?
+  ngay_tao           DateTime?  @default(now()) @db.Timestamp(6)
+  donvi              donvi?     @relation(fields: [don_vi_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  duocpham           duocpham?  @relation(fields: [duoc_pham_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  nguoidung          nguoidung? @relation(fields: [nguoi_thuc_hien_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model lichsuphanphoi {
+  id                                        Int       @id @default(autoincrement())
+  hop_thuoc_uid                             String?   @db.Uuid
+  tu_don_vi_id                              Int?
+  den_don_vi_id                             Int?
+  loai_giao_dich                            String?   @db.VarChar(50)
+  thoi_gian                                 DateTime? @default(now()) @db.Timestamp(6)
+  ghi_chu                                   String?
+  donvi_lichsuphanphoi_den_don_vi_idTodonvi donvi?    @relation("lichsuphanphoi_den_don_vi_idTodonvi", fields: [den_don_vi_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  hopthuoc                                  hopthuoc? @relation(fields: [hop_thuoc_uid], references: [uid], onDelete: NoAction, onUpdate: NoAction)
+  donvi_lichsuphanphoi_tu_don_vi_idTodonvi  donvi?    @relation("lichsuphanphoi_tu_don_vi_idTodonvi", fields: [tu_don_vi_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([thoi_gian], map: "idx_lichsu_thoigian")
+  @@index([hop_thuoc_uid], map: "idx_lichsu_uid")
+  @@index([hop_thuoc_uid, thoi_gian(sort: Desc), id(sort: Desc)], map: "idx_lichsu_uid_thoigian")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model lothuoc {
+  id               Int                @id @default(autoincrement())
+  duoc_pham_id     Int?
+  so_lo            String             @db.VarChar(100)
+  ngay_san_xuat    DateTime           @db.Date
+  han_su_dung      DateTime           @db.Date
+  trang_thai       String?            @default("HopLe") @db.VarChar(50)
+  quy_cach_id      Int?
+  chitietphieunhap chitietphieunhap[]
+  hopthuoc         hopthuoc[]
+  kienhang_sscc    kienhang_sscc[]
+  duocpham         duocpham?          @relation(fields: [duoc_pham_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  quycachdonggoi   quycachdonggoi?    @relation(fields: [quy_cach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  mahop_uid        mahop_uid[]
+
+  @@index([han_su_dung], map: "idx_lothuoc_hsd")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model mahop_uid {
+  uid                String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  lo_thuoc_id        Int?
+  kien_hang_id       Int?
+  don_vi_hien_tai_id Int?
+  trang_thai         String?           @default("TRONG_KHO") @db.VarChar(50)
+  signature          String?
+  public_key         String?
+  ngay_tao           DateTime?         @default(now()) @db.Timestamp(6)
+  canhbao_gianlan    canhbao_gianlan[]
+  lichsu_quet_qr     lichsu_quet_qr[]
+  donvi              donvi?            @relation(fields: [don_vi_hien_tai_id], references: [id], onUpdate: NoAction)
+  kienhang_sscc      kienhang_sscc?    @relation(fields: [kien_hang_id], references: [id], onUpdate: NoAction)
+  lothuoc            lothuoc?          @relation(fields: [lo_thuoc_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model makhuyenmai {
+  id                 Int       @id @default(autoincrement())
+  ma_code            String    @unique @db.VarChar(50)
+  loai_giam          String?   @default("PERCENT") @db.VarChar(20)
+  gia_tri_giam       Decimal   @db.Decimal(15, 2)
+  don_hang_toi_thieu Decimal?  @default(0) @db.Decimal(15, 2)
+  giam_toi_da        Decimal?  @db.Decimal(15, 2)
+  so_luong           Int?      @default(100)
+  so_luong_da_dung   Int?      @default(0)
+  ngay_bat_dau       DateTime? @db.Timestamp(6)
+  ngay_ket_thuc      DateTime? @db.Timestamp(6)
+  trang_thai         String?   @default("HOAT_DONG") @db.VarChar(50)
+}
+
+model nguoidung {
+  id             Int              @id @default(autoincrement())
+  ten_dang_nhap  String           @unique @db.VarChar(50)
+  mat_khau       String           @db.VarChar(255)
+  ho_ten         String           @db.VarChar(100)
+  email          String?          @unique @db.VarChar(100)
+  so_dien_thoai  String?          @db.VarChar(20)
+  vai_tro        String           @default("KHACH_HANG") @db.VarChar(50)
+  trang_thai     String?          @default("HOAT_DONG") @db.VarChar(50)
+  don_vi_id      Int?
+  ngay_tao       DateTime?        @default(now()) @db.Timestamp(6)
+  lichsu_quet_qr lichsu_quet_qr[]
+  lichsu_tonkho  lichsu_tonkho[]
+  donvi          donvi?           @relation(fields: [don_vi_id], references: [id], onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model nhanvien {
+  id            Int         @id @default(autoincrement())
+  don_vi_id     Int
+  ho_ten        String      @db.VarChar(255)
+  email         String      @unique @db.VarChar(255)
+  mat_khau_hash String      @db.VarChar(255)
+  vai_tro       String?     @db.VarChar(50)
+  trang_thai    Boolean?    @default(true)
+  baiviet       baiviet[]
+  donvi         donvi       @relation(fields: [don_vi_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  phieunhap     phieunhap[]
+}
+
+model nhatkyxacthuc {
+  id                  Int       @id @default(autoincrement())
+  hop_thuoc_uid       String?   @db.Uuid
+  thoi_gian_quet      DateTime? @default(now()) @db.Timestamp(6)
+  toa_do_lat          Decimal?  @db.Decimal(10, 8)
+  toa_do_lng          Decimal?  @db.Decimal(11, 8)
+  ip_address          String?   @db.VarChar(45)
+  trang_thai_canh_bao Boolean?  @default(false)
+  hopthuoc            hopthuoc? @relation(fields: [hop_thuoc_uid], references: [uid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([trang_thai_canh_bao], map: "idx_nhatky_canh_bao", where: raw("(trang_thai_canh_bao = true)"))
+  @@index([hop_thuoc_uid], map: "idx_nhatky_uid")
+  @@index([hop_thuoc_uid, thoi_gian_quet(sort: Desc)], map: "idx_nhatky_uid_thoigian")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model phieunhap {
+  id                   Int                    @id @default(autoincrement())
+  ma_phieu_nhap        String                 @unique @db.VarChar(50)
+  nha_cung_cap_id      Int
+  nguoi_tao_id         Int?
+  tong_tien            Decimal?               @default(0) @db.Decimal(15, 2)
+  trang_thai           String?                @default("ChoDuyet") @db.VarChar(50)
+  ghi_chu              String?
+  ngay_nhap            DateTime?              @default(now()) @db.Timestamptz(6)
+  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  chitietphieunhap     chitietphieunhap[]
+  cong_no_nha_cung_cap cong_no_nha_cung_cap[]
+  nhanvien             nhanvien?              @relation(fields: [nguoi_tao_id], references: [id], onUpdate: NoAction)
+  donvi                donvi                  @relation(fields: [nha_cung_cap_id], references: [id], onUpdate: NoAction)
+  so_quy_thu_chi       so_quy_thu_chi[]
+
+  @@index([nha_cung_cap_id], map: "idx_phieunhap_ncc")
+  @@index([trang_thai], map: "idx_phieunhap_trangthai")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model phieutrahang {
+  id                  Int                   @id @default(autoincrement())
+  don_hang_id         Int?
+  khach_hang_id       Int?
+  ly_do_tra           String
+  ngay_yeu_cau        DateTime?             @default(now()) @db.Timestamp(6)
+  trang_thai_duyet    String?               @default("ChoDuyet") @db.VarChar(50)
+  chitietphieutrahang chitietphieutrahang[]
+  donhang             donhang?              @relation(fields: [don_hang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  khachhang           khachhang?            @relation(fields: [khach_hang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([don_hang_id], map: "idx_phieutrahang_donhang")
+}
+
+model qr_scan_logs {
+  id                 Int            @id @default(autoincrement())
+  uid                String         @db.Uuid
+  scanned_by_user_id Int?
+  latitude           Decimal?       @db.Decimal(10, 7)
+  longitude          Decimal?       @db.Decimal(10, 7)
+  ip_address         String?        @db.VarChar(50)
+  user_agent         String?
+  scanned_at         DateTime?      @default(now()) @db.Timestamp(6)
+  scan_result        String?        @default("VALID") @db.VarChar(50)
+  risk_score         Int?           @default(0)
+  medicine_boxes     medicine_boxes @relation(fields: [uid], references: [uid], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([uid], map: "idx_qr_scan_logs_uid")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model quycachdonggoi {
+  id                      Int                   @id @default(autoincrement())
+  duoc_pham_id            Int?
+  ten_don_vi              String                @db.VarChar(50)
+  gia_ban                 Decimal               @db.Decimal(12, 2)
+  gia_goc                 Decimal?              @db.Decimal(12, 2)
+  phan_tram_giam          Int?                  @default(0)
+  thoi_gian_bat_dau_sale  DateTime?             @db.Timestamp(6)
+  thoi_gian_ket_thuc_sale DateTime?             @db.Timestamp(6)
+  chitietdonhang          chitietdonhang[]
+  chitietgiohang          chitietgiohang[]
+  chitietphieunhap        chitietphieunhap[]
+  chitietphieutrahang     chitietphieutrahang[]
+  giohang                 giohang[]
+  lothuoc                 lothuoc[]
+  duocpham                duocpham?             @relation(fields: [duoc_pham_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tonkho                  tonkho[]
+  tonkho_donvi            tonkho_donvi[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model reviews {
+  id           Int        @id @default(autoincrement())
+  customer_id  Int?
+  medicine_id  Int?
+  rating_stars Int?
+  comment      String?
+  images       String[]
+  created_at   DateTime?  @default(now()) @db.Timestamp(6)
+  customers    customers? @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  medicines    medicines? @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model sanphamyeuthich {
+  khach_hang_id Int
+  duoc_pham_id  Int
+  ngay_them     DateTime? @default(now()) @db.Timestamp(6)
+  duocpham      duocpham  @relation(fields: [duoc_pham_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  khachhang     khachhang @relation(fields: [khach_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([khach_hang_id, duoc_pham_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model so_quy_thu_chi {
+  id             Int        @id @default(autoincrement())
+  ma_phieu       String     @unique @db.VarChar(50)
+  loai_phieu     String     @db.VarChar(20)
+  loai_giao_dich String     @db.VarChar(50)
+  so_tien        Decimal    @db.Decimal(15, 2)
+  doi_tuong_loai String?    @default("Khac") @db.VarChar(30)
+  doi_tuong_ten  String?    @db.VarChar(255)
+  don_hang_id    Int?
+  don_nhap_id    Int?
+  phuong_thuc    String?    @default("ChuyenKhoan") @db.VarChar(50)
+  ghi_chu        String?
+  ngay_giao_dich DateTime?  @default(now()) @db.Timestamptz(6)
+  created_by     Int?
+  donhang        donhang?   @relation(fields: [don_hang_id], references: [id], onUpdate: NoAction)
+  phieunhap      phieunhap? @relation(fields: [don_nhap_id], references: [id], onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model sscc_cartons {
+  id                  Int              @id @default(autoincrement())
+  sscc_code           String           @unique @db.VarChar(50)
+  batch_id            Int?
+  current_facility_id Int?
+  status              String?          @default("PACKAGED") @db.VarChar(50)
+  box_count           Int?             @default(0)
+  created_at          DateTime?        @default(now()) @db.Timestamp(6)
+  medicine_boxes      medicine_boxes[]
+  batches             batches?         @relation(fields: [batch_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  facilities          facilities?      @relation(fields: [current_facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model toathuoc {
+  id               Int        @id @default(autoincrement())
+  khach_hang_id    Int?
+  don_hang_id      Int?
+  hinh_anh_toa     String
+  ten_bac_si       String?    @db.VarChar(255)
+  ten_benh_vien    String?    @db.VarChar(255)
+  chuan_doan       String?
+  ngay_tao         DateTime?  @default(now()) @db.Timestamp(6)
+  trang_thai_duyet String?    @default("ChoDuyet") @db.VarChar(50)
+  donhang          donhang?   @relation(fields: [don_hang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  khachhang        khachhang? @relation(fields: [khach_hang_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tonkho {
+  don_vi_id      Int
+  duoc_pham_id   Int
+  so_luong_ton   Int?           @default(0)
+  ngay_cap_nhat  DateTime?      @default(now()) @db.Timestamp(6)
+  quy_cach_id    Int
+  donvi          donvi          @relation(fields: [don_vi_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  duocpham       duocpham       @relation(fields: [duoc_pham_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  quycachdonggoi quycachdonggoi @relation(fields: [quy_cach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([don_vi_id, duoc_pham_id, quy_cach_id])
+  @@index([don_vi_id], map: "idx_tonkho_donvi")
+  @@index([duoc_pham_id], map: "idx_tonkho_duocpham")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tonkho_donvi {
+  id                Int             @id @default(autoincrement())
+  don_vi_id         Int?
+  duoc_pham_id      Int?
+  quy_cach_id       Int?
+  so_luong_ton      Int             @default(0)
+  so_luong_cho_giao Int?            @default(0)
+  ngay_cap_nhat     DateTime?       @default(now()) @db.Timestamp(6)
+  donvi             donvi?          @relation(fields: [don_vi_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  duocpham          duocpham?       @relation(fields: [duoc_pham_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  quycachdonggoi    quycachdonggoi? @relation(fields: [quy_cach_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([don_vi_id, duoc_pham_id, quy_cach_id], map: "uq_tonkho_donvi")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model vanchuyen {
   id                    Int       @id @default(autoincrement())
-  customer_id           Int
-  order_id              Int?
-  total_debt_amount     Decimal   @db.Decimal(15, 2)
-  paid_amount           Decimal?  @default(0) @db.Decimal(15, 2)
-  remaining_debt_amount Decimal   @db.Decimal(15, 2)
-  due_date              DateTime? @db.Timestamp(6)
-  debt_status           String?   @default("UNPAID") @db.VarChar(50)
-  created_at            DateTime? @default(now()) @db.Timestamp(6)
-  updated_at            DateTime? @default(now()) @db.Timestamp(6)
-  customers             customers @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  orders                orders?   @relation(fields: [order_id], references: [id], onUpdate: NoAction)
-}
+  don_hang_id           Int       @unique
+  ma_van_don            String    @unique @db.VarChar(50)
+  don_vi_van_chuyen     String    @default("GiaoHangNhanh") @db.VarChar(100)
+  trang_thai_van_chuyen String    @default("CHO_LAY_HANG") @db.VarChar(50)
+  ngay_lay_hang         DateTime? @db.Timestamp(6)
+  ngay_giao_du_kien     DateTime? @db.Timestamp(6)
+  ngay_giao_thuc_te     DateTime? @db.Timestamp(6)
+  tien_thu_ho_cod       Decimal   @default(0) @db.Decimal(15, 2)
+  trang_thai_cod        String    @default("CHUA_DOI_SOAT") @db.VarChar(50)
+  ngay_doi_soat_cod     DateTime? @db.Timestamp(6)
+  ghi_chu               String?
+  ngay_tao              DateTime? @default(now()) @db.Timestamp(6)
+  ngay_cap_nhat         DateTime? @default(now()) @db.Timestamp(6)
+  trang_thai_giao       String?   @default("ChoLayHang") @db.VarChar(50)
+  tien_cod              Decimal?  @default(0) @db.Decimal(15, 2)
+  donhang               donhang   @relation(fields: [don_hang_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-model supplier_debts {
-  id                    Int              @id @default(autoincrement())
-  supplier_name         String           @db.VarChar(255)
-  purchase_order_id     Int?
-  total_debt_amount     Decimal          @db.Decimal(15, 2)
-  paid_amount           Decimal?         @default(0) @db.Decimal(15, 2)
-  remaining_debt_amount Decimal          @db.Decimal(15, 2)
-  due_date              DateTime?        @db.Timestamp(6)
-  debt_status           String?          @default("UNPAID") @db.VarChar(50)
-  created_at            DateTime?        @default(now()) @db.Timestamp(6)
-  updated_at            DateTime?        @default(now()) @db.Timestamp(6)
-  purchase_orders       purchase_orders? @relation(fields: [purchase_order_id], references: [id], onUpdate: NoAction)
+  @@index([don_hang_id], map: "idx_vanchuyen_donhang")
+  @@index([trang_thai_cod], map: "idx_vanchuyen_trangthaicod")
 }

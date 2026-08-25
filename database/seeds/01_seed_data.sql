@@ -1,4 +1,4 @@
-﻿-- Seeds: 01_seed_data.sql
+-- Seeds: 01_seed_data.sql
 -- Default Initial Data for PharmaTrace VN Platform
 
 -- 1. Packaging Specifications
@@ -27,22 +27,27 @@ INSERT INTO public.facilities (id, name, type, address, phone, email, latitude, 
 ON CONFLICT (id) DO NOTHING;
 
 -- 4. Users (Password: password123)
--- Hash: $2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm
-INSERT INTO public.users (id, username, password, full_name, email, phone, role, status, facility_id) VALUES
-(1, 'superadmin', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'System Administrator', 'admin@pharmatrace.vn', '0901234567', 'SUPER_ADMIN', 'ACTIVE', 1),
-(2, 'pharmacist1', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Head Pharmacist', 'pharmacist@pharmatrace.vn', '0912345678', 'PHARMACIST', 'ACTIVE', 4),
-(3, 'warehouse1', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Logistics Supervisor', 'warehouse@pharmatrace.vn', '0923456789', 'WAREHOUSE_STAFF', 'ACTIVE', 3),
-(4, 'customer1', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Nguyen Van A', 'customer@pharmatrace.vn', '0934567890', 'CUSTOMER', 'ACTIVE', NULL)
+-- 4. Demo Access Credentials System Users
+INSERT INTO public.users (id, username, password_hash, full_name, email, phone_number, role, status, facility_id) VALUES
+(1, 'customer', '$2b$10$ezRZa8qqG9LRh3.t0he14eSqbI5A7SIrpBXXB3FSwF8.d5vlU5k9W', 'Customer Demo', 'customer@pharmatrace.vn', '0934567890', 'CUSTOMER', 'ACTIVE', NULL),
+(2, 'admin', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Admin User', 'admin@pharmatrace.vn', NULL, 'SUPER_ADMIN', 'ACTIVE', 1),
+(3, 'storemanager', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Store Manager', 'storemanager@pharmatrace.vn', NULL, 'STORE_MANAGER', 'ACTIVE', 4),
+(4, 'pharmacist', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Pharmacist', 'pharmacist@pharmatrace.vn', NULL, 'PHARMACIST', 'ACTIVE', 4),
+(5, 'warehouse', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Warehouse Staff', 'warehouse@pharmatrace.vn', NULL, 'WAREHOUSE_STAFF', 'ACTIVE', 3),
+(6, 'factorywarehouse', '$2b$10$EpRnTzVlqHNP0.fUbXUwSOyuiXe/QLSUG6xNekdHgTGmrpHEfIoxm', 'Factory Warehouse Staff', 'factorywarehouse@pharmatrace.vn', NULL, 'FACTORY_WAREHOUSE_STAFF', 'ACTIVE', 1)
 ON CONFLICT (id) DO NOTHING;
 
 -- 5. Customers & Employees
 INSERT INTO public.customers (id, user_id, membership_tier, reward_points, default_address) VALUES
-(1, 4, 'GOLD', 1250, '456 Le Loi, District 1, Ho Chi Minh City')
+(1, 1, 'GOLD', 1250, '456 Le Loi, District 1, Ho Chi Minh City')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.employees (id, user_id, facility_id, job_title) VALUES
-(1, 2, 4, 'Chief Pharmacist'),
-(2, 3, 3, 'Warehouse Manager')
+(1, 2, 1, 'SuperAdmin'),
+(2, 3, 4, 'Store Manager'),
+(3, 4, 4, 'Pharmacist'),
+(4, 5, 3, 'Warehouse Staff'),
+(5, 6, 1, 'Factory Warehouse Staff')
 ON CONFLICT (id) DO NOTHING;
 
 -- 6. Medicines

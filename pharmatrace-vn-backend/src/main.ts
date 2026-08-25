@@ -31,7 +31,17 @@ async function bootstrap() {
       "PharmaTrace VN Pharmaceutical Supply Chain & Traceability System",
     )
     .setVersion("1.0")
-    .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+        name: "JWT",
+        description: "Enter JWT token (without Bearer prefix)",
+        in: "header",
+      },
+      "bearerAuth",
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api-docs", app, document);
