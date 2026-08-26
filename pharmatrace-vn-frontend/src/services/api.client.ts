@@ -1,18 +1,21 @@
-﻿import axios from 'axios';
+import axios from 'axios';
+import { getPortalToken } from '@/utils/portalAuth';
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002/v1/pharmatrace',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/v1/pharmatrace',
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Tự động gắn JWT token vào Header
 apiClient.interceptors.request.use(
   (config) => {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('access_token');
+      const token =
+        getPortalToken() ||
+        localStorage.getItem('access_token') ||
+        localStorage.getItem('pharma_access_token');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -22,7 +25,6 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor xử lý lỗi tập trung
 apiClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
