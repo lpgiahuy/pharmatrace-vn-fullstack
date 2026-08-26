@@ -1,4 +1,4 @@
-﻿# Dependencies
+# Dependencies
 node_modules/
 pharmatrace-vn-backend/node_modules/
 pharmatrace-vn-frontend/node_modules/
@@ -40,6 +40,12 @@ pnpm-debug.log*
 # Prisma
 pharmatrace-vn-backend/prisma/generated/
 
-# Uploads & Temporary files
+# Uploads & Temporary files / Scripts
 pharmatrace-vn-backend/uploads/*
 !pharmatrace-vn-backend/uploads/.gitkeep
+temp/
+script/
+scripts/
+**/temp/
+**/script/
+**/scripts/
