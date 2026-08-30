@@ -4,6 +4,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { EmployeeModule } from './modules/employee/employee.module';
+import { CustomerModule } from './modules/customer/customer.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -14,8 +15,10 @@ import { AppService } from './app.service';
     PrismaModule,
     AuthModule,
     EmployeeModule,
+    CustomerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
