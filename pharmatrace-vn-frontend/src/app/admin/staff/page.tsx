@@ -35,6 +35,7 @@ import {
   HomeOutlined,
 } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
+import { AdminLayout } from '@/components/layout/AdminLayout';
 import {
   employeeService,
   Employee,
@@ -383,45 +384,10 @@ export default function StaffManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
+    <AdminLayout>
       {contextHolder}
 
-      {/* Top Header Navigation */}
-      <header className="bg-[#1e4287] text-white py-3 px-4 sm:px-6 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 sticky top-0 z-30">
-        <div className="flex items-center gap-3">
-          <TeamOutlined className="text-2xl text-blue-200" />
-          <div>
-            <h1 className="text-base sm:text-lg font-bold tracking-tight text-white m-0 leading-none">
-              PharmaTrace Admin Portal
-            </h1>
-            <span className="text-[10px] text-blue-200 uppercase font-semibold tracking-wider">
-              Staff & Role Permission Directory
-            </span>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-end">
-          <AButton
-            type="text"
-            icon={<DashboardOutlined className="text-white" />}
-            onClick={() => router.push('/admin')}
-            className="text-white hover:text-white/80 font-medium text-xs sm:text-sm"
-          >
-            Dashboard
-          </AButton>
-          <AButton
-            type="text"
-            icon={<LogoutOutlined className="text-white" />}
-            onClick={handleLogout}
-            className="text-white hover:text-white/80 font-medium text-xs sm:text-sm"
-          >
-            Sign Out
-          </AButton>
-        </div>
-      </header>
-
-      {/* Main Body Container */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Header Action Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 !rounded-md shadow-sm border border-slate-100">
           <div>
@@ -605,7 +571,7 @@ export default function StaffManagementPage() {
             size="middle"
           />
         </Card>
-      </main>
+      </div>
 
       {/* View Staff Member Details Modal */}
       {viewingEmployee && (
@@ -789,6 +755,6 @@ export default function StaffManagementPage() {
           </Form.Item>
         </Form>
       </Modal>
-    </div>
+    </AdminLayout>
   );
 }

@@ -3,15 +3,20 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Tag, Button, Descriptions } from 'antd';
-import { DashboardOutlined, SafetyCertificateOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+  SafetyCertificateOutlined,
+  TeamOutlined,
+  UserOutlined,
+  ArrowRightOutlined,
+} from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
 import { apiClient } from '@/services/api.client';
+import { AdminLayout } from '@/components/layout/AdminLayout';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
   const getIsAuthenticated = useAuthStore((state) => state.getIsAuthenticated);
   const getUser = useAuthStore((state) => state.getUser);
-  const logout = useAuthStore((state) => state.logout);
 
   const [mounted, setMounted] = useState(false);
   const [adminTestData, setAdminTestData] = useState<any>(null);
@@ -42,11 +47,6 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await logout();
-    router.push('/admin/login');
-  };
-
   if (!mounted || !isAuthenticated || !user) {
     return null;
   }
@@ -54,25 +54,58 @@ export default function AdminDashboardPage() {
   const isSuperAdmin = user.role === 'SUPER_ADMIN' || user.role === 'SuperAdmin';
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      <header className="bg-[#1e4287] text-white py-4 px-6 shadow-md flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <DashboardOutlined className="text-xl" />
-          <h1 className="text-xl font-bold tracking-tight">PharmaTrace Admin Portal</h1>
+    <AdminLayout>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900 m-0">Admin Portal Dashboard</h2>
+          <p className="text-slate-500 text-xs sm:text-sm m-0 mt-0.5">
+            Overview and administrative control for PharmaTrace VN platform
+          </p>
         </div>
-        <Button
-          type="text"
-          icon={<LogoutOutlined className="text-white" />}
-          onClick={handleLogout}
-          className="text-white hover:text-white/80"
-        >
-          Sign Out
-        </Button>
-      </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
+        {/* Quick Access Portal Modules */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card
+            hoverable
+            onClick={() => router.push('/admin/staff')}
+            className="shadow-xs rounded-xl border-slate-100 cursor-pointer"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#1e4287] flex items-center justify-center text-xl">
+                  <TeamOutlined />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-800 m-0">Staff & Role Permissions</h3>
+                  <p className="text-xs text-slate-500 m-0 mt-0.5">Manage employees, assigned facilities, and access roles</p>
+                </div>
+              </div>
+              <ArrowRightOutlined className="text-slate-400 mt-2" />
+            </div>
+          </Card>
+
+          <Card
+            hoverable
+            onClick={() => router.push('/admin/customers')}
+            className="shadow-xs rounded-xl border-slate-100 cursor-pointer"
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                  <UserOutlined />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-800 m-0">Customer Management</h3>
+                  <p className="text-xs text-slate-500 m-0 mt-0.5">Customer accounts, membership tiers, points, and order history</p>
+                </div>
+              </div>
+              <ArrowRightOutlined className="text-slate-400 mt-2" />
+            </div>
+          </Card>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card title="Admin Profile Information" className="shadow-sm rounded-xl">
+          <Card title="Admin Profile Information" className="shadow-xs rounded-xl border-slate-100">
             <Descriptions bordered column={1} size="middle">
               <Descriptions.Item label="Full Name">{user.fullName || user.full_name || 'Admin User'}</Descriptions.Item>
               <Descriptions.Item label="Email">{user.email || 'N/A'}</Descriptions.Item>
@@ -87,7 +120,7 @@ export default function AdminDashboardPage() {
             </Descriptions>
           </Card>
 
-          <Card title="RBAC Security Check" className="shadow-sm rounded-xl">
+          <Card title="RBAC Security Check" className="shadow-xs rounded-xl border-slate-100">
             <p className="text-sm text-slate-600 mb-4">
               Test protected backend endpoint (<code>/v1/pharmatrace/auth/admin-test</code>) enforcing <code>@Roles(&apos;SUPER_ADMIN&apos;)</code>.
             </p>
@@ -109,7 +142,7 @@ export default function AdminDashboardPage() {
             )}
           </Card>
         </div>
-      </main>
-    </div>
+      </div>
+    </AdminLayout>
   );
 }
