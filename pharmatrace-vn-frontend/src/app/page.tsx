@@ -2,13 +2,20 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button, Card, Tag } from 'antd';
 import { QrcodeOutlined, ShoppingCartOutlined, DashboardOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { Navbar } from '@/components/common/Navbar';
 import { useAuth } from '@/store/useAuthStore';
 
 export default function HomePage() {
+  const router = useRouter();
   const { user, isAuthenticated } = useAuth();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -26,23 +33,33 @@ export default function HomePage() {
           </p>
 
           <div className="mt-8 flex justify-center gap-4">
-            <Link href="/trace">
-              <Button type="primary" size="large" icon={<QrcodeOutlined />} className="h-12 px-6 text-base font-semibold">
-                Public QR Trace
+            <Button
+              type="primary"
+              size="large"
+              icon={<QrcodeOutlined />}
+              className="h-12 px-6 text-base font-semibold"
+              onClick={() => router.push('/trace')}
+            >
+              Public QR Trace
+            </Button>
+
+            {mounted && isAuthenticated ? (
+              <Button
+                size="large"
+                icon={<DashboardOutlined />}
+                className="h-12 px-6 text-base font-semibold"
+                onClick={() => router.push('/admin')}
+              >
+                Dashboard
               </Button>
-            </Link>
-            {!isAuthenticated ? (
-              <Link href="/login">
-                <Button size="large" className="h-12 px-6 text-base font-semibold">
-                  Sign In / Register
-                </Button>
-              </Link>
             ) : (
-              <Link href="/admin">
-                <Button size="large" icon={<DashboardOutlined />} className="h-12 px-6 text-base font-semibold">
-                  Dashboard
-                </Button>
-              </Link>
+              <Button
+                size="large"
+                className="h-12 px-6 text-base font-semibold"
+                onClick={() => router.push('/login')}
+              >
+                Sign In / Register
+              </Button>
             )}
           </div>
         </div>
