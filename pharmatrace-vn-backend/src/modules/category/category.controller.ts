@@ -56,12 +56,12 @@ export class CategoryController {
 
   @Get('categories/:id')
   @ApiOperation({
-    summary: 'Get category by ID (Public)',
-    description: 'Returns details of a single category.',
+    summary: 'Get category by ID or Slug (Public)',
+    description: 'Returns details of a single category by numerical ID or URL slug.',
   })
   @ApiResponse({ status: 200, description: 'Category retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Category not found' })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     const data = await this.categoryService.findOne(id);
     return {
       success: true,

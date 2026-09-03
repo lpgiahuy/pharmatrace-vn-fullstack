@@ -11,6 +11,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export interface FormattedCategory {
   id: number;
   categoryName: string;
+  slug?: string | null;
   description: string | null;
   icon: string | null;
   parentId: number | null;
@@ -20,16 +21,26 @@ export interface FormattedCategory {
   children?: FormattedCategory[];
 }
 
+function generateCategorySlug(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function formatCategory(cat: any): FormattedCategory {
   return {
     id: cat.id,
     categoryName: cat.category_name,
+    slug: cat.slug || null,
     description: cat.description || null,
     icon: cat.icon || null,
     parentId: cat.parent_id || null,
     displayOrder: Number(cat.display_order || 0),
     status: cat.status === 'INACTIVE' ? 'INACTIVE' : 'ACTIVE',
-    totalMedicines: cat._count?.medicines ?? 0,
+    totalMedicines: cat._count?.medicine_categories ?? 0,
   };
 }
 
@@ -42,7 +53,7 @@ export class CategoryService {
       orderBy: [{ display_order: 'asc' }, { id: 'asc' }],
       include: {
         _count: {
-          select: { medicines: true },
+          select: { medicine_categories: true },
         },
       },
     });
@@ -88,18 +99,24 @@ export class CategoryService {
     return tree;
   }
 
-  async findOne(id: number): Promise<FormattedCategory> {
-    const cat = await this.prisma.categories.findUnique({
-      where: { id },
+  async findOne(idOrSlug: string | number): Promise<FormattedCategory> {
+    const isNumeric =
+      typeof idOrSlug === 'number' ||
+      (!isNaN(Number(idOrSlug)) && /^\d+$/.test(String(idOrSlug).trim()));
+
+    const cat = await this.prisma.categories.findFirst({
+      where: isNumeric
+        ? { id: Number(idOrSlug) }
+        : { slug: String(idOrSlug).trim().toLowerCase() },
       include: {
         _count: {
-          select: { medicines: true },
+          select: { medicine_categories: true },
         },
       },
     });
 
     if (!cat) {
-      throw new NotFoundException(`Category with ID ${id} not found`);
+      throw new NotFoundException(`Category "${idOrSlug}" not found`);
     }
 
     return formatCategory(cat);
@@ -119,9 +136,12 @@ export class CategoryService {
       throw new ConflictException(`Category "${dto.categoryName}" already exists`);
     }
 
+    const slug = dto.slug?.trim() || generateCategorySlug(dto.categoryName);
+
     const created = await this.prisma.categories.create({
       data: {
         category_name: dto.categoryName.trim(),
+        slug: slug || null,
         description: dto.description?.trim() || null,
         icon: dto.icon?.trim() || null,
         parent_id: dto.parentId ? Number(dto.parentId) : null,
@@ -130,7 +150,7 @@ export class CategoryService {
       },
       include: {
         _count: {
-          select: { medicines: true },
+          select: { medicine_categories: true },
         },
       },
     });
@@ -163,10 +183,15 @@ export class CategoryService {
       }
     }
 
+    const slug = dto.slug !== undefined
+      ? (dto.slug?.trim() || generateCategorySlug(dto.categoryName || existing.category_name))
+      : (dto.categoryName ? generateCategorySlug(dto.categoryName) : undefined);
+
     const updated = await this.prisma.categories.update({
       where: { id },
       data: {
         ...(dto.categoryName ? { category_name: dto.categoryName.trim() } : {}),
+        ...(slug !== undefined ? { slug: slug || null } : {}),
         ...(dto.description !== undefined ? { description: dto.description?.trim() || null } : {}),
         ...(dto.icon !== undefined ? { icon: dto.icon?.trim() || null } : {}),
         ...(dto.parentId !== undefined ? { parent_id: dto.parentId ? Number(dto.parentId) : null } : {}),
@@ -175,7 +200,7 @@ export class CategoryService {
       },
       include: {
         _count: {
-          select: { medicines: true },
+          select: { medicine_categories: true },
         },
       },
     });
@@ -188,7 +213,7 @@ export class CategoryService {
       where: { id },
       include: {
         _count: {
-          select: { medicines: true, children: true },
+          select: { medicine_categories: true, children: true },
         },
       },
     });
@@ -197,9 +222,9 @@ export class CategoryService {
       throw new NotFoundException(`Category with ID ${id} not found`);
     }
 
-    if (existing._count.medicines > 0) {
+    if (existing._count.medicine_categories > 0) {
       throw new BadRequestException(
-        `Cannot delete category. It is currently associated with ${existing._count.medicines} medicine(s).`,
+        `Cannot delete category. It is currently associated with ${existing._count.medicine_categories} medicine(s).`,
       );
     }
 

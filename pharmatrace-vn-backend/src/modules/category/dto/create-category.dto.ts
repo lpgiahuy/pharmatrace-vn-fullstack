@@ -48,5 +48,14 @@ export class CreateCategoryDto {
   })
   @IsOptional()
   status?: string;
+
+  @ApiPropertyOptional({
+    description: 'URL slug for category',
+    example: 'antibiotics',
+  })
+  @IsOptional()
+  @IsString({ message: 'Slug must be a string' })
+  @MaxLength(100, { message: 'Slug must not exceed 100 characters' })
+  slug?: string;
 }
 

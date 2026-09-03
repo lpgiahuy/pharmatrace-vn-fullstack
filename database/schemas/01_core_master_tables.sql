@@ -1,4 +1,4 @@
-﻿-- Schema: 01_core_master_tables.sql
+-- Schema: 01_core_master_tables.sql
 -- Modules: Categories, Packaging Units, Facilities, Users, Medicine Catalog
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -65,12 +65,25 @@ CREATE TABLE IF NOT EXISTS public.employees (
     hire_date DATE DEFAULT CURRENT_DATE
 );
 
+-- Manufacturers (Pharmaceutical Brands / Master)
+CREATE TABLE IF NOT EXISTS public.manufacturers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    slug VARCHAR(255) UNIQUE,
+    country VARCHAR(100),
+    logo_url VARCHAR(500),
+    website VARCHAR(255),
+    status VARCHAR(20) DEFAULT 'ACTIVE',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Medicines Catalog
 CREATE TABLE IF NOT EXISTS public.medicines (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     category_id INTEGER REFERENCES public.categories(id) ON DELETE SET NULL,
     packaging_id INTEGER REFERENCES public.packaging_specifications(id) ON DELETE SET NULL,
+    manufacturer_id INTEGER REFERENCES public.manufacturers(id) ON DELETE SET NULL,
     registration_number VARCHAR(100),
     active_ingredients TEXT,
     dosage VARCHAR(100),
@@ -85,3 +98,4 @@ CREATE TABLE IF NOT EXISTS public.medicines (
     status VARCHAR(50) DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'DISCONTINUED')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
