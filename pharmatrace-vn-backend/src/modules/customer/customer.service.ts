@@ -60,6 +60,8 @@ function formatCustomerOrder(order: any) {
       quantity: item.quantity,
       unitPrice: Number(item.unit_price || 0),
       totalPrice: Number(item.total_price || 0),
+      medicineName: item.medicine_name || item.medicines?.medicine_name || 'Thuốc',
+      unitName: item.unit_name || item.packaging_variants?.unit_name || 'Đơn vị',
       medicine: item.medicines
         ? {
           id: item.medicines.id,
@@ -69,10 +71,10 @@ function formatCustomerOrder(order: any) {
           imageUrl: item.medicines.image_url || null,
         }
         : null,
-      packaging: item.packaging_specifications
+      packaging: item.packaging_variants
         ? {
-          id: item.packaging_specifications.id,
-          unitName: item.packaging_specifications.unit_name,
+          id: item.packaging_variants.id,
+          unitName: item.packaging_variants.unit_name,
         }
         : null,
     })),
@@ -233,7 +235,7 @@ export class CustomerService {
           order_items: {
             include: {
               medicines: true,
-              packaging_specifications: true,
+              packaging_variants: true,
             },
           },
         },
