@@ -41,6 +41,7 @@ import {
   Employee,
   EmployeeQuery,
 } from '@/services/employee.service';
+import { facilityService } from '@/services/facility.service';
 
 const ROLES_OPTIONS = [
   { value: 'SUPER_ADMIN', label: 'Super Admin', color: 'red' },
@@ -208,6 +209,27 @@ export default function StaffManagementPage() {
       fetchEmployees(1, 10);
     }
   }, [mounted, isAuthenticated, fetchEmployees]);
+
+  useEffect(() => {
+    const fetchFacilities = async () => {
+      try {
+        const res = await facilityService.getDropdownList();
+        if (res && res.data) {
+          setFacilityOptions(
+            res.data.map((f) => ({
+              value: f.id,
+              label: `${f.name} (${f.type})`,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error('Failed to load facilities:', err);
+      }
+    };
+    if (mounted && isAuthenticated) {
+      fetchFacilities();
+    }
+  }, [mounted, isAuthenticated]);
 
   const handleSearchClick = () => {
     fetchEmployees(1, pagination.pageSize);

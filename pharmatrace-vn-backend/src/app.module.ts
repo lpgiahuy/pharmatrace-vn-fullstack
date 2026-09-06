@@ -7,6 +7,7 @@ import { EmployeeModule } from './modules/employee/employee.module';
 import { CustomerModule } from './modules/customer/customer.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
+import { FacilityModule } from './modules/facility/facility.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -22,6 +23,7 @@ import { AppService } from './app.service';
     CustomerModule,
     CategoryModule,
     ProductModule,
+    FacilityModule,
   ],
   controllers: [AppController],
   providers: [AppService],
