@@ -75,6 +75,7 @@ export interface ProductQuery {
   manufacturer?: string;
   countryOfOrigin?: string;
   isPrescription?: boolean;
+  inStock?: boolean;
   status?: string;
   sortBy?: 'id' | 'price' | 'name' | 'createdAt';
   sortOrder?: 'asc' | 'desc';

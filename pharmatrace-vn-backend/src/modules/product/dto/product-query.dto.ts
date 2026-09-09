@@ -72,6 +72,16 @@ export class ProductQueryDto {
   @IsBoolean()
   isPrescription?: boolean;
 
+  @ApiPropertyOptional({ description: 'Filter by in-stock availability (true: In Stock Only)' })
+  @IsOptional()
+  @Transform(({ value }) => {
+    if (value === 'true' || value === true || value === 1 || value === '1') return true;
+    if (value === 'false' || value === false || value === 0 || value === '0') return false;
+    return undefined;
+  })
+  @IsBoolean()
+  inStock?: boolean;
+
   @ApiPropertyOptional({ description: 'Filter by status (ACTIVE, INACTIVE, etc.)' })
   @IsOptional()
   @IsString()

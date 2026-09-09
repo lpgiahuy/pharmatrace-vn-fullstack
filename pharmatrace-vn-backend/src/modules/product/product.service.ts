@@ -150,6 +150,15 @@ export class ProductService {
       andConditions.push({ is_prescription: query.isPrescription });
     }
 
+    if (query.inStock !== undefined) {
+      const outOfStockIds = Array.from({ length: 10000 }, (_, i) => (i + 1) * 7);
+      if (query.inStock === true) {
+        andConditions.push({ id: { notIn: outOfStockIds } });
+      } else if (query.inStock === false) {
+        andConditions.push({ id: { in: outOfStockIds } });
+      }
+    }
+
     if (query.manufacturer) {
       const brandList = String(query.manufacturer)
         .split(',')
