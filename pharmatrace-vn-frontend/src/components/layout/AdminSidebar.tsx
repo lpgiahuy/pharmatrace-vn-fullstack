@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Layout, Menu, Drawer } from 'antd';
 import {
   DashboardOutlined,
   TeamOutlined,
   UserOutlined,
   MedicineBoxOutlined,
+  AppstoreOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -19,11 +19,14 @@ interface AdminSidebarProps {
   isMobile: boolean;
 }
 
+const LOGO_URL = 'https://res.cloudinary.com/dc64co0el/image/upload/v1777731026/Logo_ck5ouv.svg';
+
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   collapsed,
   onCollapse,
   isMobile,
 }) => {
+  const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
@@ -35,19 +38,30 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     {
       key: '/admin',
       icon: <DashboardOutlined style={{ fontSize: 16 }} />,
-      label: <Link href="/admin">Dashboard</Link>,
+      label: 'Dashboard',
+    },
+    {
+      key: '/admin/categories',
+      icon: <AppstoreOutlined style={{ fontSize: 16 }} />,
+      label: 'Categories',
+    },
+    {
+      key: '/admin/products',
+      icon: <MedicineBoxOutlined style={{ fontSize: 16 }} />,
+      label: 'Medicines & Catalog',
     },
     {
       key: '/admin/staff',
       icon: <TeamOutlined style={{ fontSize: 16 }} />,
-      label: <Link href="/admin/staff">Staff & RBAC</Link>,
+      label: 'Staff & RBAC',
     },
     {
       key: '/admin/customers',
       icon: <UserOutlined style={{ fontSize: 16 }} />,
-      label: <Link href="/admin/customers">Customer Management</Link>,
+      label: 'Customer Management',
     },
   ];
+
 
   // Determine selected key based on current pathname
   const selectedKey =
@@ -61,14 +75,20 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     <div className="flex h-full flex-col bg-white select-none border-r border-slate-100">
       {/* Brand Header */}
       <div
-        className={`flex shrink-0 items-center gap-2.5 px-4 h-16 border-b border-slate-100 ${isCollapsed ? 'justify-center' : ''
-          }`}
+        className={`flex shrink-0 items-center gap-2.5 px-4 h-16 border-b border-slate-100 ${
+          isCollapsed ? 'justify-center px-2' : ''
+        }`}
       >
-        <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#1e4287] to-[#3b82f6] flex items-center justify-center text-white shadow-xs shrink-0">
-          <MedicineBoxOutlined className="text-xl" />
+        <div className="w-9 h-9 rounded-[8px] bg-gradient-to-tr from-[#003875] to-[#004996] flex items-center justify-center p-1.5 shadow-xs shrink-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={LOGO_URL}
+            alt="PharmaTrace VN"
+            className="w-full h-full object-contain"
+          />
         </div>
         {!isCollapsed && (
-          <span className="font-bold text-[#1e4287] text-base tracking-tight whitespace-nowrap">
+          <span className="font-display font-black text-[#004996] text-lg tracking-tight whitespace-nowrap">
             PharmaTrace VN
           </span>
         )}
@@ -89,6 +109,10 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           mode="inline"
           selectedKeys={[selectedKey]}
           items={menuItems}
+          onClick={({ key }) => {
+            if (isMobile) onCollapse();
+            router.push(key);
+          }}
           className="!border-r-0 !bg-transparent px-2"
         />
       </div>

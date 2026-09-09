@@ -2,13 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Layout, Grid } from 'antd';
+import { Layout } from 'antd';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
 import { useAuthStore } from '@/store/useAuthStore';
 
 const { Content } = Layout;
-const { useBreakpoint } = Grid;
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -21,12 +20,24 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const [mounted, setMounted] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const screens = useBreakpoint();
-
-  const isMobile = mounted ? screens.md === false : false;
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      if (mobile) {
+        setCollapsed(true);
+      } else {
+        setCollapsed(false);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
@@ -43,11 +54,13 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   }
 
   const toggleSidebar = () => {
-    setCollapsed(!collapsed);
+    setCollapsed((prev) => !prev);
   };
 
+  const sidebarWidth = isMobile ? 0 : collapsed ? 80 : 240;
+
   return (
-    <Layout className="min-h-screen bg-slate-50 font-sans w-full">
+    <Layout className="min-h-screen bg-slate-50 font-sans" hasSider>
       <AdminSidebar
         collapsed={collapsed}
         onCollapse={toggleSidebar}
@@ -55,8 +68,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       />
 
       <Layout
-        className={`transition-all duration-300 ease-in-out bg-slate-50 min-h-screen flex flex-col flex-1 w-full ${isMobile ? 'ml-0' : collapsed ? 'ml-20' : 'ml-60'
-          }`}
+        style={{
+          marginLeft: sidebarWidth,
+          transition: 'margin-left 0.2s cubic-bezier(0.2, 0, 0, 1)',
+          minHeight: '100vh',
+        }}
+        className="bg-slate-50 flex flex-col flex-1 min-w-0"
       >
         <AdminHeader
           collapsed={collapsed}
@@ -64,10 +81,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           isMobile={isMobile}
         />
 
-        <Content className="p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-64px)] w-full flex-1">
+        <Content className="p-4 sm:p-6 lg:p-6 min-h-[calc(100vh-64px)] flex-1 min-w-0">
           {children}
         </Content>
       </Layout>
     </Layout>
   );
 };
+

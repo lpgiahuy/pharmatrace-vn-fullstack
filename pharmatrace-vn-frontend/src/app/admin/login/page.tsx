@@ -135,7 +135,7 @@ export default function AdminLoginPage() {
             loading={isSubmitting}
             leftIcon={<LogIn className="w-4 h-4 mr-1" />}
             style={{ backgroundColor: '#1e4287' }}
-            className="text-white font-semibold py-3 rounded-lg mt-2 cursor-pointer shadow-sm"
+            className="text-white font-semibold py-3 rounded-[6px] mt-2 cursor-pointer shadow-xs"
           >
             Sign In to Admin Portal
           </Button>
