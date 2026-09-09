@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider, App } from "antd";
-import viVN from "antd/locale/vi_VN";
+import enUS from "antd/locale/en_US";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PharmaTrace VN - Nền Tảng Truy Xuất Nguồn Gốc & Chuỗi Cung Ứng Dược Phẩm",
-  description: "Hệ thống truy xuất nguồn gốc thuốc bằng mã kép Dual-Code QR và OTP bảo mật",
+  title: "PharmaTrace VN - Pharmaceutical Traceability & Supply Chain Platform",
+  description: "Pharmaceutical traceability platform with Dual-Code QR and secure OTP verification",
 };
 
 export default function RootLayout({
@@ -15,19 +15,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="en">
       <body>
         <AntdRegistry>
           <ConfigProvider
-            locale={viVN}
+            locale={enUS}
             theme={{
               token: {
-                colorPrimary: "#004996",
+                colorPrimary: "#1e4287",
                 colorSuccess: "#00A551",
                 colorWarning: "#f7941d",
                 colorError: "#ed1c24",
-                borderRadius: 8,
+                borderRadius: 6,
                 fontFamily: "'Be Vietnam Pro', 'Inter', sans-serif",
+              },
+              components: {
+                Button: {
+                  boxShadow: "none",
+                  boxShadowSecondary: "none",
+                  primaryShadow: "none",
+                },
               },
             }}
           >

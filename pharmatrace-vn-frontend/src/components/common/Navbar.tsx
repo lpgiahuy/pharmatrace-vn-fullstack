@@ -40,21 +40,21 @@ export const Navbar: React.FC = () => {
     { type: 'divider' },
     ...(user?.role && ['SuperAdmin', 'Admin', 'STORE_MANAGER'].includes(user.role)
       ? [
-          {
-            key: 'admin',
-            icon: <DashboardOutlined />,
-            label: <Link href="/admin">Admin Portal</Link>,
-          },
-        ]
+        {
+          key: 'admin',
+          icon: <DashboardOutlined />,
+          label: <Link href="/admin">Admin Portal</Link>,
+        },
+      ]
       : []),
     ...(user?.role && ['QuanLyKho', 'NhanVienKho', 'WAREHOUSE_MANAGER', 'WAREHOUSE_STAFF'].includes(user.role)
       ? [
-          {
-            key: 'warehouse',
-            icon: <DashboardOutlined />,
-            label: <Link href="/warehouse">Warehouse Portal</Link>,
-          },
-        ]
+        {
+          key: 'warehouse',
+          icon: <DashboardOutlined />,
+          label: <Link href="/warehouse">Warehouse Portal</Link>,
+        },
+      ]
       : []),
     {
       key: 'logout',

@@ -2,9 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import {
-  Search,
   ShoppingCart,
   User,
   Menu,
@@ -15,30 +14,39 @@ import {
   Phone,
   Smartphone,
   ChevronDown,
-  QrCode,
+  Flame,
+  Search,
 } from 'lucide-react';
 import { useAuth } from '@/store/useAuthStore';
+import { categoryService } from '@/services/category.service';
+import { Category } from '@/types/category.types';
+import { CategoryIcon } from '@/components/common/CategoryIcon';
 
 const Logo = "https://res.cloudinary.com/dc64co0el/image/upload/v1777731026/Logo_ck5ouv.svg";
 
 const NAV_LINKS = [
-  { label: 'Thuốc Kê Đơn', href: '/products' },
-  { label: 'Góc Sức Khỏe', href: '/blog' },
-  { label: 'Thực Phẩm Chức Năng', href: '/products' },
-  { label: 'Mẹ & Bé', href: '/products' },
-  { label: 'Tra Cứu Nguồn Gốc (QR)', href: '/trace' },
+  { label: 'Medications', href: '/products' },
+  { label: 'Health Library', href: '/products' },
+  { label: 'Supplements', href: '/products' },
+  { label: 'Mom & Baby', href: '/products' },
+  { label: 'PharmaTrace VN Brands', href: '/products' },
 ];
 
 export const Header: React.FC = () => {
   const [searchVal, setSearchVal] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     setMounted(true);
+    categoryService.getCategories().then((res) => {
+      if (res?.data) {
+        setCategories(res.data.filter((c) => !c.parentId));
+      }
+    });
   }, []);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -50,80 +58,123 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 shadow-sm">
-      {/* Top Utility Bar */}
-      <div className="bg-white border-b border-slate-100 py-1.5 hidden md:block">
-        <div className="max-w-[1440px] mx-auto px-4 flex items-center justify-between text-[11px] font-bold text-slate-500">
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 hover:text-[#004996] cursor-pointer transition-colors uppercase">
-              <Smartphone className="w-3.5 h-3.5" /> Tải ứng dụng PharmaTrace
-            </span>
-            <div className="h-3 w-px bg-slate-200" />
-            <div className="flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5" />
-              <span className="uppercase">Hotline Tư Vấn:</span>
-              <span className="font-black text-slate-900">1800 6821</span>
-            </div>
+    <header className="sticky top-0 z-40 shadow-xs">
+      {/* Top Utility Bar (100% replica of Photo 4 - single evenly-spaced bar across full width) */}
+      <div className="bg-white border-b border-slate-100 py-2 hidden md:block">
+        <div className="max-w-[1440px] mx-auto px-4 flex items-center justify-between gap-2 text-[11px] font-bold text-slate-500 tracking-wide overflow-x-auto no-scrollbar">
+          <Link
+            href="/products"
+            className="flex items-center gap-1.5 !text-slate-500 hover:text-[#004996] transition-colors uppercase whitespace-nowrap shrink-0"
+          >
+            <Smartphone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span>DOWNLOAD OUR APP</span>
+          </Link>
+          <div className="h-3 w-px bg-slate-200 shrink-0" />
+          <div className="flex items-center gap-1.5 whitespace-nowrap text-slate-500 shrink-0">
+            <Phone className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span className="uppercase">SUPPORT HOTLINE</span>
+            <span className="font-black text-slate-900 ml-0.5">1800 6821</span>
           </div>
-
-          <div className="flex items-center gap-4">
-            <Link
-              href="/trace"
-              className="flex items-center gap-1.5 text-[#004996] font-extrabold hover:underline uppercase"
-            >
-              <QrCode className="w-3.5 h-3.5" /> Tra cứu Nguồn gốc Dual-Code
-              <span className="px-1.5 py-0.5 rounded-sm bg-[#00A551] text-white text-[8px] font-black leading-none">
-                HOT
-              </span>
-            </Link>
-            <div className="h-3 w-px bg-slate-200" />
-            <Link
-              href="/blog"
-              className="flex items-center gap-1.5 hover:text-[#004996] transition-colors uppercase"
-            >
-              <Heart className="w-3.5 h-3.5 text-[#ed1c24]" /> Góc Sức Khỏe
-            </Link>
-            <div className="h-3 w-px bg-slate-200" />
-            <span className="flex items-center gap-1.5 hover:text-[#004996] cursor-pointer transition-colors uppercase">
-              <MapPin className="w-3.5 h-3.5 text-[#004996]" /> Hệ Thống Nhà Thuốc
+          <div className="h-3 w-px bg-slate-200 shrink-0" />
+          <Link
+            href="/products"
+            className="flex items-center gap-1.5 !text-slate-500 hover:text-[#004996] transition-colors uppercase whitespace-nowrap shrink-0"
+          >
+            <span>CORPORATE / B2B</span>
+            <span className="px-1.5 py-0.5 rounded-xs bg-[#00A551] text-white text-[8px] font-black leading-none">
+              NEW
             </span>
-          </div>
+          </Link>
+          <div className="h-3 w-px bg-slate-200 shrink-0" />
+          <Link
+            href="/products"
+            className="flex items-center gap-1.5 !text-slate-500 hover:text-[#004996] transition-colors uppercase whitespace-nowrap shrink-0"
+          >
+            <span>MONTHLY SAVINGS</span>
+            <Flame className="w-3.5 h-3.5 text-orange-500 fill-orange-500 shrink-0" />
+          </Link>
+          <div className="h-3 w-px bg-slate-200 shrink-0" />
+          <Link
+            href="/products"
+            className="flex items-center gap-1.5 !text-slate-500 hover:text-[#004996] transition-colors uppercase whitespace-nowrap shrink-0"
+          >
+            <span>TRACK ORDER</span>
+            <span className="px-1.5 py-0.5 rounded-xs bg-[#004996] text-white text-[8px] font-black leading-none">
+              NEW
+            </span>
+          </Link>
+          <div className="h-3 w-px bg-slate-200 shrink-0" />
+          <Link
+            href="/products"
+            className="flex items-center gap-1.5 !text-slate-500 hover:text-[#004996] transition-colors uppercase whitespace-nowrap shrink-0"
+          >
+            <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 shrink-0" />
+            <span>HEALTH BLOG</span>
+          </Link>
+          <div className="h-3 w-px bg-slate-200 shrink-0" />
+          <Link
+            href="/products"
+            className="flex items-center gap-1.5 !text-slate-500 hover:text-[#004996] transition-colors uppercase whitespace-nowrap shrink-0"
+          >
+            <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span>PHARMACIES</span>
+          </Link>
         </div>
       </div>
 
-      {/* Main Header — Pharmacity Blue */}
-      <div className="bg-[#004996] border-b border-[#004084] shadow-md">
+      {/* Main Header — Solid Brand Blue (#004996) */}
+      <div className="bg-[#004996] border-b border-[#003b7a] shadow-md">
         <div className="max-w-[1440px] mx-auto px-4">
-          <div className="flex items-center gap-6 h-[64px] justify-between">
-            {/* Logo & Brand Name */}
-            <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-2.5 shrink-0">
-                <img
-                  src={Logo}
-                  alt="PharmaTrace VN Logo"
-                  className="h-10 w-auto object-contain bg-white rounded-lg p-1"
-                />
-                <div className="hidden lg:block">
-                  <span className="text-[18px] font-bold text-white block leading-none tracking-tight">
+          <div className="flex items-center gap-6 h-[60px] justify-between">
+            {/* Left: Logo + Categories dropdown + Nav Links */}
+            <div className="flex items-center gap-5">
+              {/* Logo */}
+              <Link href="/products" className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={Logo} alt="Logo" className="h-8 sm:h-9 w-auto object-contain shrink-0" />
+                <div className="flex flex-col">
+                  <span className="text-[15px] sm:text-[18px] font-display font-black text-white block leading-none tracking-tight">
                     PharmaTrace VN
                   </span>
-                  <span className="text-[9px] text-white/70 font-bold tracking-[0.2em] uppercase mt-0.5 block">
-                    Supply Chain Transparency
+                  <span className="text-[8px] sm:text-[9px] text-white/90 font-bold tracking-[0.18em] uppercase mt-0.5 block">
+                    Health & Care
                   </span>
                 </div>
               </Link>
 
-              {/* Navigation Links */}
-              <nav className="hidden xl:flex items-center gap-1">
+              {/* Categories Dropdown */}
+              <div className="relative group">
+                <button
+                  type="button"
+                  className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-md text-sm font-bold transition-all whitespace-nowrap shrink-0 border border-white/20 cursor-pointer"
+                >
+                  <Menu className="w-4 h-4 text-white" />
+                  <span className="text-white">Categories</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-white opacity-80" />
+                </button>
+
+                {/* Dropdown Menu */}
+                <div className="absolute left-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50 max-h-96 overflow-y-auto">
+                  {categories.map((cat) => (
+                    <Link
+                      key={cat.id}
+                      href={`/products?category=${cat.id}`}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm !text-black hover:bg-slate-100 hover:!text-black font-bold transition-colors"
+                    >
+                      <CategoryIcon icon={cat.icon || 'category'} size={16} />
+                      <span className="flex-1 truncate !text-black">{cat.categoryName}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* Nav links (Crisp white text with compact padding to prevent overlap) */}
+              <nav className="hidden xl:flex items-center gap-0.5">
                 {NAV_LINKS.map((link) => (
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`text-[14px] font-bold px-3 py-1.5 rounded-lg transition-all whitespace-nowrap ${
-                      pathname === link.href
-                        ? 'bg-white/20 text-white'
-                        : 'text-white/90 hover:text-white hover:bg-white/10'
-                    }`}
+                    className="text-[13px] font-bold !text-white hover:text-green-300 px-2.5 py-1 rounded-lg hover:bg-white/10 transition-all whitespace-nowrap"
                   >
                     {link.label}
                   </Link>
@@ -131,99 +182,171 @@ export const Header: React.FC = () => {
               </nav>
             </div>
 
-            {/* Center Search Bar */}
-            <form onSubmit={handleSearch} className="flex-1 max-w-md hidden md:flex items-center relative">
-              <input
-                type="text"
-                placeholder="Tìm kiếm thuốc, thực phẩm chức năng, thiết bị y tế..."
-                value={searchVal}
-                onChange={(e) => setSearchVal(e.target.value)}
-                className="w-full pl-4 pr-10 py-2 rounded-full border-none bg-white text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-inner"
-              />
+            {/* Right: Notification, User Account, Cart, Mobile Menu Toggle */}
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               <button
-                type="submit"
-                className="absolute right-1 top-1/2 -translate-y-1/2 bg-[#004996] hover:bg-[#004084] text-white p-1.5 rounded-full transition-colors"
+                type="button"
+                className="p-1.5 text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer"
+                title="Notifications"
               >
-                <Search className="w-4 h-4" />
+                <Bell className="w-4 h-4 text-white" />
               </button>
-            </form>
 
-            {/* Right Action Icons */}
-            <div className="flex items-center gap-2 shrink-0">
-              <Link href="/trace">
-                <button className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all shadow-sm">
-                  <QrCode className="w-4 h-4" />
-                  <span>Tra Cứu QR</span>
-                </button>
-              </Link>
-
-              {mounted && isAuthenticated ? (
+              {mounted && isAuthenticated && user ? (
                 <div className="relative group">
-                  <button className="flex items-center gap-2 px-3 py-1.5 text-white hover:bg-white/10 rounded-xl transition-all">
-                    <User className="w-5 h-5" />
-                    <span className="text-[13px] font-bold hidden md:block max-w-[100px] truncate">
-                      {user?.fullName || user?.name || 'Tài khoản'}
+                  <button
+                    type="button"
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer"
+                  >
+                    <User className="w-4 h-4 text-white shrink-0" />
+                    <span className="text-xs font-bold text-white hidden xl:block max-w-[120px] truncate">
+                      Welcome {user.fullName || user.name || user.email || 'User'}
                     </span>
-                    <ChevronDown className="w-3.5 h-3.5 opacity-70" />
                   </button>
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all z-50">
+
+                  <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
                     <div className="px-4 py-2 border-b border-slate-100">
-                      <p className="text-[10px] text-slate-400 font-bold uppercase">Đã đăng nhập</p>
-                      <p className="text-sm font-bold text-[#004996] truncate">{user?.email}</p>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider m-0">Signed in as</p>
+                      <p className="text-sm font-bold text-[#004996] truncate m-0 mt-0.5">
+                        {user.fullName || user.name || user.email}
+                      </p>
                     </div>
-                    <Link href="/account/profile" className="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 font-medium">
-                      Hồ sơ cá nhân
-                    </Link>
-                    <Link href="/account/orders" className="block px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 font-medium">
-                      Đơn hàng của tôi
-                    </Link>
-                    {['SuperAdmin', 'Admin', 'QuanLyCuaHang'].includes(user?.role || '') && (
-                      <Link href="/admin" className="block px-4 py-2 text-sm text-[#004996] font-bold hover:bg-blue-50">
-                        Trang Admin ERP
-                      </Link>
-                    )}
-                    {['QuanLyKho', 'NhanVienKho'].includes(user?.role || '') && (
-                      <Link href="/warehouse" className="block px-4 py-2 text-sm font-bold text-amber-600 hover:bg-amber-50">
-                        Trang WMS Kho hàng
-                      </Link>
-                    )}
                     <button
+                      type="button"
                       onClick={logout}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-bold border-t border-slate-100 mt-1"
+                      className="w-full text-left px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 cursor-pointer"
                     >
-                      Đăng xuất
+                      Logout
                     </button>
                   </div>
                 </div>
               ) : (
                 <Link
                   href="/login"
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-white hover:bg-white/10 rounded-xl transition-all"
+                  className="flex items-center gap-1.5 px-2.5 py-1 text-white hover:bg-white/10 rounded-xl transition-all"
                 >
-                  <User className="w-5 h-5" />
-                  <span className="text-[13px] font-bold hidden md:block">Đăng nhập</span>
+                  <User className="w-4 h-4 text-white shrink-0" />
+                  <span className="text-xs font-bold text-white hidden xl:block">Login</span>
                 </Link>
               )}
 
               <Link
-                href="/cart"
-                className="relative flex items-center gap-1.5 px-3 py-1.5 text-white hover:bg-white/10 rounded-xl transition-all"
+                href="/products"
+                className="flex items-center gap-1.5 px-2.5 py-1 text-white hover:bg-white/10 rounded-xl transition-all"
               >
-                <ShoppingCart className="w-5 h-5" />
-                <span className="text-[13px] font-bold hidden md:block">Giỏ hàng</span>
+                <ShoppingCart className="w-4 h-4 text-white shrink-0" />
+                <span className="text-xs font-bold text-white hidden xl:block">Cart</span>
               </Link>
 
-              {/* Mobile menu button */}
+              {/* Mobile Hamburger Toggle Button */}
               <button
+                type="button"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-white hover:bg-white/10 rounded-xl xl:hidden"
+                className="lg:hidden p-2 text-white hover:bg-white/10 rounded-xl transition-colors cursor-pointer ml-1"
+                aria-label="Toggle mobile menu"
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </div>
         </div>
+
+        {/* Mobile Search Row */}
+        <div className="lg:hidden px-4 pb-2.5 pt-0.5">
+          <form onSubmit={handleSearch} className="relative w-full">
+            <input
+              type="text"
+              value={searchVal}
+              onChange={(e) => setSearchVal(e.target.value)}
+              placeholder="Search medicines, vitamins, care products..."
+              className="w-full bg-white/95 text-slate-800 text-xs rounded-lg pl-8 pr-4 py-2 border border-white/20 outline-none placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-blue-300 transition-all shadow-inner"
+            />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+          </form>
+        </div>
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+
+          {/* Drawer Content */}
+          <div className="fixed inset-y-0 right-0 max-w-xs w-full bg-white shadow-2xl p-5 overflow-y-auto flex flex-col z-10 animate-slide-left">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={Logo} alt="Logo" className="h-7 w-auto object-contain" />
+                <span className="text-base font-bold text-[#004996]">PharmaTrace VN</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Navigation links */}
+            <div className="py-4 border-b border-slate-100 space-y-1">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-2">Navigation</p>
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-3 py-2 text-sm font-bold text-slate-700 hover:bg-blue-50 hover:text-[#004996] rounded-xl transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* Categories in Drawer */}
+            <div className="py-4 border-b border-slate-100 flex-1">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-2">Categories</p>
+              <div className="space-y-1 max-h-64 overflow-y-auto pr-1">
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    href={`/products?category=${cat.id}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-blue-50 hover:text-[#004996] rounded-xl transition-colors"
+                  >
+                    <CategoryIcon icon={cat.icon || 'category'} size={14} />
+                    <span className="truncate">{cat.categoryName}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Bottom Support / Login */}
+            <div className="pt-4 space-y-2">
+              <Link
+                href="/products"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 text-xs font-semibold text-slate-600 px-3 py-1.5"
+              >
+                <Phone className="w-3.5 h-3.5 text-[#00A551]" />
+                <span>Support: 1800 6821</span>
+              </Link>
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-[#004996] text-white font-bold text-xs shadow-xs"
+              >
+                <User className="w-4 h-4" />
+                <span>Account Login</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

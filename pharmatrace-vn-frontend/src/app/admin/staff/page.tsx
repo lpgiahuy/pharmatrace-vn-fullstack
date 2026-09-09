@@ -35,13 +35,14 @@ import {
   HomeOutlined,
 } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
-import { AdminLayout } from '@/components/layout/AdminLayout';
 import {
   employeeService,
   Employee,
   EmployeeQuery,
 } from '@/services/employee.service';
 import { facilityService } from '@/services/facility.service';
+import { apiClient } from '@/services/api.client';
+import { cn } from '@/utils';
 
 const ROLES_OPTIONS = [
   { value: 'SUPER_ADMIN', label: 'Super Admin', color: 'red' },
@@ -75,28 +76,56 @@ const ROLE_MAP: Record<string, { label: string; color: string }> = {
 const getRoleBadge = (roleStr: string) => {
   const normalized = (roleStr || '').toUpperCase().replace(/[\s_-]/g, '');
   const matched = ROLE_MAP[normalized] || ROLE_MAP[roleStr?.toUpperCase()];
-  if (matched) {
-    return <Tag color={matched.color} className="rounded-full px-3">{matched.label}</Tag>;
-  }
-  return <Tag color="default" className="rounded-full px-3">{roleStr || 'Staff'}</Tag>;
+  return (
+    <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded-[6px] border border-slate-200/60 inline-block">
+      {matched?.label || roleStr || 'Staff'}
+    </span>
+  );
 };
+
+const GOOGLE_AVATAR_COLORS = [
+  '#1a73e8',
+  '#ea4335',
+  '#34a853',
+  '#f29900',
+  '#9334e6',
+  '#12b5cb',
+  '#e52592',
+  '#00897b',
+  '#5c6bc0',
+  '#8e24aa',
+];
+
+function getAvatarColor(str?: string): string {
+  if (!str) return GOOGLE_AVATAR_COLORS[0];
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % GOOGLE_AVATAR_COLORS.length;
+  return GOOGLE_AVATAR_COLORS[index];
+}
 
 const UserAvatar: React.FC<{ name?: string; email?: string; size?: 'normal' | 'large' }> = ({
   name,
   email,
   size = 'normal',
 }) => {
-  const initials = (name || email || 'U')
+  const identifier = name || email || 'U';
+  const initials = identifier
     .split(' ')
+    .filter(Boolean)
     .map((n) => n[0])
     .slice(0, 2)
     .join('')
     .toUpperCase();
 
-  const dimensionClass = size === 'large' ? 'w-14 h-14 text-base' : 'w-9 h-9 text-xs';
+  const bg = getAvatarColor(identifier);
+  const sizeClass = size === 'large' ? 'w-12 h-12 text-base font-bold' : 'w-8 h-8 text-xs font-bold';
   return (
     <div
-      className={`${dimensionClass} rounded-full bg-[#1e4287] text-white font-bold flex items-center justify-center shadow-sm shrink-0`}
+      style={{ backgroundColor: bg }}
+      className={`${sizeClass} rounded-full text-white flex items-center justify-center shrink-0 select-none shadow-xs`}
     >
       {initials}
     </div>
@@ -160,55 +189,31 @@ export default function StaffManagementPage() {
           page,
           limit,
           search: searchVal ? searchVal.trim() : undefined,
-          role: roleFilter,
-          facilityId: facilityFilter,
-          status: statusFilter,
+          role: roleFilter || undefined,
+          facilityId: facilityFilter !== undefined ? facilityFilter : undefined,
+          status: statusFilter || undefined,
         };
         const res = await employeeService.getEmployees(query);
-        if (res && res.data) {
-          setEmployees(res.data);
-          setPagination({
-            current: res.pagination.page,
-            pageSize: res.pagination.limit,
-            total: res.pagination.total,
-          });
-
-          const collectedFacs: Array<{ value: number; label: string }> = [];
-          const seenIds = new Set<number>();
-          res.data.forEach((e) => {
-            if (e.facilityId && !seenIds.has(e.facilityId)) {
-              seenIds.add(e.facilityId);
-              const facName = e.facility?.name || `Facility #${e.facilityId}`;
-              collectedFacs.push({
-                value: e.facilityId,
-                label: facName,
-              });
-            }
-          });
-          if (collectedFacs.length > 0) {
-            setFacilityOptions(collectedFacs);
-          }
-
-          // Update viewing employee if open
-          if (viewingEmployeeRef.current) {
-            const updatedView = res.data.find((e) => e.id === viewingEmployeeRef.current?.id);
-            if (updatedView) setViewingEmployee(updatedView);
-          }
-        }
+        setEmployees(res.data);
+        setPagination({
+          current: res.pagination.page,
+          pageSize: res.pagination.limit,
+          total: res.pagination.total,
+        });
       } catch (err: any) {
         messageApi.error(err?.message || 'Failed to fetch employees');
       } finally {
         setLoading(false);
       }
     },
-    [searchVal, roleFilter, facilityFilter, statusFilter, messageApi]
+    [searchVal, roleFilter, facilityFilter, statusFilter, messageApi],
   );
 
   useEffect(() => {
     if (mounted && isAuthenticated) {
-      fetchEmployees(1, 10);
+      fetchEmployees(pagination.current, pagination.pageSize);
     }
-  }, [mounted, isAuthenticated, fetchEmployees]);
+  }, [mounted, isAuthenticated, fetchEmployees, pagination.current, pagination.pageSize]);
 
   useEffect(() => {
     const fetchFacilities = async () => {
@@ -240,11 +245,13 @@ export default function StaffManagementPage() {
     setRoleFilter(undefined);
     setFacilityFilter(undefined);
     setStatusFilter(undefined);
-    fetchEmployees(1, pagination.pageSize);
+    setTimeout(() => {
+      fetchEmployees(1, pagination.pageSize);
+    }, 0);
   };
 
-  const openModal = (emp: Employee | null = null) => {
-    setEditingEmployee(emp);
+  const openModal = (emp?: Employee) => {
+    setEditingEmployee(emp || null);
     if (emp) {
       form.setFieldsValue({
         fullName: emp.fullName,
@@ -256,8 +263,7 @@ export default function StaffManagementPage() {
     } else {
       form.resetFields();
       form.setFieldsValue({
-        role: 'SALES_STAFF',
-        facilityId: 1,
+        role: 'WAREHOUSE_STAFF',
         status: true,
       });
     }
@@ -329,13 +335,13 @@ export default function StaffManagementPage() {
     {
       title: 'Staff Member',
       key: 'name',
-      width: 170,
+      width: 220,
       render: (_: any, row: Employee) => (
         <div className="flex items-center gap-3">
           <UserAvatar name={row.fullName} email={row.email} />
           <div className="min-w-0">
-            <p className="font-semibold text-sm text-slate-800 m-0 truncate">{row.fullName}</p>
-            <p className="text-xs text-slate-500 font-mono m-0 truncate">{row.email}</p>
+            <p className="font-semibold text-sm text-slate-900 m-0 truncate">{row.fullName}</p>
+            <p className="text-xs text-slate-500 font-mono m-0 truncate mt-0.5">{row.email}</p>
           </div>
         </div>
       ),
@@ -344,22 +350,22 @@ export default function StaffManagementPage() {
       title: 'System Role',
       dataIndex: 'role',
       key: 'role',
-      width: 150,
+      width: 160,
       render: (role: string) => getRoleBadge(role),
     },
     {
       title: 'Assigned Facility',
       key: 'facility',
-      width: 180,
+      width: 200,
       render: (_: any, row: Employee) => {
         const facName = row.facility?.name || `Facility #${row.facilityId}`;
-        return <Tag color="blue" className="max-w-[160px] truncate">{facName}</Tag>;
+        return <span className="text-sm text-slate-800 truncate block max-w-[200px] font-medium">{facName}</span>;
       },
     },
     {
       title: 'Status',
       key: 'status',
-      width: 120,
+      width: 130,
       render: (_: any, row: Employee) => {
         const isActive = row.status === 'ACTIVE';
         const isSelf = row.id === currentUser?.id;
@@ -373,10 +379,7 @@ export default function StaffManagementPage() {
                 onChange={() => handleStatusToggle(row)}
               />
             </Tooltip>
-            <span
-              className={`text-xs font-semibold ${isActive ? 'text-emerald-600' : 'text-rose-500'
-                }`}
-            >
+            <span className={cn('text-sm font-medium', isActive ? 'text-emerald-600' : 'text-slate-400')}>
               {isActive ? 'Active' : 'Disabled'}
             </span>
           </div>
@@ -386,17 +389,16 @@ export default function StaffManagementPage() {
     {
       title: 'Details',
       key: 'details',
-      width: 90,
+      width: 100,
       align: 'center' as const,
       render: (_: any, row: Employee) => (
-        <Tooltip title="View Profile & Actions">
-          <AButton
-            size="small"
-            icon={<EyeOutlined />}
-            onClick={() => openDetailModal(row)}
-            className="!shadow-none"
-          />
-        </Tooltip>
+        <button
+          type="button"
+          onClick={() => openDetailModal(row)}
+          className="px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-[6px] transition-colors border border-slate-200 bg-white cursor-pointer"
+        >
+          Details
+        </button>
       ),
     },
   ];
@@ -406,89 +408,113 @@ export default function StaffManagementPage() {
   }
 
   return (
-    <AdminLayout>
+    <>
       {contextHolder}
 
-      <div className="space-y-4 sm:space-y-6">
-        {/* Header Action Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 !rounded-md shadow-sm border border-slate-100">
+      <div className="space-y-5 animate-fade-in font-sans w-full">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 m-0 flex items-center gap-2">
-              <TeamOutlined className="text-[#1e4287]" /> Staff & Access Permissions
-            </h2>
-            <p className="text-slate-500 text-xs sm:text-sm m-0 mt-1">
-              Manage user directory, system authorization, and facility assignments
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 m-0 tracking-tight">
+              Staff & RBAC
+            </h1>
+            <p className="text-slate-500 text-sm m-0 mt-0.5">
+              User directory, roles authorization, and facility assignments ({pagination.total} total)
             </p>
           </div>
-          <AButton
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => openModal()}
-            size="large"
-            className="bg-[#1e4287] hover:bg-[#153166] font-semibold w-full sm:w-auto !shadow-none"
-          >
-            Add Staff Member
-          </AButton>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => fetchEmployees(pagination.current, pagination.pageSize)}
+              disabled={loading}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+            >
+              <ReloadOutlined className={cn(loading && 'animate-spin')} />
+              Refresh
+            </button>
+            <button
+              type="button"
+              onClick={() => openModal()}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] bg-[#1e4287] hover:bg-[#163266] text-white text-sm font-medium transition-colors cursor-pointer border-none shadow-xs"
+            >
+              <PlusOutlined />
+              Add Staff Member
+            </button>
+          </div>
         </div>
 
         {/* Filter Controls Bar */}
-        <Card className="shadow-sm !rounded-md border-slate-100" styles={{ body: { padding: '16px' } }}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="bg-white p-4 rounded-[6px] border border-slate-200/80 shadow-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
             <Input
               placeholder="Search by name or email"
-              prefix={<SearchOutlined className="text-slate-400" />}
+              prefix={<SearchOutlined className="text-slate-400 text-sm" />}
               value={searchVal}
               onChange={(e) => setSearchVal(e.target.value)}
               onPressEnter={handleSearchClick}
               allowClear
+              className="rounded-[6px] text-sm h-10"
             />
 
             <Select
-              placeholder="Filter by System Role"
+              placeholder="System Role"
               value={roleFilter}
               onChange={(val) => setRoleFilter(val)}
               allowClear
+              className="text-sm h-10"
               options={ROLES_OPTIONS.map((r) => ({ value: r.value, label: r.label }))}
             />
 
             <Select
-              placeholder="Filter by Facility"
+              placeholder="Assigned Facility"
               value={facilityFilter}
               onChange={(val) => setFacilityFilter(val)}
               allowClear
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              className="text-sm h-10"
               options={facilityOptions}
             />
 
             <Select
-              placeholder="Filter by Status"
+              placeholder="Account Status"
               value={statusFilter}
               onChange={(val) => setStatusFilter(val)}
               allowClear
+              className="text-sm h-10"
               options={STATUS_OPTIONS}
             />
 
-            <div className="flex gap-2 sm:col-span-2 md:col-span-3 lg:col-span-1">
-              <AButton
-                type="primary"
-                icon={<SearchOutlined />}
+            <div className="flex gap-2">
+              <button
+                type="button"
                 onClick={handleSearchClick}
-                className="bg-[#1e4287] flex-1 !shadow-none"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[6px] bg-[#1e4287] hover:bg-[#163266] text-white text-sm font-medium transition-colors cursor-pointer border-none shadow-xs h-10"
               >
+                <SearchOutlined />
                 Search
-              </AButton>
-              <AButton icon={<ReloadOutlined />} onClick={handleResetFilters} className="!shadow-none">
-                Reset
-              </AButton>
+              </button>
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                className="px-3 py-2 border border-slate-200 rounded-[6px] text-slate-500 hover:bg-slate-50 text-sm transition-colors bg-white cursor-pointer h-10"
+                title="Reset Filters"
+              >
+                <ReloadOutlined />
+              </button>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Mobile View: Compact Card List (< 640px) */}
         <div className="block sm:hidden space-y-3">
           {loading ? (
-            <Card className="!rounded-md text-center py-6 text-slate-500">Loading staff directory...</Card>
+            <Card className="!rounded-[6px] text-center py-6 text-slate-500">Loading staff directory...</Card>
           ) : employees.length === 0 ? (
-            <Card className="!rounded-md text-center py-6 text-slate-500">No staff members found.</Card>
+            <Card className="!rounded-[6px] text-center py-6 text-slate-500">No staff members found.</Card>
           ) : (
             employees.map((row) => {
               const isActive = row.status === 'ACTIVE';
@@ -496,33 +522,30 @@ export default function StaffManagementPage() {
               return (
                 <Card
                   key={row.id}
-                  className="shadow-sm !rounded-md border-slate-100 hover:border-blue-200 transition-all cursor-pointer"
+                  className="shadow-xs !rounded-[6px] border-slate-200/80 hover:border-slate-300 transition-all cursor-pointer"
                   styles={{ body: { padding: '14px' } }}
-                // onClick={() => openDetailModal(row)}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <UserAvatar name={row.fullName} email={row.email} />
                       <div className="min-w-0">
-                        <p className="font-bold text-sm text-slate-900 m-0 truncate">{row.fullName}</p>
+                        <p className="font-semibold text-sm text-slate-900 m-0 truncate">{row.fullName}</p>
                         <div className="mt-1 flex items-center gap-2">
                           {getRoleBadge(row.role)}
                         </div>
                       </div>
                     </div>
 
-                    <AButton
-                      type="default"
-                      size="small"
-                      icon={<EyeOutlined />}
+                    <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         openDetailModal(row);
                       }}
-                      className="bg-blue-50 text-[#1e4287] border-blue-200 font-medium shrink-0 !shadow-none"
+                      className="px-2.5 py-1 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-[6px] transition-colors border border-slate-200 bg-white cursor-pointer shrink-0"
                     >
                       Details
-                    </AButton>
+                    </button>
                   </div>
 
                   <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
@@ -536,7 +559,7 @@ export default function StaffManagementPage() {
                           onChange={() => handleStatusToggle(row)}
                         />
                       </Tooltip>
-                      <span className={`font-semibold ${isActive ? 'text-emerald-600' : 'text-rose-500'}`}>
+                      <span className={`font-medium ${isActive ? 'text-emerald-600' : 'text-slate-400'}`}>
                         {isActive ? 'Active' : 'Disabled'}
                       </span>
                     </div>
@@ -556,10 +579,10 @@ export default function StaffManagementPage() {
               onChange={(page, pageSize) => fetchEmployees(page, pageSize)}
               itemRender={(_page, type, originalElement) => {
                 if (type === 'prev') {
-                  return <span className="px-1 text-slate-600 text-sm font-medium">&lt; Previous</span>;
+                  return <span className="px-1 text-slate-600 text-xs font-medium">&lt; Prev</span>;
                 }
                 if (type === 'next') {
-                  return <span className="px-1 text-[#1e4287] text-sm font-medium">Next &gt;</span>;
+                  return <span className="px-1 text-[#1e4287] text-xs font-medium">Next &gt;</span>;
                 }
                 return originalElement;
               }}
@@ -568,7 +591,7 @@ export default function StaffManagementPage() {
         </div>
 
         {/* Desktop & Tablet View: Full Table (>= 640px) */}
-        <Card className="hidden sm:block shadow-sm !rounded-md border-slate-100 overflow-hidden" styles={{ body: { padding: 0 } }}>
+        <Card className="hidden sm:block shadow-xs !rounded-[6px] border-slate-200/80 overflow-hidden" styles={{ body: { padding: 0 } }}>
           <Table
             dataSource={employees}
             columns={columns}
@@ -582,10 +605,10 @@ export default function StaffManagementPage() {
               onChange: (page, pageSize) => fetchEmployees(page, pageSize),
               itemRender: (_page, type, originalElement) => {
                 if (type === 'prev') {
-                  return <span className="px-1 text-slate-600 text-sm font-medium">&lt; Previous</span>;
+                  return <span className="px-1 text-slate-600 text-xs font-medium">&lt; Previous</span>;
                 }
                 if (type === 'next') {
-                  return <span className="px-1 text-[#1e4287] text-sm font-medium">Next &gt;</span>;
+                  return <span className="px-1 text-[#1e4287] text-xs font-medium">Next &gt;</span>;
                 }
                 return originalElement;
               },
@@ -599,18 +622,18 @@ export default function StaffManagementPage() {
       {viewingEmployee && (
         <Modal
           title={
-            <div className="font-bold text-lg text-slate-900 flex items-center gap-2">
+            <div className="font-semibold text-base text-slate-900 flex items-center gap-2">
               <UserOutlined className="text-[#1e4287]" /> Staff Member Profile
             </div>
           }
           open={detailModalOpen}
           onCancel={() => setDetailModalOpen(false)}
           footer={
-            <div className="flex items-center justify-between gap-2 pt-2">
+            <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
               {viewingEmployee.id === currentUser?.id ? (
                 <Tooltip title="Cannot delete your own account">
                   <span>
-                    <AButton size="small" danger icon={<DeleteOutlined />} disabled className="shadow-none">
+                    <AButton size="small" danger icon={<DeleteOutlined />} disabled className="rounded-[6px] text-xs shadow-none">
                       Delete Member
                     </AButton>
                   </span>
@@ -624,7 +647,7 @@ export default function StaffManagementPage() {
                   cancelText="Cancel"
                   okButtonProps={{ danger: true, size: 'small' }}
                 >
-                  <AButton size="small" danger icon={<DeleteOutlined />} className="shadow-none">
+                  <AButton size="small" danger icon={<DeleteOutlined />} className="rounded-[6px] text-xs shadow-none">
                     Delete Member
                   </AButton>
                 </Popconfirm>
@@ -638,21 +661,21 @@ export default function StaffManagementPage() {
                   setDetailModalOpen(false);
                   openModal(viewingEmployee);
                 }}
-                className="bg-[#1e4287] hover:bg-[#153166] font-semibold !shadow-none border-0"
+                className="bg-[#1e4287] hover:bg-[#153166] font-medium text-xs rounded-[6px] !shadow-none border-0"
               >
                 Edit Profile
               </AButton>
             </div>
           }
           centered
-          width={520}
+          width={500}
         >
-          <div className="py-4 space-y-6">
+          <div className="py-2 space-y-4">
             {/* Header Profile Summary */}
-            <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+            <div className="flex items-center gap-3.5 bg-slate-50/70 p-3.5 rounded-[6px] border border-slate-200/70">
               <UserAvatar name={viewingEmployee.fullName} email={viewingEmployee.email} size="large" />
               <div className="min-w-0">
-                <h3 className="font-bold text-base text-slate-900 m-0 truncate">
+                <h3 className="font-semibold text-sm text-slate-900 m-0 truncate">
                   {viewingEmployee.fullName}
                 </h3>
                 <p className="text-xs text-slate-500 font-mono m-0 flex items-center gap-1 mt-0.5">
@@ -662,29 +685,29 @@ export default function StaffManagementPage() {
             </div>
 
             {/* Details Specification Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-              <div className="p-3 bg-white border border-slate-100 rounded-xl space-y-1">
-                <span className="text-slate-400 text-xs font-medium uppercase tracking-wider flex items-center gap-1 mb-1">
-                  <SafetyCertificateOutlined className="text-blue-500" /> System Authorization
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-3 bg-white border border-slate-200/80 rounded-[6px] space-y-1">
+                <span className="text-slate-400 text-[11px] font-medium uppercase tracking-wider block mb-1">
+                  System Authorization
                 </span>
                 <div>{getRoleBadge(viewingEmployee.role)}</div>
               </div>
 
-              <div className="p-3 bg-white border border-slate-100 rounded-xl space-y-1">
-                <span className="text-slate-400 text-xs font-medium uppercase tracking-wider flex items-center gap-1">
-                  <HomeOutlined className="text-purple-500" /> Assigned Facility
+              <div className="p-3 bg-white border border-slate-200/80 rounded-[6px] space-y-1">
+                <span className="text-slate-400 text-[11px] font-medium uppercase tracking-wider block mb-1">
+                  Assigned Facility
                 </span>
-                <p className="font-semibold text-slate-800 m-0">
+                <p className="font-semibold text-slate-800 m-0 text-xs">
                   {viewingEmployee.facility?.name || `Facility #${viewingEmployee.facilityId}`}
                 </p>
               </div>
 
-              <div className="p-3 bg-white border border-slate-100 rounded-xl space-y-1 sm:col-span-2">
-                <span className="text-slate-400 text-xs font-medium uppercase tracking-wider">
+              <div className="p-3 bg-white border border-slate-200/80 rounded-[6px] space-y-1 sm:col-span-2">
+                <span className="text-slate-400 text-[11px] font-medium uppercase tracking-wider block">
                   Account Active Status
                 </span>
                 <div className="flex items-center justify-between pt-1">
-                  <span className="text-slate-600 font-medium text-xs">
+                  <span className="text-slate-700 font-medium text-xs">
                     Status: {viewingEmployee.status === 'ACTIVE' ? 'Active' : 'Deactivated'}
                   </span>
                   <Switch
@@ -702,7 +725,7 @@ export default function StaffManagementPage() {
       {/* Add / Edit Staff Modal */}
       <Modal
         title={
-          <div className="font-bold text-base sm:text-lg text-slate-800">
+          <div className="font-semibold text-base text-slate-900">
             {editingEmployee ? 'Edit Staff Member' : 'Add New Staff Member'}
           </div>
         }
@@ -713,9 +736,10 @@ export default function StaffManagementPage() {
         cancelText="Cancel"
         confirmLoading={saving}
         centered
-        width={560}
-        okButtonProps={{ className: 'bg-[#1e4287] font-semibold !shadow-none' }}
-        cancelButtonProps={{ className: '!shadow-none' }}
+        width={540}
+        okButtonProps={{ className: 'bg-[#1e4287] font-medium rounded-[6px] text-xs !shadow-none' }}
+        cancelButtonProps={{ className: 'rounded-[6px] text-xs !shadow-none' }}
+        forceRender
       >
         <Form form={form} layout="vertical" onFinish={handleSave} className="mt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -724,7 +748,7 @@ export default function StaffManagementPage() {
               name="fullName"
               rules={[{ required: true, message: 'Please enter full name' }]}
             >
-              <Input placeholder="e.g. John Doe" />
+              <Input placeholder="e.g. John Doe" className="rounded-[6px] text-xs" />
             </Form.Item>
 
             <Form.Item
@@ -735,7 +759,7 @@ export default function StaffManagementPage() {
                 { type: 'email', message: 'Please enter a valid email' },
               ]}
             >
-              <Input placeholder="name@pharmatrace.vn" />
+              <Input placeholder="name@pharmatrace.vn" className="rounded-[6px] text-xs" />
             </Form.Item>
           </div>
 
@@ -751,7 +775,7 @@ export default function StaffManagementPage() {
                 ]
             }
           >
-            <Input.Password placeholder="At least 6 characters" />
+            <Input.Password placeholder="At least 6 characters" className="rounded-[6px] text-xs" />
           </Form.Item>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -760,7 +784,7 @@ export default function StaffManagementPage() {
               name="role"
               rules={[{ required: true, message: 'Please select system role' }]}
             >
-              <Select options={ROLES_OPTIONS.map((r) => ({ value: r.value, label: r.label }))} />
+              <Select options={ROLES_OPTIONS.map((r) => ({ value: r.value, label: r.label }))} className="text-xs" />
             </Form.Item>
 
             <Form.Item
@@ -768,7 +792,15 @@ export default function StaffManagementPage() {
               name="facilityId"
               rules={[{ required: true, message: 'Please select assigned facility' }]}
             >
-              <Select options={facilityOptions} placeholder="Select assigned facility" />
+              <Select
+                options={facilityOptions}
+                placeholder="Search or select facility by name..."
+                showSearch
+                filterOption={(input, option) =>
+                  (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+                }
+                className="text-xs"
+              />
             </Form.Item>
           </div>
 
@@ -777,6 +809,6 @@ export default function StaffManagementPage() {
           </Form.Item>
         </Form>
       </Modal>
-    </AdminLayout>
+    </>
   );
 }

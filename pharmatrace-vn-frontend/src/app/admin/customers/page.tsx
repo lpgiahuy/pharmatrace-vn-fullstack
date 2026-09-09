@@ -47,13 +47,13 @@ import {
   CarOutlined,
 } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
-import { AdminLayout } from '@/components/layout/AdminLayout';
 import {
   customerService,
   Customer,
   CustomerQuery,
   CustomerOrderDetail,
 } from '@/services/customer.service';
+import { cn } from '@/utils';
 
 const TIER_META: Record<string, { label: string; color: string; bg: string; border: string }> = {
   BRONZE: { label: 'Bronze', color: '#92400e', bg: '#fef3c7', border: '#d97706' },
@@ -81,15 +81,7 @@ const TierTag: React.FC<{ tier?: string }> = ({ tier }) => {
   const normalized = (tier || 'BRONZE').toUpperCase();
   const meta = TIER_META[normalized] || TIER_META.BRONZE;
   return (
-    <span
-      style={{
-        color: meta.color,
-        background: meta.bg,
-        border: `1px solid ${meta.border}`,
-      }}
-      className="text-xs font-semibold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-xs"
-    >
-      <TrophyOutlined className="text-[10px]" />
+    <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded-[6px]">
       {meta.label}
     </span>
   );
@@ -99,7 +91,7 @@ const StatusBadge: React.FC<{ status?: string }> = ({ status }) => {
   const normalized = (status || 'ACTIVE').toUpperCase();
   if (normalized === 'ACTIVE') {
     return (
-      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 inline-flex items-center gap-1.5">
+      <span className="text-xs text-slate-600 font-medium inline-flex items-center gap-1.5">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
         Active
       </span>
@@ -107,26 +99,50 @@ const StatusBadge: React.FC<{ status?: string }> = ({ status }) => {
   }
   if (normalized === 'BANNED') {
     return (
-      <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 inline-flex items-center gap-1.5">
+      <span className="text-xs text-rose-600 font-medium inline-flex items-center gap-1.5">
         <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
         Banned
       </span>
     );
   }
   return (
-    <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 inline-flex items-center gap-1.5">
-      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+    <span className="text-xs text-slate-500 font-medium inline-flex items-center gap-1.5">
+      <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
       Locked
     </span>
   );
 };
+
+const GOOGLE_AVATAR_COLORS = [
+  '#1a73e8',
+  '#ea4335',
+  '#34a853',
+  '#f29900',
+  '#9334e6',
+  '#12b5cb',
+  '#e52592',
+  '#00897b',
+  '#5c6bc0',
+  '#8e24aa',
+];
+
+function getAvatarColor(str?: string): string {
+  if (!str) return GOOGLE_AVATAR_COLORS[0];
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % GOOGLE_AVATAR_COLORS.length;
+  return GOOGLE_AVATAR_COLORS[index];
+}
 
 const UserAvatar: React.FC<{ name?: string; email?: string; size?: 'sm' | 'md' | 'lg' }> = ({
   name,
   email,
   size = 'md',
 }) => {
-  const initials = (name || email || 'C')
+  const identifier = name || email || 'C';
+  const initials = identifier
     .split(' ')
     .filter(Boolean)
     .map((n) => n[0])
@@ -134,16 +150,13 @@ const UserAvatar: React.FC<{ name?: string; email?: string; size?: 'sm' | 'md' |
     .join('')
     .toUpperCase();
 
-  const sizeClass =
-    size === 'lg'
-      ? 'w-14 h-14 text-lg'
-      : size === 'sm'
-        ? 'w-8 h-8 text-xs'
-        : 'w-10 h-10 text-sm';
+  const bg = getAvatarColor(identifier);
+  const sizeClass = size === 'lg' ? 'w-12 h-12 text-base font-bold' : size === 'sm' ? 'w-8 h-8 text-xs font-bold' : 'w-9 h-9 text-xs font-bold';
 
   return (
     <div
-      className={`${sizeClass} rounded-full bg-gradient-to-tr from-[#1e4287] to-[#3a6bc4] text-white font-bold flex items-center justify-center shadow-xs shrink-0 select-none`}
+      style={{ backgroundColor: bg }}
+      className={`${sizeClass} rounded-full text-white flex items-center justify-center shrink-0 select-none shadow-xs`}
     >
       {initials || <UserOutlined />}
     </div>
@@ -372,18 +385,17 @@ export default function CustomersManagementPage() {
   const vipCount = customers.filter((c) =>
     ['GOLD', 'PLATINUM', 'DIAMOND'].includes((c.membershipTier || '').toUpperCase())
   ).length;
-
   const columns = [
     {
       title: 'Customer',
       key: 'customer',
-      width: 220,
+      width: 240,
       render: (_: any, row: Customer) => (
         <div className="flex items-center gap-3">
-          <UserAvatar name={row.fullName} email={row.email} size="sm" />
+          <UserAvatar name={row.fullName} email={row.email} size="md" />
           <div className="min-w-0">
-            <p className="font-semibold text-sm text-slate-800 m-0 truncate">{row.fullName || 'Unnamed'}</p>
-            <p className="text-xs text-slate-500 font-mono m-0 truncate">{row.email || 'No email'}</p>
+            <p className="font-semibold text-sm text-slate-900 m-0 truncate">{row.fullName || 'Unnamed'}</p>
+            <p className="text-xs text-slate-500 font-mono m-0 truncate mt-0.5">{row.email || 'No email'}</p>
           </div>
         </div>
       ),
@@ -392,9 +404,9 @@ export default function CustomersManagementPage() {
       title: 'Phone Number',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
-      width: 140,
+      width: 150,
       render: (phone: string) => (
-        <span className="font-mono text-xs text-slate-700">{phone || 'N/A'}</span>
+        <span className="font-mono text-sm text-slate-800">{phone || 'N/A'}</span>
       ),
     },
     {
@@ -408,10 +420,10 @@ export default function CustomersManagementPage() {
       title: 'Reward Points',
       dataIndex: 'rewardPoints',
       key: 'rewardPoints',
-      width: 130,
+      width: 140,
       align: 'right' as const,
       render: (points: number) => (
-        <span className="font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-xs">
+        <span className="text-sm text-slate-900 font-semibold">
           {(points || 0).toLocaleString()} pts
         </span>
       ),
@@ -419,12 +431,12 @@ export default function CustomersManagementPage() {
     {
       title: 'Total Orders',
       key: 'totalOrders',
-      width: 110,
+      width: 120,
       align: 'center' as const,
       render: (_: any, row: Customer) => (
-        <Tag color="blue" className="rounded-full px-2.5 font-semibold">
-          {row.totalOrders ?? 0} orders
-        </Tag>
+        <span className="text-sm text-slate-800 font-medium">
+          {row.totalOrders ?? 0}
+        </span>
       ),
     },
     {
@@ -433,7 +445,7 @@ export default function CustomersManagementPage() {
       key: 'createdAt',
       width: 140,
       render: (dateStr: string) => (
-        <span className="text-xs text-slate-500">{formatDate(dateStr)}</span>
+        <span className="text-sm text-slate-600">{formatDate(dateStr)}</span>
       ),
     },
     {
@@ -446,19 +458,16 @@ export default function CustomersManagementPage() {
     {
       title: 'Actions',
       key: 'actions',
-      width: 110,
+      width: 100,
       align: 'center' as const,
       render: (_: any, row: Customer) => (
-        <Tooltip title="View Profile & Order History">
-          <AButton
-            size="small"
-            icon={<EyeOutlined />}
-            onClick={() => openDetailModal(row)}
-            className="!shadow-none hover:!border-[#1e4287] hover:!text-[#1e4287] font-medium text-xs"
-          >
-            Details
-          </AButton>
-        </Tooltip>
+        <button
+          type="button"
+          onClick={() => openDetailModal(row)}
+          className="px-3 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-[6px] transition-colors border border-slate-200 bg-white cursor-pointer"
+        >
+          Details
+        </button>
       ),
     },
   ];
@@ -468,38 +477,41 @@ export default function CustomersManagementPage() {
       title: 'Order Code',
       dataIndex: 'orderCode',
       key: 'orderCode',
-      width: 140,
-      render: (code: string) => <span className="font-mono font-bold text-xs text-[#1e4287]">{code}</span>,
+      width: 150,
+      render: (code: string) => <span className="font-mono font-bold text-sm text-[#1e4287]">{code}</span>,
     },
     {
       title: 'Date',
       dataIndex: 'createdAt',
       key: 'createdAt',
-      width: 140,
-      render: (dateStr: string) => <span className="text-xs text-slate-500">{formatDate(dateStr)}</span>,
+      width: 150,
+      render: (dateStr: string) => <span className="text-sm text-slate-600">{formatDate(dateStr)}</span>,
     },
     {
       title: 'Total Amount',
       dataIndex: 'totalAmount',
       key: 'totalAmount',
-      width: 130,
+      width: 140,
       align: 'right' as const,
       render: (amt: number) => (
-        <span className="font-bold text-xs text-slate-800">{formatCurrency(amt)}</span>
+        <span className="font-bold text-sm text-slate-900">{formatCurrency(amt)}</span>
       ),
     },
     {
       title: 'Payment',
       key: 'payment',
-      width: 130,
+      width: 140,
       render: (_: any, item: CustomerOrderDetail) => {
         const isPaid = (item.paymentStatus || '').toUpperCase() === 'PAID';
         return (
           <div className="space-y-0.5">
-            <span className="text-xs font-mono text-slate-600 block">{item.paymentMethod}</span>
-            <Tag color={isPaid ? 'green' : 'orange'} className="text-[10px] px-1.5 py-0">
+            <span className="text-sm font-mono text-slate-700 block">{item.paymentMethod}</span>
+            <span className={cn(
+              'text-xs font-medium px-1.5 py-0.5 rounded-[6px] inline-block',
+              isPaid ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'
+            )}>
               {item.paymentStatus}
-            </Tag>
+            </span>
           </div>
         );
       },
@@ -508,18 +520,12 @@ export default function CustomersManagementPage() {
       title: 'Order Status',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
-      width: 130,
+      width: 140,
       render: (status: string) => {
-        const s = (status || '').toUpperCase();
-        let color = 'default';
-        if (['DELIVERED', 'COMPLETED', 'HOANTHANH'].includes(s)) color = 'success';
-        else if (['SHIPPING', 'DANGGIAO'].includes(s)) color = 'processing';
-        else if (['PENDING', 'CHODUYET'].includes(s)) color = 'warning';
-        else if (['CANCELLED', 'DAHUY'].includes(s)) color = 'error';
         return (
-          <Tag color={color} className="font-semibold text-xs px-2 py-0.5">
+          <span className="text-xs font-semibold px-2 py-0.5 rounded-[6px] bg-slate-100 text-slate-700 border border-slate-200">
             {status}
-          </Tag>
+          </span>
         );
       },
     },
@@ -530,156 +536,138 @@ export default function CustomersManagementPage() {
   }
 
   return (
-    <AdminLayout>
+    <>
       {contextHolder}
 
-      <div className="space-y-4 sm:space-y-6">
-        {/* Header Action Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 sm:p-6 !rounded-md shadow-xs border border-slate-100">
+      <div className="space-y-5 animate-fade-in font-sans w-full">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
           <div>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 m-0 flex items-center gap-2">
-              <TeamOutlined className="text-[#1e4287]" /> Customer Directory & Accounts
-            </h2>
-            <p className="text-slate-500 text-xs sm:text-sm m-0 mt-1">
-              Manage registered customers, loyalty tiers, reward points, and purchase history
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 m-0 tracking-tight">
+              Customer Management
+            </h1>
+            <p className="text-slate-500 text-sm m-0 mt-0.5">
+              Customer directory, loyalty tiers, points, and order history
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <AButton
-              icon={<ReloadOutlined />}
+            <button
+              type="button"
               onClick={() => fetchCustomers(pagination.current, pagination.pageSize)}
-              loading={loading}
-              className="!shadow-none"
+              disabled={loading}
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[6px] border border-slate-200 bg-white text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
             >
+              <ReloadOutlined className={cn(loading && 'animate-spin')} />
               Refresh
-            </AButton>
+            </button>
           </div>
         </div>
 
-        {/* KPI Statistics Overview Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="shadow-xs !rounded-md border-slate-100" styles={{ body: { padding: '16px' } }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider m-0">Total Customers</p>
-                <h3 className="text-2xl font-bold text-slate-900 m-0 mt-1">{totalCount.toLocaleString()}</h3>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-blue-50 text-[#1e4287] flex items-center justify-center text-lg">
-                <TeamOutlined />
-              </div>
+        {/* Stat Strip */}
+        <div className="bg-white px-6 py-4 rounded-[6px] border border-slate-200/80 shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-6 sm:gap-10 flex-wrap">
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Customers</span>
+              <span className="text-base sm:text-lg font-bold text-slate-900">{totalCount.toLocaleString()}</span>
             </div>
-          </Card>
-
-          <Card className="shadow-xs !rounded-md border-slate-100" styles={{ body: { padding: '16px' } }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider m-0">Active Accounts</p>
-                <h3 className="text-2xl font-bold text-emerald-600 m-0 mt-1">{activeCount}</h3>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
-                <CheckCircleOutlined />
-              </div>
+            <div className="h-4 w-px bg-slate-200" />
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Active</span>
+              <span className="text-base sm:text-lg font-bold text-emerald-600">{activeCount}</span>
             </div>
-          </Card>
-
-          <Card className="shadow-xs !rounded-md border-slate-100" styles={{ body: { padding: '16px' } }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider m-0">Locked Accounts</p>
-                <h3 className="text-2xl font-bold text-rose-600 m-0 mt-1">{lockedCount}</h3>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
-                <LockOutlined />
-              </div>
+            <div className="h-4 w-px bg-slate-200" />
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Locked</span>
+              <span className="text-base sm:text-lg font-bold text-slate-500">{lockedCount}</span>
             </div>
-          </Card>
-
-          <Card className="shadow-xs !rounded-md border-slate-100" styles={{ body: { padding: '16px' } }}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider m-0">VIP / Gold+ Tier</p>
-                <h3 className="text-2xl font-bold text-amber-600 m-0 mt-1">{vipCount}</h3>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
-                <TrophyOutlined />
-              </div>
+            <div className="h-4 w-px bg-slate-200" />
+            <div className="flex items-center gap-2.5">
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">VIP Tier</span>
+              <span className="text-base sm:text-lg font-bold text-amber-600">{vipCount}</span>
             </div>
-          </Card>
+          </div>
         </div>
 
         {/* Filter Controls Bar */}
-        <Card className="shadow-xs !rounded-md border-slate-100" styles={{ body: { padding: '16px' } }}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white p-4 rounded-[6px] border border-slate-200/80 shadow-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
             <Input
               placeholder="Search name, email, or phone number"
-              prefix={<SearchOutlined className="text-slate-400" />}
+              prefix={<SearchOutlined className="text-slate-400 text-sm" />}
               value={searchVal}
               onChange={(e) => setSearchVal(e.target.value)}
               onPressEnter={handleSearchClick}
               allowClear
+              className="rounded-[6px] text-sm h-10"
             />
 
             <Select
-              placeholder="Filter by Membership Tier"
+              placeholder="Membership Tier"
               value={tierFilter}
               onChange={(v) => setTierFilter(v)}
               options={TIER_OPTIONS}
               allowClear
+              className="text-sm h-10"
             />
 
             <Select
-              placeholder="Filter by Status"
+              placeholder="Account Status"
               value={statusFilter}
               onChange={(v) => setStatusFilter(v)}
               options={STATUS_OPTIONS}
               allowClear
+              className="text-sm h-10"
             />
 
             <div className="flex gap-2">
-              <AButton
-                type="primary"
-                icon={<SearchOutlined />}
+              <button
+                type="button"
                 onClick={handleSearchClick}
-                className="bg-[#1e4287] hover:bg-[#153166] flex-1 !shadow-none font-semibold"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[6px] bg-[#1e4287] hover:bg-[#163266] text-white text-sm font-medium transition-colors cursor-pointer border-none shadow-xs h-10"
               >
+                <SearchOutlined />
                 Search
-              </AButton>
-              <AButton icon={<ReloadOutlined />} onClick={handleResetFilters} className="!shadow-none">
-                Reset
-              </AButton>
+              </button>
+              <button
+                type="button"
+                onClick={handleResetFilters}
+                className="px-3 py-2 border border-slate-200 rounded-[6px] text-slate-500 hover:bg-slate-50 text-sm transition-colors bg-white cursor-pointer h-10"
+                title="Reset Filters"
+              >
+                <ReloadOutlined />
+              </button>
             </div>
           </div>
-        </Card>
+        </div>
 
         {/* Mobile View: Compact Card List (< 640px) */}
         <div className="block sm:hidden space-y-3">
           {loading ? (
-            <Card className="!rounded-md text-center py-6 text-slate-500 shadow-xs border-slate-100">
+            <Card className="!rounded-[6px] text-center py-6 text-slate-500 shadow-xs border-slate-100">
               Loading customer directory...
             </Card>
           ) : customers.length === 0 ? (
-            <Card className="!rounded-md text-center py-6 text-slate-500 shadow-xs border-slate-100">
+            <Card className="!rounded-[6px] text-center py-6 text-slate-500 shadow-xs border-slate-100">
               <TeamOutlined className="text-3xl text-slate-400 mb-2 block" />
               No customers found.
             </Card>
           ) : (
             customers.map((row) => {
-              const isActive = (row.status || 'ACTIVE').toUpperCase() === 'ACTIVE';
               return (
                 <Card
                   key={row.id}
-                  className="shadow-xs !rounded-md border-slate-100 transition-all"
+                  className="shadow-xs !rounded-[6px] border-slate-200/80 transition-all"
                   styles={{ body: { padding: '14px' } }}
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex items-center gap-3 min-w-0">
                         <UserAvatar name={row.fullName} email={row.email} size="sm" />
                         <div className="min-w-0">
-                          <p className="font-bold text-sm text-slate-900 m-0 truncate">
+                          <p className="font-semibold text-sm text-slate-900 m-0 truncate">
                             {row.fullName || 'Unnamed'}
                           </p>
-                          <p className="text-xs text-slate-500 font-mono m-0 truncate">
+                          <p className="text-xs text-slate-500 font-mono m-0 truncate mt-0.5">
                             {row.email || 'No email'}
                           </p>
                         </div>
@@ -690,27 +678,26 @@ export default function CustomersManagementPage() {
                     <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs">
                       <div className="flex items-center gap-2">
                         <TierTag tier={row.membershipTier} />
-                        <span className="font-semibold text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-[11px]">
+                        <span className="text-xs text-slate-700 font-semibold">
                           {(row.rewardPoints || 0).toLocaleString()} pts
                         </span>
                       </div>
-                      <Tag color="blue" className="rounded-full px-2 text-[11px] font-semibold m-0">
+                      <span className="text-xs text-slate-600 font-medium">
                         {row.totalOrders ?? 0} orders
-                      </Tag>
+                      </span>
                     </div>
 
                     <div className="flex items-center justify-between pt-1 gap-2">
-                      <span className="text-[11px] font-mono text-slate-600">
-                        SĐT: {row.phoneNumber || 'N/A'}
+                      <span className="text-xs font-mono text-slate-600">
+                        Phone: {row.phoneNumber || 'N/A'}
                       </span>
-                      <AButton
-                        size="small"
-                        icon={<EyeOutlined />}
+                      <button
+                        type="button"
                         onClick={() => openDetailModal(row)}
-                        className="!shadow-none font-medium text-xs"
+                        className="px-3 py-1 text-xs text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-[6px] transition-colors border border-slate-200 bg-white cursor-pointer shrink-0 font-medium"
                       >
                         Details
-                      </AButton>
+                      </button>
                     </div>
                   </div>
                 </Card>
@@ -719,7 +706,7 @@ export default function CustomersManagementPage() {
           )}
 
           {/* Mobile Pagination */}
-          <div className="p-3 bg-white rounded-md border border-slate-100 flex items-center justify-between text-xs">
+          <div className="p-3 bg-white rounded-[6px] border border-slate-200/80 flex items-center justify-between text-xs">
             <span className="text-slate-500">{pagination.total} customers</span>
             <Pagination
               current={pagination.current}
@@ -742,7 +729,7 @@ export default function CustomersManagementPage() {
         </div>
 
         {/* Desktop & Tablet View: Full Table (>= 640px) */}
-        <Card className="hidden sm:block shadow-xs !rounded-md border-slate-100 overflow-hidden" styles={{ body: { padding: '0px' } }}>
+        <Card className="hidden sm:block shadow-xs !rounded-[6px] border-slate-200/80 overflow-hidden" styles={{ body: { padding: '0px' } }}>
           <div className="overflow-x-auto">
             <Table
               dataSource={customers}
@@ -765,7 +752,7 @@ export default function CustomersManagementPage() {
 
           {/* Pagination Footer */}
           <div className="p-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <span className="text-xs text-slate-500">
+            <span className="text-sm text-slate-500">
               Showing {(pagination.current - 1) * pagination.pageSize + 1} -{' '}
               {Math.min(pagination.current * pagination.pageSize, pagination.total)} of {pagination.total} customers
             </span>
@@ -791,21 +778,21 @@ export default function CustomersManagementPage() {
         </Card>
       </div>
 
-      {/* Customer Details & Orders Modal */}
+      {/* Customer Profile & History Modal */}
       <Modal
         title={
-          <div className="flex items-center gap-2 text-base font-bold text-slate-900">
+          <div className="flex items-center gap-2 text-base font-semibold text-slate-900 pb-2 border-b border-slate-100">
             <UserOutlined className="text-[#1e4287]" /> Customer Profile & History
           </div>
         }
         open={detailModalOpen}
         onCancel={() => setDetailModalOpen(false)}
         footer={[
-          <AButton key="close" onClick={() => setDetailModalOpen(false)}>
+          <AButton key="close" onClick={() => setDetailModalOpen(false)} className="rounded-[6px] text-sm font-medium px-4">
             Close
           </AButton>,
         ]}
-        width={780}
+        width={720}
         centered
       >
         {detailLoading && !customerDetail ? (
@@ -814,21 +801,21 @@ export default function CustomersManagementPage() {
             <p className="mt-3 text-slate-500 text-sm">Loading customer information...</p>
           </div>
         ) : customerDetail ? (
-          <div className="space-y-4 mt-2">
-            {/* Top Customer Header Card */}
-            <div className="p-4 bg-slate-50 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-100">
+          <div className="space-y-4 py-2">
+            {/* Top Customer Info Row */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-slate-100">
               <div className="flex items-center gap-3.5">
                 <UserAvatar name={customerDetail.fullName} email={customerDetail.email} size="lg" />
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="text-base font-bold text-slate-900 m-0">{customerDetail.fullName || 'Unnamed Customer'}</h3>
                     <TierTag tier={customerDetail.membershipTier} />
                   </div>
-                  <p className="text-xs text-slate-500 font-mono m-0 mt-0.5">{customerDetail.email}</p>
-                  <p className="text-xs text-slate-600 font-mono m-0 mt-0.5">{customerDetail.phoneNumber || 'No phone number'}</p>
+                  <p className="text-sm text-slate-500 font-mono m-0 mt-0.5">{customerDetail.email}</p>
+                  <p className="text-sm text-slate-600 font-mono m-0 mt-0.5">{customerDetail.phoneNumber || 'No phone number'}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 self-end sm:self-center">
+              <div className="flex items-center gap-2.5 self-end sm:self-center flex-wrap">
                 <StatusBadge status={customerDetail.status} />
 
                 {(customerDetail.status || 'ACTIVE').toUpperCase() !== 'BANNED' && (
@@ -839,17 +826,19 @@ export default function CustomersManagementPage() {
                     okText="Confirm"
                     cancelText="Cancel"
                   >
-                    <AButton
-                      size="small"
-                      icon={(customerDetail.status || 'ACTIVE').toUpperCase() === 'ACTIVE' ? <LockOutlined /> : <UnlockOutlined />}
-                      loading={togglingId === customerDetail.id}
-                      className={`!shadow-none font-semibold text-xs ${(customerDetail.status || 'ACTIVE').toUpperCase() === 'ACTIVE'
-                        ? '!bg-amber-50 hover:!bg-amber-100 !text-amber-700 !border-amber-200'
-                        : '!bg-emerald-600 hover:!bg-emerald-700 !text-white !border-none'
-                        }`}
+                    <button
+                      type="button"
+                      disabled={togglingId === customerDetail.id}
+                      className={cn(
+                        'px-3 py-1.5 rounded-[6px] text-xs font-medium transition-colors border cursor-pointer inline-flex items-center gap-1.5',
+                        (customerDetail.status || 'ACTIVE').toUpperCase() === 'ACTIVE'
+                          ? 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700'
+                          : 'border-emerald-600 bg-emerald-600 hover:bg-emerald-700 text-white'
+                      )}
                     >
+                      {(customerDetail.status || 'ACTIVE').toUpperCase() === 'ACTIVE' ? <LockOutlined /> : <UnlockOutlined />}
                       {(customerDetail.status || 'ACTIVE').toUpperCase() === 'ACTIVE' ? 'Lock' : 'Unlock'}
-                    </AButton>
+                    </button>
                   </Popconfirm>
                 )}
 
@@ -861,33 +850,31 @@ export default function CustomersManagementPage() {
                     okText="Unban"
                     cancelText="Cancel"
                   >
-                    <AButton
-                      size="small"
-                      type="primary"
-                      icon={<UnlockOutlined />}
-                      loading={togglingId === customerDetail.id}
-                      className="!shadow-none !bg-emerald-600 hover:!bg-emerald-700 !text-white !border-none font-semibold text-xs"
+                    <button
+                      type="button"
+                      disabled={togglingId === customerDetail.id}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium border border-emerald-600 bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer"
                     >
-                      Unban Account
-                    </AButton>
+                      <CheckCircleOutlined className="text-xs" />
+                      Unban                   </button>
                   </Popconfirm>
                 ) : (
                   <Popconfirm
                     title="Ban this customer account permanently?"
                     description="This customer will be barred from placing new orders or logging in."
                     onConfirm={() => handleSetStatus(customerDetail, 'BANNED')}
-                    okText="Ban Account"
+                    okText="Ban"
                     cancelText="Cancel"
                     okButtonProps={{ danger: true }}
                   >
-                    <AButton
-                      size="small"
-                      icon={<StopOutlined />}
-                      loading={togglingId === customerDetail.id}
-                      className="!shadow-none font-semibold text-xs !bg-rose-50 hover:!bg-rose-100 !text-rose-700 !border-rose-200"
+                    <button
+                      type="button"
+                      disabled={togglingId === customerDetail.id}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 transition-colors cursor-pointer"
                     >
+                      <StopOutlined className="text-xs" />
                       Ban
-                    </AButton>
+                    </button>
                   </Popconfirm>
                 )}
               </div>
@@ -905,64 +892,85 @@ export default function CustomersManagementPage() {
                     </span>
                   ),
                   children: (
-                    <div className="space-y-4">
-                      {/* 4-Card Order Statistics Grid */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <div className="p-3 bg-blue-50/60 rounded-lg border border-blue-100 text-center">
-                          <p className="text-slate-500 text-[11px] font-semibold uppercase m-0">Total Orders</p>
-                          <p className="text-lg font-bold text-slate-800 m-0 mt-1">
-                            {customerDetail.orderStats?.totalOrders ?? customerDetail.totalOrders ?? 0}
-                          </p>
-                        </div>
-                        <div className="p-3 bg-emerald-50/60 rounded-lg border border-emerald-100 text-center">
-                          <p className="text-slate-500 text-[11px] font-semibold uppercase m-0">Total Spend</p>
-                          <p className="text-lg font-bold text-emerald-700 m-0 mt-1 truncate">
-                            {formatCurrency(customerDetail.orderStats?.totalSpent ?? 0)}
-                          </p>
-                        </div>
-                        <div className="p-3 bg-teal-50/60 rounded-lg border border-teal-100 text-center">
-                          <p className="text-slate-500 text-[11px] font-semibold uppercase m-0">Completed</p>
-                          <p className="text-lg font-bold text-teal-700 m-0 mt-1">
-                            {customerDetail.orderStats?.completedOrders ?? 0}
-                          </p>
-                        </div>
-                        <div className="p-3 bg-rose-50/60 rounded-lg border border-rose-100 text-center">
-                          <p className="text-slate-500 text-[11px] font-semibold uppercase m-0">Cancelled</p>
-                          <p className="text-lg font-bold text-rose-600 m-0 mt-1">
-                            {customerDetail.orderStats?.cancelledOrders ?? 0}
-                          </p>
+                    <div className="space-y-4 pt-1">
+                      {/* 4-Metric Strip */}
+                      <div className="bg-slate-50/70 p-4 rounded-[6px] border border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
+                        <div className="flex items-center gap-6 sm:gap-8 flex-wrap">
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Total Orders</span>
+                            <span className="text-lg font-bold text-slate-900 mt-0.5 block">
+                              {customerDetail.orderStats?.totalOrders ?? customerDetail.totalOrders ?? 0}
+                            </span>
+                          </div>
+                          <div className="h-6 w-px bg-slate-200" />
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Total Spend</span>
+                            <span className="text-lg font-bold text-slate-900 mt-0.5 block truncate">
+                              {formatCurrency(customerDetail.orderStats?.totalSpent ?? 0)}
+                            </span>
+                          </div>
+                          <div className="h-6 w-px bg-slate-200" />
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Completed</span>
+                            <span className="text-lg font-bold text-emerald-600 mt-0.5 block">
+                              {customerDetail.orderStats?.completedOrders ?? 0}
+                            </span>
+                          </div>
+                          <div className="h-6 w-px bg-slate-200" />
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Cancelled</span>
+                            <span className="text-lg font-bold text-rose-600 mt-0.5 block">
+                              {customerDetail.orderStats?.cancelledOrders ?? 0}
+                            </span>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Detailed Descriptions */}
-                      <Descriptions bordered column={{ xs: 1, sm: 2 }} size="small">
-                        <Descriptions.Item label="Full Name">
-                          <span className="font-semibold text-slate-800">{customerDetail.fullName || 'N/A'}</span>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Email Address">
-                          <span className="font-mono text-xs text-slate-700">{customerDetail.email || 'N/A'}</span>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Phone Number">
-                          <span className="font-mono text-xs text-slate-700">{customerDetail.phoneNumber || 'N/A'}</span>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Loyalty Points">
-                          <span className="font-bold text-amber-600">
-                            {(customerDetail.rewardPoints || 0).toLocaleString()} pts
-                          </span>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Membership Tier">
-                          <TierTag tier={customerDetail.membershipTier} />
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Registered Date">
-                          <span className="text-xs text-slate-600">{formatDate(customerDetail.createdAt)}</span>
-                        </Descriptions.Item>
-                        <Descriptions.Item label="Default Shipping Address" span={{ xs: 1, sm: 2 }}>
-                          <span className="text-xs text-slate-700 flex items-start gap-1">
-                            <EnvironmentOutlined className="text-slate-400 mt-0.5" />
+                      {/* Clean 2-Column Key-Value Details */}
+                      <div className="bg-white rounded-[6px] border border-slate-200/80 p-4 divide-y divide-slate-100 space-y-3 text-sm">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-1">
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-1">Full Name</span>
+                            <span className="text-sm font-semibold text-slate-900">{customerDetail.fullName || 'N/A'}</span>
+                          </div>
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-1">Email Address</span>
+                            <span className="text-sm font-mono text-slate-700">{customerDetail.email || 'N/A'}</span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 pb-1">
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-1">Phone Number</span>
+                            <span className="text-sm font-mono text-slate-700">{customerDetail.phoneNumber || 'N/A'}</span>
+                          </div>
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-1">Loyalty Points</span>
+                            <span className="text-sm font-bold text-amber-600">
+                              {(customerDetail.rewardPoints || 0).toLocaleString()} pts
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-3 pb-1">
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-1">Membership Tier</span>
+                            <TierTag tier={customerDetail.membershipTier} />
+                          </div>
+                          <div>
+                            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-1">Registered Date</span>
+                            <span className="text-sm text-slate-700">{formatDate(customerDetail.createdAt)}</span>
+                          </div>
+                        </div>
+
+                        <div className="pt-3">
+                          <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block mb-1">Default Shipping Address</span>
+                          <span className="text-sm text-slate-700 flex items-start gap-1.5">
+                            <EnvironmentOutlined className="text-slate-400 mt-0.5 shrink-0" />
                             {customerDetail.defaultAddress || 'No default address specified'}
                           </span>
-                        </Descriptions.Item>
-                      </Descriptions>
+                        </div>
+                      </div>
                     </div>
                   ),
                 },
@@ -974,7 +982,7 @@ export default function CustomersManagementPage() {
                     </span>
                   ),
                   children: (
-                    <div className="space-y-3">
+                    <div className="space-y-3 pt-1">
                       <Table
                         dataSource={customerOrders}
                         columns={orderColumns}
@@ -984,7 +992,7 @@ export default function CustomersManagementPage() {
                         size="small"
                         expandable={{
                           expandedRowRender: (record) => (
-                            <div className="p-3 bg-slate-50 rounded-lg space-y-2 border border-slate-200">
+                            <div className="p-3 bg-slate-50/70 rounded-[6px] space-y-2 border border-slate-200/70 text-sm">
                               <div className="flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
                                 <div>
                                   <span className="font-semibold text-slate-700">Recipient:</span>{' '}
@@ -1009,14 +1017,14 @@ export default function CustomersManagementPage() {
                                     record.orderItems.map((item) => (
                                       <div
                                         key={item.id}
-                                        className="flex items-center justify-between text-xs bg-white p-2 rounded border border-slate-100"
+                                        className="flex items-center justify-between text-xs text-slate-700 py-1.5 border-b border-slate-100 last:border-0"
                                       >
                                         <div className="min-w-0">
                                           <p className="font-semibold text-slate-800 m-0 truncate">
                                             {item.medicine?.medicineName || 'Medicine Item'}
                                           </p>
                                           {item.medicine?.activeIngredients && (
-                                            <p className="text-[10px] text-slate-400 m-0 truncate">
+                                            <p className="text-[11px] text-slate-400 m-0 truncate">
                                               {item.medicine.activeIngredients}
                                             </p>
                                           )}
@@ -1025,7 +1033,7 @@ export default function CustomersManagementPage() {
                                           <span>
                                             x{item.quantity} {item.packaging?.unitName || 'unit'}
                                           </span>
-                                          <span className="font-bold text-slate-800">
+                                          <span className="font-bold text-slate-900">
                                             {formatCurrency(item.totalPrice)}
                                           </span>
                                         </div>
@@ -1072,6 +1080,6 @@ export default function CustomersManagementPage() {
           </div>
         ) : null}
       </Modal>
-    </AdminLayout>
+    </>
   );
 }
