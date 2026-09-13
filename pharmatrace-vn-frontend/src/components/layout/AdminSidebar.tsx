@@ -9,6 +9,7 @@ import {
   UserOutlined,
   MedicineBoxOutlined,
   AppstoreOutlined,
+  GiftOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -49,6 +50,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       key: '/admin/products',
       icon: <MedicineBoxOutlined style={{ fontSize: 16 }} />,
       label: 'Medicines & Catalog',
+    },
+    {
+      key: '/admin/vouchers',
+      icon: <GiftOutlined style={{ fontSize: 16 }} />,
+      label: 'Vouchers & Promotions',
     },
     {
       key: '/admin/staff',

@@ -302,10 +302,10 @@ export default function AdminProductsPage() {
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white p-3.5 rounded-[6px] border border-slate-200/80 shadow-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2.5">
+        <div className="bg-white p-3 sm:p-3.5 rounded-[6px] border border-slate-200/80 shadow-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-2.5">
             <Input
-              placeholder="Search by name, ingredients, SDK..."
+              placeholder="Search name, ingredients, SDK..."
               prefix={<SearchOutlined className="text-slate-400 text-xs" />}
               value={searchVal}
               onChange={(e) => {
@@ -313,7 +313,7 @@ export default function AdminProductsPage() {
                 setPage(1);
               }}
               allowClear
-              className="md:col-span-2 rounded-[6px] text-xs"
+              className="col-span-2 sm:col-span-3 md:col-span-2 rounded-[6px] text-xs h-9 sm:h-auto w-full"
             />
 
             <Select
@@ -326,7 +326,7 @@ export default function AdminProductsPage() {
               options={categories.map((c) => ({ value: c.id, label: c.categoryName }))}
               allowClear
               showSearch
-              className="text-xs"
+              className="col-span-1 text-xs h-9 sm:h-auto w-full"
               filterOption={(input, option) =>
                 (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
               }
@@ -344,7 +344,7 @@ export default function AdminProductsPage() {
                 { value: false, label: 'OTC (Non-Rx)' },
               ]}
               allowClear
-              className="text-xs"
+              className="col-span-1 text-xs h-9 sm:h-auto w-full"
             />
 
             <Select
@@ -359,17 +359,17 @@ export default function AdminProductsPage() {
                 { value: 'INACTIVE', label: 'Hidden' },
               ]}
               allowClear
-              className="text-xs"
+              className="col-span-1 text-xs h-9 sm:h-auto w-full"
             />
 
-            <div className="flex gap-2">
+            <div className="col-span-1 sm:col-span-2 md:col-span-1 flex gap-1.5">
               <Select
                 value={sort}
                 onChange={(v) => {
                   setSort(v);
                   setPage(1);
                 }}
-                className="flex-1 text-xs"
+                className="flex-1 text-xs h-9 sm:h-auto"
                 options={[
                   { label: 'Newest', value: 'newest' },
                   { label: 'Oldest', value: 'oldest' },
@@ -382,7 +382,7 @@ export default function AdminProductsPage() {
                 type="button"
                 onClick={handleResetFilters}
                 title="Reset Filters"
-                className="px-2.5 py-1.5 border border-slate-200 rounded-[6px] text-slate-500 hover:bg-slate-50 text-xs transition-colors bg-white cursor-pointer"
+                className="px-2.5 py-1.5 border border-slate-200 rounded-[6px] text-slate-500 hover:bg-slate-50 text-xs transition-colors bg-white cursor-pointer h-9 sm:h-auto flex items-center justify-center"
               >
                 <ReloadOutlined />
               </button>
