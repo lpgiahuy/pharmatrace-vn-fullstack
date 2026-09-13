@@ -564,66 +564,72 @@ export default function CustomersManagementPage() {
         </div>
 
         {/* Stat Strip */}
-        <div className="bg-white px-6 py-4 rounded-[6px] border border-slate-200/80 shadow-xs flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-6 sm:gap-10 flex-wrap">
-            <div className="flex items-center gap-2.5">
-              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Total Customers</span>
-              <span className="text-base sm:text-lg font-bold text-slate-900">{totalCount.toLocaleString()}</span>
+        <div className="bg-white p-3 sm:px-6 sm:py-4 rounded-[6px] border border-slate-200/80 shadow-xs">
+          <div className="grid grid-cols-2 sm:flex sm:items-center sm:gap-10 gap-2.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Total</span>
+              <span className="text-sm sm:text-lg font-bold text-slate-900">{totalCount.toLocaleString()}</span>
             </div>
-            <div className="h-4 w-px bg-slate-200" />
-            <div className="flex items-center gap-2.5">
-              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Active</span>
-              <span className="text-base sm:text-lg font-bold text-emerald-600">{activeCount}</span>
+            <div className="hidden sm:block h-4 w-px bg-slate-200" />
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Active</span>
+              <span className="text-sm sm:text-lg font-bold text-emerald-600">{activeCount}</span>
             </div>
-            <div className="h-4 w-px bg-slate-200" />
-            <div className="flex items-center gap-2.5">
-              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Locked</span>
-              <span className="text-base sm:text-lg font-bold text-slate-500">{lockedCount}</span>
+            <div className="hidden sm:block h-4 w-px bg-slate-200" />
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">Locked</span>
+              <span className="text-sm sm:text-lg font-bold text-slate-500">{lockedCount}</span>
             </div>
-            <div className="h-4 w-px bg-slate-200" />
-            <div className="flex items-center gap-2.5">
-              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">VIP Tier</span>
-              <span className="text-base sm:text-lg font-bold text-amber-600">{vipCount}</span>
+            <div className="hidden sm:block h-4 w-px bg-slate-200" />
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] sm:text-xs text-slate-400 font-semibold uppercase tracking-wider">VIP Tier</span>
+              <span className="text-sm sm:text-lg font-bold text-amber-600">{vipCount}</span>
             </div>
           </div>
         </div>
 
         {/* Filter Controls Bar */}
-        <div className="bg-white p-4 rounded-[6px] border border-slate-200/80 shadow-xs">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-            <Input
-              placeholder="Search name, email, or phone number"
-              prefix={<SearchOutlined className="text-slate-400 text-sm" />}
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
-              onPressEnter={handleSearchClick}
-              allowClear
-              className="rounded-[6px] text-sm h-10"
-            />
+        <div className="bg-white p-3 sm:p-4 rounded-[6px] border border-slate-200/80 shadow-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+            <div className="col-span-2 md:col-span-1">
+              <Input
+                placeholder="Search name, email, phone"
+                prefix={<SearchOutlined className="text-slate-400 text-xs sm:text-sm" />}
+                value={searchVal}
+                onChange={(e) => setSearchVal(e.target.value)}
+                onPressEnter={handleSearchClick}
+                allowClear
+                className="rounded-[6px] text-xs sm:text-sm h-9 sm:h-10 w-full"
+              />
+            </div>
 
-            <Select
-              placeholder="Membership Tier"
-              value={tierFilter}
-              onChange={(v) => setTierFilter(v)}
-              options={TIER_OPTIONS}
-              allowClear
-              className="text-sm h-10"
-            />
+            <div className="col-span-1">
+              <Select
+                placeholder="Membership Tier"
+                value={tierFilter}
+                onChange={(v) => setTierFilter(v)}
+                options={TIER_OPTIONS}
+                allowClear
+                className="text-xs sm:text-sm h-9 sm:h-10 w-full"
+              />
+            </div>
 
-            <Select
-              placeholder="Account Status"
-              value={statusFilter}
-              onChange={(v) => setStatusFilter(v)}
-              options={STATUS_OPTIONS}
-              allowClear
-              className="text-sm h-10"
-            />
+            <div className="col-span-1">
+              <Select
+                placeholder="Account Status"
+                value={statusFilter}
+                onChange={(v) => setStatusFilter(v)}
+                options={STATUS_OPTIONS}
+                allowClear
+                className="text-xs sm:text-sm h-9 sm:h-10 w-full"
+              />
+            </div>
 
-            <div className="flex gap-2">
+            <div className="col-span-2 sm:col-span-2 md:col-span-1 flex gap-2">
               <button
                 type="button"
                 onClick={handleSearchClick}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-[6px] bg-[#1e4287] hover:bg-[#163266] text-white text-sm font-medium transition-colors cursor-pointer border-none shadow-xs h-10"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[6px] bg-[#1e4287] hover:bg-[#163266] text-white text-xs sm:text-sm font-medium transition-colors cursor-pointer border-none shadow-xs h-9 sm:h-10"
               >
                 <SearchOutlined />
                 Search
@@ -631,7 +637,7 @@ export default function CustomersManagementPage() {
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="px-3 py-2 border border-slate-200 rounded-[6px] text-slate-500 hover:bg-slate-50 text-sm transition-colors bg-white cursor-pointer h-10"
+                className="px-3 py-1.5 border border-slate-200 rounded-[6px] text-slate-500 hover:bg-slate-50 text-xs sm:text-sm transition-colors bg-white cursor-pointer h-9 sm:h-10"
                 title="Reset Filters"
               >
                 <ReloadOutlined />
@@ -641,7 +647,7 @@ export default function CustomersManagementPage() {
         </div>
 
         {/* Mobile View: Compact Card List (< 640px) */}
-        <div className="block sm:hidden space-y-3">
+        <div className="block sm:hidden !space-y-3">
           {loading ? (
             <Card className="!rounded-[6px] text-center py-6 text-slate-500 shadow-xs border-slate-100">
               Loading customer directory...
@@ -706,8 +712,7 @@ export default function CustomersManagementPage() {
           )}
 
           {/* Mobile Pagination */}
-          <div className="p-3 bg-white rounded-[6px] border border-slate-200/80 flex items-center justify-between text-xs">
-            <span className="text-slate-500">{pagination.total} customers</span>
+          <div className="p-3 bg-white rounded-[6px] flex items-center justify-center text-xs">
             <Pagination
               current={pagination.current}
               pageSize={pagination.pageSize}
