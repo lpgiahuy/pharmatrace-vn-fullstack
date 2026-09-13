@@ -9,6 +9,7 @@ import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
 import { FacilityModule } from './modules/facility/facility.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
+import { VoucherModule } from './modules/voucher/voucher.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -24,6 +25,7 @@ import { AppService } from './app.service';
     CategoryModule,
     ProductModule,
     FacilityModule,
+    VoucherModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -20,13 +20,19 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    const userRole = (user.role || user.vai_tro || "").toString().toLowerCase();
+    const userRole = (user.role || user.vai_tro || "")
+      .toString()
+      .toLowerCase()
+      .replace(/_/g, "");
 
     // Check if SuperAdmin (always bypass role checks)
-    if (userRole === "superadmin") {
+    if (userRole === "superadmin" || userRole === "admin") {
       return true;
     }
 
-    return requiredRoles.some((role) => role.toLowerCase() === userRole);
+    return requiredRoles.some((role) => {
+      const normalizedReq = role.toLowerCase().replace(/_/g, "");
+      return normalizedReq === userRole;
+    });
   }
 }
