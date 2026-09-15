@@ -60,6 +60,7 @@ model customers {
   prescriptions       prescriptions[]
   qr_scan_logs        qr_scan_logs[]
   reviews             reviews[]
+  wishlists           customer_wishlists[]
 }
 
 model employees {
@@ -108,6 +109,7 @@ model medicines {
   packaging_variants   packaging_variants[]
   purchase_order_items purchase_order_items[]
   reviews              reviews[]
+  wishlists            customer_wishlists[]
 
   @@index([effective_price], map: "idx_medicines_effective_price")
   @@index([slug], map: "idx_medicines_slug")
@@ -549,4 +551,17 @@ model manufacturers {
   created_at DateTime?   @default(now()) @db.Timestamptz(6)
   medicines  medicines[]
 }
+
+model customer_wishlists {
+  customer_id Int
+  medicine_id Int
+  created_at  DateTime?  @default(now()) @db.Timestamptz(6)
+  customers   customers  @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  medicines   medicines  @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([customer_id, medicine_id])
+  @@index([customer_id], map: "idx_wishlist_customer_id")
+  @@index([medicine_id], map: "idx_wishlist_medicine_id")
+}
+
 

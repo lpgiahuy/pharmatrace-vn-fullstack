@@ -10,6 +10,7 @@ import { ProductModule } from './modules/product/product.module';
 import { FacilityModule } from './modules/facility/facility.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { VoucherModule } from './modules/voucher/voucher.module';
+import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -26,6 +27,7 @@ import { AppService } from './app.service';
     ProductModule,
     FacilityModule,
     VoucherModule,
+    WishlistModule,
   ],
   controllers: [AppController],
   providers: [AppService],

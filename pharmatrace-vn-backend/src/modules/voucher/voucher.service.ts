@@ -112,38 +112,38 @@ export class VoucherService {
     };
   }
 
-  async findAll(query: VoucherQueryDto) {
-    const page = Math.max(1, Number(query.page) || 1);
-    const limit = Math.max(1, Math.min(100, Number(query.limit) || 10));
+  async findAll(query?: VoucherQueryDto) {
+    const page = Math.max(1, Number(query?.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
     const skip = (page - 1) * limit;
 
     const where: any = {};
 
-    if (query.search) {
+    if (query?.search) {
       where.voucher_code = {
         contains: query.search.trim(),
         mode: 'insensitive',
       };
     }
 
-    if (query.status) {
+    if (query?.status) {
       where.status = query.status.trim().toUpperCase();
     }
 
-    if (query.discountType) {
+    if (query?.discountType) {
       where.discount_type = query.discountType.trim().toUpperCase();
     }
 
     let orderBy: any = { id: 'desc' };
-    if (query.sort === 'oldest') {
+    if (query?.sort === 'oldest') {
       orderBy = { id: 'asc' };
-    } else if (query.sort === 'usage_desc') {
+    } else if (query?.sort === 'usage_desc') {
       orderBy = { used_quantity: 'desc' };
-    } else if (query.sort === 'usage_asc') {
+    } else if (query?.sort === 'usage_asc') {
       orderBy = { used_quantity: 'asc' };
-    } else if (query.sort === 'min_order_asc') {
+    } else if (query?.sort === 'min_order_asc') {
       orderBy = { min_order_value: 'asc' };
-    } else if (query.sort === 'min_order_desc') {
+    } else if (query?.sort === 'min_order_desc') {
       orderBy = { min_order_value: 'desc' };
     }
 

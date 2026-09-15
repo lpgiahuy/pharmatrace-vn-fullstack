@@ -103,14 +103,14 @@ export function formatProduct(item: any) {
 export class ProductService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async findAll(query: ProductQueryDto) {
-    const page = Math.max(1, Number(query.page) || 1);
-    const limit = Math.max(1, Math.min(10000, Number(query.limit) || 12));
+  async findAll(query?: ProductQueryDto) {
+    const page = Math.max(1, Number(query?.page) || 1);
+    const limit = Math.max(1, Math.min(10000, Number(query?.limit) || 12));
     const skip = (page - 1) * limit;
 
     const andConditions: Prisma.medicinesWhereInput[] = [];
 
-    const reqStatus = query.status ? String(query.status).toUpperCase() : 'ACTIVE';
+    const reqStatus = query?.status ? String(query.status).toUpperCase() : 'ACTIVE';
     if (reqStatus === 'ALL') {
     } else if (reqStatus === 'ACTIVE') {
       andConditions.push({
@@ -122,7 +122,7 @@ export class ProductService {
       });
     }
 
-    if (query.categoryId) {
+    if (query?.categoryId) {
       const rawCatIds = String(query.categoryId)
         .split(',')
         .map((id) => Number(id.trim()))
@@ -142,15 +142,15 @@ export class ProductService {
       }
     }
 
-    if (query.packagingId) {
+    if (query?.packagingId) {
       andConditions.push({ packaging_variants: { some: { id: Number(query.packagingId) } } });
     }
 
-    if (query.isPrescription !== undefined) {
+    if (query?.isPrescription !== undefined) {
       andConditions.push({ is_prescription: query.isPrescription });
     }
 
-    if (query.inStock !== undefined) {
+    if (query?.inStock !== undefined) {
       const outOfStockIds = Array.from({ length: 10000 }, (_, i) => (i + 1) * 7);
       if (query.inStock === true) {
         andConditions.push({ id: { notIn: outOfStockIds } });
@@ -159,7 +159,7 @@ export class ProductService {
       }
     }
 
-    if (query.manufacturer) {
+    if (query?.manufacturer) {
       const brandList = String(query.manufacturer)
         .split(',')
         .map((b) => b.trim())
@@ -184,7 +184,7 @@ export class ProductService {
       }
     }
 
-    if (query.countryOfOrigin) {
+    if (query?.countryOfOrigin) {
       andConditions.push({
         country_of_origin: {
           contains: query.countryOfOrigin.trim(),
@@ -193,7 +193,7 @@ export class ProductService {
       });
     }
 
-    if (query.minPrice !== undefined || query.maxPrice !== undefined) {
+    if (query?.minPrice !== undefined || query?.maxPrice !== undefined) {
       const minVal = query.minPrice !== undefined ? new Prisma.Decimal(query.minPrice) : undefined;
       const maxVal = query.maxPrice !== undefined ? new Prisma.Decimal(query.maxPrice) : undefined;
 
@@ -233,7 +233,7 @@ export class ProductService {
       });
     }
 
-    if (query.search) {
+    if (query?.search) {
       const s = query.search.trim();
       andConditions.push({
         OR: [
@@ -258,9 +258,9 @@ export class ProductService {
     const where: Prisma.medicinesWhereInput =
       andConditions.length > 0 ? { AND: andConditions } : {};
 
-    const order = query.sortOrder === 'desc' ? 'desc' : 'asc';
+    const order = query?.sortOrder === 'desc' ? 'desc' : 'asc';
     let orderBy: Prisma.medicinesOrderByWithRelationInput[] = [{ id: order }];
-    if (query.sortBy) {
+    if (query?.sortBy) {
       switch (query.sortBy) {
         case 'id':
           orderBy = [{ id: order }];

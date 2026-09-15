@@ -28,14 +28,14 @@ export function formatFacility(f: any) {
 export class FacilityService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query: FacilityQueryDto) {
-    const page = Math.max(1, query.page || 1);
-    const limit = Math.max(1, Math.min(100, query.limit || 10));
+  async findAll(query?: FacilityQueryDto) {
+    const page = Math.max(1, Number(query?.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
     const skip = (page - 1) * limit;
 
     const where: any = {};
 
-    if (query.search && query.search.trim() !== '') {
+    if (query?.search && query.search.trim() !== '') {
       const s = query.search.trim();
       where.OR = [
         { facility_name: { contains: s, mode: 'insensitive' } },
@@ -44,7 +44,7 @@ export class FacilityService {
       ];
     }
 
-    if (query.type && query.type.trim() !== '') {
+    if (query?.type && query.type.trim() !== '') {
       where.facility_type = { equals: query.type.trim(), mode: 'insensitive' };
     }
 

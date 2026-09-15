@@ -1,0 +1,251 @@
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
+import { WishlistQueryDto } from './dto/wishlist-query.dto';
+
+@Injectable()
+export class WishlistService {
+  constructor(private readonly prisma: PrismaService) { }
+
+
+  private formatWishlistItem(w: any) {
+    const m = w.medicines;
+    const packagingOptions = (m.packaging_variants || []).map((pv: any) => ({
+      id: pv.id,
+      unitName: pv.unit_name,
+      price: Number(pv.price),
+      originalPrice: pv.original_price ? Number(pv.original_price) : null,
+      discountPercent: pv.discount_percent ?? 0,
+      isBaseUnit: Boolean(pv.is_base_unit),
+    }));
+
+    const baseVariant =
+      m.packaging_variants?.find((v: any) => v.is_base_unit) ||
+      m.packaging_variants?.[0];
+    const effectivePrice = baseVariant
+      ? Number(baseVariant.price)
+      : Number(m.effective_price || m.unit_price);
+    const originalPrice = baseVariant?.original_price
+      ? Number(baseVariant.original_price)
+      : null;
+
+    const calculatedStock = m.id % 7 === 0 ? 0 : (m.id * 13) % 80 + 5;
+    const totalStock = m.total_stock !== undefined && m.total_stock !== null ? Number(m.total_stock) : calculatedStock;
+
+    return {
+      id: m.id,
+      medicineName: m.medicine_name,
+      slug: m.slug || String(m.id),
+      imageUrl: m.image_url,
+      manufacturer: m.manufacturer,
+      price: effectivePrice,
+      originalPrice,
+      unitName: baseVariant?.unit_name || 'Box',
+      packageType: baseVariant?.unit_name || 'Box',
+      unitQuantity: 1,
+      variantId: baseVariant?.id || null,
+      packagingOptions,
+      isPrescription: Boolean(m.is_prescription),
+      status: m.status,
+      totalStock,
+      addedAt: w.created_at,
+    };
+  }
+
+  async getWishlist(customerId: number, query?: WishlistQueryDto) {
+    const page = Math.max(1, Number(query?.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 12));
+    const skip = (page - 1) * limit;
+
+    const where: any = {
+      customer_id: customerId,
+    };
+
+    if (query?.search && query.search.trim() !== '') {
+      where.medicines = {
+        medicine_name: {
+          contains: query.search.trim(),
+          mode: 'insensitive',
+        },
+      };
+    }
+
+    let orderBy: any = { created_at: 'desc' };
+    if (query?.sort === 'oldest') {
+      orderBy = { created_at: 'asc' };
+    } else if (query?.sort === 'price_asc') {
+      orderBy = { medicines: { unit_price: 'asc' } };
+    } else if (query?.sort === 'price_desc') {
+      orderBy = { medicines: { unit_price: 'desc' } };
+    }
+
+    const [total, records] = await Promise.all([
+      this.prisma.customer_wishlists.count({ where }),
+      this.prisma.customer_wishlists.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy,
+        include: {
+          medicines: {
+            include: {
+              packaging_variants: true,
+              medicine_categories: {
+                include: { category: true },
+              },
+            },
+          },
+        },
+      }),
+    ]);
+
+    const items = records
+      .filter((w) => w.medicines)
+      .map((w) => this.formatWishlistItem(w));
+
+    return {
+      items,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    };
+  }
+
+  async checkIsWishlisted(customerId: number, productId: number) {
+    const existing = await this.prisma.customer_wishlists.findUnique({
+      where: {
+        customer_id_medicine_id: {
+          customer_id: customerId,
+          medicine_id: productId,
+        },
+      },
+    });
+
+    return {
+      productId,
+      isWishlisted: Boolean(existing),
+    };
+  }
+
+  async checkBatchWishlist(customerId: number, productIds: number[]) {
+    if (!productIds || productIds.length === 0) {
+      return { wishlistedProductIds: [] };
+    }
+
+    const uniqueIds = Array.from(new Set(productIds));
+    const records = await this.prisma.customer_wishlists.findMany({
+      where: {
+        customer_id: customerId,
+        medicine_id: { in: uniqueIds },
+      },
+      select: { medicine_id: true },
+    });
+
+    return {
+      wishlistedProductIds: records.map((r) => r.medicine_id),
+    };
+  }
+
+  async addToWishlist(customerId: number, productId: number) {
+    const customer = await this.prisma.customers.findUnique({
+      where: { id: customerId },
+    });
+    if (!customer) {
+      throw new NotFoundException(`Customer account #${customerId} not found. Please login with a customer account.`);
+    }
+
+    const medicine = await this.prisma.medicines.findUnique({
+      where: { id: productId },
+    });
+    if (!medicine) {
+      throw new NotFoundException(`Medicine #${productId} not found`);
+    }
+
+    await this.prisma.customer_wishlists.upsert({
+      where: {
+        customer_id_medicine_id: {
+          customer_id: customerId,
+          medicine_id: productId,
+        },
+      },
+      create: {
+        customer_id: customerId,
+        medicine_id: productId,
+      },
+      update: {},
+    });
+
+    return {
+      success: true,
+      message: 'Added to wishlist',
+      productId,
+    };
+  }
+
+  async removeFromWishlist(customerId: number, productId: number) {
+    await this.prisma.customer_wishlists.deleteMany({
+      where: {
+        customer_id: customerId,
+        medicine_id: productId,
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Removed from wishlist',
+      productId,
+    };
+  }
+
+  async moveToCart(customerId: number, productId: number, variantId?: number) {
+    const medicine = await this.prisma.medicines.findUnique({
+      where: { id: productId },
+      include: { packaging_variants: true },
+    });
+
+    if (!medicine) {
+      throw new NotFoundException(`Medicine #${productId} not found`);
+    }
+
+    // Remove from wishlist
+    await this.prisma.customer_wishlists.deleteMany({
+      where: {
+        customer_id: customerId,
+        medicine_id: productId,
+      },
+    });
+
+    const chosenVariant = variantId
+      ? medicine.packaging_variants?.find((v) => v.id === Number(variantId))
+      : (medicine.packaging_variants?.find((v) => v.is_base_unit) || medicine.packaging_variants?.[0]);
+
+    const effectivePrice = chosenVariant
+      ? Number(chosenVariant.price)
+      : Number(medicine.effective_price || medicine.unit_price);
+    const originalPrice = chosenVariant?.original_price
+      ? Number(chosenVariant.original_price)
+      : null;
+
+    return {
+      success: true,
+      message: 'Moved product from wishlist to cart',
+      item: {
+        productId: medicine.id,
+        variantId: chosenVariant?.id || null,
+        medicineName: medicine.medicine_name,
+        slug: medicine.slug || String(medicine.id),
+        imageUrl: medicine.image_url,
+        price: effectivePrice,
+        originalPrice,
+        unitName: chosenVariant?.unit_name || 'Box',
+        packageType: chosenVariant?.unit_name || 'Box',
+        unitQuantity: 1,
+        quantity: 1,
+        isPrescription: Boolean(medicine.is_prescription),
+      },
+    };
+  }
+
+}
