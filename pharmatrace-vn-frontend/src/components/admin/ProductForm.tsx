@@ -34,6 +34,24 @@ import { ProductPayload, PackagingSpecification } from '@/types/product.types';
 
 const { TextArea } = Input;
 
+function safeExtractFormString(val: any): string {
+  if (!val) return '';
+  if (typeof val === 'string') {
+    const t = val.trim();
+    return t === '[object Object]' ? '' : t;
+  }
+  if (Array.isArray(val)) {
+    return val.map(safeExtractFormString).filter(Boolean).join('\n');
+  }
+  if (typeof val === 'object') {
+    return Object.entries(val)
+      .map(([k, v]) => `${k}: ${typeof v === 'object' ? JSON.stringify(v) : v}`)
+      .filter(Boolean)
+      .join('\n');
+  }
+  return String(val);
+}
+
 const SectionCustomFields = ({
   name,
   sectionLabel,
@@ -336,71 +354,71 @@ export default function ProductForm({ productId }: { productId?: number }) {
           effectsOnDriving: ct.effectsOnDriving || ct.anh_huong_lai_xe || ct.lai_xe_van_hanh_may_moc || '',
           adverseReactionManagement: ct.adverseReactionManagement || ct.xu_tri_tac_dung_phu || '',
           detailedIngredients: {
-            activeIngredients:
+            activeIngredients: safeExtractFormString(
               ct.detailedIngredients?.activeIngredients ||
               ct.thanh_phan_chi_tiet?.hoat_chat ||
               ct.hoat_chat ||
               (Array.isArray(ct.ingredients) ? ct.ingredients.join(', ') : typeof ct.ingredients === 'string' ? ct.ingredients : '') ||
-              p.activeIngredients ||
-              '',
-            excipients:
+              p.activeIngredients,
+            ),
+            excipients: safeExtractFormString(
               ct.detailedIngredients?.excipients ||
               ct.thanh_phan_chi_tiet?.ta_duoc ||
-              ct.ta_duoc ||
-              '',
+              ct.ta_duoc,
+            ),
           },
           usageInstructions: {
-            administration:
+            administration: safeExtractFormString(
               ct.usageInstructions?.administration ||
               ct.huong_dan_su_dung?.cach_dung ||
-              ct.cach_dung ||
-              '',
-            dosage:
+              ct.cach_dung,
+            ),
+            dosage: safeExtractFormString(
               ct.usageInstructions?.dosage ||
               ct.huong_dan_su_dung?.lieu_dung ||
               ct.lieu_dung ||
-              p.dosage ||
-              '',
-            missedDose:
+              p.dosage,
+            ),
+            missedDose: safeExtractFormString(
               ct.usageInstructions?.missedDose ||
               ct.huong_dan_su_dung?.quen_lieu ||
-              ct.quen_lieu ||
-              '',
-            overdoseManagement:
+              ct.quen_lieu,
+            ),
+            overdoseManagement: safeExtractFormString(
               ct.usageInstructions?.overdoseManagement ||
               ct.huong_dan_su_dung?.qua_lieu_va_xu_tri ||
               ct.huong_dan_su_dung?.qua_lieu ||
-              ct.qua_lieu ||
-              '',
+              ct.qua_lieu,
+            ),
           },
           pharmacodynamics: {
-            pharmacologicalClass:
+            pharmacologicalClass: safeExtractFormString(
               ct.pharmacodynamics?.pharmacologicalClass ||
               ct.duoc_luc_hoc?.nhom_duoc_ly ||
-              ct.nhom_duoc_ly ||
-              '',
-            mechanismOfAction:
+              ct.nhom_duoc_ly,
+            ),
+            mechanismOfAction: safeExtractFormString(
               ct.pharmacodynamics?.mechanismOfAction ||
               ct.duoc_luc_hoc?.co_che_tac_dung ||
-              ct.co_che_tac_dung ||
-              '',
+              ct.co_che_tac_dung,
+            ),
           },
           pharmacokinetics: {
-            absorption:
+            absorption: safeExtractFormString(
               ct.pharmacokinetics?.absorption ||
               ct.duoc_dong_hoc?.hap_thu ||
-              ct.hap_thu ||
-              '',
-            metabolism:
+              ct.hap_thu,
+            ),
+            metabolism: safeExtractFormString(
               ct.pharmacokinetics?.metabolism ||
               ct.duoc_dong_hoc?.chuyen_hoa ||
-              ct.chuyen_hoa ||
-              '',
-            elimination:
+              ct.chuyen_hoa,
+            ),
+            elimination: safeExtractFormString(
               ct.pharmacokinetics?.elimination ||
               ct.duoc_dong_hoc?.thai_tru ||
-              ct.thai_tru ||
-              '',
+              ct.thai_tru,
+            ),
           },
           drugInteractions:
             (Array.isArray(ct.drugInteractions) ? ct.drugInteractions : null) ||

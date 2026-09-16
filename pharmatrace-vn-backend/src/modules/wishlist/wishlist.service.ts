@@ -40,7 +40,6 @@ export class WishlistService {
       price: effectivePrice,
       originalPrice,
       unitName: baseVariant?.unit_name || 'Box',
-      packageType: baseVariant?.unit_name || 'Box',
       unitQuantity: 1,
       variantId: baseVariant?.id || null,
       packagingOptions,
@@ -198,54 +197,4 @@ export class WishlistService {
       productId,
     };
   }
-
-  async moveToCart(customerId: number, productId: number, variantId?: number) {
-    const medicine = await this.prisma.medicines.findUnique({
-      where: { id: productId },
-      include: { packaging_variants: true },
-    });
-
-    if (!medicine) {
-      throw new NotFoundException(`Medicine #${productId} not found`);
-    }
-
-    // Remove from wishlist
-    await this.prisma.customer_wishlists.deleteMany({
-      where: {
-        customer_id: customerId,
-        medicine_id: productId,
-      },
-    });
-
-    const chosenVariant = variantId
-      ? medicine.packaging_variants?.find((v) => v.id === Number(variantId))
-      : (medicine.packaging_variants?.find((v) => v.is_base_unit) || medicine.packaging_variants?.[0]);
-
-    const effectivePrice = chosenVariant
-      ? Number(chosenVariant.price)
-      : Number(medicine.effective_price || medicine.unit_price);
-    const originalPrice = chosenVariant?.original_price
-      ? Number(chosenVariant.original_price)
-      : null;
-
-    return {
-      success: true,
-      message: 'Moved product from wishlist to cart',
-      item: {
-        productId: medicine.id,
-        variantId: chosenVariant?.id || null,
-        medicineName: medicine.medicine_name,
-        slug: medicine.slug || String(medicine.id),
-        imageUrl: medicine.image_url,
-        price: effectivePrice,
-        originalPrice,
-        unitName: chosenVariant?.unit_name || 'Box',
-        packageType: chosenVariant?.unit_name || 'Box',
-        unitQuantity: 1,
-        quantity: 1,
-        isPrescription: Boolean(medicine.is_prescription),
-      },
-    };
-  }
-
 }

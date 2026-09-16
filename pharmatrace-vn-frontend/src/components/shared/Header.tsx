@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
-  ShoppingCart,
   User,
   Menu,
   X,
@@ -16,6 +15,7 @@ import {
   ChevronDown,
   Flame,
   Search,
+  LogOut,
 } from 'lucide-react';
 import { useAuth } from '@/store/useAuthStore';
 import { categoryService } from '@/services/category.service';
@@ -182,61 +182,63 @@ export const Header: React.FC = () => {
               </nav>
             </div>
 
-            {/* Right: Notification, User Account, Cart, Mobile Menu Toggle */}
-            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+            {/* Right: Notification, User Account, Mobile Menu Toggle */}
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button
                 type="button"
-                className="p-1.5 text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer"
+                className="p-2 text-white hover:bg-white/10 rounded-full transition-all cursor-pointer"
                 title="Notifications"
               >
-                <Bell className="w-4 h-4 text-white" />
+                <Bell className="w-5 h-5 text-white" />
               </button>
 
               {mounted && isAuthenticated && user ? (
                 <div className="relative group">
                   <button
                     type="button"
-                    className="flex items-center gap-1.5 px-2.5 py-1 text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer"
+                    className="flex items-center gap-2.5 px-3 py-1.5 text-white hover:bg-white/10 rounded-full transition-all cursor-pointer"
                   >
-                    <User className="w-4 h-4 text-white shrink-0" />
-                    <span className="text-xs font-bold text-white hidden xl:block max-w-[120px] truncate">
-                      Welcome {user.fullName || user.name || user.email || 'User'}
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white shrink-0">
+                      <User className="w-4.5 h-4.5" />
+                    </div>
+                    <span className="text-sm font-bold text-white hidden sm:block max-w-[140px] truncate">
+                      {user.fullName || user.name || user.email || 'Customer'}
                     </span>
                   </button>
 
-                  <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
-                    <div className="px-4 py-2 border-b border-slate-100">
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider m-0">Signed in as</p>
-                      <p className="text-sm font-bold text-[#004996] truncate m-0 mt-0.5">
-                        {user.fullName || user.name || user.email}
-                      </p>
-                    </div>
+                  <div className="absolute right-0 top-full mt-2.5 w-60 bg-white rounded-2xl shadow-xl border border-slate-100/90 py-2.5 px-1.5 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 z-50">
+                    {/* Upward pointer arrow */}
+                    <div className="absolute -top-1.5 right-8 w-3 h-3 bg-white rotate-45 border-l border-t border-slate-100/90" />
+
+                    <Link
+                      href="/wishlist"
+                      className="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-black hover:bg-slate-100 rounded-xl transition-colors"
+                    >
+                      <Heart className="w-[18px] h-[18px] text-black shrink-0 stroke-[1.8]" />
+                      <span className="!text-black">Wishlist</span>
+                    </Link>
+
                     <button
                       type="button"
                       onClick={logout}
-                      className="w-full text-left px-4 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 cursor-pointer"
+                      className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-black hover:bg-slate-100 rounded-xl transition-colors cursor-pointer text-left"
                     >
-                      Logout
+                      <LogOut className="w-[18px] h-[18px] text-black shrink-0 stroke-[1.8]" />
+                      <span className="!text-black">Logout</span>
                     </button>
                   </div>
                 </div>
               ) : (
                 <Link
                   href="/login"
-                  className="flex items-center gap-1.5 px-2.5 py-1 text-white hover:bg-white/10 rounded-xl transition-all"
+                  className="flex items-center gap-2.5 px-3 py-1.5 text-white hover:bg-white/10 rounded-full transition-all"
                 >
-                  <User className="w-4 h-4 text-white shrink-0" />
-                  <span className="text-xs font-bold text-white hidden xl:block">Login</span>
+                  <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white shrink-0">
+                    <User className="w-4.5 h-4.5" />
+                  </div>
+                  <span className="text-sm font-bold text-white hidden sm:block">Login</span>
                 </Link>
               )}
-
-              <Link
-                href="/products"
-                className="flex items-center gap-1.5 px-2.5 py-1 text-white hover:bg-white/10 rounded-xl transition-all"
-              >
-                <ShoppingCart className="w-4 h-4 text-white shrink-0" />
-                <span className="text-xs font-bold text-white hidden xl:block">Cart</span>
-              </Link>
 
               {/* Mobile Hamburger Toggle Button */}
               <button

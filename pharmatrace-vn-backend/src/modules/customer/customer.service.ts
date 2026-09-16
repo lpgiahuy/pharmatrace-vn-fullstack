@@ -60,8 +60,8 @@ function formatCustomerOrder(order: any) {
       quantity: item.quantity,
       unitPrice: Number(item.unit_price || 0),
       totalPrice: Number(item.total_price || 0),
-      medicineName: item.medicine_name || item.medicines?.medicine_name || 'Thuốc',
-      unitName: item.unit_name || item.packaging_variants?.unit_name || 'Đơn vị',
+      medicineName: item.medicine_name || item.medicines?.medicine_name || 'Medicine',
+      unitName: item.unit_name || item.packaging_variants?.unit_name || 'Unit',
       medicine: item.medicines
         ? {
           id: item.medicines.id,

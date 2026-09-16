@@ -82,26 +82,6 @@ export class WishlistController {
     };
   }
 
-  @Post(':productId/move-to-cart')
-  @ApiOperation({
-    summary: 'Move product from wishlist to cart',
-    description: 'Removes medicine from wishlist and returns item data ready for cart insertion.',
-  })
-  @ApiResponse({ status: 200, description: 'Moved to cart successfully' })
-  async moveToCart(
-    @CurrentUser() user: any,
-    @Param('productId', ParseIntPipe) productId: number,
-    @Body('variantId') variantId?: number,
-  ) {
-    const customerId = user.userId || user.id;
-    const result = await this.wishlistService.moveToCart(customerId, productId, variantId);
-    return {
-      success: true,
-      message: result.message,
-      data: result.item,
-    };
-  }
-
   @Post(':productId')
   @ApiOperation({
     summary: 'Add medicine to wishlist',

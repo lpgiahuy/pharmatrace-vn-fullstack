@@ -22,8 +22,11 @@ import {
   Thermometer,
   Star,
   FileCheck2,
+  Heart,
 } from 'lucide-react';
 import { productService } from '@/services/product.service';
+import { wishlistService } from '@/services/wishlist.service';
+import { useAuth } from '@/store/useAuthStore';
 import { Product } from '@/types/product.types';
 import { formatCurrency, cleanText, cn } from '@/utils';
 
@@ -78,6 +81,21 @@ function getEnglishLabel(key: string): string {
     .toUpperCase();
 }
 
+function hasValidContent(val: any): boolean {
+  if (val === null || val === undefined) return false;
+  if (typeof val === 'string') {
+    const t = val.trim();
+    return t !== '' && t !== '[object Object]';
+  }
+  if (Array.isArray(val)) {
+    return val.length > 0 && val.some(hasValidContent);
+  }
+  if (typeof val === 'object') {
+    return Object.values(val).some(hasValidContent);
+  }
+  return true;
+}
+
 function RenderSafeContent({
   content,
   className = 'text-base text-slate-700 leading-relaxed font-normal',
@@ -85,10 +103,11 @@ function RenderSafeContent({
   content: any;
   className?: string;
 }) {
-  if (!content) return null;
+  if (!hasValidContent(content)) return null;
 
   if (typeof content === 'string') {
     const trimmed = content.trim();
+    if (trimmed === '[object Object]' || trimmed === '') return null;
     if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
       try {
         const parsed = JSON.parse(trimmed);
@@ -101,10 +120,11 @@ function RenderSafeContent({
   }
 
   if (Array.isArray(content)) {
-    if (content.length === 0) return null;
+    const validItems = content.filter(hasValidContent);
+    if (validItems.length === 0) return null;
     return (
       <ul className={`list-disc pl-5 space-y-2 marker:text-black ${className}`}>
-        {content.map((item: any, i: number) => (
+        {validItems.map((item: any, i: number) => (
           <li key={i} className="leading-relaxed">
             {typeof item === 'object' && item !== null ? (
               <RenderSafeContent content={item} className="mt-1" />
@@ -118,20 +138,20 @@ function RenderSafeContent({
   }
 
   if (typeof content === 'object' && content !== null) {
+    const entries = Object.entries(content).filter(([, val]) => hasValidContent(val));
+    if (entries.length === 0) return null;
+
     return (
-      <div className={`grid gap-3 sm:grid-cols-2 ${className}`}>
-        {Object.entries(content).map(([key, val]) => {
-          if (val === null || val === undefined || (typeof val === 'string' && val.trim() === '')) return null;
+      <div className={`space-y-4 ${className}`}>
+        {entries.map(([key, val]) => {
           const label = getEnglishLabel(key);
 
           return (
-            <div key={key} className="bg-slate-50/70 p-4 sm:p-5 rounded-xl border border-slate-100 shadow-2xs">
-              <h4 className="text-base font-semibold text-slate-800 mb-2">
+            <div key={key}>
+              <h4 className="text-base font-bold text-slate-900 mb-1">
                 {label}
               </h4>
-              <div className="pl-3">
-                <RenderSafeContent content={val} className="text-base text-slate-700 leading-relaxed font-normal" />
-              </div>
+              <RenderSafeContent content={val} className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal" />
             </div>
           );
         })}
@@ -139,7 +159,9 @@ function RenderSafeContent({
     );
   }
 
-  return <div className={className}>{cleanText(String(content))}</div>;
+  const str = String(content);
+  if (str === '[object Object]') return null;
+  return <div className={className}>{cleanText(str)}</div>;
 }
 
 function TabCustomAttributesSection({
@@ -152,37 +174,35 @@ function TabCustomAttributesSection({
   if (!attributes || attributes.length === 0) return null;
 
   return (
-    <section className="pt-6 mt-6 border-t border-slate-100">
-      <h3 className="text-base font-semibold text-slate-800 mb-2">
+    <section className="pt-5 mt-5 border-t border-slate-100">
+      <h3 className="text-base font-bold text-slate-900 mb-2">
         {title}
       </h3>
-      <div className="pl-4">
-        <div className="overflow-hidden rounded-xl border border-slate-200/80 shadow-2xs">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50/80">
-              <tr>
-                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase tracking-wider w-1/3">
-                  Specification / Property
-                </th>
-                <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-600 uppercase tracking-wider">
-                  Value / Details
-                </th>
+      <div className="overflow-hidden rounded-xl border border-slate-200/80 shadow-2xs">
+        <table className="min-w-full divide-y divide-slate-200">
+          <thead className="bg-slate-50/80">
+            <tr>
+              <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wider w-1/3">
+                Specification / Property
+              </th>
+              <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-slate-900 uppercase tracking-wider">
+                Value / Details
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100 bg-white">
+            {attributes.map((attr, idx) => (
+              <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/40 hover:bg-blue-50/30 transition-colors'}>
+                <td className="px-6 py-4 text-base font-bold text-slate-900 capitalize align-top">
+                  {getEnglishLabel(attr.key)}
+                </td>
+                <td className="px-6 py-4 text-slate-700 font-normal leading-relaxed align-top text-[15px]">
+                  <RenderSafeContent content={attr.value} />
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 bg-white">
-              {attributes.map((attr, idx) => (
-                <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/40 hover:bg-blue-50/30 transition-colors'}>
-                  <td className="px-6 py-4 text-base font-semibold text-slate-800 capitalize align-top">
-                    {getEnglishLabel(attr.key)}
-                  </td>
-                  <td className="px-6 py-4 text-base text-slate-700 font-normal leading-relaxed align-top">
-                    <RenderSafeContent content={attr.value} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </section>
   );
@@ -196,12 +216,16 @@ export default function ProductDetailPage({
   const resolvedParams = use(params);
   const productId = resolvedParams.id;
 
+  const { isAuthenticated } = useAuth();
+
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
   const [selectedPackagingId, setSelectedPackagingId] = useState<number | null>(null);
   const [activeTab, setActiveTab] = useState('ingredients');
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
@@ -228,8 +252,52 @@ export default function ProductDetailPage({
       });
   }, [productId, messageApi]);
 
+  useEffect(() => {
+    if (!product?.id || !isAuthenticated) {
+      setIsWishlisted(false);
+      return;
+    }
+    wishlistService
+      .checkIsWishlisted(product.id)
+      .then((res) => {
+        if (res?.data) {
+          setIsWishlisted(Boolean(res.data.isWishlisted));
+        }
+      })
+      .catch(() => { });
+  }, [product?.id, isAuthenticated]);
+
+  const handleToggleWishlist = async () => {
+    if (!product) return;
+    if (!isAuthenticated) {
+      messageApi.warning('Please sign in to save items to your wishlist');
+      return;
+    }
+    const nextStatus = !isWishlisted;
+    setIsWishlisted(nextStatus);
+    setWishlistLoading(true);
+    try {
+      if (!nextStatus) {
+        await wishlistService.removeFromWishlist(product.id);
+        messageApi.success('Removed from wishlist');
+      } else {
+        await wishlistService.addToWishlist(product.id);
+        messageApi.success('Added to wishlist');
+      }
+    } catch (err: any) {
+      setIsWishlisted(!nextStatus);
+      const errMsg =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to update wishlist';
+      messageApi.error(errMsg);
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
+
   const handleAddToCart = () => {
-    messageApi.success(`Added ${qty} item(s) to your cart!`);
+    messageApi.info('Cart feature is coming soon.');
   };
 
   if (loading) {
@@ -449,18 +517,18 @@ export default function ProductDetailPage({
               className="max-w-full max-h-full object-contain hover:scale-105 transition-transform duration-500"
             />
 
-            <div className="absolute top-3 left-3 flex flex-col gap-1 z-10">
+            <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10">
               {discount > 0 && (
-                <span className="bg-[#ed1c24] text-white text-xs font-black px-2.5 py-0.5 rounded-full shadow-xs">
+                <span className="bg-[#ed1c24] text-white text-xs font-black px-2.5 py-0.5 rounded-full shadow-xs w-fit">
                   -{discount}%
                 </span>
               )}
               {product.isPrescription ? (
-                <span className="bg-rose-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
+                <span className="bg-rose-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs w-fit">
                   Prescription Required (Rx)
                 </span>
               ) : (
-                <span className="bg-[#00A551] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs">
+                <span className="bg-[#00A551] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full shadow-xs w-fit">
                   OTC Medicine
                 </span>
               )}
@@ -640,10 +708,34 @@ export default function ProductDetailPage({
               type="button"
               onClick={handleAddToCart}
               disabled={!isInStock}
-              className="flex-1 bg-[#004996] hover:bg-[#003875] text-white py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-2.5 shadow-md shadow-blue-900/10 transition-all active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-base"
+              className="flex-1 bg-[#004996] hover:bg-[#003875] text-white py-3.5 px-6 rounded-xl font-bold flex items-center justify-center gap-2.5 shadow-md shadow-blue-900/10 transition-all active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-base"
             >
               <ShoppingCart className="w-5 h-5" />
               {isInStock ? 'Add to Cart' : 'Out of Stock'}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleToggleWishlist}
+              disabled={wishlistLoading}
+              title={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+              aria-label="Wishlist toggle"
+              className={cn(
+                'group/wishlist w-[52px] h-[52px] rounded-xl border bg-transparent hover:bg-transparent flex items-center justify-center transition-all cursor-pointer shrink-0 active:scale-95',
+                isWishlisted
+                  ? 'border-rose-600 text-rose-600 hover:border-rose-700'
+                  : 'border-slate-300 text-slate-400 hover:border-rose-500 hover:text-rose-500',
+              )}
+            >
+              <Heart
+                className={cn(
+                  'w-5 h-5 transition-all duration-200',
+                  isWishlisted
+                    ? 'fill-rose-600 text-rose-600 scale-110'
+                    : 'text-slate-500 group-hover/wishlist:fill-rose-500 group-hover/wishlist:text-rose-500 group-hover/wishlist:scale-110',
+                  wishlistLoading && 'animate-pulse',
+                )}
+              />
             </button>
           </div>
 
@@ -668,44 +760,38 @@ export default function ProductDetailPage({
       {/* Product Details Section */}
       {(() => {
         const renderIngredients = () => (
-          <div className="space-y-6">
-            {ct.detailedIngredients?.activeIngredients && (
+          <div className="space-y-5">
+            {hasValidContent(ct.detailedIngredients?.activeIngredients) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Active Ingredients
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.detailedIngredients.activeIngredients}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.detailedIngredients.activeIngredients}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
-            {ct.detailedIngredients?.excipients && (
+            {hasValidContent(ct.detailedIngredients?.excipients) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Excipients / Other Ingredients
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.detailedIngredients.excipients}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.detailedIngredients.excipients}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
-            {(ct.ingredients || product.activeIngredients) && (
+            {hasValidContent(ct.ingredients || product.activeIngredients) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Ingredient List
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.ingredients || product.activeIngredients}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.ingredients || product.activeIngredients}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
             <TabCustomAttributesSection
@@ -716,48 +802,48 @@ export default function ProductDetailPage({
         );
 
         const renderIndications = () => (
-          <div className="space-y-6">
-            <section>
-              <h3 className="text-base font-semibold text-slate-800 mb-2">
-                Approved Indications & Therapeutic Use
-              </h3>
-              <div className="pl-4">
-                <RenderSafeContent
-                  content={
-                    ct.indications ||
-                    ct.generalDescription ||
-                    product.shortDescription
-                  }
-                  className="text-base text-slate-700 leading-relaxed font-normal"
-                />
-              </div>
-            </section>
+          <div className="space-y-5">
+            {hasValidContent(
+              ct.indications ||
+              ct.generalDescription ||
+              product.shortDescription
+            ) && (
+                <section>
+                  <h3 className="text-base font-bold text-slate-900 mb-1.5">
+                    Approved Indications & Therapeutic Use
+                  </h3>
+                  <RenderSafeContent
+                    content={
+                      ct.indications ||
+                      ct.generalDescription ||
+                      product.shortDescription
+                    }
+                    className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                  />
+                </section>
+              )}
 
             {/* Clinical Pharmacology: Pharmacodynamics & Pharmacokinetics */}
-            {(ct.pharmacodynamics || ct.pharmacokinetics) && (
-              <section className="space-y-3 pt-4 border-t border-slate-100">
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+            {(hasValidContent(ct.pharmacodynamics) || hasValidContent(ct.pharmacokinetics)) && (
+              <section className="space-y-4 pt-4 border-t border-slate-100">
+                <h3 className="text-base font-bold text-slate-900 mb-2">
                   Clinical Pharmacology
                 </h3>
-                <div className="pl-4 space-y-3">
-                  {ct.pharmacodynamics && (
-                    <div className="p-4 sm:p-5 bg-white rounded-xl border border-slate-200 space-y-2">
-                      <h4 className="text-base font-semibold text-slate-800 mb-2">
+                <div className="space-y-3">
+                  {hasValidContent(ct.pharmacodynamics) && (
+                    <div>
+                      <h4 className="text-base font-bold text-slate-900 mb-1">
                         Pharmacodynamics
                       </h4>
-                      <div className="pl-3">
-                        <RenderSafeContent content={ct.pharmacodynamics} className="text-base text-slate-700 leading-relaxed font-normal" />
-                      </div>
+                      <RenderSafeContent content={ct.pharmacodynamics} className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal" />
                     </div>
                   )}
-                  {ct.pharmacokinetics && (
-                    <div className="p-4 sm:p-5 bg-white rounded-xl border border-slate-200 space-y-2">
-                      <h4 className="text-base font-semibold text-slate-800 mb-2">
+                  {hasValidContent(ct.pharmacokinetics) && (
+                    <div>
+                      <h4 className="text-base font-bold text-slate-900 mb-1">
                         Pharmacokinetics
                       </h4>
-                      <div className="pl-3">
-                        <RenderSafeContent content={ct.pharmacokinetics} className="text-base text-slate-700 leading-relaxed font-normal" />
-                      </div>
+                      <RenderSafeContent content={ct.pharmacokinetics} className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal" />
                     </div>
                   )}
                 </div>
@@ -772,70 +858,62 @@ export default function ProductDetailPage({
         );
 
         const renderUsage = () => (
-          <div className="space-y-6">
-            {ct.usageInstructions?.administration && (
+          <div className="space-y-5">
+            {hasValidContent(ct.usageInstructions?.administration) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Administration Method
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.usageInstructions.administration}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.usageInstructions.administration}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
 
-            {ct.usageInstructions?.dosage && (
+            {hasValidContent(ct.usageInstructions?.dosage) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Dosage & Schedule
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.usageInstructions.dosage}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
-              </section>
-            )}
-
-            {/* Missed dose advice */}
-            {ct.usageInstructions?.missedDose && (
-              <section className="bg-transparent border-0 p-0">
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
-                  Missed Dose Advice
-                </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.usageInstructions.missedDose}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.usageInstructions.dosage}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
 
             {/* Overdose advice */}
-            {ct.usageInstructions?.overdoseManagement && (
-              <section className="bg-transparent border-0 p-0">
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+            {hasValidContent(ct.usageInstructions?.overdoseManagement) && (
+              <section>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Overdose Management
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.usageInstructions.overdoseManagement}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.usageInstructions.overdoseManagement}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
 
-            {!ct.usageInstructions && (
-              <div className="pl-4">
+            {/* Missed dose advice */}
+            {hasValidContent(ct.usageInstructions?.missedDose) && (
+              <section>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
+                  Missed Dose Advice
+                </h3>
+                <RenderSafeContent
+                  content={ct.usageInstructions.missedDose}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
+              </section>
+            )}
+
+            {!hasValidContent(ct.usageInstructions) && (
+              <div>
                 <RenderSafeContent
                   content="Use as directed by your physician or according to the packaged instruction leaflet."
-                  className="text-base text-slate-700 leading-relaxed font-normal"
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
                 />
               </div>
             )}
@@ -848,170 +926,152 @@ export default function ProductDetailPage({
         );
 
         const renderPrecautions = () => (
-          <div className="space-y-6">
-            {ct.contraindications && (
-              <section className="bg-transparent border-0 p-0">
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+          <div className="space-y-5">
+            {hasValidContent(ct.contraindications) && (
+              <section>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Contraindications / Do Not Use If
                 </h3>
-                <div className="pl-4 text-slate-700 font-normal">
-                  <RenderSafeContent
-                    content={ct.contraindications}
-                    className="text-base leading-relaxed text-slate-700 font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.contraindications}
+                  className="text-[15px] sm:text-base leading-relaxed text-slate-700 font-normal"
+                />
               </section>
             )}
 
-            {ct.warningsAndPrecautions && (
+            {hasValidContent(ct.warningsAndPrecautions) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">Warnings & Precautions</h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.warningsAndPrecautions}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">Warnings & Precautions</h3>
+                <RenderSafeContent
+                  content={ct.warningsAndPrecautions}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
 
-            {ct.sideEffects && (
+            {hasValidContent(ct.sideEffects) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-2">Potential Side Effects</h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.sideEffects}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">Potential Side Effects</h3>
+                <RenderSafeContent
+                  content={ct.sideEffects}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
 
             {/* Adverse Event Management */}
-            {(ct.adverseReactionManagement || ct.adverseEventManagement) && (
-              <section className="bg-transparent border-0 p-0">
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+            {hasValidContent(ct.adverseReactionManagement || ct.adverseEventManagement) && (
+              <section>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Management of Adverse Reactions
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.adverseReactionManagement || ct.adverseEventManagement}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.adverseReactionManagement || ct.adverseEventManagement}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
 
             {/* Effects on Driving */}
-            {ct.effectsOnDriving && (
-              <section className="bg-transparent border-0 p-0">
-                <h3 className="text-base font-semibold text-slate-800 mb-2">
+            {hasValidContent(ct.effectsOnDriving) && (
+              <section>
+                <h3 className="text-base font-bold text-slate-900 mb-1.5">
                   Effects on Driving & Operating Machinery
                 </h3>
-                <div className="pl-4">
-                  <RenderSafeContent
-                    content={ct.effectsOnDriving}
-                    className="text-base text-slate-700 leading-relaxed font-normal"
-                  />
-                </div>
+                <RenderSafeContent
+                  content={ct.effectsOnDriving}
+                  className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal"
+                />
               </section>
             )}
 
-            {ct.drugInteractions && (
+            {hasValidContent(ct.drugInteractions) && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-3">Drug Interactions</h3>
-                <div className="pl-4">
-                  {Array.isArray(ct.drugInteractions) ? (
-                    <div className="overflow-x-auto rounded-xl border border-slate-200/80 shadow-2xs">
-                      <table className="min-w-full text-base text-left border-collapse">
-                        <thead className="bg-slate-50/80 text-slate-700 font-bold border-b border-slate-200">
-                          <tr>
-                            <th className="px-6 py-4 w-1/3 font-bold text-slate-700 text-xs uppercase tracking-wider">Interacting Substance</th>
-                            <th className="px-6 py-4 font-bold text-slate-700 text-xs uppercase tracking-wider">Potential Effect</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 bg-white">
-                          {ct.drugInteractions.map((item: any, i: number) => {
-                            const substance =
-                              item.drug || item.substance || item.item || item.name || Object.values(item)[0] || '';
-                            const effect =
-                              item.effect || item.description || Object.values(item)[1] || '';
-                            return (
-                              <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                                <td className="px-6 py-4 font-semibold text-slate-800 align-top text-base">
-                                  {String(substance)}
-                                </td>
-                                <td className="px-6 py-4 text-slate-700 leading-relaxed align-top text-base font-normal">
-                                  {typeof effect === 'object' ? <RenderSafeContent content={effect} /> : String(effect)}
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : typeof ct.drugInteractions === 'object' ? (
-                    <div className="overflow-x-auto rounded-xl border border-slate-200/80 shadow-2xs">
-                      <table className="min-w-full text-base text-left border-collapse">
-                        <thead className="bg-slate-50/80 text-slate-700 font-bold border-b border-slate-200">
-                          <tr>
-                            <th className="px-6 py-4 w-1/3 font-bold text-slate-700 text-xs uppercase tracking-wider">Interacting Substance</th>
-                            <th className="px-6 py-4 font-bold text-slate-700 text-xs uppercase tracking-wider">Potential Effect</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 bg-white">
-                          {Object.entries(ct.drugInteractions).map(([substance, effect], i) => (
+                <h3 className="text-base font-bold text-slate-900 mb-2">Drug Interactions</h3>
+                {Array.isArray(ct.drugInteractions) ? (
+                  <div className="overflow-x-auto rounded-xl border border-slate-200/80 shadow-2xs">
+                    <table className="min-w-full text-base text-left border-collapse">
+                      <thead className="bg-slate-50/80 text-slate-900 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="px-6 py-4 w-1/3 font-bold text-slate-900 text-xs uppercase tracking-wider">Interacting Substance</th>
+                          <th className="px-6 py-4 font-bold text-slate-900 text-xs uppercase tracking-wider">Potential Effect</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 bg-white">
+                        {ct.drugInteractions.map((item: any, i: number) => {
+                          const substance =
+                            item.drug || item.substance || item.item || item.name || Object.values(item)[0] || '';
+                          const effect =
+                            item.effect || item.description || Object.values(item)[1] || '';
+                          return (
                             <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                              <td className="px-6 py-4 font-semibold text-slate-800 align-top text-base">
-                                {substance}
+                              <td className="px-6 py-4 font-bold text-slate-900 align-top text-base">
+                                {String(substance)}
                               </td>
-                              <td className="px-6 py-4 text-slate-700 leading-relaxed align-top text-base font-normal">
+                              <td className="px-6 py-4 text-slate-700 leading-relaxed align-top text-[15px] font-normal">
                                 {typeof effect === 'object' ? <RenderSafeContent content={effect} /> : String(effect)}
                               </td>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  ) : (
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 leading-relaxed font-normal text-base">
-                      {String(ct.drugInteractions)}
-                    </div>
-                  )}
-                </div>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : typeof ct.drugInteractions === 'object' ? (
+                  <div className="overflow-x-auto rounded-xl border border-slate-200/80 shadow-2xs">
+                    <table className="min-w-full text-base text-left border-collapse">
+                      <thead className="bg-slate-50/80 text-slate-900 font-bold border-b border-slate-200">
+                        <tr>
+                          <th className="px-6 py-4 w-1/3 font-bold text-slate-900 text-xs uppercase tracking-wider">Interacting Substance</th>
+                          <th className="px-6 py-4 font-bold text-slate-900 text-xs uppercase tracking-wider">Potential Effect</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 bg-white">
+                        {Object.entries(ct.drugInteractions).map(([substance, effect], i) => (
+                          <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                            <td className="px-6 py-4 font-bold text-slate-900 align-top text-base">
+                              {substance}
+                            </td>
+                            <td className="px-6 py-4 text-slate-700 leading-relaxed align-top text-[15px] font-normal">
+                              {typeof effect === 'object' ? <RenderSafeContent content={effect} /> : String(effect)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-slate-700 leading-relaxed font-normal text-[15px]">
+                    {String(ct.drugInteractions)}
+                  </div>
+                )}
               </section>
             )}
 
             {ct.specialPatientGroups && (
               <section>
-                <h3 className="text-base font-semibold text-slate-800 mb-3">
+                <h3 className="text-base font-bold text-slate-900 mb-2">
                   Special Patient Groups
                 </h3>
-                <div className="pl-4">
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {typeof ct.specialPatientGroups === 'object' && !Array.isArray(ct.specialPatientGroups) ? (
-                      Object.entries(ct.specialPatientGroups)
-                        .filter(([_, val]) => val && String(val).trim() !== '')
-                        .map(([key, val]) => {
-                          const label = getEnglishLabel(key);
-                          return (
-                            <div key={key} className="p-4 sm:p-5 bg-white rounded-xl border border-slate-200">
-                              <h4 className="text-base font-semibold text-slate-800 mb-2">
-                                {label}
-                              </h4>
-                              <div className="pl-3">
-                                <RenderSafeContent content={val} className="text-base text-slate-700 leading-relaxed font-normal" />
-                              </div>
-                            </div>
-                          );
-                        })
-                    ) : (
-                      <div className="p-4 sm:p-5 bg-white rounded-xl border border-slate-200 col-span-2">
-                        <RenderSafeContent content={ct.specialPatientGroups} className="text-base text-slate-700 leading-relaxed font-normal" />
-                      </div>
-                    )}
+                {typeof ct.specialPatientGroups === 'object' && !Array.isArray(ct.specialPatientGroups) ? (
+                  <div className="space-y-3">
+                    {Object.entries(ct.specialPatientGroups)
+                      .filter(([_, val]) => val && String(val).trim() !== '')
+                      .map(([key, val]) => {
+                        const label = getEnglishLabel(key);
+                        return (
+                          <div key={key}>
+                            <h4 className="text-base font-bold text-slate-900 mb-1">
+                              {label}
+                            </h4>
+                            <RenderSafeContent content={val} className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal" />
+                          </div>
+                        );
+                      })}
                   </div>
-                </div>
+                ) : (
+                  <RenderSafeContent content={ct.specialPatientGroups} className="text-[15px] sm:text-base text-slate-700 leading-relaxed font-normal" />
+                )}
               </section>
             )}
 
@@ -1062,10 +1122,10 @@ export default function ProductDetailPage({
                       {item.icon}
                     </div>
                     <div>
-                      <p className="text-xs text-slate-500 font-bold uppercase tracking-wider m-0">
+                      <p className="text-xs font-bold text-slate-900 uppercase tracking-wider m-0">
                         {item.label}
                       </p>
-                      <p className="text-base font-semibold text-slate-900 mt-1 m-0">
+                      <p className="text-sm font-normal text-slate-600 mt-1 m-0 leading-relaxed">
                         {cleanText(item.value)}
                       </p>
                     </div>
@@ -1091,7 +1151,7 @@ export default function ProductDetailPage({
         return (
           <div className="mt-12 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
             <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/50">
-              <h2 className="text-xl sm:text-2xl font-display font-semibold text-slate-900 m-0">
+              <h2 className="text-xl sm:text-2xl font-display font-bold text-slate-900 m-0">
                 Product Description
               </h2>
             </div>
@@ -1106,9 +1166,9 @@ export default function ProductDetailPage({
                     role="tab"
                     aria-selected={activeTab === tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`px-5 sm:px-7 py-3.5 sm:py-4.5 text-base sm:text-lg font-semibold whitespace-nowrap transition-all relative cursor-pointer border-none bg-transparent ${activeTab === tab.id
-                        ? 'text-slate-900'
-                        : 'text-slate-500 hover:text-slate-900'
+                    className={`px-5 sm:px-7 py-3.5 sm:py-4.5 text-base sm:text-lg font-bold whitespace-nowrap transition-all relative cursor-pointer border-none bg-transparent ${activeTab === tab.id
+                      ? 'text-slate-900'
+                      : 'text-slate-500 hover:text-slate-900'
                       }`}
                   >
                     {tab.label}
