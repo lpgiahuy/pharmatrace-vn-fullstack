@@ -60,8 +60,8 @@ function formatCustomerOrder(order: any) {
       quantity: item.quantity,
       unitPrice: Number(item.unit_price || 0),
       totalPrice: Number(item.total_price || 0),
-      medicineName: item.medicine_name || item.medicines?.medicine_name || 'Thuốc',
-      unitName: item.unit_name || item.packaging_variants?.unit_name || 'Đơn vị',
+      medicineName: item.medicine_name || item.medicines?.medicine_name || 'Medicine',
+      unitName: item.unit_name || item.packaging_variants?.unit_name || 'Unit',
       medicine: item.medicines
         ? {
           id: item.medicines.id,
@@ -85,14 +85,14 @@ function formatCustomerOrder(order: any) {
 export class CustomerService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async findAll(query: CustomerQueryDto) {
-    const page = Math.max(1, query.page || 1);
-    const limit = Math.max(1, Math.min(100, query.limit || 10));
+  async findAll(query?: CustomerQueryDto) {
+    const page = Math.max(1, Number(query?.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
     const skip = (page - 1) * limit;
 
     const where: any = {};
 
-    if (query.search && query.search.trim() !== '') {
+    if (query?.search && query.search.trim() !== '') {
       const s = query.search.trim();
       where.OR = [
         { full_name: { contains: s, mode: 'insensitive' } },
@@ -101,11 +101,11 @@ export class CustomerService {
       ];
     }
 
-    if (query.membershipTier && query.membershipTier.trim() !== '') {
+    if (query?.membershipTier && query.membershipTier.trim() !== '') {
       where.membership_tier = { equals: query.membershipTier.trim(), mode: 'insensitive' };
     }
 
-    if (query.status && query.status.trim() !== '') {
+    if (query?.status && query.status.trim() !== '') {
       where.status = { equals: query.status.trim(), mode: 'insensitive' };
     }
 
@@ -196,7 +196,7 @@ export class CustomerService {
     return formatCustomer(updated);
   }
 
-  async getCustomerOrders(id: number, query: CustomerOrderQueryDto) {
+  async getCustomerOrders(id: number, query?: CustomerOrderQueryDto) {
     const customer = await this.prisma.customers.findUnique({
       where: { id },
       select: { id: true, full_name: true },
@@ -206,19 +206,19 @@ export class CustomerService {
       throw new NotFoundException(`Customer with ID ${id} not found`);
     }
 
-    const page = Math.max(1, query.page || 1);
-    const limit = Math.max(1, Math.min(100, query.limit || 10));
+    const page = Math.max(1, Number(query?.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
     const skip = (page - 1) * limit;
 
     const where: any = {
       customer_id: id,
     };
 
-    if (query.orderStatus && query.orderStatus.trim() !== '') {
+    if (query?.orderStatus && query.orderStatus.trim() !== '') {
       where.order_status = { equals: query.orderStatus.trim(), mode: 'insensitive' };
     }
 
-    if (query.paymentStatus && query.paymentStatus.trim() !== '') {
+    if (query?.paymentStatus && query.paymentStatus.trim() !== '') {
       where.payment_status = { equals: query.paymentStatus.trim(), mode: 'insensitive' };
     }
 

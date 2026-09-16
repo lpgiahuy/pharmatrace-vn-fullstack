@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Spin, Pagination, Drawer } from 'antd';
+import { Spin, Pagination, Drawer, App } from 'antd';
 import {
   Heart,
   Plus,
@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { productService } from '@/services/product.service';
 import { categoryService } from '@/services/category.service';
+import { wishlistService } from '@/services/wishlist.service';
+import { useAuth } from '@/store/useAuthStore';
 import { Product } from '@/types/product.types';
 import { Category } from '@/types/category.types';
 import { CategoryIcon } from '@/components/common/CategoryIcon';
@@ -158,8 +160,55 @@ function CategoryFilterItem({
   );
 }
 
-function ProductCardItem({ product }: { product: Product }) {
-  const [isFavorite, setIsFavorite] = useState(false);
+function ProductCardItem({
+  product,
+  isFavorite: initialFavorite = false,
+  onToggleFavorite,
+}: {
+  product: Product;
+  isFavorite?: boolean;
+  onToggleFavorite?: (productId: number, nextStatus: boolean) => void;
+}) {
+  const { message } = App.useApp();
+  const [isFavorite, setIsFavorite] = useState(initialFavorite);
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    setIsFavorite(initialFavorite);
+  }, [initialFavorite]);
+
+  const handleToggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      message.warning('Please sign in to save items to your wishlist');
+      return;
+    }
+    const nextStatus = !isFavorite;
+    setIsFavorite(nextStatus);
+    onToggleFavorite?.(product.id, nextStatus);
+
+    try {
+      if (!nextStatus) {
+        await wishlistService.removeFromWishlist(product.id);
+        message.success('Removed from wishlist');
+      } else {
+        await wishlistService.addToWishlist(product.id);
+        message.success('Added to wishlist');
+      }
+    } catch (err: any) {
+      setIsFavorite(!nextStatus);
+      onToggleFavorite?.(product.id, !nextStatus);
+      const errMsg = err?.response?.data?.message || err?.message || 'Failed to update wishlist';
+      message.error(errMsg);
+    }
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    message.info('Cart feature is coming soon.');
+  };
 
   const hasDiscount = Boolean(
     product.promotionalPrice &&
@@ -207,7 +256,7 @@ function ProductCardItem({ product }: { product: Product }) {
 
         {/* Out of Stock Overlay */}
         {!isInStock && (
-          <div className="absolute inset-0 bg-white/75 flex items-center justify-center z-20">
+          <div className="absolute inset-0 bg-white/75 flex items-center justify-center z-20 pointer-events-none">
             <span className="bg-slate-800 text-white text-xs font-bold px-3 py-1 rounded-md uppercase tracking-wider">
               Out of stock
             </span>
@@ -215,23 +264,24 @@ function ProductCardItem({ product }: { product: Product }) {
         )}
 
         {/* Wishlist button */}
-        {isInStock && (
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setIsFavorite(!isFavorite);
-            }}
-            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        <button
+          type="button"
+          onClick={handleToggleFavorite}
+          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          className={cn(
+            'group/fav absolute bottom-2 right-2 p-1.5 bg-transparent flex items-center justify-center transition-all cursor-pointer z-30 active:scale-90',
+            isFavorite ? 'text-rose-600' : 'text-slate-400 hover:text-rose-500',
+          )}
+        >
+          <Heart
             className={cn(
-              'absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-white border border-slate-200 shadow-xs flex items-center justify-center transition-colors cursor-pointer z-10',
-              isFavorite ? 'text-rose-600 border-rose-200' : 'text-slate-400 hover:text-slate-600 hover:border-slate-300',
+              'w-5 h-5 transition-all duration-200',
+              isFavorite
+                ? 'fill-rose-600 text-rose-600'
+                : 'text-slate-400 group-hover/fav:fill-rose-500 group-hover/fav:text-rose-500 group-hover/fav:scale-110',
             )}
-          >
-            <Heart className={cn('w-4 h-4', isFavorite && 'fill-current text-rose-600')} />
-          </button>
-        )}
+          />
+        </button>
       </Link>
 
       {/* Content */}
@@ -271,6 +321,7 @@ function ProductCardItem({ product }: { product: Product }) {
         {isInStock ? (
           <button
             type="button"
+            onClick={handleAddToCart}
             className="w-full h-10 rounded-xl border-2 border-[#004996] bg-white text-[#004996] hover:bg-blue-50 active:bg-blue-100 text-sm font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
@@ -293,6 +344,7 @@ function ProductCardItem({ product }: { product: Product }) {
 function ProductListContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isAuthenticated } = useAuth();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -303,6 +355,7 @@ function ProductListContainer() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const [wishlistIds, setWishlistIds] = useState<Set<number>>(new Set());
 
   const page = Number(searchParams.get('page')) || 1;
   const categoryParam = searchParams.get('category') || '';
@@ -312,6 +365,31 @@ function ProductListContainer() {
   const inStockOnly = searchParams.get('in_stock') === 'true';
   const minPrice = searchParams.get('minPrice') || '';
   const maxPrice = searchParams.get('maxPrice') || '';
+
+  useEffect(() => {
+    if (isAuthenticated && products.length > 0) {
+      const ids = products.map((p) => p.id);
+      wishlistService
+        .checkBatchWishlist(ids)
+        .then((res) => {
+          if (res?.data?.wishlistedProductIds) {
+            setWishlistIds(new Set(res.data.wishlistedProductIds));
+          }
+        })
+        .catch(() => { });
+    } else {
+      setWishlistIds(new Set());
+    }
+  }, [isAuthenticated, products]);
+
+  const handleToggleWishlist = (productId: number, nextStatus: boolean) => {
+    setWishlistIds((prev) => {
+      const next = new Set(prev);
+      if (nextStatus) next.add(productId);
+      else next.delete(productId);
+      return next;
+    });
+  };
 
   const [localMin, setLocalMin] = useState(minPrice);
   const [localMax, setLocalMax] = useState(maxPrice);
@@ -893,7 +971,12 @@ function ProductListContainer() {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {products.map((p) => (
-                <ProductCardItem key={p.id} product={p} />
+                <ProductCardItem
+                  key={p.id}
+                  product={p}
+                  isFavorite={wishlistIds.has(p.id)}
+                  onToggleFavorite={handleToggleWishlist}
+                />
               ))}
             </div>
           )}
@@ -930,10 +1013,9 @@ function ProductListContainer() {
           </div>
         }
         placement="left"
-        width={320}
         onClose={() => setMobileFilterOpen(false)}
         open={mobileFilterOpen}
-        styles={{ body: { padding: '16px' } }}
+        styles={{ wrapper: { width: 320 }, body: { padding: '16px' } }}
         footer={
           <div className="p-2">
             <button

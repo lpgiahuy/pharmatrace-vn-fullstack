@@ -34,14 +34,14 @@ function formatEmployee(emp: any) {
 export class EmployeeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query: EmployeeQueryDto) {
-    const page = Math.max(1, query.page || 1);
-    const limit = Math.max(1, Math.min(100, query.limit || 10));
+  async findAll(query?: EmployeeQueryDto) {
+    const page = Math.max(1, Number(query?.page) || 1);
+    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
     const skip = (page - 1) * limit;
 
     const where: any = {};
 
-    if (query.search && query.search.trim() !== '') {
+    if (query?.search && query.search.trim() !== '') {
       const s = query.search.trim();
       where.OR = [
         { full_name: { contains: s, mode: 'insensitive' } },
@@ -49,16 +49,16 @@ export class EmployeeService {
       ];
     }
 
-    if (query.role && query.role.trim() !== '') {
+    if (query?.role && query.role.trim() !== '') {
       where.role = { equals: query.role.trim(), mode: 'insensitive' };
     }
 
-    if (query.facilityId) {
+    if (query?.facilityId) {
       where.facility_id = query.facilityId;
     }
 
-    if (query.status && query.status.trim() !== '') {
-      where.status = query.status.trim();
+    if (query?.status && query.status.trim() !== '') {
+      where.status = { equals: query.status.trim(), mode: 'insensitive' };
     }
 
     const [total, items] = await Promise.all([
