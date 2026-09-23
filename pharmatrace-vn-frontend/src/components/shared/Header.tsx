@@ -133,10 +133,10 @@ export const Header: React.FC = () => {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={Logo} alt="Logo" className="h-8 sm:h-9 w-auto object-contain shrink-0" />
                 <div className="flex flex-col">
-                  <span className="text-[15px] sm:text-[18px] font-display font-black text-white block leading-none tracking-tight">
+                  <span className="text-[15px] sm:text-[18px] font-display font-black !text-white block leading-none tracking-tight">
                     PharmaTrace VN
                   </span>
-                  <span className="text-[8px] sm:text-[9px] text-white/90 font-bold tracking-[0.18em] uppercase mt-0.5 block">
+                  <span className="text-[8px] sm:text-[9px] !text-white/90 font-bold tracking-[0.18em] uppercase mt-0.5 block">
                     Health & Care
                   </span>
                 </div>

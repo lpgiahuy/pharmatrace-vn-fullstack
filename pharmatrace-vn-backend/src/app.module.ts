@@ -11,6 +11,8 @@ import { FacilityModule } from './modules/facility/facility.module';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 import { VoucherModule } from './modules/voucher/voucher.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
+import { ReviewModule } from './modules/review/review.module';
+import { ContentModerationModule } from './modules/moderation/content-moderation.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -28,6 +30,8 @@ import { AppService } from './app.service';
     FacilityModule,
     VoucherModule,
     WishlistModule,
+    ReviewModule,
+    ContentModerationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

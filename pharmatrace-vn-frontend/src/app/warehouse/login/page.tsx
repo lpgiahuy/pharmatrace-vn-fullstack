@@ -137,13 +137,13 @@ export default function WarehouseLoginPage() {
           <p>
             Are you a Store Manager / Administrator?{' '}
             <Link href="/admin/login" style={{ color: '#1e4287' }} className="font-semibold hover:underline">
-              Sign in to Store & Admin Portal ➔
+              Sign in to Store & Admin Portal &rarr;
             </Link>
           </p>
           <p>
             Are you a retail customer?{' '}
             <Link href="/login" style={{ color: '#1e4287' }} className="font-semibold hover:underline">
-              Go to Customer Storefront Sign In ➔
+              Go to Customer Storefront Sign In &rarr;
             </Link>
           </p>
         </div>

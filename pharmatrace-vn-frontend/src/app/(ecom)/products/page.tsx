@@ -354,6 +354,7 @@ function ProductListContainer() {
   const [showAllBrands, setShowAllBrands] = useState(false);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<Set<number>>(new Set());
 
@@ -396,19 +397,23 @@ function ProductListContainer() {
   const [searchInput, setSearchInput] = useState(search);
 
   useEffect(() => {
-    categoryService.getCategories().then((res) => {
-      if (res?.data) {
-        setCategories(res.data);
-        const tree = buildCategoryTree(res.data);
-        setCategoryTree(tree);
-      }
-    });
+    const loadCategoriesAndBrands = () => {
+      categoryService.getCategories().then((res) => {
+        if (res?.data) {
+          setCategories(res.data);
+          const tree = buildCategoryTree(res.data);
+          setCategoryTree(tree);
+        }
+      }).catch(() => {});
 
-    productService.getBrands().then((res) => {
-      if (res?.data) {
-        setBrands(res.data);
-      }
-    }).catch(() => { });
+      productService.getBrands().then((res) => {
+        if (res?.data) {
+          setBrands(res.data);
+        }
+      }).catch(() => { });
+    };
+
+    loadCategoriesAndBrands();
   }, []);
 
   const setParam = useCallback(
@@ -471,8 +476,9 @@ function ProductListContainer() {
     router.push(`/products?${current.toString()}`);
   };
 
-  const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async (retryAttempt = 0) => {
     setLoading(true);
+    setFetchError(null);
     try {
       let sortBy: 'id' | 'price' | 'name' | 'createdAt' = 'id';
       let sortOrder: 'asc' | 'desc' = 'desc';
@@ -514,11 +520,25 @@ function ProductListContainer() {
 
       if (res && res.data) {
         setProducts(res.data);
-        setTotal(res.pagination.total);
+        setTotal(res.pagination?.total ?? res.data.length);
+        setFetchError(null);
+        setLoading(false);
+      } else {
+        setProducts([]);
+        setTotal(0);
+        setLoading(false);
       }
-    } catch {
-      // ignore
-    } finally {
+    } catch (err: any) {
+      console.error('Failed to load products:', err);
+      if (retryAttempt < 1) {
+        setTimeout(() => {
+          fetchProducts(retryAttempt + 1);
+        }, 1200);
+        return;
+      }
+      setProducts([]);
+      setTotal(0);
+      setFetchError(err?.message || 'Unable to load products. Please check server connection.');
       setLoading(false);
     }
   }, [page, categoryParam, minPrice, maxPrice, search, selectedBrand, sort, inStockOnly]);
@@ -955,6 +975,19 @@ function ProductListContainer() {
             <div className="py-24 text-center bg-white rounded-md border border-slate-200">
               <Spin size="large" />
               <p className="mt-3 text-slate-500 text-xs font-medium">Loading products...</p>
+            </div>
+          ) : fetchError ? (
+            <div className="py-16 text-center bg-white rounded-md border border-rose-200 space-y-3">
+              <Package className="w-10 h-10 text-rose-300 mx-auto" />
+              <p className="text-sm font-semibold text-rose-700 m-0">Failed to load products</p>
+              <p className="text-xs text-slate-500">{fetchError}</p>
+              <button
+                type="button"
+                onClick={() => fetchProducts(0)}
+                className="px-4 py-2 rounded-lg bg-[#004996] text-white text-xs font-semibold hover:bg-[#003875] transition-colors cursor-pointer"
+              >
+                Try again
+              </button>
             </div>
           ) : products.length === 0 ? (
             <div className="py-16 text-center bg-white rounded-md border border-slate-200 space-y-3">

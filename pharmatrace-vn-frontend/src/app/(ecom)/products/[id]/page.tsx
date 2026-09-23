@@ -4,7 +4,12 @@ import React, { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import {
   Spin,
-  message,
+  Modal,
+  Rate,
+  Input,
+  App,
+  Popconfirm,
+  Select,
 } from 'antd';
 import {
   ShoppingCart,
@@ -23,12 +28,24 @@ import {
   Star,
   FileCheck2,
   Heart,
+  ThumbsUp,
+  CheckCircle2,
+  UploadCloud,
+  X,
+  CornerDownRight,
+  User,
+  Camera,
+  Info,
+  Edit3,
+  Trash2,
+  Flag,
 } from 'lucide-react';
+import { reviewService, ReviewItem, ReviewStats } from '@/services/review.service';
 import { productService } from '@/services/product.service';
 import { wishlistService } from '@/services/wishlist.service';
 import { useAuth } from '@/store/useAuthStore';
 import { Product } from '@/types/product.types';
-import { formatCurrency, cleanText, cn } from '@/utils';
+import { formatCurrency, formatDate, formatDateTime, cleanText, cn, compressImages } from '@/utils';
 
 const KEY_LABEL_MAP: Record<string, string> = {
   // English keys mapping
@@ -216,7 +233,7 @@ export default function ProductDetailPage({
   const resolvedParams = use(params);
   const productId = resolvedParams.id;
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -226,7 +243,95 @@ export default function ProductDetailPage({
   const [isMobileExpanded, setIsMobileExpanded] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message: messageApi, modal: modalApi } = App.useApp();
+
+  const [reviews, setReviews] = useState<ReviewItem[]>([]);
+  const [reviewStats, setReviewStats] = useState<ReviewStats>({
+    totalReviews: 0,
+    averageRating: 5.0,
+    starCounts: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+  });
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewFilterRating, setReviewFilterRating] = useState<number | null>(null);
+  const [reviewSort, setReviewSort] = useState<'newest' | 'oldest' | 'highest_rating' | 'lowest_rating' | 'most_helpful'>('newest');
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState<number | null>(null);
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewStars, setReviewStars] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewImages, setReviewImages] = useState<string[]>([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [votedHelpfulIds, setVotedHelpfulIds] = useState<Set<number>>(new Set());
+
+  const mostHelpfulReviewId = React.useMemo(() => {
+    let maxCount = 0;
+    let topId: number | null = null;
+    reviews.forEach((r) => {
+      const count = r.helpfulCount || 0;
+      if (count > maxCount) {
+        maxCount = count;
+        topId = r.id;
+      }
+    });
+    return maxCount > 0 ? topId : null;
+  }, [reviews]);
+
+  const displayedReviews = React.useMemo(() => {
+    if (!mostHelpfulReviewId) return reviews;
+    const topReview = reviews.find((r) => r.id === mostHelpfulReviewId);
+    if (!topReview) return reviews;
+    const otherReviews = reviews.filter((r) => r.id !== mostHelpfulReviewId);
+    return [topReview, ...otherReviews];
+  }, [reviews, mostHelpfulReviewId]);
+
+  // Report Review States
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportingReviewId, setReportingReviewId] = useState<number | null>(null);
+  const [reportReason, setReportReason] = useState<string>('SPAM');
+  const [reportDescription, setReportDescription] = useState<string>('');
+  const [submittingReport, setSubmittingReport] = useState(false);
+
+  // Restore voted helpful review IDs from localStorage on client mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('pharmatrace_helpful_reviews');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setVotedHelpfulIds(new Set(parsed));
+        }
+      }
+    } catch {
+      // Ignore localStorage read error
+    }
+  }, []);
+
+  const loadReviews = React.useCallback(
+    async (
+      id: number | string,
+      ratingFilter?: number | null,
+      sortOption?: string,
+    ) => {
+      setReviewsLoading(true);
+      try {
+        const res = await reviewService.getProductReviews(id, {
+          rating: ratingFilter !== null && ratingFilter !== undefined ? ratingFilter : undefined,
+          sort: (sortOption as any) || 'newest',
+        });
+        if (res?.data) {
+          setReviews(res.data);
+          if (res.stats) {
+            setReviewStats(res.stats);
+          }
+        }
+      } catch {
+        // ignore
+      } finally {
+        setReviewsLoading(false);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!productId) return;
@@ -242,6 +347,7 @@ export default function ProductDetailPage({
           if (res.data.medicineName) {
             document.title = `${cleanText(res.data.medicineName)} | PharmaTrace VN`;
           }
+          loadReviews(res.data.id || productId);
         }
       })
       .catch(() => {
@@ -250,7 +356,7 @@ export default function ProductDetailPage({
       .finally(() => {
         setLoading(false);
       });
-  }, [productId, messageApi]);
+  }, [productId, messageApi, loadReviews]);
 
   useEffect(() => {
     if (!product?.id || !isAuthenticated) {
@@ -293,6 +399,228 @@ export default function ProductDetailPage({
       messageApi.error(errMsg);
     } finally {
       setWishlistLoading(false);
+    }
+  };
+
+  const handleOpenReviewModal = async () => {
+    if (!isAuthenticated) {
+      messageApi.warning('Please log in to write a review for this product.');
+      return;
+    }
+    if (!product) return;
+
+    try {
+      const checkRes = await reviewService.checkCanReview(product.id);
+      if (!checkRes.data.canReview) {
+        modalApi.info({
+          title: 'Verified Purchase Required',
+          content: (
+            <div className="py-2 text-sm text-slate-600 space-y-2">
+              <p>
+                To ensure authenticity and transparency, PharmaTrace VN only allows customers who have <strong>purchased and received this product</strong> to submit a review.
+              </p>
+              <p className="text-xs text-slate-400">
+                Please place an order for this medicine and come back to review after receiving your delivery!
+              </p>
+            </div>
+          ),
+          okText: 'Got it',
+          okButtonProps: { style: { backgroundColor: '#004996' } },
+        });
+        return;
+      }
+      if (checkRes.data.alreadyReviewed) {
+        messageApi.info('You have already submitted a review for this product.');
+      }
+      setIsReviewModalOpen(true);
+    } catch {
+      setIsReviewModalOpen(true);
+    }
+  };
+
+  const handleUploadReviewImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    if (reviewImages.length + files.length > 4) {
+      messageApi.warning('You can upload up to 4 photos in JPG, PNG, or JPEG format.');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      // 1. Compress & resize images in browser before upload (reduces 5-10MB to ~150-250KB)
+      const fileArray = Array.from(files);
+      const compressedFiles = await compressImages(fileArray, {
+        maxWidth: 1200,
+        maxHeight: 1200,
+        quality: 0.82,
+      });
+
+      // 2. Upload compressed files in parallel for maximum speed
+      const uploadPromises = compressedFiles.map((cFile: File) =>
+        reviewService.uploadReviewImage(cFile),
+      );
+      const responses = await Promise.all(uploadPromises);
+
+      const newUrls: string[] = [];
+      responses.forEach((res: any) => {
+        if (res?.data?.imageUrl) {
+          newUrls.push(res.data.imageUrl);
+        }
+      });
+
+      if (newUrls.length > 0) {
+        setReviewImages((prev) => [...prev, ...newUrls].slice(0, 4));
+        messageApi.success(
+          newUrls.length === 1
+            ? 'Image uploaded successfully'
+            : `${newUrls.length} images uploaded successfully`,
+        );
+      }
+    } catch {
+      messageApi.error('Failed to upload image. Please try again.');
+    } finally {
+      setUploadingImage(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleVoteHelpful = async (reviewId: number) => {
+    const isAlreadyVoted = votedHelpfulIds.has(reviewId);
+    try {
+      await reviewService.voteHelpful(reviewId, isAlreadyVoted);
+      if (isAlreadyVoted) {
+        setVotedHelpfulIds((prev) => {
+          const next = new Set(prev);
+          next.delete(reviewId);
+          try {
+            localStorage.setItem(
+              'pharmatrace_helpful_reviews',
+              JSON.stringify(Array.from(next)),
+            );
+          } catch {}
+          return next;
+        });
+        setReviews((prev) =>
+          prev.map((r) =>
+            r.id === reviewId
+              ? { ...r, helpfulCount: Math.max(0, (r.helpfulCount || 0) - 1) }
+              : r,
+          ),
+        );
+      } else {
+        setVotedHelpfulIds((prev) => {
+          const next = new Set([...prev, reviewId]);
+          try {
+            localStorage.setItem(
+              'pharmatrace_helpful_reviews',
+              JSON.stringify(Array.from(next)),
+            );
+          } catch {}
+          return next;
+        });
+        setReviews((prev) =>
+          prev.map((r) =>
+            r.id === reviewId ? { ...r, helpfulCount: (r.helpfulCount || 0) + 1 } : r,
+          ),
+        );
+      }
+    } catch {
+      messageApi.error('Failed to update helpful vote');
+    }
+  };
+
+  const handleOpenEditModal = (r: ReviewItem) => {
+    setEditingReviewId(r.id);
+    setReviewStars(r.ratingStars || 5);
+    setReviewComment(r.comment || '');
+    setReviewImages(r.images || []);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleDeleteReview = async (reviewId: number) => {
+    try {
+      await reviewService.deleteCustomerReview(reviewId);
+      messageApi.success('Review deleted successfully');
+      if (product) {
+        loadReviews(product.id, reviewFilterRating, reviewSort);
+      }
+    } catch {
+      messageApi.error('Failed to delete review');
+    }
+  };
+
+  const handleOpenReportModal = (reviewId: number) => {
+    if (!isAuthenticated) {
+      messageApi.warning('Please log in to report a review.');
+      return;
+    }
+    setReportingReviewId(reviewId);
+    setReportReason('SPAM');
+    setReportDescription('');
+    setIsReportModalOpen(true);
+  };
+
+  const handleSubmitReport = async () => {
+    if (!reportingReviewId) return;
+    setSubmittingReport(true);
+    try {
+      await reviewService.reportReview(reportingReviewId, {
+        reason: reportReason,
+        description: reportDescription.trim() || undefined,
+      });
+      messageApi.success('Thank you. Your report has been submitted to moderators.');
+      setIsReportModalOpen(false);
+      setReportingReviewId(null);
+      setReportDescription('');
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || err?.message || 'Failed to submit report';
+      messageApi.error(msg);
+    } finally {
+      setSubmittingReport(false);
+    }
+  };
+
+  const handleSubmitReview = async () => {
+    if (!isAuthenticated) {
+      messageApi.warning('Please log in to write a review.');
+      return;
+    }
+    if (!reviewComment.trim()) {
+      messageApi.warning('Please enter your review feedback.');
+      return;
+    }
+    if (!product) return;
+
+    setSubmittingReview(true);
+    try {
+      if (editingReviewId) {
+        await reviewService.updateCustomerReview(editingReviewId, {
+          ratingStars: reviewStars,
+          comment: reviewComment.trim(),
+          images: reviewImages,
+        });
+        messageApi.success('Review updated successfully!');
+      } else {
+        await reviewService.createProductReview(product.id, {
+          ratingStars: reviewStars,
+          comment: reviewComment.trim(),
+          images: reviewImages,
+        });
+        messageApi.success('Review submitted successfully! Thank you for your feedback.');
+      }
+      setIsReviewModalOpen(false);
+      setEditingReviewId(null);
+      setReviewComment('');
+      setReviewImages([]);
+      setReviewStars(5);
+      loadReviews(product.id, reviewFilterRating, reviewSort);
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message || err?.message || 'Failed to submit review';
+      messageApi.error(msg);
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -481,12 +809,330 @@ export default function ProductDetailPage({
     { id: 'usage', label: 'How to Use' },
     { id: 'precautions', label: 'Precautions' },
     { id: 'manufacturing', label: 'Manufacturing' },
-    { id: 'reviews', label: 'Reviews' },
   ];
+
+  const renderReviews = () => (
+    <div className="space-y-6 animate-fade-in">
+      {/* Header: Score Summary */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 bg-slate-50/80 rounded-[6px] border border-slate-200/80">
+        <div className="flex flex-wrap items-center gap-6">
+          <div>
+            <div className="flex items-baseline gap-1">
+              <span className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                {reviewStats.averageRating.toFixed(1)}
+              </span>
+              <span className="text-sm font-semibold text-slate-400">/ 5.0</span>
+            </div>
+            <div className="flex items-center gap-1 mt-1 text-amber-400">
+              {[1, 2, 3, 4, 5].map((s) => (
+                <Star
+                  key={s}
+                  className={cn(
+                    'w-4 h-4',
+                    s <= Math.round(reviewStats.averageRating)
+                      ? 'fill-amber-400 text-amber-400'
+                      : 'text-slate-200',
+                  )}
+                />
+              ))}
+            </div>
+            <p className="text-xs text-slate-500 mt-1.5 m-0 font-medium">
+              Based on {reviewStats.totalReviews} verified customer reviews
+            </p>
+          </div>
+
+          {/* Star bars */}
+          <div className="hidden sm:flex flex-col gap-1 min-w-[200px] border-l border-slate-200/80 pl-5">
+            {[5, 4, 3, 2, 1].map((star) => {
+              const count = reviewStats.starCounts[star] || 0;
+              const pct = reviewStats.totalReviews > 0 ? (count / reviewStats.totalReviews) * 100 : 0;
+              return (
+                <div key={star} className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="w-12 font-medium">{star} {star === 1 ? 'Star' : 'Stars'}</span>
+                  <div className="w-28 sm:w-36 h-2 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-amber-400 rounded-full"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <span className="w-6 text-right tabular-nums text-slate-400 font-mono text-[11px]">{count}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Filter & Sort Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-100">
+        {/* Star Rating Filters */}
+        <div className="flex flex-wrap items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              setReviewFilterRating(null);
+              loadReviews(product.id, null, reviewSort);
+            }}
+            className={cn(
+              'px-3 py-1.5 rounded-[6px] text-xs font-semibold transition-colors cursor-pointer',
+              reviewFilterRating === null
+                ? 'bg-[#004996] text-white'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
+            )}
+          >
+            All ({reviewStats.totalReviews})
+          </button>
+          {[5, 4, 3, 2, 1].map((star) => {
+            const isSelected = reviewFilterRating === star;
+            const count = reviewStats.starCounts[star] || 0;
+            return (
+              <button
+                key={star}
+                type="button"
+                onClick={() => {
+                  const next = isSelected ? null : star;
+                  setReviewFilterRating(next);
+                  loadReviews(product.id, next, reviewSort);
+                }}
+                className={cn(
+                  'px-3 py-1.5 rounded-[6px] text-xs font-semibold transition-colors flex items-center gap-1 cursor-pointer',
+                  isSelected
+                    ? 'bg-[#004996] text-white'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200',
+                )}
+              >
+                <span>{star} {star === 1 ? 'Star' : 'Stars'}</span>
+                <span className="text-[10px] opacity-75">({count})</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Sort Selector */}
+        <div className="flex items-center gap-2 text-xs text-slate-500">
+          <span>Sort by:</span>
+          <select
+            value={reviewSort}
+            onChange={(e) => {
+              const nextSort = e.target.value as any;
+              setReviewSort(nextSort);
+              loadReviews(product.id, reviewFilterRating, nextSort);
+            }}
+            className="bg-slate-50 border border-slate-200 rounded-[6px] px-2.5 py-1 text-xs font-semibold text-slate-700 outline-none focus:border-[#004996] cursor-pointer"
+          >
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="highest_rating">Highest Rating</option>
+            <option value="lowest_rating">Lowest Rating</option>
+            <option value="most_helpful">Most Helpful</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Reviews List */}
+      {reviewsLoading ? (
+        <div className="py-12 text-center text-slate-400">
+          <Spin />
+          <p className="text-xs mt-2">Loading reviews...</p>
+        </div>
+      ) : reviews.length === 0 ? (
+        <div className="py-10 text-center text-slate-400">
+          <FileCheck2 className="w-12 h-12 mx-auto text-slate-300 mb-2" />
+          <p className="font-bold text-slate-700 m-0 text-base">
+            {reviewFilterRating ? `No ${reviewFilterRating}-star reviews yet` : 'No reviews yet'}
+          </p>
+        </div>
+      ) : (
+        <div className="divide-y divide-slate-100 space-y-6">
+          {displayedReviews.map((r) => (
+            <div key={r.id} className="pt-6 first:pt-0">
+              <div className="relative">
+                {/* Customer Header + Avatar */}
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-full bg-slate-500 text-white flex items-center justify-center shrink-0">
+                    <User className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-sm font-bold text-slate-900">
+                        {r.customerName || 'Khách hàng'}
+                      </span>
+                      {r.id === mostHelpfulReviewId ? (
+                        <span className="px-2 py-0.5 bg-[#00A551] text-white text-[11px] font-semibold rounded-[4px]">
+                          Hữu ích nhất
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="text-xs text-slate-400 mt-0.5">
+                      {formatDateTime(r.createdAt)}
+                    </div>
+                    {/* Star rating */}
+                    <div className="flex items-center gap-1 text-amber-400 mt-1">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star
+                          key={s}
+                          className={cn(
+                            'w-3.5 h-3.5',
+                            s <= r.ratingStars
+                              ? 'fill-amber-400 text-amber-400'
+                              : 'text-slate-200',
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Customer Review Content */}
+                <div className="pl-13 mt-2 space-y-2.5">
+                  <p className="text-sm text-slate-800 m-0 leading-relaxed font-normal">
+                    {r.comment}
+                  </p>
+
+                  {/* Uploaded Photos */}
+                  {r.images && r.images.length > 0 && (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {r.images.map((img, idx) => (
+                        <a
+                          key={idx}
+                          href={img}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="relative block w-16 h-16 rounded-[6px] border border-slate-200 overflow-hidden group/img hover:border-[#004996] transition-colors"
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={img}
+                            alt="Review attachment"
+                            className="w-full h-full object-cover group-hover/img:scale-105 transition-transform"
+                          />
+                        </a>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Helpful Button & Owner Actions */}
+                  <div className="pt-1 flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => handleVoteHelpful(r.id)}
+                      className={cn(
+                        'inline-flex items-center gap-1.5 px-3 py-1 rounded-[6px] border text-xs font-semibold transition-colors cursor-pointer',
+                        votedHelpfulIds.has(r.id)
+                          ? 'bg-blue-50 border-blue-200 text-[#004996]'
+                          : 'bg-white border-slate-200 text-slate-500 hover:text-slate-800 hover:bg-slate-50',
+                      )}
+                    >
+                      <ThumbsUp className="w-3.5 h-3.5" />
+                      <span>Helpful</span>
+                      {Boolean(r.helpfulCount) && (
+                        <span className="tabular-nums">({r.helpfulCount})</span>
+                      )}
+                    </button>
+
+                    {user && (r.customerId === user.id || (user.userId && r.customerId === user.userId)) ? (
+                      <div className="flex items-center gap-1.5 border-l border-slate-200 pl-3">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenEditModal(r)}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[6px] text-slate-600 hover:text-[#004996] hover:bg-blue-50 border border-slate-200 transition-colors cursor-pointer"
+                          title="Edit your review"
+                        >
+                          <Edit3 className="w-3 h-3" />
+                          <span>Edit</span>
+                        </button>
+                        <Popconfirm
+                          title="Delete Review"
+                          description="Are you sure you want to delete this review? You can write a new review after deleting."
+                          okText="Yes, Delete"
+                          cancelText="Cancel"
+                          okButtonProps={{ danger: true }}
+                          onConfirm={() => handleDeleteReview(r.id)}
+                        >
+                          <button
+                            type="button"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[6px] text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-100 transition-colors cursor-pointer"
+                            title="Delete your review"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            <span>Delete</span>
+                          </button>
+                        </Popconfirm>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleOpenReportModal(r.id)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-[6px] text-slate-400 hover:text-amber-600 hover:bg-amber-50 border border-slate-200 transition-colors cursor-pointer"
+                        title="Report this review"
+                      >
+                        <Flag className="w-3 h-3" />
+                        <span>Report</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Pharmacist / Store Reply Thread (styled like Image 2) */}
+                {r.adminReply && (
+                  <div className="relative mt-4 pl-12 sm:pl-14">
+                    {/* Curved connecting line: user avatar down to pharmacist avatar */}
+                    <div
+                      className="absolute left-5 top-[-14px] w-7 h-10 border-l border-b border-slate-300 rounded-bl-xl pointer-events-none"
+                      aria-hidden="true"
+                    />
+
+                    {/* Pharmacist Header */}
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full bg-[#004996] text-white flex flex-col items-center justify-center shrink-0 p-1 text-center shadow-xs">
+                        <span className="text-[7px] font-bold uppercase tracking-tighter leading-tight opacity-90">
+                          NHÀ THUỐC
+                        </span>
+                        <span className="text-[9px] font-black leading-tight">
+                          PharmaTrace
+                        </span>
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm font-bold text-slate-900">
+                            {r.repliedByName || 'PharmaTrace'}
+                          </span>
+                          <span
+                            className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[#0090FF] text-white shrink-0"
+                            title="Verified Pharmacy Partner"
+                          >
+                            <svg className="w-2.5 h-2.5 fill-current" viewBox="0 0 20 20">
+                              <path
+                                fillRule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                        <div className="text-xs text-slate-400 mt-0.5">
+                          {formatDateTime(r.repliedAt || r.createdAt)}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Reply Text Body */}
+                    <div className="pl-13 mt-2 text-sm text-slate-800 leading-relaxed whitespace-pre-line font-normal">
+                      {r.adminReply}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="w-full animate-fade-in space-y-6 sm:space-y-8 font-sans">
-      {contextHolder}
 
       {/* Breadcrumb with category navigation */}
       <nav className="flex items-center gap-2 text-sm !text-black mb-6 flex-wrap" aria-label="Breadcrumb">
@@ -593,10 +1239,29 @@ export default function ProductDetailPage({
           <div className="flex items-center gap-3 mb-4">
             <div className="flex items-center gap-1 text-amber-400">
               {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                <Star
+                  key={s}
+                  className={cn(
+                    'w-4 h-4',
+                    s <= Math.round(reviewStats.averageRating)
+                      ? 'fill-amber-400 text-amber-400'
+                      : 'text-slate-200',
+                  )}
+                />
               ))}
             </div>
-            <span className="text-sm text-slate-500 font-bold">5.0</span>
+            <span className="text-sm text-slate-700 font-bold">{reviewStats.averageRating.toFixed(1)}</span>
+            <span className="text-slate-300">|</span>
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById('customer-reviews-section');
+                el?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="text-xs text-[#004996] hover:underline font-semibold bg-transparent border-none cursor-pointer p-0"
+            >
+              {reviewStats.totalReviews} customer {reviewStats.totalReviews === 1 ? 'review' : 'reviews'}
+            </button>
             <span className="text-slate-300">|</span>
             <span className="text-sm text-slate-500">Sold 128 items</span>
           </div>
@@ -1140,16 +1805,8 @@ export default function ProductDetailPage({
           </div>
         );
 
-        const renderReviews = () => (
-          <div className="py-8 text-center text-slate-400 text-base">
-            <FileCheck2 className="w-12 h-12 mx-auto text-slate-300 mb-2" />
-            <p className="font-bold text-slate-700 m-0 text-lg">No customer reviews yet</p>
-            <p className="text-sm text-slate-400 mt-1">Be the first to leave feedback for this medication!</p>
-          </div>
-        );
-
         return (
-          <div className="mt-12 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div id="product-description-section" className="mt-12 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
             <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/50">
               <h2 className="text-xl sm:text-2xl font-display font-bold text-slate-900 m-0">
                 Product Description
@@ -1186,7 +1843,6 @@ export default function ProductDetailPage({
                 {activeTab === 'usage' && renderUsage()}
                 {activeTab === 'precautions' && renderPrecautions()}
                 {activeTab === 'manufacturing' && renderManufacturing()}
-                {activeTab === 'reviews' && renderReviews()}
               </div>
             </div>
 
@@ -1238,14 +1894,6 @@ export default function ProductDetailPage({
                   {renderManufacturing()}
                 </div>
 
-                {/* 6. Reviews */}
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 pb-2 mb-4 border-b border-slate-100 uppercase tracking-wide">
-                    6. Customer Reviews
-                  </h3>
-                  {renderReviews()}
-                </div>
-
                 {!isMobileExpanded && (
                   <div className="absolute bottom-0 left-0 right-0 h-36 bg-gradient-to-t from-white via-white/85 to-transparent pointer-events-none" />
                 )}
@@ -1268,6 +1916,239 @@ export default function ProductDetailPage({
           </div>
         );
       })()}
+
+      {/* Standalone Section: Customer Reviews & Ratings */}
+      <section
+        id="customer-reviews-section"
+        className="mt-8 sm:mt-12 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden"
+      >
+        <div className="p-4 sm:p-6 border-b border-slate-100 bg-slate-50/50 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-display font-bold text-slate-900 m-0">
+              Customer Reviews & Ratings
+            </h2>
+            <p className="text-xs text-slate-500 m-0 mt-0.5">
+              Authentic feedback from verified customers who purchased this medication
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={handleOpenReviewModal}
+            className="px-5 py-2.5 bg-[#004996] hover:bg-[#003875] text-white text-xs font-bold rounded-[6px] transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+          >
+            <Star className="w-3.5 h-3.5 fill-white" />
+            <span>Write a Review</span>
+          </button>
+        </div>
+
+        <div className="p-5 sm:p-7 md:p-8">
+          {renderReviews()}
+        </div>
+      </section>
+      {/* Review Submission Modal */}
+      <Modal
+        title={
+          <div className="text-xl font-bold text-black pb-1">
+            {editingReviewId ? 'Edit Your Review' : 'Product Review'}
+          </div>
+        }
+        open={isReviewModalOpen}
+        onCancel={() => {
+          setIsReviewModalOpen(false);
+          setEditingReviewId(null);
+          setReviewImages([]);
+        }}
+        footer={[
+          <div key="actions" className="flex justify-end pt-2">
+            <button
+              key="submit"
+              type="button"
+              disabled={submittingReview}
+              onClick={handleSubmitReview}
+              className="px-6 py-2.5 bg-[#1856b6] hover:bg-[#12428c] text-white font-bold text-sm rounded-[6px] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
+            >
+              {submittingReview && <Spin size="small" />}
+              <span>{editingReviewId ? 'Update Review' : 'Submit Review'}</span>
+            </button>
+          </div>,
+        ]}
+        destroyOnHidden
+        width={540}
+      >
+        <div className="space-y-4 pt-2">
+          {/* Product Header Card */}
+          <div className="flex items-center gap-3.5">
+            <div className="w-14 h-14 rounded-lg border border-slate-200 bg-white p-1 flex items-center justify-center shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={product.imageUrl || '/favicon.ico'}
+                alt={product.medicineName}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <div className="min-w-0">
+              <h4 className="text-sm font-bold text-black leading-snug line-clamp-2 m-0">
+                {cleanText(product.medicineName)}
+              </h4>
+              <p className="text-xs text-[#6B7171] mt-1 m-0 font-medium">
+                Packaging: {activeUnitName || product.packaging?.unitName || 'Standard unit'}
+              </p>
+            </div>
+          </div>
+
+          <div className="border-b border-slate-100" />
+
+          {/* Large Golden Stars Centered */}
+          <div className="py-1 flex justify-center">
+            <Rate
+              value={reviewStars}
+              onChange={(val) => setReviewStars(val)}
+              className="text-4xl text-amber-400"
+            />
+          </div>
+
+          {/* Photo Upload Area */}
+          <div className="space-y-2">
+            <p className="text-xs text-[#6B7171] m-0 font-medium">
+              You can add up to 4 photos in JPG, PNG, or JPEG format
+            </p>
+
+            {/* Uploaded Photos Preview */}
+            {reviewImages.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-1 pb-1">
+                {reviewImages.map((imgUrl, idx) => (
+                  <div
+                    key={idx}
+                    className="relative w-16 h-16 rounded-[6px] border border-slate-200 overflow-hidden group/thumb"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={imgUrl} alt="Review thumb" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setReviewImages((prev) => prev.filter((_, i) => i !== idx))}
+                      className="absolute top-1 right-1 w-4 h-4 rounded-full bg-slate-900/80 text-white flex items-center justify-center opacity-0 group/thumb:opacity-100 transition-opacity cursor-pointer"
+                    >
+                      <X className="w-2.5 h-2.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Big Upload Area */}
+            {reviewImages.length < 4 && (
+              <label className="w-full py-5 rounded-[6px] bg-[#EEF4FF] hover:bg-blue-100/70 transition-colors flex flex-col items-center justify-center cursor-pointer border border-blue-100 gap-2 text-[#0066CC]">
+                {uploadingImage ? (
+                  <Spin size="small" />
+                ) : (
+                  <>
+                    <div className="w-9 h-9 rounded-full bg-[#0066CC] text-white flex items-center justify-center shadow-2xs">
+                      <Camera className="w-5 h-5 fill-white text-white" />
+                    </div>
+                    <span className="text-xs font-semibold text-black">
+                      Add Photos
+                    </span>
+                  </>
+                )}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/jpg"
+                  multiple
+                  disabled={uploadingImage}
+                  onChange={handleUploadReviewImage}
+                  className="hidden"
+                />
+              </label>
+            )}
+          </div>
+
+          {/* Review Textarea Section */}
+          <div className="space-y-1.5 pt-1">
+            <label className="text-xs font-semibold text-black block m-0">
+              Write a Review
+            </label>
+            <Input.TextArea
+              rows={4}
+              maxLength={300}
+              placeholder="Share your experience with this product..."
+              value={reviewComment}
+              onChange={(e) => setReviewComment(e.target.value)}
+              className="rounded-[6px] text-sm text-black border-slate-200 focus:border-[#004996] p-3"
+            />
+            <div className="flex items-center justify-between text-xs text-[#6B7171] pt-0.5">
+              <span className="flex items-center gap-1">
+                <Info className="w-3.5 h-3.5 text-slate-400 shrink-0 inline" />
+                <span>Up to 300 characters</span>
+              </span>
+              <span className="text-[11px] font-mono">{reviewComment.length}/300</span>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Customer Report Review Modal */}
+      <Modal
+        title={
+          <div className="flex items-center gap-2 text-base font-bold text-gray-900">
+            <Flag className="w-4 h-4 text-[#b45309]" />
+            <span>Report Review</span>
+          </div>
+        }
+        open={isReportModalOpen}
+        onCancel={() => {
+          setIsReportModalOpen(false);
+          setReportingReviewId(null);
+          setReportDescription('');
+        }}
+        onOk={handleSubmitReport}
+        confirmLoading={submittingReport}
+        okText="Submit Report"
+        cancelText="Cancel"
+        okButtonProps={{ style: { backgroundColor: '#004996' } }}
+        destroyOnHidden
+        width={480}
+      >
+        <div className="space-y-4 py-2 text-sm">
+          <p className="text-sm text-gray-600 m-0 leading-relaxed">
+            Please select the reason why you are reporting this review. Our moderation team will investigate promptly.
+          </p>
+
+          <div>
+            <label className="text-sm font-semibold text-gray-800 block mb-1.5">
+              Reason for Report *
+            </label>
+            <Select
+              value={reportReason}
+              onChange={(val) => setReportReason(val)}
+              className="w-full"
+              size="middle"
+              options={[
+                { value: 'SPAM', label: 'Spam, advertising, or commercial links' },
+                { value: 'HARASSMENT', label: 'Harassment, hate speech, or profanity' },
+                { value: 'MISINFORMATION', label: 'False or dangerous medical claims' },
+                { value: 'INAPPROPRIATE', label: 'Inappropriate or irrelevant content' },
+                { value: 'OTHER', label: 'Other policy violation' },
+              ]}
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold text-gray-800 block mb-1.5">
+              Additional Details (Optional)
+            </label>
+            <Input.TextArea
+              rows={3}
+              maxLength={500}
+              placeholder="Provide any additional details or context for moderators..."
+              value={reportDescription}
+              onChange={(e) => setReportDescription(e.target.value)}
+              showCount
+              className="text-sm"
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

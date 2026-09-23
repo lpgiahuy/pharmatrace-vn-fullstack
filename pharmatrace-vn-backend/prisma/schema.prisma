@@ -61,6 +61,8 @@ model customers {
   qr_scan_logs        qr_scan_logs[]
   reviews             reviews[]
   wishlists           customer_wishlists[]
+  moderation_reports    moderation_reports[]    @relation("report_reporter_customer")
+  moderation_audit_logs moderation_audit_logs[] @relation("audit_customer")
 }
 
 model employees {
@@ -80,6 +82,9 @@ model employees {
   inventory_logs  inventory_logs[]
   prescriptions   prescriptions[]
   purchase_orders purchase_orders[]
+  reported_moderations  moderation_reports[]    @relation("report_reporter_employee")
+  resolved_moderations  moderation_reports[]    @relation("report_resolver_employee")
+  moderation_audit_logs moderation_audit_logs[] @relation("audit_employee")
 }
 
 model medicines {
@@ -509,18 +514,27 @@ model qr_scan_logs {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model reviews {
-  id           Int        @id @default(autoincrement())
-  customer_id  Int?
-  medicine_id  Int?
-  rating_stars Int?
-  comment      String?
-  images       String[]
-  created_at   DateTime?  @default(now()) @db.Timestamptz(6)
-  customers    customers? @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  medicines    medicines? @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                   Int        @id @default(autoincrement())
+  customer_id          Int?
+  medicine_id          Int?
+  rating_stars         Int?
+  comment              String?
+  images               String[]
+  status               String?    @default("APPROVED") @db.VarChar(50)
+  is_verified_purchase Boolean?   @default(false)
+  helpful_count        Int?       @default(0)
+  admin_reply          String?
+  replied_at           DateTime?  @db.Timestamptz(6)
+  replied_by_name      String?    @db.VarChar(150)
+  created_at           DateTime?  @default(now()) @db.Timestamptz(6)
+  customers            customers? @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  medicines            medicines? @relation(fields: [medicine_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  moderation_reports    moderation_reports[]
+  moderation_audit_logs moderation_audit_logs[]
 
   @@index([medicine_id], map: "idx_reviews_medicine_id")
   @@index([customer_id], map: "idx_reviews_customer_id")
+  @@index([status], map: "idx_reviews_status")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -562,6 +576,48 @@ model customer_wishlists {
   @@id([customer_id, medicine_id])
   @@index([customer_id], map: "idx_wishlist_customer_id")
   @@index([medicine_id], map: "idx_wishlist_medicine_id")
+}
+
+model moderation_reports {
+  id                      Int        @id @default(autoincrement())
+  review_id               Int
+  reporter_customer_id    Int?
+  reporter_employee_id    Int?
+  reason                  String     @db.VarChar(50)
+  description             String?
+  status                  String     @default("PENDING") @db.VarChar(50)
+  resolved_by_employee_id Int?
+  resolver_note           String?
+  created_at              DateTime?  @default(now()) @db.Timestamptz(6)
+  resolved_at             DateTime?  @db.Timestamptz(6)
+
+  reviews                 reviews    @relation(fields: [review_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reporter_customer       customers? @relation("report_reporter_customer", fields: [reporter_customer_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  reporter_employee       employees? @relation("report_reporter_employee", fields: [reporter_employee_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  resolver_employee       employees? @relation("report_resolver_employee", fields: [resolved_by_employee_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@index([review_id], map: "idx_moderation_reports_review_id")
+  @@index([status], map: "idx_moderation_reports_status")
+}
+
+model moderation_audit_logs {
+  id                       Int        @id @default(autoincrement())
+  review_id                Int?
+  action                   String     @db.VarChar(50)
+  performed_by_employee_id  Int?
+  performed_by_customer_id  Int?
+  performed_by_role        String?    @db.VarChar(50)
+  reason                   String?
+  meta                     Json?      @default("{}")
+  created_at               DateTime?  @default(now()) @db.Timestamptz(6)
+
+  reviews                  reviews?   @relation(fields: [review_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  performed_by_employee    employees? @relation("audit_employee", fields: [performed_by_employee_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  performed_by_customer    customers? @relation("audit_customer", fields: [performed_by_customer_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@index([review_id], map: "idx_moderation_audit_logs_review_id")
+  @@index([action], map: "idx_moderation_audit_logs_action")
+  @@index([created_at], map: "idx_moderation_audit_logs_created_at")
 }
 
 
