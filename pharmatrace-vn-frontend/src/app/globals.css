@@ -1,7 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @import "tailwindcss";
 
 @theme {
+  /* Brand */
+
   --color-brand-50: #f0f7ff;
   --color-brand-100: #e0effe;
   --color-brand-200: #bae0fd;
@@ -14,99 +17,308 @@
   --color-brand-900: #001e3e;
 
   --color-medical-blue: #004996;
-  --color-medical-teal: #00b4a6;
-  --color-medical-green: #00A551;
-  --color-medical-red: #ed1c24;
-  --color-medical-orange: #f7941d;
+  --color-medical-teal: #00a99d;
+  --color-medical-green: #15803d;
+  --color-medical-red: #b91c1c;
+  --color-medical-orange: #b45309;
 
-  --color-surface-DEFAULT: #f2f4f7;
+  /* Surfaces */
+
+  --color-surface-DEFAULT: #f7f8fa;
   --color-surface-card: #ffffff;
   --color-surface-border: #e5e7eb;
 
-  --font-sans: 'Be Vietnam Pro', 'Inter', system-ui, sans-serif;
-  --font-display: 'Be Vietnam Pro', 'Outfit', system-ui, sans-serif;
+  /* Typography */
+
+  --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-display: 'Be Vietnam Pro', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / .08), 0 1px 2px -1px rgb(0 0 0 / .06);
-  --shadow-elevated: 0 4px 16px 0 rgb(11 125 232 / .12);
-  --shadow-modal: 0 20px 60px -10px rgb(0 0 0 / .22);
+  /* Shadows
+     Keep shadows subtle.
+     Avoid colored / glowing shadows. */
+
+  --shadow-card:
+    0 1px 2px rgb(0 0 0 / 0.04);
+
+  --shadow-elevated:
+    0 4px 12px rgb(0 0 0 / 0.08);
+
+  --shadow-modal:
+    0 12px 32px rgb(0 0 0 / 0.14);
 }
 
+/* Design tokens */
+
 :root {
+  /* Background */
   --background: #ffffff;
-  --foreground: #1e293b;
+  --foreground: #1f2937;
+
+  /* Text hierarchy */
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --text-label: #6b7280;
+  --text-muted: #6b7280;
+  --text-disabled: #9ca3af;
+
+  /* Borders */
+  --border-default: #e5e7eb;
+  --border-strong: #d1d5db;
+
+  /* Surfaces */
+  --surface-page: #f7f8fa;
+  --surface-card: #ffffff;
+  --surface-subtle: #f9fafb;
+
+  /* Brand */
+  --brand-primary: #004996;
+  --brand-primary-hover: #004084;
+
+  /* Semantic colors */
+  --success: #15803d;
+  --danger: #b91c1c;
+  --warning: #b45309;
+}
+
+/* Base */
+
+html {
+  font-family: var(--font-sans);
 }
 
 body {
+  margin: 0;
+  min-height: 100vh;
+
   background: var(--background);
   color: var(--foreground);
+
   font-family: var(--font-sans);
-  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Custom component classes */
+/* Headings */
+
+main h1,
+main h2,
+main h3,
+main h4,
+main h5,
+main h6,
+.main-content h1,
+.main-content h2,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+  color: var(--text-primary);
+}
+
+/* Avoid overly heavy AI-generated headings */
+main h1,
+.main-content h1 {
+  font-weight: 700;
+}
+
+main h2,
+.main-content h2 {
+  font-weight: 600;
+}
+
+main h3,
+main h4,
+main h5,
+main h6,
+.main-content h3,
+.main-content h4,
+.main-content h5,
+.main-content h6 {
+  font-weight: 600;
+}
+
+/* Secondary / muted text */
+
+/*
+ * Use a darker neutral gray.
+ *
+ * Avoid extremely pale blue-gray such as:
+ * #94A3B8
+ * #CBD5E1
+ *
+ * Those colors are one of the things making the UI feel
+ * like an AI-generated dashboard.
+ */
+
+main .text-slate-500,
+main .text-slate-400,
+main .text-gray-500,
+main .text-gray-400,
+main .text-muted,
+.main-content .text-slate-500,
+.main-content .text-slate-400,
+.main-content .text-gray-500,
+.main-content .text-gray-400,
+.main-content .text-muted {
+  color: var(--text-label);
+}
+
+/* Header */
+
+header .text-white,
+header a.text-white,
+header span.text-white,
+header .font-display.text-white {
+  color: #ffffff !important;
+}
+
+/* Footer */
+
+footer h1,
+footer h2,
+footer h3,
+footer h4,
+footer h5,
+footer h6,
+footer .font-display,
+footer li,
+footer a,
+footer .text-white {
+  color: #ffffff !important;
+}
+
+footer p.text-white\/70,
+footer span.text-white\/70 {
+  color: rgb(255 255 255 / 0.7) !important;
+}
+
+/* Buttons */
+
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   gap: 0.5rem;
+
   padding: 0.5rem 1rem;
+
   border-radius: 0.375rem;
+
   font-weight: 500;
   font-size: 0.875rem;
-  transition: all 0.15s ease-in-out;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+
   cursor: pointer;
   user-select: none;
 }
 
+/* Primary */
+
 .btn-primary {
-  background-color: #004996;
+  background-color: var(--brand-primary);
   color: #ffffff;
+  border: 1px solid var(--brand-primary);
 }
 
 .btn-primary:hover {
-  background-color: #004084;
+  background-color: var(--brand-primary-hover);
 }
+
+/* Secondary */
 
 .btn-secondary {
   background-color: #ffffff;
-  color: #004084;
-  border: 1px solid #bae0fd;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
 }
 
 .btn-secondary:hover {
-  background-color: #f0f7ff;
+  background-color: var(--surface-subtle);
 }
+
+/* Card */
 
 .card {
-  background-color: #ffffff;
+  background-color: var(--surface-card);
+
+  border: 1px solid var(--border-default);
+
   border-radius: 0.375rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / .08);
-  border: 1px solid #e5e7eb;
+
+  box-shadow: var(--shadow-card);
 }
 
+/* Section header */
+
+/*
+ * Avoid large blue filled section headers.
+ *
+ * Prefer a neutral section heading.
+ */
+
 .section-header-blue {
-  background-color: #004996;
-  color: #ffffff;
-  padding: 0.625rem 1rem;
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
-  font-weight: 700;
+  background-color: #ffffff;
+  color: var(--text-primary);
+
+  padding: 0.75rem 1rem;
+
+  border-bottom: 1px solid var(--border-default);
+
+  font-weight: 600;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
+/* Badge */
+
+/*
+ * Keep badges small and functional.
+ *
+ * Do not make every piece of metadata a pill.
+ */
+
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.125rem 0.5rem;
-  border-radius: 9999px;
+
+  padding: 0.125rem 0.375rem;
+
+  border-radius: 0.25rem;
+
   font-size: 0.75rem;
   font-weight: 500;
+
+  line-height: 1.25;
+}
+
+/* Status colors */
+
+.status-approved {
+  color: var(--success);
+}
+
+.status-rejected,
+.status-spam {
+  color: var(--danger);
+}
+
+.status-pending {
+  color: var(--warning);
 }
 
 /* Scrollbar */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -117,39 +329,117 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 9999px;
+  background: #d1d5db;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #9ca3af;
 }
 
-/* Ant Design overrides */
+/* Ant Design */
+
 .ant-layout {
   background: transparent !important;
 }
 
+/* Selected menu */
+
 .ant-menu-item-selected {
-  background-color: #e6f2ff !important;
+  background-color: #f0f7ff !important;
 }
+
+/* Table */
 
 .ant-table-thead>tr>th {
-  background: #f8fafc !important;
+  background: #f9fafb !important;
+
+  color: #374151 !important;
+
   font-weight: 600;
+
+  border-bottom: 1px solid var(--border-default) !important;
 }
 
-/* Ant Design Tooltip cursor override */
+/* Remove excessive table header decoration */
+
+.ant-table-thead>tr>th::before {
+  display: none !important;
+}
+
+/* Tooltip cursor */
+
 .ant-form-item-tooltip,
 .ant-form-item-label .ant-form-item-tooltip,
 .ant-form-item-tooltip .anticon {
   cursor: pointer !important;
 }
 
-/* DatePicker dropdown & button shadow removal */
+/* Remove unnecessary button shadows */
+
 .ant-picker-dropdown .ant-btn,
 .ant-picker-dropdown .ant-picker-now-btn,
 .ant-picker-dropdown .ant-picker-ok button,
 .ant-btn-primary {
   box-shadow: none !important;
+}
+
+/* Ant Design Pagination */
+
+.ant-pagination {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.25rem !important;
+}
+
+.ant-pagination .ant-pagination-item {
+  border: 1px solid transparent !important;
+  border-radius: 0.375rem !important;
+  min-width: 28px !important;
+  height: 28px !important;
+  line-height: 26px !important;
+  text-align: center !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.ant-pagination .ant-pagination-item a {
+  color: var(--text-secondary) !important;
+  font-size: 0.8125rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.ant-pagination .ant-pagination-item:hover {
+  border-color: var(--border-strong) !important;
+}
+
+.ant-pagination .ant-pagination-item-active {
+  border: 1px solid var(--brand-primary) !important;
+  background-color: #ffffff !important;
+}
+
+.ant-pagination .ant-pagination-item-active a {
+  color: var(--brand-primary) !important;
+  font-weight: 600 !important;
+}
+
+.ant-pagination .ant-pagination-prev,
+.ant-pagination .ant-pagination-next {
+  border: none !important;
+  height: auto !important;
+  line-height: normal !important;
+  min-width: auto !important;
+  margin: 0 0.25rem !important;
+}
+
+.ant-pagination .ant-pagination-prev button,
+.ant-pagination .ant-pagination-next button {
+  border: none !important;
 }

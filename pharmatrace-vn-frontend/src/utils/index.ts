@@ -24,6 +24,18 @@ export function formatDate(date: string | Date | null | undefined): string {
   }).format(d);
 }
 
+export function formatDateTime(date: string | Date | null | undefined): string {
+  if (!date) return 'N/A';
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return String(date);
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  return `${hours}:${minutes} ${day}-${month}-${year}`;
+}
+
 export function cleanText(str: string | null | undefined): string {
   if (!str || typeof str !== 'string') return '';
   return str
@@ -34,3 +46,6 @@ export function cleanText(str: string | null | undefined): string {
     .replace(/\s*\?{3,}\s*/g, ' - ')
     .replace(/\uFFFD/g, '°');
 }
+
+export * from './image';
+

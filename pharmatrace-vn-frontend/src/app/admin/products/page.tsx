@@ -554,7 +554,7 @@ export default function AdminProductsPage() {
                                 : 'bg-white text-slate-600 border-slate-200',
                             )}
                           >
-                            {c.categoryName} {c.isPrimary && '★'}
+                            {c.categoryName} {c.isPrimary && ' (Primary)'}
                           </span>
                         ))
                       ) : (
