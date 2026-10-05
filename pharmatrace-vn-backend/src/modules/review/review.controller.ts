@@ -26,7 +26,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewQueryDto } from './dto/review-query.dto';
 import { CreateReportDto } from '../moderation/dto/create-report.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Reviews')
 @Controller()
@@ -92,10 +92,9 @@ export class ReviewController {
   @ApiResponse({ status: 200, description: 'Checked successfully' })
   async checkCanReview(
     @Param('id') id: string,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.reviewService.checkCanReview(id, customerId);
+    const result = await this.reviewService.checkCanReview(id, user.id);
     return {
       success: true,
       data: result,
@@ -112,11 +111,10 @@ export class ReviewController {
   @ApiResponse({ status: 201, description: 'Review submitted successfully' })
   async createReview(
     @Param('id') id: string,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: CreateReviewDto,
   ) {
-    const customerId = user.userId || user.id;
-    const data = await this.reviewService.createProductReview(id, customerId, dto);
+    const data = await this.reviewService.createProductReview(id, user.id, dto);
     return {
       success: true,
       message: 'Product review submitted successfully',
@@ -160,13 +158,13 @@ export class ReviewController {
   @ApiResponse({ status: 201, description: 'Review reported successfully' })
   async reportReview(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: CreateReportDto,
   ) {
     const isEmployee = user.role && user.role !== 'CUSTOMER';
     const reporter = {
-      customerId: !isEmployee ? (user.userId || user.id) : undefined,
-      employeeId: isEmployee ? (user.employeeId || user.userId || user.id) : undefined,
+      customerId: !isEmployee ? user.id : undefined,
+      employeeId: isEmployee ? user.id : undefined,
       role: user.role || (isEmployee ? 'EMPLOYEE' : 'CUSTOMER'),
     };
     return this.reviewService.reportReview(id, reporter, dto);
@@ -181,12 +179,11 @@ export class ReviewController {
   })
   @ApiResponse({ status: 200, description: 'Customer reviews retrieved' })
   async getCustomerMyReviews(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.reviewService.getCustomerMyReviews(customerId, {
+    const result = await this.reviewService.getCustomerMyReviews(user.id, {
       page,
       limit,
     });
@@ -205,9 +202,8 @@ export class ReviewController {
     description: 'Retrieves purchased and delivered medicines that customer has not yet reviewed.',
   })
   @ApiResponse({ status: 200, description: 'Pending reviews retrieved' })
-  async getCustomerPendingReviews(@CurrentUser() user: any) {
-    const customerId = user.userId || user.id;
-    const result = await this.reviewService.getCustomerPendingReviews(customerId);
+  async getCustomerPendingReviews(@CurrentUser() user: CurrentUserPayload) {
+    const result = await this.reviewService.getCustomerPendingReviews(user.id);
     return {
       success: true,
       data: result.items,
@@ -224,11 +220,10 @@ export class ReviewController {
   @ApiResponse({ status: 200, description: 'Review updated successfully' })
   async updateCustomerReview(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: UpdateReviewDto,
   ) {
-    const customerId = user.userId || user.id;
-    const data = await this.reviewService.customerUpdateReview(id, customerId, dto);
+    const data = await this.reviewService.customerUpdateReview(id, user.id, dto);
     return {
       success: true,
       message: 'Review updated successfully',
@@ -246,10 +241,9 @@ export class ReviewController {
   @ApiResponse({ status: 200, description: 'Review deleted successfully' })
   async deleteCustomerReview(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.reviewService.customerDeleteReview(id, customerId);
+    const result = await this.reviewService.customerDeleteReview(id, user.id);
     return result;
   }
 }

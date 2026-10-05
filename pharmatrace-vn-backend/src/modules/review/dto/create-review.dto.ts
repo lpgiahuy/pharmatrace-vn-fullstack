@@ -21,7 +21,7 @@ export class CreateReviewDto {
   ratingStars: number;
 
   @ApiProperty({
-    example: 'Sản phẩm chính hãng, đóng gói cẩn thận, hạn sử dụng dài.',
+    example: 'Authentic product, carefully packaged, long expiry date.',
     description: 'Review comment content',
   })
   @IsString()

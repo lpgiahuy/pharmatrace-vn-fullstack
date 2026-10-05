@@ -18,7 +18,7 @@ import { ReplyReviewDto } from './dto/reply-review.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Admin - Reviews Moderation')
 @ApiBearerAuth('bearerAuth')
@@ -61,15 +61,14 @@ export class AdminReviewController {
   @ApiResponse({ status: 200, description: 'Status updated successfully' })
   async updateStatus(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: UpdateReviewStatusDto,
   ) {
-    const adminId = user.userId || user.id;
     const adminRole = user.role || 'SUPER_ADMIN';
     return this.reviewService.updateReviewStatus(
       id,
       dto.status,
-      adminId,
+      user.id,
       adminRole,
       dto.reason,
     );
@@ -83,13 +82,12 @@ export class AdminReviewController {
   @ApiResponse({ status: 200, description: 'Replied successfully' })
   async replyToReview(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: ReplyReviewDto,
   ) {
-    const adminName = user.fullName || user.name || 'Dược sĩ PharmaTrace';
-    const adminId = user.userId || user.id;
+    const adminName = (user.fullName as string) || (user.name as string) || 'PharmaTrace Pharmacist';
     const adminRole = user.role || 'PHARMACIST';
-    return this.reviewService.replyToReview(id, dto, adminName, adminId, adminRole);
+    return this.reviewService.replyToReview(id, dto, adminName, user.id, adminRole);
   }
 
   @Delete(':id')
@@ -100,10 +98,9 @@ export class AdminReviewController {
   @ApiResponse({ status: 200, description: 'Deleted review' })
   async deleteReview(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const adminId = user.userId || user.id;
     const adminRole = user.role || 'SUPER_ADMIN';
-    return this.reviewService.deleteReview(id, adminId, adminRole);
+    return this.reviewService.deleteReview(id, user.id, adminRole);
   }
 }

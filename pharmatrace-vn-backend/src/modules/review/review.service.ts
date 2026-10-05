@@ -110,7 +110,7 @@ export class ReviewService {
         repliedAt: r.replied_at || null,
         repliedByName: r.replied_by_name || null,
         createdAt: r.created_at,
-        customerName: r.customers?.full_name || 'Khách hàng ẩn danh',
+        customerName: r.customers?.full_name || 'Anonymous Customer',
       })),
       pagination: {
         page,
@@ -258,7 +258,7 @@ export class ReviewService {
       isVerifiedPurchase: true,
       helpfulCount: 0,
       createdAt: review.created_at,
-      customerName: review.customers?.full_name || 'Khách hàng',
+      customerName: review.customers?.full_name || 'Customer',
     };
   }
 
