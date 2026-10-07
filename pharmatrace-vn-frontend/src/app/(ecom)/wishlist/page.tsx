@@ -4,9 +4,10 @@ import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Spin, Pagination, Popconfirm, App } from 'antd';
-import { Trash2 } from 'lucide-react';
+import { Trash2, ShoppingCart } from 'lucide-react';
 import { wishlistService, WishlistItem } from '@/services/wishlist.service';
 import { useAuth } from '@/store/useAuthStore';
+import { useCartStore } from '@/store/useCartStore';
 import { formatCurrency, cleanText } from '@/utils';
 
 function WishlistContent() {
@@ -14,6 +15,7 @@ function WishlistContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const addItem = useCartStore((state) => state.addItem);
 
   const [mounted, setMounted] = useState(false);
   const [items, setItems] = useState<WishlistItem[]>([]);
@@ -88,6 +90,37 @@ function WishlistContent() {
       ...prev,
       [productId]: variantId,
     }));
+  };
+
+  const handleAddToCart = (product: WishlistItem) => {
+    const activeVariantId = selectedVariants[product.id] || product.variantId || product.packagingOptions?.[0]?.id;
+    const activeVariant = product.packagingOptions?.find((v) => v.id === activeVariantId) || {
+      id: activeVariantId || product.variantId || undefined,
+      unitName: product.unitName || 'Box',
+      price: product.price,
+      originalPrice: product.originalPrice,
+      discountPercent: 0,
+    };
+
+    addItem({
+      id: `${product.id}-${activeVariant.id || 'base'}`,
+      productId: product.id,
+      slug: product.slug || String(product.id),
+      medicineName: product.medicineName,
+      imageUrl: product.imageUrl,
+      variantId: activeVariant.id ? Number(activeVariant.id) : undefined,
+      unitName: activeVariant.unitName || 'Box',
+      price: Number(activeVariant.price),
+      originalPrice: activeVariant.originalPrice ? Number(activeVariant.originalPrice) : undefined,
+      packagingOptions: product.packagingOptions?.map((p) => ({
+        id: p.id,
+        unitName: p.unitName,
+        price: Number(p.price),
+        originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
+      })),
+    }, 1);
+
+    message.success('Added to cart!');
   };
 
   const handleRemove = async (productId: number) => {
@@ -279,7 +312,18 @@ function WishlistContent() {
 
                       {/* Actions Column */}
                       <td className="py-5 px-4 align-middle text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            type="button"
+                            disabled={!isAvailable}
+                            onClick={() => handleAddToCart(product)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#004996] hover:bg-[#004084] disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-semibold rounded-[6px] transition-colors cursor-pointer disabled:cursor-not-allowed"
+                            title={isAvailable ? 'Add to cart' : 'Out of stock'}
+                          >
+                            <ShoppingCart className="w-3.5 h-3.5" />
+                            <span>Add to Cart</span>
+                          </button>
+
                           <Popconfirm
                             title="Remove from wishlist?"
                             description="Are you sure you want to remove this item?"
@@ -405,7 +449,17 @@ function WishlistContent() {
                   </div>
 
                   {/* Actions (Mobile) */}
-                  <div className="flex items-center justify-end pt-1">
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                    <button
+                      type="button"
+                      disabled={!isAvailable}
+                      onClick={() => handleAddToCart(product)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#004996] hover:bg-[#004084] disabled:bg-slate-200 disabled:text-slate-400 text-white text-xs font-semibold rounded-[6px] transition-colors cursor-pointer disabled:cursor-not-allowed"
+                    >
+                      <ShoppingCart className="w-3.5 h-3.5" />
+                      <span>Add to Cart</span>
+                    </button>
+
                     <Popconfirm
                       title="Remove from wishlist?"
                       description="Are you sure you want to remove this item?"
@@ -418,7 +472,7 @@ function WishlistContent() {
                       <button
                         type="button"
                         disabled={actionLoading === product.id}
-                        className="w-9 h-9 rounded-[6px] border border-slate-200 hover:border-rose-300 text-slate-400 hover:text-rose-600 bg-transparent hover:bg-transparent flex items-center justify-center transition-colors cursor-pointer shrink-0"
+                        className="w-8 h-8 rounded-[6px] border border-slate-200 hover:border-rose-300 text-slate-400 hover:text-rose-600 bg-transparent hover:bg-transparent flex items-center justify-center transition-colors cursor-pointer shrink-0"
                         title="Remove item"
                         aria-label="Remove item"
                       >

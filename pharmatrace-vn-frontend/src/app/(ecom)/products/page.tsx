@@ -20,6 +20,7 @@ import { productService } from '@/services/product.service';
 import { categoryService } from '@/services/category.service';
 import { wishlistService } from '@/services/wishlist.service';
 import { useAuth } from '@/store/useAuthStore';
+import { useCartStore } from '@/store/useCartStore';
 import { Product } from '@/types/product.types';
 import { Category } from '@/types/category.types';
 import { CategoryIcon } from '@/components/common/CategoryIcon';
@@ -204,10 +205,35 @@ function ProductCardItem({
     }
   };
 
+  const addItem = useCartStore((state) => state.addItem);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    message.info('Cart feature is coming soon.');
+
+    const baseVariant =
+      product.packagingOptions?.[0] || product.packaging;
+
+    const effectivePrice = baseVariant && 'price' in baseVariant && baseVariant.price
+      ? Number(baseVariant.price)
+      : Number(product.promotionalPrice || product.unitPrice || 0);
+
+    addItem(
+      {
+        id: `${product.id}-${baseVariant?.id || 'base'}`,
+        productId: product.id,
+        slug: product.slug || String(product.id),
+        medicineName: product.medicineName,
+        imageUrl: product.imageUrl,
+        variantId: baseVariant?.id,
+        unitName: baseVariant?.unitName || 'Box',
+        price: effectivePrice,
+        originalPrice: Number(product.unitPrice || effectivePrice),
+      },
+      1,
+    );
+
+    message.success('Added to cart!');
   };
 
   const hasDiscount = Boolean(
@@ -550,11 +576,11 @@ function ProductListContainer() {
   const hasActiveFilters = Boolean(categoryParam || minPrice || maxPrice || inStockOnly || selectedBrand || search);
 
   const PRICE_OPTIONS = [
-    { label: 'Under 50.000 đ', min: '', max: '50000' },
-    { label: '50.000 đ - 100.000 đ', min: '50000', max: '100000' },
-    { label: '100.000 đ - 300.000 đ', min: '100000', max: '300000' },
-    { label: '300.000 đ - 500.000 đ', min: '300000', max: '500000' },
-    { label: 'Above 500.000 đ', min: '500000', max: '' },
+    { label: 'Under 50,000 ₫', min: '', max: '50000' },
+    { label: '50,000 ₫ - 100,000 ₫', min: '50000', max: '100000' },
+    { label: '100,000 ₫ - 300,000 ₫', min: '100000', max: '300000' },
+    { label: '300,000 ₫ - 500,000 ₫', min: '300000', max: '500000' },
+    { label: 'Above 500,000 ₫', min: '500000', max: '' },
   ];
 
   const selectedBrandsList = selectedBrand ? selectedBrand.split(',').filter(Boolean) : [];
