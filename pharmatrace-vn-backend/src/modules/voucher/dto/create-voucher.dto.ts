@@ -46,13 +46,12 @@ export class CreateVoucherDto {
   @Min(0)
   maxDiscountAmount?: number;
 
-  @ApiPropertyOptional({ example: 100, description: 'Total available voucher uses', default: 100 })
-  @IsOptional()
-  @ValidateIf((_, val) => val !== null && val !== undefined)
+  @ApiProperty({ example: 100, description: 'Total available voucher uses (usage limit)' })
+  @IsNotEmpty({ message: 'Voucher usage limit (totalQuantity) is required' })
   @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  totalQuantity?: number = 100;
+  @IsInt({ message: 'Usage limit must be an integer' })
+  @Min(1, { message: 'Usage limit must be at least 1' })
+  totalQuantity: number;
 
   @ApiPropertyOptional({ example: '2026-06-01T00:00:00Z', description: 'Start validity timestamp' })
   @IsOptional()

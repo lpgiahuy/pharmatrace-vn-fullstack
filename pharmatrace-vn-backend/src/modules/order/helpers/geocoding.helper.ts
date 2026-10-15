@@ -76,7 +76,7 @@ function matchesRequestedStreet(address: string, resultText: string): boolean {
   );
 }
 
-function isValidCoordinates(latitude: number, longitude: number): boolean {
+export function isValidCoordinates(latitude: number, longitude: number): boolean {
   return (
     Number.isFinite(latitude) &&
     Number.isFinite(longitude) &&
@@ -355,9 +355,7 @@ async function resolveAddress(address: string): Promise<GeocodeResult | null> {
 }
 
 // Resolves a Vietnamese shipping address without throwing into checkout.
-export async function geocodeAddress(
-  address: string,
-): Promise<GeocodeResult | null> {
+export async function geocodeAddress(address: string): Promise<GeocodeResult | null> {
   if (typeof address !== "string" || address.trim() === "") {
     return null;
   }

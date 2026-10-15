@@ -65,9 +65,11 @@ export class VoucherService {
       throw new BadRequestException('Voucher has expired');
     }
 
-    const totalQty = voucher.total_quantity ?? 100;
+    if (!voucher.total_quantity || voucher.total_quantity <= 0) {
+      throw new BadRequestException('Voucher does not have a valid usage limit');
+    }
     const usedQty = voucher.used_quantity ?? 0;
-    if (totalQty > 0 && usedQty >= totalQty) {
+    if (usedQty >= voucher.total_quantity) {
       throw new BadRequestException('Voucher usage limit reached');
     }
 
@@ -188,6 +190,10 @@ export class VoucherService {
       throw new ConflictException(`Voucher code "${code}" already exists`);
     }
 
+    if (!dto.totalQuantity || dto.totalQuantity <= 0) {
+      throw new BadRequestException('Voucher usage limit (totalQuantity) is required and must be at least 1');
+    }
+
     const discountType = dto.discountType || 'PERCENT';
     const created = await this.prisma.vouchers.create({
       data: {
@@ -196,7 +202,7 @@ export class VoucherService {
         discount_value: dto.discountValue,
         min_order_value: dto.minOrderValue ?? 0,
         max_discount_amount: discountType === 'PERCENT' ? (dto.maxDiscountAmount ?? null) : null,
-        total_quantity: dto.totalQuantity ?? 100,
+        total_quantity: dto.totalQuantity,
         used_quantity: 0,
         start_date: dto.startDate ? new Date(dto.startDate) : null,
         end_date: dto.endDate ? new Date(dto.endDate) : null,
@@ -239,7 +245,12 @@ export class VoucherService {
       data.max_discount_amount = dto.maxDiscountAmount;
     }
 
-    if (dto.totalQuantity !== undefined) data.total_quantity = dto.totalQuantity;
+    if (dto.totalQuantity !== undefined) {
+      if (!dto.totalQuantity || dto.totalQuantity <= 0) {
+        throw new BadRequestException('Voucher usage limit must be at least 1');
+      }
+      data.total_quantity = dto.totalQuantity;
+    }
     if (dto.startDate !== undefined) data.start_date = dto.startDate ? new Date(dto.startDate) : null;
     if (dto.endDate !== undefined) data.end_date = dto.endDate ? new Date(dto.endDate) : null;
     if (dto.status !== undefined) data.status = dto.status;
@@ -255,14 +266,21 @@ export class VoucherService {
   async applyVoucher(dto: ValidateVoucherDto) {
     const validation = await this.validateVoucher(dto);
 
-    await this.prisma.vouchers.update({
-      where: { id: validation.voucherId },
-      data: {
-        used_quantity: {
-          increment: 1,
-        },
-      },
-    });
+    const updatedRows = await this.prisma.$executeRaw`
+      UPDATE "vouchers"
+      SET "used_quantity" = COALESCE("used_quantity", 0) + 1
+      WHERE "id" = ${validation.voucherId}
+        AND "status" = 'ACTIVE'
+        AND ("start_date" IS NULL OR "start_date" <= NOW())
+        AND ("end_date" IS NULL OR "end_date" >= NOW())
+        AND "total_quantity" IS NOT NULL
+        AND "total_quantity" > 0
+        AND COALESCE("used_quantity", 0) < "total_quantity"
+    `;
+
+    if (updatedRows !== 1) {
+      throw new BadRequestException('Voucher usage limit reached or is no longer active');
+    }
 
     return {
       ...validation,

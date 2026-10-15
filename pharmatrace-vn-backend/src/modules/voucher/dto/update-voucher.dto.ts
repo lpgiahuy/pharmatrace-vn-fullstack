@@ -48,10 +48,9 @@ export class UpdateVoucherDto {
 
   @ApiPropertyOptional({ example: 200, description: 'Total available voucher uses' })
   @IsOptional()
-  @ValidateIf((_, val) => val !== null && val !== undefined)
   @Type(() => Number)
-  @IsInt()
-  @Min(1)
+  @IsInt({ message: 'Usage limit must be an integer' })
+  @Min(1, { message: 'Usage limit must be at least 1' })
   totalQuantity?: number;
 
   @ApiPropertyOptional({ example: '2026-06-01T00:00:00Z', description: 'Start validity timestamp' })
