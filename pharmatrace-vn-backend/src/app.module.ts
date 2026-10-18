@@ -13,7 +13,7 @@ import { VoucherModule } from './modules/voucher/voucher.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { ReviewModule } from './modules/review/review.module';
 import { ContentModerationModule } from './modules/moderation/content-moderation.module';
-// import { OrderModule } from './modules/order/order.module';
+import { OrderModule } from './modules/order/order.module';
 import { CartModule } from './modules/cart/cart.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -34,7 +34,7 @@ import { AppService } from './app.service';
     WishlistModule,
     ReviewModule,
     ContentModerationModule,
-    // OrderModule,
+    OrderModule,
     CartModule,
   ],
   controllers: [AppController],

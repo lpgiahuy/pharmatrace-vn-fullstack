@@ -78,6 +78,29 @@ function formatCustomerOrder(order: any) {
         }
         : null,
     })),
+    items: (order.order_items || []).map((item: any) => ({
+      id: item.id,
+      quantity: item.quantity,
+      unitPrice: Number(item.unit_price || 0),
+      totalPrice: Number(item.total_price || 0),
+      medicineName: item.medicine_name || item.medicines?.medicine_name || 'Medicine',
+      unitName: item.unit_name || item.packaging_variants?.unit_name || 'Unit',
+      medicine: item.medicines
+        ? {
+          id: item.medicines.id,
+          medicineName: item.medicines.medicine_name,
+          activeIngredients: item.medicines.active_ingredients || null,
+          dosage: item.medicines.dosage || null,
+          imageUrl: item.medicines.image_url || null,
+        }
+        : null,
+      packaging: item.packaging_variants
+        ? {
+          id: item.packaging_variants.id,
+          unitName: item.packaging_variants.unit_name,
+        }
+        : null,
+    })),
   };
 }
 

@@ -407,7 +407,7 @@ export class CartService {
         if (existing) {
           await tx.cart_items.update({
             where: { id: existing.id },
-            data: { quantity: Math.min(999, existing.quantity + qty) },
+            data: { quantity: Math.max(existing.quantity, qty) },
           });
         } else {
           await tx.cart_items.create({

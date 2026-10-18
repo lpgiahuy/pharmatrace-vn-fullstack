@@ -48,8 +48,8 @@ export function normalizeOrderStatus(status?: string | null): string {
   if (["SHIPPING", "IN_TRANSIT"].includes(s)) return "SHIPPING";
   if (["COMPLETED", "DELIVERED"].includes(s)) return "COMPLETED";
   if (["CANCELLED", "CANCELED"].includes(s)) return "CANCELLED";
-  if (["PARTIALLY_RETURNED", "RETURNED"].includes(s))
-    return "PARTIALLY_RETURNED";
+  if (["RETURNED", "PARTIALLY_RETURNED"].includes(s))
+    return "RETURNED";
   return status;
 }
 
@@ -60,7 +60,8 @@ export const STATUS_DB_MAPPINGS: Record<string, string[]> = {
   SHIPPING: ["SHIPPING", "IN_TRANSIT"],
   COMPLETED: ["COMPLETED", "DELIVERED"],
   CANCELLED: ["CANCELLED", "CANCELED"],
-  PARTIALLY_RETURNED: ["PARTIALLY_RETURNED", "RETURNED"],
+  RETURNED: ["RETURNED", "PARTIALLY_RETURNED"],
+  PARTIALLY_RETURNED: ["RETURNED", "PARTIALLY_RETURNED"],
 };
 
 function normalizePaymentStatus(status?: string | null): string {
@@ -111,9 +112,7 @@ export async function releaseOrderReservations(
           AND COALESCE("reserved_quantity", 0) >= ${item.quantity}
       `;
     if (releasedInventoryRows !== 1) {
-      throw new BadRequestException(
-        "The order inventory reservation is inconsistent and could not be released.",
-      );
+      throw new BadRequestException("The order inventory reservation is inconsistent and could not be released.",);
     }
 
     if (item.assigned_uids.length > 0) {
@@ -136,7 +135,6 @@ export async function releaseOrderReservations(
     });
   }
 
-  // Cancel any open internal transfer requests for this cancelled order
   await tx.internal_transfers.updateMany({
     where: {
       order_id: orderId,
@@ -226,10 +224,10 @@ export function formatOrder(order: any) {
     exportFacilityId: order.export_facility_id,
     exportFacility: order.facilities
       ? {
-          id: order.facilities.id,
-          facilityName: order.facilities.facility_name,
-          address: order.facilities.address,
-        }
+        id: order.facilities.id,
+        facilityName: order.facilities.facility_name,
+        address: order.facilities.address,
+      }
       : undefined,
     prescriptionId: order.prescription_id,
     subtotalAmount: Number(order.subtotal_amount || 0),
