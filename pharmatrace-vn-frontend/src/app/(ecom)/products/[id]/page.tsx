@@ -633,6 +633,20 @@ export default function ProductDetailPage({
       product.packagingOptions?.find((p) => p.id === selectedPackagingId) ||
       product.packagingOptions?.[0];
 
+    const currentStock = activePackaging && typeof (activePackaging as any).stock === 'number'
+      ? (activePackaging as any).stock
+      : Number(product.totalStock ?? 0);
+
+    if (currentStock <= 0) {
+      messageApi.warning('This medicine is currently out of stock.');
+      return;
+    }
+
+    if (qty > currentStock) {
+      messageApi.warning(`Only ${currentStock} item(s) available in stock.`);
+      return;
+    }
+
     const effectivePrice = activePackaging
       ? Number(activePackaging.price)
       : Number(product.promotionalPrice || product.unitPrice || 0);
@@ -724,7 +738,10 @@ export default function ProductDetailPage({
       ? Math.round(((activeOriginalPrice - activePrice) / activeOriginalPrice) * 100)
       : 0;
 
-  const isInStock = product.totalStock !== undefined ? product.totalStock > 0 : true;
+  const activeStock = activeOption && typeof (activeOption as any).stock === 'number'
+    ? (activeOption as any).stock
+    : Number(product.totalStock ?? 0);
+  const isInStock = activeStock > 0;
   const ct: any = product.details || {};
 
   function categorizeCustomAttribute(key: string, explicitSection?: string): 'composition' | 'indications' | 'usage' | 'safety' | 'manufacturing' {
@@ -1379,7 +1396,7 @@ export default function ProductDetailPage({
             <div className="flex items-center gap-2">
               <span className={cn('w-2 h-2 rounded-full shrink-0', isInStock ? 'bg-emerald-600' : 'bg-rose-600')} />
               <span className={cn('font-semibold', isInStock ? 'text-slate-800' : 'text-rose-600')}>
-                {isInStock ? `In Stock (${product.totalStock || 50} available)` : 'Out of Stock'}
+                {isInStock ? `In Stock (${activeStock} available)` : 'Out of Stock'}
               </span>
             </div>
           </div>

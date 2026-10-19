@@ -424,7 +424,7 @@ function CustomerReviewsContent() {
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-full bg-[#004996] text-white flex flex-col items-center justify-center shrink-0 p-1 text-center shadow-xs">
                           <span className="text-[7px] font-bold uppercase tracking-tighter leading-tight opacity-90">
-                            NHÀ THUỐC
+                            PHARMACY
                           </span>
                           <span className="text-[9px] font-black leading-tight">
                             PharmaTrace

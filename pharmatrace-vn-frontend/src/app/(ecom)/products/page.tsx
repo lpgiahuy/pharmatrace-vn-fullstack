@@ -211,6 +211,11 @@ function ProductCardItem({
     e.preventDefault();
     e.stopPropagation();
 
+    if (!isInStock) {
+      message.warning('This medicine is currently out of stock');
+      return;
+    }
+
     const baseVariant =
       product.packagingOptions?.[0] || product.packaging;
 
@@ -246,7 +251,7 @@ function ProductCardItem({
     ? Math.round(((product.unitPrice - Number(product.promotionalPrice)) / product.unitPrice) * 100)
     : 0;
 
-  const isInStock = product.totalStock !== undefined ? product.totalStock > 0 : true;
+  const isInStock = (product.totalStock ?? 0) > 0;
 
   return (
     <article className="bg-white rounded-2xl border border-slate-200/90 hover:border-slate-300 hover:shadow-md transition-all duration-300 p-4 flex flex-col h-full group">
@@ -359,7 +364,7 @@ function ProductCardItem({
             disabled
             className="w-full h-10 rounded-xl bg-slate-100 text-slate-400 text-sm font-medium flex items-center justify-center gap-2 border border-slate-200 cursor-not-allowed select-none"
           >
-            <span>Unavailable</span>
+            <span>Out of stock</span>
           </button>
         )}
       </div>

@@ -48,11 +48,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             ref={ref}
             required={required}
-            className={`w-full px-3.5 py-2.5 rounded-lg border text-sm placeholder:text-slate-400 transition-all duration-150 text-slate-800 ${
-              error
+            className={`w-full px-3.5 py-2.5 rounded-lg border text-sm placeholder:text-slate-400 transition-all duration-150 text-slate-800 ${error
                 ? 'border-red-400 bg-red-50 focus:ring-2 focus:ring-red-200 focus:border-red-400 focus:outline-none'
                 : 'border-slate-200 bg-white hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#004996]/20 focus:border-[#004996]'
-            } ${leftIcon ? 'pl-10' : ''} ${rightIcon ? 'pr-10' : ''} ${className}`}
+              } ${leftIcon ? 'pl-10' : ''} ${rightIcon ? 'pr-10' : ''} ${className}`}
             {...props}
           />
           {rightIcon && (

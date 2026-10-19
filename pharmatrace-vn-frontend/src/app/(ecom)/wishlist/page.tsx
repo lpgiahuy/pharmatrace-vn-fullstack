@@ -224,7 +224,7 @@ function WishlistContent() {
                   const stockCount = product.totalStock !== undefined ? product.totalStock : 0;
                   const isAvailable =
                     product.status === 'ACTIVE' &&
-                    (product.totalStock === undefined || product.totalStock > 0);
+                    (product.totalStock ?? 0) > 0;
 
                   return (
                     <tr key={product.id} className="hover:bg-slate-50/60 transition-colors">
@@ -370,7 +370,7 @@ function WishlistContent() {
               const stockCount = product.totalStock !== undefined ? product.totalStock : 0;
               const isAvailable =
                 product.status === 'ACTIVE' &&
-                (product.totalStock === undefined || product.totalStock > 0);
+                (product.totalStock ?? 0) > 0;
 
               return (
                 <div key={product.id} className="py-4 space-y-3">

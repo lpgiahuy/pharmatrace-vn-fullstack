@@ -102,6 +102,20 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/* Mobile navigation drawer link colors adhering to global text-primary */
+[data-mobile-nav] a:not(.text-white):not([class*="bg-[#004996]"]) {
+  color: var(--text-primary) !important;
+}
+
+[data-mobile-nav] a:not(.text-white):not([class*="bg-[#004996]"]):hover {
+  color: var(--brand-primary) !important;
+}
+
 /* Headings */
 
 main h1,
@@ -386,29 +400,33 @@ footer span.text-white\/70 {
 
 /* Ant Design Pagination */
 
+.custom-pagination.ant-pagination,
 .ant-pagination {
   display: inline-flex !important;
   align-items: center !important;
-  gap: 0.25rem !important;
+  gap: 0.375rem !important;
 }
 
+.custom-pagination .ant-pagination-item,
 .ant-pagination .ant-pagination-item {
-  border: 1px solid transparent !important;
+  border: 1.5px solid transparent !important;
   border-radius: 0.375rem !important;
-  min-width: 28px !important;
-  height: 28px !important;
-  line-height: 26px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  line-height: 29px !important;
   text-align: center !important;
   background-color: transparent !important;
   margin: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
+  transition: all 0.15s ease-in-out !important;
 }
 
+.custom-pagination .ant-pagination-item a,
 .ant-pagination .ant-pagination-item a {
   color: var(--text-secondary) !important;
-  font-size: 0.8125rem !important;
+  font-size: 0.875rem !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -416,30 +434,53 @@ footer span.text-white\/70 {
   height: 100% !important;
 }
 
+.custom-pagination .ant-pagination-item:hover,
 .ant-pagination .ant-pagination-item:hover {
   border-color: var(--border-strong) !important;
 }
 
+.custom-pagination .ant-pagination-item:hover a,
+.ant-pagination .ant-pagination-item:hover a {
+  color: var(--brand-primary) !important;
+}
+
+.custom-pagination .ant-pagination-item-active,
 .ant-pagination .ant-pagination-item-active {
-  border: 1px solid var(--brand-primary) !important;
+  border: 1.5px solid var(--brand-primary) !important;
+  border-radius: 0.375rem !important;
   background-color: #ffffff !important;
 }
 
+.custom-pagination .ant-pagination-item-active a,
 .ant-pagination .ant-pagination-item-active a {
   color: var(--brand-primary) !important;
   font-weight: 600 !important;
 }
 
+.custom-pagination .ant-pagination-prev,
+.custom-pagination .ant-pagination-next,
 .ant-pagination .ant-pagination-prev,
 .ant-pagination .ant-pagination-next {
   border: none !important;
-  height: auto !important;
-  line-height: normal !important;
+  height: 32px !important;
+  line-height: 32px !important;
   min-width: auto !important;
   margin: 0 0.25rem !important;
+  background: transparent !important;
 }
 
+.custom-pagination .ant-pagination-prev button,
+.custom-pagination .ant-pagination-next button,
+.custom-pagination .ant-pagination-prev .ant-pagination-item-link,
+.custom-pagination .ant-pagination-next .ant-pagination-item-link,
 .ant-pagination .ant-pagination-prev button,
-.ant-pagination .ant-pagination-next button {
+.ant-pagination .ant-pagination-next button,
+.ant-pagination .ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination .ant-pagination-next .ant-pagination-item-link {
   border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  line-height: inherit !important;
 }

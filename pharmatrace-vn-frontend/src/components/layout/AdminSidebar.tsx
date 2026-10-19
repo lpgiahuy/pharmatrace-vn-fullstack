@@ -11,6 +11,7 @@ import {
   AppstoreOutlined,
   PercentageOutlined,
   CommentOutlined,
+  ShoppingOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -53,6 +54,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       label: 'Medicines & Catalog',
     },
     {
+      key: '/admin/orders',
+      icon: <ShoppingOutlined style={{ fontSize: 16 }} />,
+      label: 'Orders & Fulfillment',
+    },
+    {
       key: '/admin/reviews',
       icon: <CommentOutlined style={{ fontSize: 16 }} />,
       label: 'Review Moderation',
@@ -87,9 +93,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     <div className="flex h-full flex-col bg-white select-none border-r border-slate-100">
       {/* Brand Header */}
       <div
-        className={`flex shrink-0 items-center gap-2.5 px-4 h-16 border-b border-slate-100 ${
-          isCollapsed ? 'justify-center px-2' : ''
-        }`}
+        className={`flex shrink-0 items-center gap-2.5 px-4 h-16 border-b border-slate-100 ${isCollapsed ? 'justify-center px-2' : ''
+          }`}
       >
         <div className="w-9 h-9 rounded-[8px] bg-gradient-to-tr from-[#003875] to-[#004996] flex items-center justify-center p-1.5 shadow-xs shrink-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}

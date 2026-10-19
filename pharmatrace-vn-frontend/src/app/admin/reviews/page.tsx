@@ -550,7 +550,7 @@ export default function AdminReviewsPage() {
             />
           </div>
 
-          {/* Status, Rating Filters & Refresh Button (Ngang hàng) */}
+          {/* Status, Rating Filters & Refresh Button (Inline) */}
           <div className="flex items-center gap-2.5 shrink-0">
             <Select
               size="middle"
