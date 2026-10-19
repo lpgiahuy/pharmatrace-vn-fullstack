@@ -9,6 +9,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DATABASE_URL || "postgresql://postgres:HuyLe%40574406@localhost:5432/pharmatrace-vn-db?schema=public",
+    url: process.env.DATABASE_URL || "postgresql://postgres:postgres123@localhost:5433/phartrace-vn-db?schema=public",
   },
 });
