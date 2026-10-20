@@ -42,6 +42,7 @@ pharmatrace-vn-backend/prisma/generated/
 
 # Uploads & Temporary files / Scripts
 pharmatrace-vn-backend/uploads/*
+**/.private/
 !pharmatrace-vn-backend/uploads/.gitkeep
 temp/
 script/
@@ -49,3 +50,7 @@ scripts/
 **/temp/
 **/script/
 **/scripts/
+
+database/backups/*
+
+docs/*

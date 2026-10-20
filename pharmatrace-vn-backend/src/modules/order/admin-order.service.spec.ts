@@ -31,7 +31,7 @@ describe("AdminOrderService packing", () => {
     ],
   };
 
-  function setup(otherStatus = "RESERVED") {
+  function setup(otherStatus = "RESERVED", reviewStatus?: string) {
     const boxes = [ownUid, otherUid].map((uid) => ({
       uid,
       status: uid === ownUid ? "RESERVED" : otherStatus,
@@ -59,7 +59,7 @@ describe("AdminOrderService packing", () => {
       orders: { update: jest.fn() },
     };
     const prisma = {
-      orders: { findFirst: jest.fn().mockResolvedValue(order) },
+      orders: { findFirst: jest.fn().mockResolvedValue({ ...order, prescription_review_status: reviewStatus }) },
       medicine_boxes: { findMany: tx.medicine_boxes.findMany },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) =>
         run(tx),
@@ -76,6 +76,13 @@ describe("AdminOrderService packing", () => {
     await expect(service.adminPackOrder(1, {}, facilityStaff)).rejects.toThrow(
       /scan|UID|confirm/i,
     );
+    expect(tx.shipments.create).not.toHaveBeenCalled();
+  });
+
+  it("does not pack an order before pharmacist approval", async () => {
+    const { service, tx } = setup('RESERVED', 'PENDING_APPROVAL');
+    await expect(service.adminPackOrder(1, { boxUids: [ownUid] }, facilityStaff))
+      .rejects.toThrow(/pharmacist approval/i);
     expect(tx.shipments.create).not.toHaveBeenCalled();
   });
 

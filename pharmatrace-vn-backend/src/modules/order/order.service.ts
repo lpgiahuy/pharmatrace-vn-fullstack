@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from "@nestjs/common";
 import { randomBytes } from "crypto";
+import { Prisma } from '@prisma/client';
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrderQueryDto } from "./dto/order-query.dto";
@@ -93,15 +94,22 @@ export class OrderService {
     }
 
     const hasPrescriptionDrug = itemsToOrder.some((i) => i.isPrescription);
+    if (!hasPrescriptionDrug && dto.prescriptionId) {
+      throw new BadRequestException('A prescription can only be attached to an order containing prescription medicine');
+    }
     if (hasPrescriptionDrug && !dto.prescriptionId) {
       throw new BadRequestException("Your order contains prescription drugs (Rx). Please provide or upload an approved doctor prescription.");
     }
 
     if (dto.prescriptionId) {
-      const prescription = await this.prisma.prescriptions.findUnique({
-        where: { id: dto.prescriptionId },
-      });
-      if (!prescription || prescription.customer_id !== customerId) {
+      const prescription = await this.prisma.withActor(
+        { id: customerId, role: 'CUSTOMER', type: 'customer' },
+        (tx) => tx.prescriptions.findFirst({
+          where: { id: dto.prescriptionId, customer_id: customerId },
+          select: { id: true },
+        }),
+      );
+      if (!prescription) {
         throw new BadRequestException("Invalid prescription or prescription does not belong to your account");
       }
     }
@@ -344,13 +352,14 @@ export class OrderService {
     const datePart = new Date().toISOString().slice(2, 10).replace(/-/g, "");
     const orderCode = `ORD-${datePart}-${randomBytes(4).toString("hex").toUpperCase()}`;
 
-    const newOrder = await this.prisma.$transaction(async (tx) => {
+    const saveOrder = async (tx: Prisma.TransactionClient) => {
       const order = await tx.orders.create({
         data: {
           order_code: orderCode,
           customer_id: customerId,
           export_facility_id: exportFacilityId,
           prescription_id: dto.prescriptionId || null,
+          prescription_review_status: hasPrescriptionDrug ? 'PENDING_APPROVAL' : null,
           subtotal_amount: subtotal,
           shipping_fee: shippingFee,
           discount_amount: discountFromVoucher,
@@ -365,6 +374,17 @@ export class OrderService {
           note: dto.note || null,
         },
       });
+
+      if (hasPrescriptionDrug && dto.prescriptionId) {
+        await tx.order_prescription_reviews.create({
+          data: {
+            order_id: order.id,
+            prescription_id: dto.prescriptionId,
+            facility_id: exportFacilityId,
+            status: 'PENDING_APPROVAL',
+          },
+        });
+      }
 
       const reservedUidsByVariant = new Map<number, string[]>();
 
@@ -505,7 +525,14 @@ export class OrderService {
       });
 
       return order;
-    });
+    };
+
+    const newOrder = hasPrescriptionDrug
+      ? await this.prisma.withActor(
+          { id: customerId, role: 'CUSTOMER', type: 'customer' },
+          saveOrder,
+        )
+      : await this.prisma.$transaction(saveOrder);
 
     return this.getMyOrderById(customerId, newOrder.id);
   }
@@ -586,10 +613,11 @@ export class OrderService {
     }
 
     await this.prisma.$transaction(async (tx) => {
-      await tx.orders.update({
-        where: { id: orderId },
+      const cancelled = await tx.orders.updateMany({
+        where: { id: orderId, order_status: order.order_status },
         data: { order_status: "CANCELLED" },
       });
+      if (cancelled.count !== 1) throw new BadRequestException('Order status changed. Reload and try again.');
 
       await releaseOrderReservations(
         tx,

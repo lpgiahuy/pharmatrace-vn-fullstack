@@ -132,6 +132,10 @@ export class AdminOrderService {
       ? normalizeOrderStatus(dto.orderStatus)
       : currentStatus;
 
+    if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED' && !['PENDING', 'WAITING_INTERNAL_TRANSFER', 'CANCELLED'].includes(targetStatus)) {
+      throw new BadRequestException('This order requires pharmacist approval before processing');
+    }
+
     if (currentStatus !== targetStatus) {
       const allowedNext = ALLOWED_TRANSITIONS[currentStatus] || [];
       if (!allowedNext.includes(targetStatus)) {
@@ -153,10 +157,11 @@ export class AdminOrderService {
     }
 
     await this.prisma.$transaction(async (tx) => {
-      await tx.orders.update({
-        where: { id: orderId },
+      const updated = await tx.orders.updateMany({
+        where: { id: orderId, order_status: order.order_status },
         data: updateData,
       });
+      if (updated.count !== 1) throw new BadRequestException('Order status changed. Reload and try again.');
 
       if (targetStatus === "CANCELLED" && currentStatus !== targetStatus) {
         await releaseOrderReservations(tx, orderId, order.export_facility_id);
@@ -348,6 +353,10 @@ export class AdminOrderService {
 
     if (!order) {
       throw new NotFoundException(`Order #${orderId} not found`);
+    }
+
+    if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED') {
+      throw new BadRequestException('This order requires pharmacist approval before packing');
     }
 
     const normStatus = normalizeOrderStatus(order.order_status);
@@ -659,6 +668,13 @@ export class AdminOrderService {
     });
     if (!transfer) {
       throw new NotFoundException(`Internal transfer #${transferId} not found`);
+    }
+    const transferOrder = await this.prisma.orders.findUnique({
+      where: { id: transfer.order_id },
+      select: { prescription_review_status: true, order_status: true },
+    });
+    if (!transferOrder || transferOrder.order_status === 'CANCELLED' || (transferOrder.prescription_review_status && transferOrder.prescription_review_status !== 'APPROVED')) {
+      throw new BadRequestException('This transfer cannot be dispatched before pharmacist approval');
     }
     if (["CANCELLED", "REJECTED", "REJECTED_UNFULFILLED", "REPLACED", "RECEIVED"].includes(transfer.status)) {
       throw new BadRequestException(`Cannot dispatch transfer #${transferId} because its status is ${transfer.status}.`);

@@ -4,7 +4,6 @@ import { Prisma } from "@prisma/client";
 export const ORDER_DETAILS_INCLUDE = {
   order_items: { include: { medicines: true, source_facility: true } },
   shipments: true,
-  prescriptions: true,
   facilities: true,
   internal_transfers: {
     include: {
@@ -230,6 +229,7 @@ export function formatOrder(order: any) {
       }
       : undefined,
     prescriptionId: order.prescription_id,
+    prescriptionReviewStatus: order.prescription_review_status,
     subtotalAmount: Number(order.subtotal_amount || 0),
     shippingFee: Number(order.shipping_fee || 0),
     discountAmount: voucherDiscount,
@@ -258,14 +258,5 @@ export function formatOrder(order: any) {
     shipment: formattedShipment,
     shipments: formattedShipment ? [formattedShipment] : [],
     internalTransfers: formattedTransfers,
-    prescription: order.prescriptions
-      ? {
-        id: order.prescriptions.id,
-        status: order.prescriptions.status,
-        imageUrl: order.prescriptions.prescription_image_url,
-        prescribingDoctor: order.prescriptions.prescribing_doctor,
-        medicalFacility: order.prescriptions.medical_facility,
-      }
-      : undefined,
   };
 }
