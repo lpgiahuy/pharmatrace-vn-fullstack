@@ -2,9 +2,9 @@
 DO $$
 BEGIN
    IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'app_user') THEN
-      CREATE USER app_user WITH PASSWORD 'HuyLe@574406';
+      CREATE USER app_user WITH PASSWORD 'pharmatrace_secure_password';
    ELSE
-      ALTER USER app_user WITH PASSWORD 'HuyLe@574406';
+      ALTER USER app_user WITH PASSWORD 'pharmatrace_secure_password';
    END IF;
 END
 $$;

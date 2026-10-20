@@ -3,7 +3,7 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class ReplyReviewDto {
   @ApiProperty({
-    example: 'Cảm ơn quý khách đã tin tưởng sử dụng sản phẩm của PharmaTrace VN. Chúc quý khách nhiều sức khỏe!',
+    example: 'Thank you for trusting PharmaTrace VN products. Wishing you good health!',
     description: 'Admin or Pharmacist reply message',
   })
   @IsString()
@@ -11,7 +11,7 @@ export class ReplyReviewDto {
   reply: string;
 
   @ApiPropertyOptional({
-    example: 'Dược sĩ PharmaTrace',
+    example: 'PharmaTrace Pharmacist',
     description: 'Name of replier (Pharmacist or Support Staff)',
   })
   @IsOptional()

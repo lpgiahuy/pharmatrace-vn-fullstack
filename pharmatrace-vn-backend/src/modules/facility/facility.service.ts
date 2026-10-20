@@ -82,7 +82,7 @@ export class FacilityService {
       select: { id: true, facility_type: true },
     });
 
-    let total = all.length;
+    const total = all.length;
     let manufacturers = 0;
     let warehouses = 0;
     let pharmacies = 0;
@@ -168,8 +168,8 @@ export class FacilityService {
         address: dto.address?.trim() || null,
         phone_number: dto.phoneNumber?.trim() || null,
         email: dto.email?.trim() || null,
-        latitude: dto.latitude !== undefined ? dto.latitude : null,
-        longitude: dto.longitude !== undefined ? dto.longitude : null,
+        latitude: dto.latitude,
+        longitude: dto.longitude,
       },
     });
 

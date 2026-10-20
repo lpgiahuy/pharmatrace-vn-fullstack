@@ -44,6 +44,7 @@ import { reviewService, ReviewItem, ReviewStats } from '@/services/review.servic
 import { productService } from '@/services/product.service';
 import { wishlistService } from '@/services/wishlist.service';
 import { useAuth } from '@/store/useAuthStore';
+import { useCartStore } from '@/store/useCartStore';
 import { Product } from '@/types/product.types';
 import { formatCurrency, formatDate, formatDateTime, cleanText, cn, compressImages } from '@/utils';
 
@@ -234,6 +235,7 @@ export default function ProductDetailPage({
   const productId = resolvedParams.id;
 
   const { isAuthenticated, user } = useAuth();
+  const addItem = useCartStore((state) => state.addItem);
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -498,7 +500,7 @@ export default function ProductDetailPage({
               'pharmatrace_helpful_reviews',
               JSON.stringify(Array.from(next)),
             );
-          } catch {}
+          } catch { }
           return next;
         });
         setReviews((prev) =>
@@ -516,7 +518,7 @@ export default function ProductDetailPage({
               'pharmatrace_helpful_reviews',
               JSON.stringify(Array.from(next)),
             );
-          } catch {}
+          } catch { }
           return next;
         });
         setReviews((prev) =>
@@ -625,7 +627,56 @@ export default function ProductDetailPage({
   };
 
   const handleAddToCart = () => {
-    messageApi.info('Cart feature is coming soon.');
+    if (!product) return;
+
+    const activePackaging =
+      product.packagingOptions?.find((p) => p.id === selectedPackagingId) ||
+      product.packagingOptions?.[0];
+
+    const currentStock = activePackaging && typeof (activePackaging as any).stock === 'number'
+      ? (activePackaging as any).stock
+      : Number(product.totalStock ?? 0);
+
+    if (currentStock <= 0) {
+      messageApi.warning('This medicine is currently out of stock.');
+      return;
+    }
+
+    if (qty > currentStock) {
+      messageApi.warning(`Only ${currentStock} item(s) available in stock.`);
+      return;
+    }
+
+    const effectivePrice = activePackaging
+      ? Number(activePackaging.price)
+      : Number(product.promotionalPrice || product.unitPrice || 0);
+
+    const originalPrice = activePackaging
+      ? Number(activePackaging.originalPrice || activePackaging.price)
+      : Number(product.unitPrice || effectivePrice);
+
+    addItem(
+      {
+        id: `${product.id}-${activePackaging?.id || 'base'}`,
+        productId: product.id,
+        slug: product.slug || String(product.id),
+        medicineName: product.medicineName,
+        imageUrl: product.imageUrl,
+        variantId: activePackaging?.id,
+        unitName: activePackaging?.unitName || 'Box',
+        price: effectivePrice,
+        originalPrice: originalPrice,
+        packagingOptions: product.packagingOptions?.map((p) => ({
+          id: p.id,
+          unitName: p.unitName,
+          price: Number(p.price),
+          originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
+        })),
+      },
+      qty,
+    );
+
+    messageApi.success('Added to cart!');
   };
 
   if (loading) {
@@ -687,7 +738,10 @@ export default function ProductDetailPage({
       ? Math.round(((activeOriginalPrice - activePrice) / activeOriginalPrice) * 100)
       : 0;
 
-  const isInStock = product.totalStock !== undefined ? product.totalStock > 0 : true;
+  const activeStock = activeOption && typeof (activeOption as any).stock === 'number'
+    ? (activeOption as any).stock
+    : Number(product.totalStock ?? 0);
+  const isInStock = activeStock > 0;
   const ct: any = product.details || {};
 
   function categorizeCustomAttribute(key: string, explicitSection?: string): 'composition' | 'indications' | 'usage' | 'safety' | 'manufacturing' {
@@ -955,11 +1009,11 @@ export default function ProductDetailPage({
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-bold text-slate-900">
-                        {r.customerName || 'Khách hàng'}
+                        {r.customerName || 'Customer'}
                       </span>
                       {r.id === mostHelpfulReviewId ? (
                         <span className="px-2 py-0.5 bg-[#00A551] text-white text-[11px] font-semibold rounded-[4px]">
-                          Hữu ích nhất
+                          Most Helpful
                         </span>
                       ) : null}
                     </div>
@@ -1030,7 +1084,7 @@ export default function ProductDetailPage({
                       )}
                     </button>
 
-                    {user && (r.customerId === user.id || (user.userId && r.customerId === user.userId)) ? (
+                    {user && r.customerId === user.id ? (
                       <div className="flex items-center gap-1.5 border-l border-slate-200 pl-3">
                         <button
                           type="button"
@@ -1086,7 +1140,7 @@ export default function ProductDetailPage({
                     <div className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-full bg-[#004996] text-white flex flex-col items-center justify-center shrink-0 p-1 text-center shadow-xs">
                         <span className="text-[7px] font-bold uppercase tracking-tighter leading-tight opacity-90">
-                          NHÀ THUỐC
+                          PHARMACY
                         </span>
                         <span className="text-[9px] font-black leading-tight">
                           PharmaTrace
@@ -1135,20 +1189,20 @@ export default function ProductDetailPage({
     <div className="w-full animate-fade-in space-y-6 sm:space-y-8 font-sans">
 
       {/* Breadcrumb with category navigation */}
-      <nav className="flex items-center gap-2 text-sm !text-black mb-6 flex-wrap" aria-label="Breadcrumb">
-        <Link href="/products" className="!text-black hover:opacity-75 font-medium">Home</Link>
-        <ChevronRight className="w-4 h-4 !text-black" />
-        <Link href="/products" className="!text-black hover:opacity-75 font-medium">Products</Link>
+      <nav className="flex items-center gap-2 text-sm mb-6 flex-wrap" aria-label="Breadcrumb">
+        <Link href="/" className="text-gray-500 hover:text-black transition-colors font-medium">Home</Link>
+        <ChevronRight className="w-4 h-4 text-gray-400" />
+        <Link href="/products" className="text-gray-500 hover:text-black transition-colors font-medium">Products</Link>
         {product.category && (
           <>
-            <ChevronRight className="w-4 h-4 !text-black" />
-            <Link href={`/products?category=${product.category.id}`} className="!text-black hover:opacity-75 font-medium">
+            <ChevronRight className="w-4 h-4 text-gray-400" />
+            <Link href={`/products?category=${product.category.id}`} className="text-gray-500 hover:text-black transition-colors font-medium">
               {product.category.categoryName}
             </Link>
           </>
         )}
-        <ChevronRight className="w-4 h-4 !text-black" />
-        <span className="!text-black font-semibold truncate max-w-md">{cleanText(product.medicineName)}</span>
+        <ChevronRight className="w-4 h-4 text-gray-400" />
+        <span className="text-black font-semibold truncate max-w-md">{cleanText(product.medicineName)}</span>
       </nav>
 
       {/* Product Hero 2 Columns */}
@@ -1342,7 +1396,7 @@ export default function ProductDetailPage({
             <div className="flex items-center gap-2">
               <span className={cn('w-2 h-2 rounded-full shrink-0', isInStock ? 'bg-emerald-600' : 'bg-rose-600')} />
               <span className={cn('font-semibold', isInStock ? 'text-slate-800' : 'text-rose-600')}>
-                {isInStock ? `In Stock (${product.totalStock || 50} available)` : 'Out of Stock'}
+                {isInStock ? `In Stock (${activeStock} available)` : 'Out of Stock'}
               </span>
             </div>
           </div>
@@ -1937,7 +1991,6 @@ export default function ProductDetailPage({
             onClick={handleOpenReviewModal}
             className="px-5 py-2.5 bg-[#004996] hover:bg-[#003875] text-white text-xs font-bold rounded-[6px] transition-all shadow-xs flex items-center gap-2 cursor-pointer"
           >
-            <Star className="w-3.5 h-3.5 fill-white" />
             <span>Write a Review</span>
           </button>
         </div>

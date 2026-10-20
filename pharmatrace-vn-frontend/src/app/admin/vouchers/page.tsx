@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -337,7 +338,7 @@ export default function AdminVouchersPage() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 space-y-5 animate-fade-in font-sans w-full">
+    <div className="space-y-4 font-sans w-full">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
         <div>
@@ -554,7 +555,7 @@ export default function AdminVouchersPage() {
       </div>
 
       {/* Desktop & Tablet View: Full Table (>= 640px) */}
-      <div className="hidden sm:block bg-white rounded-[6px] border border-slate-200/80 shadow-xs overflow-hidden">
+      <div className="hidden sm:block bg-white rounded-md border border-gray-200 shadow-card overflow-hidden">
         <Table
           columns={columns}
           dataSource={vouchers}

@@ -18,7 +18,7 @@ import {
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Admin - Content Moderation & Reports')
 @ApiBearerAuth('bearerAuth')
@@ -51,14 +51,13 @@ export class AdminModerationController {
   @ApiResponse({ status: 200, description: 'Report resolved successfully' })
   async resolveReport(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: ResolveReportDto,
   ) {
-    const adminId = user.userId || user.id;
     const adminRole = user.role || 'SUPER_ADMIN';
     return this.moderationService.resolveReport(
       id,
-      adminId,
+      user.id,
       adminRole,
       dto.note,
       dto.actionOnReview,
@@ -73,12 +72,11 @@ export class AdminModerationController {
   @ApiResponse({ status: 200, description: 'Report dismissed successfully' })
   async dismissReport(
     @Param('id', ParseIntPipe) id: number,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: ResolveReportDto,
   ) {
-    const adminId = user.userId || user.id;
     const adminRole = user.role || 'SUPER_ADMIN';
-    return this.moderationService.dismissReport(id, adminId, adminRole, dto.note);
+    return this.moderationService.dismissReport(id, user.id, adminRole, dto.note);
   }
 
   @Get('audit-logs')

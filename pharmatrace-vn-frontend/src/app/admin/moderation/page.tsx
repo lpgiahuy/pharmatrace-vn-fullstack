@@ -580,21 +580,21 @@ export default function AdminModerationPage() {
                       {Math.min(reportsPage * reportsPageSize, reportsTotal)} of {reportsTotal} reports
                     </span>
                     <Pagination
+                      className="custom-pagination"
                       current={reportsPage}
                       pageSize={reportsPageSize}
-                      total={reportsTotal}
+                      total={Math.max(reportsTotal, 1)}
                       onChange={(p, ps) => {
                         setReportsPage(p);
                         if (ps && ps !== reportsPageSize) setReportsPageSize(ps);
                       }}
                       showSizeChanger={false}
-                      size="small"
                       itemRender={(_page, type, originalElement) => {
                         if (type === 'prev') {
-                          return <span className="px-1 text-gray-600 text-xs font-medium">&lt; Prev</span>;
+                          return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">&lt; Prev</span>;
                         }
                         if (type === 'next') {
-                          return <span className="px-1 text-[#004996] text-xs font-medium">Next &gt;</span>;
+                          return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">Next &gt;</span>;
                         }
                         return originalElement;
                       }}
@@ -688,21 +688,21 @@ export default function AdminModerationPage() {
                         {Math.min(reportsPage * reportsPageSize, reportsTotal)} of {reportsTotal} reports
                       </span>
                       <Pagination
+                        className="custom-pagination"
                         current={reportsPage}
                         pageSize={reportsPageSize}
-                        total={reportsTotal}
+                        total={Math.max(reportsTotal, 1)}
                         onChange={(p, ps) => {
                           setReportsPage(p);
                           if (ps && ps !== reportsPageSize) setReportsPageSize(ps);
                         }}
                         showSizeChanger={false}
-                        size="small"
                         itemRender={(_page, type, originalElement) => {
                           if (type === 'prev') {
-                            return <span className="px-1 text-gray-600 text-xs font-medium">&lt; Prev</span>;
+                            return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">&lt; Prev</span>;
                           }
                           if (type === 'next') {
-                            return <span className="px-1 text-[#004996] text-xs font-medium">Next &gt;</span>;
+                            return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">Next &gt;</span>;
                           }
                           return originalElement;
                         }}
@@ -775,21 +775,21 @@ export default function AdminModerationPage() {
                       {Math.min(auditPage * auditPageSize, auditTotal)} of {auditTotal} audit entries
                     </span>
                     <Pagination
+                      className="custom-pagination"
                       current={auditPage}
                       pageSize={auditPageSize}
-                      total={auditTotal}
+                      total={Math.max(auditTotal, 1)}
                       onChange={(p, ps) => {
                         setAuditPage(p);
                         if (ps && ps !== auditPageSize) setAuditPageSize(ps);
                       }}
                       showSizeChanger={false}
-                      size="small"
                       itemRender={(_page, type, originalElement) => {
                         if (type === 'prev') {
-                          return <span className="px-1 text-gray-600 text-xs font-medium">&lt; Prev</span>;
+                          return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">&lt; Prev</span>;
                         }
                         if (type === 'next') {
-                          return <span className="px-1 text-[#004996] text-xs font-medium">Next &gt;</span>;
+                          return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">Next &gt;</span>;
                         }
                         return originalElement;
                       }}
@@ -854,21 +854,21 @@ export default function AdminModerationPage() {
                         {Math.min(auditPage * auditPageSize, auditTotal)} of {auditTotal} audit entries
                       </span>
                       <Pagination
+                        className="custom-pagination"
                         current={auditPage}
                         pageSize={auditPageSize}
-                        total={auditTotal}
+                        total={Math.max(auditTotal, 1)}
                         onChange={(p, ps) => {
                           setAuditPage(p);
                           if (ps && ps !== auditPageSize) setAuditPageSize(ps);
                         }}
                         showSizeChanger={false}
-                        size="small"
                         itemRender={(_page, type, originalElement) => {
                           if (type === 'prev') {
-                            return <span className="px-1 text-gray-600 text-xs font-medium">&lt; Prev</span>;
+                            return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">&lt; Prev</span>;
                           }
                           if (type === 'next') {
-                            return <span className="px-1 text-[#004996] text-xs font-medium">Next &gt;</span>;
+                            return <span className="px-1 text-[#004996] text-sm font-medium hover:underline cursor-pointer select-none">Next &gt;</span>;
                           }
                           return originalElement;
                         }}

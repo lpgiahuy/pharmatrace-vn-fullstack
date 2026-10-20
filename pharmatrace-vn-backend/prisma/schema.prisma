@@ -40,6 +40,9 @@ model facilities {
   orders                   orders[]
   purchase_orders_supplier purchase_orders[]  @relation("po_supplier")
   sscc_cartons             sscc_cartons[]
+  transfers_from           internal_transfers[] @relation("transfers_from")
+  transfers_to             internal_transfers[] @relation("transfers_to")
+  order_items_sourced      order_items[]        @relation("order_items_source_facility")
 }
 
 model customers {
@@ -202,8 +205,8 @@ model vouchers {
   discount_value      Decimal   @db.Decimal(15, 2)
   min_order_value     Decimal?  @default(0) @db.Decimal(15, 2)
   max_discount_amount Decimal?  @db.Decimal(15, 2)
-  total_quantity      Int?      @default(100)
-  used_quantity       Int?      @default(0)
+  total_quantity      Int       @default(100)
+  used_quantity       Int       @default(0)
   start_date          DateTime? @db.Timestamptz(6)
   end_date            DateTime? @db.Timestamptz(6)
   status              String?   @default("ACTIVE") @db.VarChar(50)
@@ -236,6 +239,7 @@ model orders {
   facilities          facilities?           @relation(fields: [export_facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   prescriptions       prescriptions?        @relation(fields: [prescription_id], references: [id], onUpdate: NoAction)
   shipments           shipments?
+  internal_transfers  internal_transfers[]
 
   @@index([customer_id], map: "idx_orders_customer_id")
   @@index([order_status], map: "idx_orders_status")
@@ -253,9 +257,39 @@ model order_items {
   unit_price         Decimal             @default(0) @db.Decimal(15, 2)
   total_price        Decimal             @default(0) @db.Decimal(15, 2)
   assigned_uids      String[]            @default([]) @db.Uuid
+  inventory_reserved Boolean             @default(false)
+  source_facility_id Int?
   packaging_variants packaging_variants? @relation(fields: [variant_id], references: [id], onUpdate: NoAction, map: "fk_order_items_variant")
   medicines          medicines?          @relation(fields: [medicine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   orders             orders?             @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  source_facility    facilities?         @relation("order_items_source_facility", fields: [source_facility_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
+}
+
+model internal_transfers {
+  id               Int        @id @default(autoincrement())
+  transfer_code    String     @unique @db.VarChar(50)
+  order_id         Int
+  from_facility_id Int
+  to_facility_id   Int
+  status           String     @default("REQUESTED") @db.VarChar(50)
+  items            Json       @default("[]")
+  tracking_code    String?    @db.VarChar(100)
+  distance_km      Decimal?   @db.Decimal(10, 2)
+  estimated_hours  Int?       @default(24)
+  notes            String?
+  dispatched_at    DateTime?  @db.Timestamptz(6)
+  received_at      DateTime?  @db.Timestamptz(6)
+  created_at       DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime?  @default(now()) @db.Timestamptz(6)
+
+  orders           orders     @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  from_facility    facilities @relation("transfers_from", fields: [from_facility_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  to_facility      facilities @relation("transfers_to", fields: [to_facility_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@index([order_id], map: "idx_internal_transfers_order_id")
+  @@index([from_facility_id], map: "idx_internal_transfers_from")
+  @@index([to_facility_id], map: "idx_internal_transfers_to")
+  @@index([status], map: "idx_internal_transfers_status")
 }
 
 model cart_items {

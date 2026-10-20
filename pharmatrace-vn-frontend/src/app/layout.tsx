@@ -23,6 +23,8 @@ export default function RootLayout({
             theme={{
               token: {
                 colorPrimary: "#1e4287",
+                colorLink: "#1f2937",
+                colorLinkHover: "#004996",
                 colorSuccess: "#00A551",
                 colorWarning: "#f7941d",
                 colorError: "#ed1c24",

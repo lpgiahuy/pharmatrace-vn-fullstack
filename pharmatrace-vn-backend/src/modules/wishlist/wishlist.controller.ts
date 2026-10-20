@@ -16,7 +16,7 @@ import { WishlistService } from './wishlist.service';
 import { WishlistQueryDto } from './dto/wishlist-query.dto';
 import { CheckBatchWishlistDto } from './dto/check-batch-wishlist.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Customer - Wishlist')
 @ApiBearerAuth('bearerAuth')
@@ -32,11 +32,10 @@ export class WishlistController {
   })
   @ApiResponse({ status: 200, description: 'Wishlist items retrieved successfully' })
   async getWishlist(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Query() query: WishlistQueryDto,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.wishlistService.getWishlist(customerId, query);
+    const result = await this.wishlistService.getWishlist(user.id, query);
     return {
       success: true,
       message: 'Wishlist retrieved successfully',
@@ -52,11 +51,10 @@ export class WishlistController {
   })
   @ApiResponse({ status: 200, description: 'Checked successfully' })
   async checkIsWishlisted(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Param('productId', ParseIntPipe) productId: number,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.wishlistService.checkIsWishlisted(customerId, productId);
+    const result = await this.wishlistService.checkIsWishlisted(user.id, productId);
     return {
       success: true,
       data: result,
@@ -71,11 +69,10 @@ export class WishlistController {
   })
   @ApiResponse({ status: 200, description: 'Batch checked successfully' })
   async checkBatchWishlist(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: CheckBatchWishlistDto,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.wishlistService.checkBatchWishlist(customerId, dto.productIds);
+    const result = await this.wishlistService.checkBatchWishlist(user.id, dto.productIds);
     return {
       success: true,
       data: result,
@@ -89,11 +86,10 @@ export class WishlistController {
   })
   @ApiResponse({ status: 201, description: 'Added to wishlist successfully' })
   async addToWishlist(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Param('productId', ParseIntPipe) productId: number,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.wishlistService.addToWishlist(customerId, productId);
+    const result = await this.wishlistService.addToWishlist(user.id, productId);
     return {
       success: true,
       message: result.message,
@@ -108,11 +104,10 @@ export class WishlistController {
   })
   @ApiResponse({ status: 200, description: 'Removed from wishlist successfully' })
   async removeFromWishlist(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Param('productId', ParseIntPipe) productId: number,
   ) {
-    const customerId = user.userId || user.id;
-    const result = await this.wishlistService.removeFromWishlist(customerId, productId);
+    const result = await this.wishlistService.removeFromWishlist(user.id, productId);
     return {
       success: true,
       message: result.message,

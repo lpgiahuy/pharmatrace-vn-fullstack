@@ -57,6 +57,13 @@ export async function compressAndResizeImage(
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
+
+      // Fill with white background so transparent PNGs don't have black background when converted to JPEG
+      if (mimeType === 'image/jpeg') {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
       ctx.drawImage(img, 0, 0, width, height);
 
       canvas.toBlob(

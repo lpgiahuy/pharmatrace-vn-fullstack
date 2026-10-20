@@ -42,15 +42,60 @@ export const Badge: React.FC<{
   </span>
 );
 
-export const StockBadge: React.FC<{
-  quantity?: number | null;
-  threshold?: number;
-}> = ({ quantity, threshold = 20 }) => {
-  if (quantity === 0 || quantity === null || quantity === undefined) {
-    return <Badge color="red" className="text-[11px] px-2 py-0.5">Out of stock</Badge>;
+export const OrderStatusBadge: React.FC<{
+  status?: string;
+  className?: string;
+}> = ({ status, className }) => {
+  const norm = (status || '').trim().toUpperCase();
+  let textColor = 'text-slate-600';
+  let icon = '•';
+  let label = status || 'Unknown';
+
+  if (['PENDING'].includes(norm)) {
+    textColor = 'text-amber-600';
+    icon = '◷';
+    label = 'Pending Confirmation';
+  } else if (['WAITING_INTERNAL_TRANSFER', 'WAITING_TRANSFER'].includes(norm)) {
+    textColor = 'text-cyan-700';
+    icon = '⇄';
+    label = 'Consolidating from Warehouses';
+  } else if (['PROCESSING'].includes(norm)) {
+    textColor = 'text-purple-600';
+    icon = '◷';
+    label = 'Order Prepared';
+  } else if (['SHIPPING', 'IN_TRANSIT'].includes(norm)) {
+    textColor = 'text-blue-600';
+    icon = '◷';
+    label = 'In Transit';
+  } else if (['COMPLETED', 'DELIVERED'].includes(norm)) {
+    textColor = 'text-emerald-600';
+    icon = '✓';
+    label = 'Delivered';
+  } else if (['CANCELLED', 'CANCELED'].includes(norm)) {
+    textColor = 'text-rose-600';
+    icon = '×';
+    label = 'Cancelled';
+  } else if (['RETURNED', 'PARTIALLY_RETURNED'].includes(norm)) {
+    textColor = 'text-slate-500';
+    icon = '↩';
+    label = 'Returned';
   }
-  if (quantity <= threshold) {
-    return <Badge color="orange" className="text-[11px] px-2 py-0.5">{quantity} in stock</Badge>;
-  }
-  return <Badge color="green" className="text-[11px] px-2 py-0.5">{quantity} in stock</Badge>;
+
+  return (
+    <span
+      role="status"
+      className={cn(
+        'inline-flex items-center gap-1.5 text-sm font-medium whitespace-nowrap bg-transparent border-0 p-0',
+        textColor,
+        className
+      )}
+    >
+      <span className="font-semibold text-sm leading-none flex-shrink-0" aria-hidden="true">
+        {icon}
+      </span>
+      <span>{label}</span>
+    </span>
+  );
 };
+
+

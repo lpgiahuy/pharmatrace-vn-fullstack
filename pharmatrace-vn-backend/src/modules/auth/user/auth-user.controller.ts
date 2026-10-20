@@ -6,7 +6,7 @@ import { UserRegisterDto } from "./dto/user-register.dto";
 import { UserUpdateProfileDto } from "./dto/user-update-profile.dto";
 import { UserChangePasswordDto } from "./dto/user-change-password.dto";
 import { JwtAuthGuard } from "../../../common/guards/jwt-auth.guard";
-import { CurrentUser } from "../../../common/decorators/current-user.decorator";
+import { CurrentUser, CurrentUserPayload } from "../../../common/decorators/current-user.decorator";
 
 @ApiTags("Auth")
 @Controller("auth")
@@ -77,10 +77,8 @@ export class AuthUserController {
     description: "User profile retrieved successfully",
   })
   @ApiResponse({ status: 401, description: "Unauthorized access token" })
-  async getMe(@CurrentUser() user: any) {
-    const profile = await this.authUserService.getProfile(
-      user.userId || user.id,
-    );
+  async getMe(@CurrentUser() user: CurrentUserPayload) {
+    const profile = await this.authUserService.getProfile(user.id);
     return {
       success: true,
       data: profile,
@@ -100,10 +98,8 @@ export class AuthUserController {
     description: "Loyalty progress retrieved successfully",
   })
   @ApiResponse({ status: 401, description: "Unauthorized" })
-  async getLoyaltyProgress(@CurrentUser() user: any) {
-    const progress = await this.authUserService.getLoyaltyProgress(
-      user.userId || user.id,
-    );
+  async getLoyaltyProgress(@CurrentUser() user: CurrentUserPayload) {
+    const progress = await this.authUserService.getLoyaltyProgress(user.id);
     return {
       success: true,
       data: progress,
@@ -120,11 +116,8 @@ export class AuthUserController {
   })
   @ApiResponse({ status: 200, description: "Profile updated successfully" })
   @ApiResponse({ status: 401, description: "Unauthorized" })
-  async updateMe(@CurrentUser() user: any, @Body() dto: UserUpdateProfileDto) {
-    const updated = await this.authUserService.updateProfile(
-      user.userId || user.id,
-      dto,
-    );
+  async updateMe(@CurrentUser() user: CurrentUserPayload, @Body() dto: UserUpdateProfileDto) {
+    const updated = await this.authUserService.updateProfile(user.id, dto);
     return {
       success: true,
       message: "Profile updated successfully",
@@ -144,10 +137,10 @@ export class AuthUserController {
   @ApiResponse({ status: 400, description: "Invalid password or mismatch" })
   @ApiResponse({ status: 401, description: "Current password is incorrect" })
   async changeMyPassword(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserPayload,
     @Body() dto: UserChangePasswordDto,
   ) {
-    return this.authUserService.changePassword(user.userId || user.id, dto);
+    return this.authUserService.changePassword(user.id, dto);
   }
 
   @Post("logout")

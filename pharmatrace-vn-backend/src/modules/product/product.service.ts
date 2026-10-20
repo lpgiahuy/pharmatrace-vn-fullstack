@@ -10,7 +10,17 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 export function formatProduct(item: any) {
-  const calculatedStock = item.id % 7 === 0 ? 0 : (item.id * 13) % 80 + 5;
+  let realStock = 0;
+  if (item.packaging_variants && Array.isArray(item.packaging_variants)) {
+    for (const pv of item.packaging_variants) {
+      if (pv.inventories && Array.isArray(pv.inventories)) {
+        for (const inv of pv.inventories) {
+          realStock += Math.max(0, (inv.stock_quantity || 0) - (inv.reserved_quantity || 0));
+        }
+      }
+    }
+  }
+
   const primaryCategory = item.medicine_categories?.find((mc: any) => mc.is_primary)?.category
     || item.medicine_categories?.[0]?.category
     || null;
@@ -20,16 +30,25 @@ export function formatProduct(item: any) {
     || null;
 
   const packagingOptions = item.packaging_options || (item.packaging_variants && item.packaging_variants.length > 0
-    ? item.packaging_variants.map((pv: any) => ({
-      id: pv.id,
-      unitName: pv.unit_name,
-      price: Number(pv.price),
-      originalPrice: pv.original_price ? Number(pv.original_price) : null,
-      discountPercent: pv.discount_percent ?? 0,
-      isBaseUnit: Boolean(pv.is_base_unit),
-      saleStartDate: pv.sale_start_date ? new Date(pv.sale_start_date).toISOString() : null,
-      saleEndDate: pv.sale_end_date ? new Date(pv.sale_end_date).toISOString() : null,
-    }))
+    ? item.packaging_variants.map((pv: any) => {
+      let variantStock = 0;
+      if (pv.inventories && Array.isArray(pv.inventories)) {
+        for (const inv of pv.inventories) {
+          variantStock += Math.max(0, (inv.stock_quantity || 0) - (inv.reserved_quantity || 0));
+        }
+      }
+      return {
+        id: pv.id,
+        unitName: pv.unit_name,
+        price: Number(pv.price),
+        originalPrice: pv.original_price ? Number(pv.original_price) : null,
+        discountPercent: pv.discount_percent ?? 0,
+        isBaseUnit: Boolean(pv.is_base_unit),
+        stock: variantStock,
+        saleStartDate: pv.sale_start_date ? new Date(pv.sale_start_date).toISOString() : null,
+        saleEndDate: pv.sale_end_date ? new Date(pv.sale_end_date).toISOString() : null,
+      };
+    })
     : []);
 
   const hasVariantDiscount = Boolean(
@@ -70,7 +89,7 @@ export function formatProduct(item: any) {
     details: item.details || {},
     isPrescription: Boolean(item.is_prescription),
     status: item.status === 'INACTIVE' ? 'INACTIVE' : 'ACTIVE',
-    totalStock: item.total_stock ?? calculatedStock,
+    totalStock: item.total_stock !== undefined && item.total_stock !== null ? Number(item.total_stock) : realStock,
     createdAt: item.created_at,
     slug: item.slug || null,
     category: primaryCategory
@@ -151,11 +170,32 @@ export class ProductService {
     }
 
     if (query?.inStock !== undefined) {
-      const outOfStockIds = Array.from({ length: 10000 }, (_, i) => (i + 1) * 7);
       if (query.inStock === true) {
-        andConditions.push({ id: { notIn: outOfStockIds } });
+        andConditions.push({
+          packaging_variants: {
+            some: {
+              inventories: {
+                some: {
+                  stock_quantity: { gt: 0 },
+                },
+              },
+            },
+          },
+        });
       } else if (query.inStock === false) {
-        andConditions.push({ id: { in: outOfStockIds } });
+        andConditions.push({
+          NOT: {
+            packaging_variants: {
+              some: {
+                inventories: {
+                  some: {
+                    stock_quantity: { gt: 0 },
+                  },
+                },
+              },
+            },
+          },
+        });
       }
     }
 
@@ -294,7 +334,11 @@ export class ProductService {
               },
             },
           },
-          packaging_variants: true,
+          packaging_variants: {
+            include: {
+              inventories: true,
+            },
+          },
           _count: {
             select: { reviews: true },
           },
@@ -355,6 +399,9 @@ export class ProductService {
           },
         },
         packaging_variants: {
+          include: {
+            inventories: true,
+          },
           orderBy: { price: 'asc' },
         },
         reviews: {
