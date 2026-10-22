@@ -20,6 +20,7 @@ interface AdminSidebarProps {
   collapsed: boolean;
   onCollapse: () => void;
   isMobile: boolean;
+  role?: string;
 }
 
 const LOGO_URL = 'https://res.cloudinary.com/dc64co0el/image/upload/v1777731026/Logo_ck5ouv.svg';
@@ -28,6 +29,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
   collapsed,
   onCollapse,
   isMobile,
+  role,
 }) => {
   const router = useRouter();
   const pathname = usePathname();

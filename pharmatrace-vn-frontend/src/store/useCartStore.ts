@@ -14,6 +14,7 @@ export interface CartItem {
   productId: number;
   slug: string;
   medicineName: string;
+  isPrescription?: boolean;
   imageUrl?: string | null;
   variantId?: number;
   unitName: string;
@@ -84,6 +85,7 @@ const mapServerItemToCartItem = (s: ServerCartItem): CartItem => ({
   productId: s.productId,
   slug: s.slug,
   medicineName: s.medicineName,
+  isPrescription: s.isPrescription,
   imageUrl: s.imageUrl,
   variantId: s.variantId,
   unitName: s.unitName,

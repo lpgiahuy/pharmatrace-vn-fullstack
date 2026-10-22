@@ -229,6 +229,7 @@ function ProductCardItem({
         productId: product.id,
         slug: product.slug || String(product.id),
         medicineName: product.medicineName,
+        isPrescription: product.isPrescription,
         imageUrl: product.imageUrl,
         variantId: baseVariant?.id,
         unitName: baseVariant?.unitName || 'Box',

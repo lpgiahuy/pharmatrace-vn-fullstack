@@ -65,6 +65,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         collapsed={collapsed}
         onCollapse={toggleSidebar}
         isMobile={isMobile}
+        role={user.role}
       />
 
       <Layout

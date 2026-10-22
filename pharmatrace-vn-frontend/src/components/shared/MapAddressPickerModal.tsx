@@ -85,7 +85,7 @@ function formatPhotonItem(f: PhotonFeature): SearchResultItem {
     primary = `${p.housenumber} ${p.street}`;
   }
   if (!primary) {
-    primary = p.locality || p.district || p.city || "Địa điểm đã chọn";
+    primary = p.locality || p.district || p.city || "Selected Location";
   }
 
   const rawParts: string[] = [primary];

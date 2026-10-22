@@ -590,6 +590,13 @@ function CustomerOrdersContent() {
                   </div>
                 </div>
 
+                {order.prescriptionReviewStatus === 'PENDING_APPROVAL' && (
+                  <div className="border-b border-blue-100 bg-blue-50 px-4 py-3 text-sm text-[#004996]">This order is waiting for a pharmacist at the preparing facility to review your prescription.</div>
+                )}
+                {order.prescriptionReviewStatus === 'REJECTED' && (
+                  <div className="border-b border-red-100 bg-red-50 px-4 py-3 text-sm text-red-800">The prescription was rejected and this order was cancelled. <Link href="/account/prescriptions" className="font-semibold underline">View the review</Link>.</div>
+                )}
+
                 {formatOrderStatus(order.orderStatus) === 'WAITING_INTERNAL_TRANSFER' && (
                   <div className="bg-cyan-50/90 border-b border-cyan-100 px-4 py-2.5 flex items-center gap-2.5 text-xs text-cyan-950">
                     <RotateCcw className="w-4 h-4 text-cyan-700 shrink-0 animate-spin" />
