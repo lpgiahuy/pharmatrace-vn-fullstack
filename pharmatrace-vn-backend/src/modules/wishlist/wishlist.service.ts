@@ -6,6 +6,9 @@ import { WishlistQueryDto } from './dto/wishlist-query.dto';
 export class WishlistService {
   constructor(private readonly prisma: PrismaService) { }
 
+  private customerActor(customerId: number) {
+    return { id: customerId, role: 'CUSTOMER', type: 'customer' as const };
+  }
 
   private formatWishlistItem(w: any) {
     const m = w.medicines;
@@ -77,9 +80,9 @@ export class WishlistService {
       orderBy = { medicines: { unit_price: 'desc' } };
     }
 
-    const [total, records] = await Promise.all([
-      this.prisma.customer_wishlists.count({ where }),
-      this.prisma.customer_wishlists.findMany({
+    const [total, records] = await this.prisma.withActor(this.customerActor(customerId), (tx) => Promise.all([
+      tx.customer_wishlists.count({ where }),
+      tx.customer_wishlists.findMany({
         where,
         skip,
         take: limit,
@@ -95,7 +98,7 @@ export class WishlistService {
           },
         },
       }),
-    ]);
+    ]));
 
     const items = records
       .filter((w) => w.medicines)
@@ -113,14 +116,14 @@ export class WishlistService {
   }
 
   async checkIsWishlisted(customerId: number, productId: number) {
-    const existing = await this.prisma.customer_wishlists.findUnique({
+    const existing = await this.prisma.withActor(this.customerActor(customerId), (tx) => tx.customer_wishlists.findUnique({
       where: {
         customer_id_medicine_id: {
           customer_id: customerId,
           medicine_id: productId,
         },
       },
-    });
+    }));
 
     return {
       productId,
@@ -134,13 +137,13 @@ export class WishlistService {
     }
 
     const uniqueIds = Array.from(new Set(productIds));
-    const records = await this.prisma.customer_wishlists.findMany({
+    const records = await this.prisma.withActor(this.customerActor(customerId), (tx) => tx.customer_wishlists.findMany({
       where: {
         customer_id: customerId,
         medicine_id: { in: uniqueIds },
       },
       select: { medicine_id: true },
-    });
+    }));
 
     return {
       wishlistedProductIds: records.map((r) => r.medicine_id),
@@ -148,32 +151,28 @@ export class WishlistService {
   }
 
   async addToWishlist(customerId: number, productId: number) {
-    const customer = await this.prisma.customers.findUnique({
-      where: { id: customerId },
-    });
-    if (!customer) {
-      throw new NotFoundException(`Customer account #${customerId} not found. Please login with a customer account.`);
-    }
+    await this.prisma.withActor(this.customerActor(customerId), async (tx) => {
+      const customer = await tx.customers.findUnique({
+        where: { id: customerId },
+      });
+      if (!customer) {
+        throw new NotFoundException(`Customer account #${customerId} not found. Please login with a customer account.`);
+      }
 
-    const medicine = await this.prisma.medicines.findUnique({
-      where: { id: productId },
-    });
-    if (!medicine) {
-      throw new NotFoundException(`Medicine #${productId} not found`);
-    }
+      const medicine = await tx.medicines.findUnique({
+        where: { id: productId },
+      });
+      if (!medicine) {
+        throw new NotFoundException(`Medicine #${productId} not found`);
+      }
 
-    await this.prisma.customer_wishlists.upsert({
-      where: {
-        customer_id_medicine_id: {
+      await tx.customer_wishlists.createMany({
+        data: {
           customer_id: customerId,
           medicine_id: productId,
         },
-      },
-      create: {
-        customer_id: customerId,
-        medicine_id: productId,
-      },
-      update: {},
+        skipDuplicates: true,
+      });
     });
 
     return {
@@ -184,12 +183,12 @@ export class WishlistService {
   }
 
   async removeFromWishlist(customerId: number, productId: number) {
-    await this.prisma.customer_wishlists.deleteMany({
+    await this.prisma.withActor(this.customerActor(customerId), (tx) => tx.customer_wishlists.deleteMany({
       where: {
         customer_id: customerId,
         medicine_id: productId,
       },
-    });
+    }));
 
     return {
       success: true,
