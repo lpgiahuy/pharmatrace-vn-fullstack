@@ -16,7 +16,8 @@ database/
 │   ├── 01_app_permissions.sql      # Base table grants and default privileges
 │   ├── 02_prescription_rls.sql     # Prescription grants and access policies
 │   ├── 03_auth_rls.sql             # Auth role/policies; enforcement opt-in
-│   └── 04_auth_rls_rollback.sql    # Manual rollback, never called by master
+│   ├── 04_auth_rls_rollback.sql    # Manual rollback, never called by master
+│   └── 05_wishlist_rls.sql         # Enforced customer wishlist ownership
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -31,7 +32,8 @@ database/
 │   └── 01_seed_data.sql
 └── tests/
     ├── development_seed_test.sql   # Fresh-database fixtures, sequences, and grants
-    └── prescription_rls_test.sql   # Manual RLS isolation checks
+    ├── prescription_rls_test.sql   # Manual RLS isolation checks
+    └── wishlist_rls_test.sql       # Wishlist allow/deny checks, rolled back
 ```
 
 `backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth role/policies are prepared automatically; account RLS enforcement stays off until dependent modules are ready. Read [Auth RLS rollout](#auth-rls-rollout) before activation. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
@@ -49,6 +51,7 @@ Run the fixture checks on a freshly initialized database, then the RLS checks:
 ```powershell
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/development_seed_test.sql
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/prescription_rls_test.sql
+docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/wishlist_rls_test.sql
 ```
 
 The test uses the IDs from the committed seed data and rolls back its test order.
@@ -135,6 +138,7 @@ Docker runs only the top-level `.sh` and `.sql` entrypoints, in filename order. 
 5. `seeds/01_seed_data.sql` imports all development data in a transaction with foreign-key and CHECK constraints enabled, restores exported sequence values, and advances any sequence that would collide with imported IDs.
 6. `security/02_prescription_rls.sql` revokes inherited review-table privileges, grants the permitted review operations, and applies prescription policies.
 7. `security/03_auth_rls.sql` prepares auth roles, column grants and policies. It does not enable account RLS unless explicitly invoked with `auth_rls_activate=true`. Master never runs the rollback script.
+8. `security/05_wishlist_rls.sql` restricts `app_user` to SELECT/INSERT/DELETE and enables/forces customer ownership policies on `customer_wishlists`.
 
 All tables must exist before importing the seed. Review grants are explicitly restricted after import so blanket or default privileges cannot add DELETE/TRUNCATE access. The SQL files are intended to run as `postgres` through `psql`.
 
@@ -147,6 +151,64 @@ All tables must exist before importing the seed. Review grants are explicitly re
 - The seed contains synthetic account and personal fields alongside catalog and operational fixtures. Foreign-key triggers remain enabled during import. It is not a production provisioning script.
 - Some seed text already contains corrupted characters. Repair it from a verified source rather than guessing replacements.
 - Existing databases need an explicit upgrade procedure for schema changes, including the `REDEEM_REVERSAL` constraint and review grants. Editing bootstrap files alone does not update an existing Docker volume.
+
+## Wishlist RLS
+
+Wishlist RLS is enabled automatically on a new Docker database, independently of `AUTH_RLS_ENABLED`. Keep that auth flag false on the shared application database until the account-dependent modules are ready.
+
+`security/05_wishlist_rls.sql` permits only a customer context (`app.current_user_type=customer`, `app.current_user_role=CUSTOMER`) whose ID matches `customer_wishlists.customer_id`:
+
+- SELECT/INSERT/DELETE apply only to that customer's rows. Missing context and employee context see no rows and cannot insert.
+- UPDATE and TRUNCATE are not granted. Duplicate adds use INSERT with conflict-ignore rather than an UPDATE/upsert.
+- List, count, search, pagination, single/batch checks and writes run through the same actor transaction in `WishlistService`. Medicine and packaging reads remain part of that transaction.
+- No database superuser or `BYPASSRLS` connection may be used for these runtime queries. The bootstrap owner is separate from `app_user`.
+
+The script does not change account or catalog RLS, product visibility, or existing stock display behavior. Its context comes from the authenticated server; it does not protect against someone who already holds backend database credentials and can send arbitrary SQL.
+
+### Existing database
+
+Docker does not rerun init scripts for existing volumes. Deploy the updated wishlist backend before applying the SQL; older code without actor context would receive empty results or denied writes. Back up the current policy/grants and test on a copy first. The script is transactional, can be reapplied, and refuses unknown wishlist policies rather than combining them with potentially broader access. It does not delete seed or customer rows.
+
+After deploying the compatible backend, an owner can apply just this script without resetting the volume:
+
+```powershell
+docker compose exec -T db sh -c 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /docker-entrypoint-initdb.d/security/05_wishlist_rls.sql'
+```
+
+Run `tests/wishlist_rls_test.sql` as owner for standalone allow/deny checks. It creates temporary customer fixtures, uses the runtime role for assertions and rolls back the data. Sequence advancement is not rolled back. This work does not apply the SQL to the developer's existing database automatically.
+
+### Wishlist HTTP integration test
+
+Use a separate disposable database. These PowerShell commands start at the repository root:
+
+```powershell
+docker run --detach --name pharmatrace-wishlist-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=wishlist_test_owner_only -e APP_DB_PASSWORD=wishlist_test_app_only -e POSTGRES_DB=pharmatrace_wishlist_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
+docker logs pharmatrace-wishlist-rls-test
+```
+
+Wait for `PostgreSQL init process complete; ready for start up.`, then:
+
+```powershell
+$wishlistTestPort = (docker port pharmatrace-wishlist-rls-test 5432).Split(':')[-1]
+$env:WISHLIST_RLS_TEST_DATABASE_URL = "postgresql://app_user:wishlist_test_app_only@127.0.0.1:$wishlistTestPort/pharmatrace_wishlist_rls_test"
+$env:WISHLIST_RLS_TEST_ADMIN_URL = "postgresql://postgres:wishlist_test_owner_only@127.0.0.1:$wishlistTestPort/pharmatrace_wishlist_rls_test"
+$env:WISHLIST_RLS_TEST_AUTH_ENABLED = 'false'
+Push-Location pharmatrace-vn-backend
+npm.cmd run test:e2e -- --runInBand --runTestsByPath test/wishlist-rls.e2e-spec.ts
+Pop-Location
+```
+
+The suite requires those explicit localhost URLs and the database name above; it never uses `.env` as a test target. Without test URLs the suite is skipped, not verified. It tests HTTP, JWT, Prisma, cross-customer isolation, employee rejection, product relations, pagination/search/count, batch checks, duplicate-add concurrency, delete idempotence, forbidden database writes and context cleanup after rollback.
+
+To verify compatibility with future account RLS, activate `security/03_auth_rls.sql` **on this disposable database only**, set `WISHLIST_RLS_TEST_AUTH_ENABLED=true` in the test shell, and rerun the same suite. No other integration suite should share this test database concurrently.
+
+After testing:
+
+```powershell
+docker rm --force pharmatrace-wishlist-rls-test
+Remove-Item Env:WISHLIST_RLS_TEST_DATABASE_URL, Env:WISHLIST_RLS_TEST_ADMIN_URL
+Remove-Item Env:WISHLIST_RLS_TEST_AUTH_ENABLED -ErrorAction SilentlyContinue
+```
 
 ## Auth RLS rollout
 

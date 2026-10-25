@@ -73,7 +73,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
         SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname = current_user
       `;
       if (!role || role.rolsuper || role.rolbypassrls) {
-        throw new ServiceUnavailableException('Prescription access requires an RLS-enabled database role');
+        throw new ServiceUnavailableException('Actor access requires an RLS-enabled database role');
       }
       await tx.$queryRaw`SELECT set_config('app.current_user_id', ${String(actor.id)}, true)`;
       await tx.$queryRaw`SELECT set_config('app.current_user_role', ${actor.role}, true)`;
