@@ -26,6 +26,7 @@ import { UpdateReviewDto } from './dto/update-review.dto';
 import { ReviewQueryDto } from './dto/review-query.dto';
 import { CreateReportDto } from '../moderation/dto/create-report.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CustomerGuard } from '../../common/guards/customer.guard';
 import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Reviews')
@@ -38,7 +39,7 @@ export class ReviewController {
 
   @Post('reviews/upload-image')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
@@ -84,7 +85,7 @@ export class ReviewController {
 
   @Get('products/:id/reviews/can-review')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
     summary: 'Check if current customer can review product',
     description: 'Verifies delivered order purchase status and existing reviews.',
@@ -103,7 +104,7 @@ export class ReviewController {
 
   @Post('products/:id/reviews')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
     summary: 'Submit product review (Customer)',
     description: 'Allows a customer who received the product to submit a review with stars, comment, and images.',
@@ -150,7 +151,7 @@ export class ReviewController {
 
   @Post('reviews/:id/report')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
     summary: 'Report review (Customer / Staff)',
     description: 'Allows an authenticated user to flag a review for spam, harassment, or policy violation.',
@@ -172,7 +173,7 @@ export class ReviewController {
 
   @Get('customer/my-reviews')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
     summary: 'Get customer review history',
     description: 'Retrieves all reviews submitted by the current authenticated customer.',
@@ -196,7 +197,7 @@ export class ReviewController {
 
   @Get('customer/pending-reviews')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
     summary: 'Get customer pending products waiting for review',
     description: 'Retrieves purchased and delivered medicines that customer has not yet reviewed.',
@@ -212,7 +213,7 @@ export class ReviewController {
 
   @Patch('customer/reviews/:id')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
     summary: 'Edit customer review (Customer)',
     description: 'Allows a customer to edit their own existing review.',
@@ -233,7 +234,7 @@ export class ReviewController {
 
   @Delete('customer/reviews/:id')
   @ApiBearerAuth('bearerAuth')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
     summary: 'Delete customer review (Customer)',
     description: 'Allows a customer to delete their own review, freeing up the product for a new review.',

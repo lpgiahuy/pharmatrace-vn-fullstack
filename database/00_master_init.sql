@@ -1,5 +1,5 @@
 -- Master database initialization script for PharmaTrace VN
--- Execution order: Base schemas -> Base grants -> Prescription schema -> Seed -> RLS
+-- Execution order: Base schemas -> Base grants -> Prescription schema -> Seed -> Prescription RLS -> Auth preparation
 \set ON_ERROR_STOP on
 
 -- 1. Schemas & Tables
@@ -23,4 +23,7 @@
 
 -- 5. Prescription review security
 \i /docker-entrypoint-initdb.d/security/02_prescription_rls.sql
+
+-- 6. Prepare auth role/policies without enabling account RLS during module rollout.
+\i /docker-entrypoint-initdb.d/security/03_auth_rls.sql
 

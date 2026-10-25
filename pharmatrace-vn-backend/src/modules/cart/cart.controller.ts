@@ -18,11 +18,12 @@ import { UpdateCartQuantityDto } from './dto/update-cart-quantity.dto';
 import { SwitchCartVariantDto } from './dto/switch-cart-variant.dto';
 import { SyncCartDto } from './dto/sync-cart.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CustomerGuard } from '../../common/guards/customer.guard';
 import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Customer - Cart')
 @ApiBearerAuth('bearerAuth')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, CustomerGuard)
 @Controller('customer/cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}

@@ -16,11 +16,12 @@ import { WishlistService } from './wishlist.service';
 import { WishlistQueryDto } from './dto/wishlist-query.dto';
 import { CheckBatchWishlistDto } from './dto/check-batch-wishlist.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CustomerGuard } from '../../common/guards/customer.guard';
 import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Customer - Wishlist')
 @ApiBearerAuth('bearerAuth')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, CustomerGuard)
 @Controller('customer/wishlist')
 export class WishlistController {
   constructor(private readonly wishlistService: WishlistService) {}

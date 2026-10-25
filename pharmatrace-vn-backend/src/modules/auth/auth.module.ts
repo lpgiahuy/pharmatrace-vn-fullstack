@@ -21,9 +21,7 @@ import { RolesGuard } from "../../common/guards/roles.guard";
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret:
-          configService.get<string>("JWT_SECRET") ||
-          "pharmatrace-vn-jwt-secret-key-2026",
+        secret: configService.getOrThrow<string>("JWT_SECRET"),
         signOptions: {
           expiresIn: (configService.get<string>("JWT_EXPIRES_IN") ||
             "7d") as any,

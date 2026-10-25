@@ -78,7 +78,7 @@ export class AuthUserController {
   })
   @ApiResponse({ status: 401, description: "Unauthorized access token" })
   async getMe(@CurrentUser() user: CurrentUserPayload) {
-    const profile = await this.authUserService.getProfile(user.id);
+    const profile = await this.authUserService.getProfile(user);
     return {
       success: true,
       data: profile,
@@ -99,7 +99,7 @@ export class AuthUserController {
   })
   @ApiResponse({ status: 401, description: "Unauthorized" })
   async getLoyaltyProgress(@CurrentUser() user: CurrentUserPayload) {
-    const progress = await this.authUserService.getLoyaltyProgress(user.id);
+    const progress = await this.authUserService.getLoyaltyProgress(user);
     return {
       success: true,
       data: progress,
@@ -117,7 +117,7 @@ export class AuthUserController {
   @ApiResponse({ status: 200, description: "Profile updated successfully" })
   @ApiResponse({ status: 401, description: "Unauthorized" })
   async updateMe(@CurrentUser() user: CurrentUserPayload, @Body() dto: UserUpdateProfileDto) {
-    const updated = await this.authUserService.updateProfile(user.id, dto);
+    const updated = await this.authUserService.updateProfile(user, dto);
     return {
       success: true,
       message: "Profile updated successfully",
@@ -140,7 +140,7 @@ export class AuthUserController {
     @CurrentUser() user: CurrentUserPayload,
     @Body() dto: UserChangePasswordDto,
   ) {
-    return this.authUserService.changePassword(user.id, dto);
+    return this.authUserService.changePassword(user, dto);
   }
 
   @Post("logout")
@@ -148,7 +148,7 @@ export class AuthUserController {
   @ApiOperation({
     summary: "User logout (Customer & Staff Shared)",
     description:
-      "Logs out the user (Customer or Internal Staff) and invalidates current JWT session token.",
+      "Client must discard its token. This endpoint does not revoke an issued JWT.",
   })
   @ApiResponse({ status: 200, description: "Logged out successfully" })
   logout() {

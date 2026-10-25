@@ -32,15 +32,14 @@ export class AuthAdminController {
 
   @Post("setup")
   @ApiOperation({
-    summary: "Initialize the first SuperAdmin account",
+    summary: "Public administrator setup is disabled",
     description:
-      "Initializes the first SuperAdmin account during system deployment.",
+      "Provision the initial administrator through the database administration process.",
   })
   @ApiResponse({
-    status: 201,
-    description: "SuperAdmin account created successfully",
+    status: 410,
+    description: "Public setup is no longer available",
   })
-  @ApiResponse({ status: 409, description: "SuperAdmin email already exists" })
   async setupAdmin(@Body() dto: AdminSetupDto) {
     const data = await this.authAdminService.setupInitialAdmin(dto);
     return {

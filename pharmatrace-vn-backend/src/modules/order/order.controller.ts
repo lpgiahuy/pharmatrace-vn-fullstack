@@ -16,11 +16,12 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderQueryDto } from './dto/order-query.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CustomerGuard } from '../../common/guards/customer.guard';
 import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Customer - Orders')
 @ApiBearerAuth('bearerAuth')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, CustomerGuard)
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) { }
