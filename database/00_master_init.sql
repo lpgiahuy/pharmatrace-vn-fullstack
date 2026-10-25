@@ -29,3 +29,6 @@
 -- 7. Wishlist ownership: only the current customer can read/add/remove their rows.
 \i /docker-entrypoint-initdb.d/security/05_wishlist_rls.sql
 
+-- 8. Cart ownership, including checkout cleanup.
+\i /docker-entrypoint-initdb.d/security/06_cart_rls.sql
+

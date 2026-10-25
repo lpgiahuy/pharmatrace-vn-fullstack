@@ -496,12 +496,10 @@ export class OrderService {
       return order;
     };
 
-    const newOrder = hasPrescriptionDrug
-      ? await this.prisma.withActor(
-          { id: customerId, role: 'CUSTOMER', type: 'customer' },
-          saveOrder,
-        )
-      : await this.prisma.$transaction(saveOrder);
+    const newOrder = await this.prisma.withActor(
+      { id: customerId, role: 'CUSTOMER', type: 'customer' },
+      saveOrder,
+    );
 
     return this.getMyOrderById(customerId, newOrder.id);
   }

@@ -8,6 +8,7 @@ import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartQuantityDto } from './dto/update-cart-quantity.dto';
 import { SwitchCartVariantDto } from './dto/switch-cart-variant.dto';
 import { SyncCartDto } from './dto/sync-cart.dto';
+import { Prisma } from '@prisma/client';
 
 export interface FormattedCartItem {
   id: string; // `${productId}-${variantId}` for UI consistency
@@ -39,8 +40,12 @@ export interface FormattedCartItem {
 export class CartService {
   constructor(private readonly prisma: PrismaService) { }
 
-  private async ensureCustomerExists(customerId: number) {
-    const customer = await this.prisma.customers.findUnique({
+  private customerActor(customerId: number) {
+    return { id: customerId, role: 'CUSTOMER', type: 'customer' as const };
+  }
+
+  private async ensureCustomerExists(tx: Prisma.TransactionClient, customerId: number) {
+    const customer = await tx.customers.findUnique({
       where: { id: customerId },
     });
     if (!customer) {
@@ -54,15 +59,16 @@ export class CartService {
 
 
   private async getVariantAvailableStock(
+    tx: Prisma.TransactionClient,
     variantId: number,
     medicine: { id: number; total_stock?: number | null },
   ): Promise<number> {
-    const invCount = await this.prisma.inventories.count({
+    const invCount = await tx.inventories.count({
       where: { variant_id: variantId },
     });
 
     if (invCount > 0) {
-      const inv = await this.prisma.inventories.aggregate({
+      const inv = await tx.inventories.aggregate({
         where: { variant_id: variantId },
         _sum: {
           stock_quantity: true,
@@ -119,9 +125,13 @@ export class CartService {
   }
 
   async getCart(customerId: number) {
-    await this.ensureCustomerExists(customerId);
+    return this.prisma.withActor(this.customerActor(customerId), (tx) => this.getCartInTransaction(tx, customerId));
+  }
 
-    const records = await this.prisma.cart_items.findMany({
+  private async getCartInTransaction(tx: Prisma.TransactionClient, customerId: number) {
+    await this.ensureCustomerExists(tx, customerId);
+
+    const records = await tx.cart_items.findMany({
       where: { customer_id: customerId },
       include: {
         packaging_variants: {
@@ -158,52 +168,54 @@ export class CartService {
   }
 
   async addToCart(customerId: number, dto: AddToCartDto) {
-    await this.ensureCustomerExists(customerId);
+    return this.prisma.withActor(this.customerActor(customerId), async (tx) => {
+      await this.ensureCustomerExists(tx, customerId);
 
-    const variant = await this.prisma.packaging_variants.findUnique({
-      where: { id: dto.variantId },
-      include: { medicine: true },
-    });
-
-    if (!variant) {
-      throw new NotFoundException(`Product packaging variant #${dto.variantId} not found`);
-    }
-
-    if (variant.medicine.status !== 'ACTIVE') {
-      throw new BadRequestException(
-        `Medicine "${variant.medicine.medicine_name}" is currently not available for purchase`,
-      );
-    }
-
-    const quantityToAdd = dto.quantity && dto.quantity > 0 ? dto.quantity : 1;
-
-    // Check if variant is already in customer's cart
-    const existing = await this.prisma.cart_items.findUnique({
-      where: {
-        customer_id_variant_id: {
-          customer_id: customerId,
-          variant_id: dto.variantId,
-        },
-      },
-    });
-
-    if (existing) {
-      const newQuantity = Math.min(999, existing.quantity + quantityToAdd);
-      await this.prisma.cart_items.update({
-        where: { id: existing.id },
-        data: { quantity: newQuantity },
+      const variant = await tx.packaging_variants.findUnique({
+        where: { id: dto.variantId },
+        include: { medicine: true },
       });
-    } else {
-      await this.prisma.cart_items.create({
-        data: {
-          customer_id: customerId,
-          variant_id: dto.variantId,
-          quantity: Math.min(999, quantityToAdd),
+
+      if (!variant) {
+        throw new NotFoundException(`Product packaging variant #${dto.variantId} not found`);
+      }
+
+      if (variant.medicine.status !== 'ACTIVE') {
+        throw new BadRequestException(
+          `Medicine "${variant.medicine.medicine_name}" is currently not available for purchase`,
+        );
+      }
+
+      const quantityToAdd = dto.quantity && dto.quantity > 0 ? dto.quantity : 1;
+
+      // Check if variant is already in customer's cart
+      const existing = await tx.cart_items.findUnique({
+        where: {
+          customer_id_variant_id: {
+            customer_id: customerId,
+            variant_id: dto.variantId,
+          },
         },
       });
-    }
 
-    return this.getCart(customerId);
+      if (existing) {
+        const newQuantity = Math.min(999, existing.quantity + quantityToAdd);
+        await tx.cart_items.update({
+          where: { id: existing.id },
+          data: { quantity: newQuantity },
+        });
+      } else {
+        await tx.cart_items.create({
+          data: {
+            customer_id: customerId,
+            variant_id: dto.variantId,
+            quantity: Math.min(999, quantityToAdd),
+          },
+        });
+      }
+
+      return this.getCartInTransaction(tx, customerId);
+    });
   }
 
 
@@ -212,101 +224,104 @@ export class CartService {
     variantId: number,
     dto: UpdateCartQuantityDto,
   ) {
-    await this.ensureCustomerExists(customerId);
+    return this.prisma.withActor(this.customerActor(customerId), async (tx) => {
+      await this.ensureCustomerExists(tx, customerId);
 
-    const existing = await this.prisma.cart_items.findUnique({
-      where: {
-        customer_id_variant_id: {
-          customer_id: customerId,
-          variant_id: variantId,
+      const existing = await tx.cart_items.findUnique({
+        where: {
+          customer_id_variant_id: {
+            customer_id: customerId,
+            variant_id: variantId,
+          },
         },
-      },
+      });
+
+      if (!existing) {
+        throw new NotFoundException(`Item with variant #${variantId} was not found in your cart`);
+      }
+
+      if (dto.quantity <= 0) {
+        await tx.cart_items.delete({
+          where: { id: existing.id },
+        });
+      } else {
+        await tx.cart_items.update({
+          where: { id: existing.id },
+          data: { quantity: Math.min(999, dto.quantity) },
+        });
+      }
+
+      return this.getCartInTransaction(tx, customerId);
     });
-
-    if (!existing) {
-      throw new NotFoundException(`Item with variant #${variantId} was not found in your cart`);
-    }
-
-    if (dto.quantity <= 0) {
-      await this.prisma.cart_items.delete({
-        where: { id: existing.id },
-      });
-    } else {
-      await this.prisma.cart_items.update({
-        where: { id: existing.id },
-        data: { quantity: Math.min(999, dto.quantity) },
-      });
-    }
-
-    return this.getCart(customerId);
   }
 
 
   async switchVariant(customerId: number, dto: SwitchCartVariantDto) {
-    await this.ensureCustomerExists(customerId);
+    return this.prisma.withActor(this.customerActor(customerId), async (tx) => {
+      await this.ensureCustomerExists(tx, customerId);
 
-    if (dto.oldVariantId === dto.newVariantId) {
-      return this.getCart(customerId);
-    }
+      if (dto.oldVariantId === dto.newVariantId) {
+        return this.getCartInTransaction(tx, customerId);
+      }
 
-    const currentItem = await this.prisma.cart_items.findUnique({
-      where: {
-        customer_id_variant_id: {
-          customer_id: customerId,
-          variant_id: dto.oldVariantId,
+      const currentItem = await tx.cart_items.findUnique({
+        where: {
+          customer_id_variant_id: {
+            customer_id: customerId,
+            variant_id: dto.oldVariantId,
+          },
         },
-      },
-      include: {
-        packaging_variants: true,
-      },
-    });
+        include: {
+          packaging_variants: true,
+        },
+      });
 
-    if (!currentItem) {
-      throw new NotFoundException(
-        `Original variant #${dto.oldVariantId} is not in your cart`,
+      if (!currentItem) {
+        throw new NotFoundException(
+          `Original variant #${dto.oldVariantId} is not in your cart`,
+        );
+      }
+
+      const newVariant = await tx.packaging_variants.findUnique({
+        where: { id: dto.newVariantId },
+        include: { medicine: true },
+      });
+
+      if (!newVariant) {
+        throw new NotFoundException(`New variant #${dto.newVariantId} not found`);
+      }
+
+      if (
+        currentItem.packaging_variants &&
+        currentItem.packaging_variants.medicine_id !== newVariant.medicine_id
+      ) {
+        throw new BadRequestException('Cannot switch variant between two different medicines');
+      }
+
+      if (newVariant.medicine.status !== 'ACTIVE') {
+        throw new BadRequestException(
+          `Medicine "${newVariant.medicine.medicine_name}" is currently not available for purchase`,
+        );
+      }
+
+      // Query available live inventory stock for the new variant
+      const availableStock = await this.getVariantAvailableStock(
+        tx,
+        newVariant.id,
+        newVariant.medicine,
       );
-    }
 
-    const newVariant = await this.prisma.packaging_variants.findUnique({
-      where: { id: dto.newVariantId },
-      include: { medicine: true },
-    });
+      // Case 2: Variant 2 has 0 items in stock -> Block immediately with English error message
+      if (availableStock <= 0) {
+        throw new BadRequestException(
+          `Packaging variant "${newVariant.unit_name}" is currently out of stock`,
+        );
+      }
 
-    if (!newVariant) {
-      throw new NotFoundException(`New variant #${dto.newVariantId} not found`);
-    }
+      // Case 1: Cap to available stock (e.g. customer has 10, but stock is 1 -> target is 1)
+      const targetQuantity = Math.min(currentItem.quantity, availableStock);
 
-    if (
-      currentItem.packaging_variants &&
-      currentItem.packaging_variants.medicine_id !== newVariant.medicine_id
-    ) {
-      throw new BadRequestException('Cannot switch variant between two different medicines');
-    }
-
-    if (newVariant.medicine.status !== 'ACTIVE') {
-      throw new BadRequestException(
-        `Medicine "${newVariant.medicine.medicine_name}" is currently not available for purchase`,
-      );
-    }
-
-    // Query available live inventory stock for the new variant
-    const availableStock = await this.getVariantAvailableStock(
-      newVariant.id,
-      newVariant.medicine,
-    );
-
-    // Case 2: Variant 2 has 0 items in stock -> Block immediately with English error message
-    if (availableStock <= 0) {
-      throw new BadRequestException(
-        `Packaging variant "${newVariant.unit_name}" is currently out of stock`,
-      );
-    }
-
-    // Case 1: Cap to available stock (e.g. customer has 10, but stock is 1 -> target is 1)
-    const targetQuantity = Math.min(currentItem.quantity, availableStock);
-
-    // Perform atomic transaction: merge or replace
-    await this.prisma.$transaction(async (tx) => {
+      // Perform atomic transaction: merge or replace
       const existingTarget = await tx.cart_items.findUnique({
         where: {
           customer_id_variant_id: {
@@ -339,58 +354,62 @@ export class CartService {
           },
         });
       }
-    });
 
-    return this.getCart(customerId);
+      return this.getCartInTransaction(tx, customerId);
+    });
   }
 
   async removeItem(customerId: number, variantId: number) {
-    await this.ensureCustomerExists(customerId);
+    return this.prisma.withActor(this.customerActor(customerId), async (tx) => {
+      await this.ensureCustomerExists(tx, customerId);
 
-    await this.prisma.cart_items.deleteMany({
-      where: {
-        customer_id: customerId,
-        variant_id: variantId,
-      },
+      await tx.cart_items.deleteMany({
+        where: {
+          customer_id: customerId,
+          variant_id: variantId,
+        },
+      });
+
+      return this.getCartInTransaction(tx, customerId);
     });
-
-    return this.getCart(customerId);
   }
 
   async clearCart(customerId: number) {
-    await this.ensureCustomerExists(customerId);
+    return this.prisma.withActor(this.customerActor(customerId), async (tx) => {
+      await this.ensureCustomerExists(tx, customerId);
 
-    await this.prisma.cart_items.deleteMany({
-      where: { customer_id: customerId },
+      await tx.cart_items.deleteMany({
+        where: { customer_id: customerId },
+      });
+
+      return {
+        items: [],
+        totalItems: 0,
+        subtotal: 0,
+      };
     });
-
-    return {
-      items: [],
-      totalItems: 0,
-      subtotal: 0,
-    };
   }
 
   async syncCart(customerId: number, dto: SyncCartDto) {
-    await this.ensureCustomerExists(customerId);
+    return this.prisma.withActor(this.customerActor(customerId), async (tx) => {
+      await this.ensureCustomerExists(tx, customerId);
 
-    if (!dto.items || dto.items.length === 0) {
-      return this.getCart(customerId);
-    }
+      if (!dto.items || dto.items.length === 0) {
+        return this.getCartInTransaction(tx, customerId);
+      }
 
-    const variantIds = dto.items.map((i) => i.variantId);
-    const validVariants = await this.prisma.packaging_variants.findMany({
-      where: {
-        id: { in: variantIds },
-        medicine: { status: 'ACTIVE' },
-      },
-      select: { id: true },
-    });
+      const variantIds = dto.items.map((i) => i.variantId);
+      const validVariants = await tx.packaging_variants.findMany({
+        where: {
+          id: { in: variantIds },
+          medicine: { status: 'ACTIVE' },
+        },
+        select: { id: true },
+      });
 
-    const validVariantIdSet = new Set(validVariants.map((v) => v.id));
+      const validVariantIdSet = new Set(validVariants.map((v) => v.id));
 
-    // Upsert items into database
-    await this.prisma.$transaction(async (tx) => {
+      // Upsert items into database
       for (const item of dto.items) {
         if (!validVariantIdSet.has(item.variantId)) continue;
 
@@ -419,8 +438,8 @@ export class CartService {
           });
         }
       }
-    });
 
-    return this.getCart(customerId);
+      return this.getCartInTransaction(tx, customerId);
+    });
   }
 }
