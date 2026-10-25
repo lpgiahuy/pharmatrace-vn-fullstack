@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { ROLES_KEY } from "../decorators/roles.decorator";
+import { normalizeRole } from '../auth-identity';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -20,19 +21,10 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    const userRole = (user.role || user.vai_tro || "")
-      .toString()
-      .toLowerCase()
-      .replace(/_/g, "");
-
-    // Check if SuperAdmin (always bypass role checks)
-    if (userRole === "superadmin" || userRole === "admin") {
-      return true;
+    const userRole = normalizeRole(user.role);
+    if (!userRole || (userRole === 'CUSTOMER' ? user.type !== 'customer' : user.type !== 'employee')) {
+      return false;
     }
-
-    return requiredRoles.some((role) => {
-      const normalizedReq = role.toLowerCase().replace(/_/g, "");
-      return normalizedReq === userRole;
-    });
+    return requiredRoles.some((role) => normalizeRole(role) === userRole);
   }
 }

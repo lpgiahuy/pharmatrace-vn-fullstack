@@ -14,7 +14,9 @@ database/
 ├── security/
 │   ├── 00_create_app_user.sql      # Role creation with an environment-provided password
 │   ├── 01_app_permissions.sql      # Base table grants and default privileges
-│   └── 02_prescription_rls.sql     # Prescription grants and access policies
+│   ├── 02_prescription_rls.sql     # Prescription grants and access policies
+│   ├── 03_auth_rls.sql             # Auth role/policies; enforcement opt-in
+│   └── 04_auth_rls_rollback.sql    # Manual rollback, never called by master
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -32,7 +34,7 @@ database/
     └── prescription_rls_test.sql   # Manual RLS isolation checks
 ```
 
-`backups/` contains ignored local database dumps. `migrations/` is currently unused; the scripts above bootstrap a new database and do not track applied versions.
+`backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth role/policies are prepared automatically; account RLS enforcement stays off until dependent modules are ready. Read [Auth RLS rollout](#auth-rls-rollout) before activation. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
 
 ## Docker Development Setup
 
@@ -132,6 +134,7 @@ Docker runs only the top-level `.sh` and `.sql` entrypoints, in filename order. 
 4. `schemas/09_prescription_management.sql` creates the prescription review table and adds the order review column.
 5. `seeds/01_seed_data.sql` imports all development data in a transaction with foreign-key and CHECK constraints enabled, restores exported sequence values, and advances any sequence that would collide with imported IDs.
 6. `security/02_prescription_rls.sql` revokes inherited review-table privileges, grants the permitted review operations, and applies prescription policies.
+7. `security/03_auth_rls.sql` prepares auth roles, column grants and policies. It does not enable account RLS unless explicitly invoked with `auth_rls_activate=true`. Master never runs the rollback script.
 
 All tables must exist before importing the seed. Review grants are explicitly restricted after import so blanket or default privileges cannot add DELETE/TRUNCATE access. The SQL files are intended to run as `postgres` through `psql`.
 
@@ -145,4 +148,117 @@ All tables must exist before importing the seed. Review grants are explicitly re
 - Some seed text already contains corrupted characters. Repair it from a verified source rather than guessing replacements.
 - Existing databases need an explicit upgrade procedure for schema changes, including the `REDEEM_REVERSAL` constraint and review grants. Editing bootstrap files alone does not update an existing Docker volume.
 
+## Auth RLS rollout
+
+Nhánh triển khai: `feature/auth-rbac`. Ngày: 25/10/2026.
+
+### Trạng thái rollout
+
+**Docker tự chuẩn bị role và policy auth khi khởi tạo database mới**, qua `security/03_auth_rls.sql` được master gọi. Script mặc định không ENABLE/FORCE RLS trên hai bảng tài khoản. `AUTH_RLS_ENABLED` của backend vẫn mặc định là `false`.
+
+Chuẩn bị policy và bật cưỡng chế là hai bước khác nhau. Prescription có thể bật ngay vì luồng tương ứng đã được chuyển đổi; customers/employees còn được nhiều module chưa có context sử dụng. Không xóa volume đang có dữ liệu để ép Docker chạy lại init.
+
+Chỉ bật trên database dùng chung sau khi các module còn lại đã chuyển sang context/role phù hợp. Không thêm policy mở toàn bảng để tránh lỗi: điều đó sẽ vô hiệu hóa cách ly dữ liệu cần triển khai.
+
+#### Khi chưa bật
+
+- Auth đã phân biệt customer/employee khi đọc/sửa hồ sơ và mật khẩu, kể cả khi trùng ID.
+- JWT yêu cầu type/role hợp lệ và kiểm tra lại tài khoản trong database mỗi request; tài khoản khóa, role hoặc facility thay đổi làm token bị từ chối.
+- `ADMIN` không còn vượt mọi danh sách role; `SUPER_ADMIN` cũng phải được liệt kê trên endpoint. Alias được chuẩn hóa theo danh sách role hỗ trợ.
+- Cart, wishlist, customer order và các thao tác review của khách có guard kiểm tra đúng loại tài khoản.
+- API `POST /admin/auth/setup` trả 410 và không ghi database. Quản trị ban đầu phải được tạo qua quy trình DBA; seed development đã có tài khoản demo.
+- `JWT_SECRET` phải được cấu hình; không còn fallback secret trong code. Token thiếu type phải đăng nhập lại.
+- Transaction auth truyền context nhưng vẫn dùng role kết nối cũ. Đây chưa phải RLS bảo vệ tài khoản ở tầng database.
+
+#### Khi bật trên database đã cấu hình auth RLS
+
+`withAuth()` kiểm tra role không phải superuser/BYPASSRLS/owner và hai bảng tài khoản đã ENABLE + FORCE RLS. Nếu chưa sẵn sàng, request trả 503, không âm thầm quay về truy cập rộng. Sau đó transaction dùng `SET LOCAL ROLE auth_runtime` và đặt đủ các trường context, kể cả giá trị rỗng khi thiếu.
+
+| Thao tác | Quyền database của `auth_runtime` |
+|---|---|
+| Thiếu actor và không phải login/register | Không đọc được dòng tài khoản nào |
+| Đăng nhập khách | Chỉ dòng khớp phone/email đang được kiểm tra |
+| Đăng nhập nhân viên | Chỉ dòng khớp email đang được kiểm tra |
+| Đăng ký | Chỉ insert năm cột hồ sơ/credential, đúng phone context; điểm/tier/status dùng default và bị CHECK policy giới hạn |
+| Hồ sơ/mật khẩu | Chỉ tài khoản đúng type + ID; chỉ các cột hồ sơ/mật khẩu được cấp UPDATE |
+| Role/facility/status/điểm/ID | Không có quyền tự sửa hoặc tự gán khi insert |
+| Tạo/xóa nhân viên, xóa khách, TRUNCATE | Không được cấp |
+
+Không dùng `SECURITY DEFINER` hoặc hàm database trả credential. Credential được backend đọc qua truy vấn login có tham số và scope; response HTTP không chứa hash. Role auth có SELECT cơ sở để dựng profile nhân viên; đây chưa phải thiết kế phân quyền toàn bộ module facility.
+
+Các custom settings là context do server tin cậy truyền xuống, không phải bằng chứng danh tính độc lập. Không để người dùng cuối có credential database hoặc quyền gửi SQL tùy ý.
+
+### Kiểm thử trên database riêng
+
+Các lệnh sau dùng PowerShell tại root dự án. Database test là container/volume tạm riêng; không thay tên thành database đang dùng.
+
+```powershell
+docker run --detach --name pharmatrace-auth-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=auth_test_owner_only -e APP_DB_PASSWORD=auth_test_app_only -e POSTGRES_DB=pharmatrace_auth_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
+docker logs pharmatrace-auth-rls-test
+```
+
+Chờ thông báo `PostgreSQL init process complete; ready for start up.`. Chạy kiểm tra fixture trước khi các test tạo tài khoản:
+
+```powershell
+docker exec pharmatrace-auth-rls-test psql -X -v ON_ERROR_STOP=1 -U postgres -d pharmatrace_auth_rls_test -f /docker-entrypoint-initdb.d/tests/development_seed_test.sql
+docker exec pharmatrace-auth-rls-test psql -X -v ON_ERROR_STOP=1 -v auth_rls_activate=true -U postgres -d pharmatrace_auth_rls_test -f /docker-entrypoint-initdb.d/security/03_auth_rls.sql
+
+$authTestPort = (docker port pharmatrace-auth-rls-test 5432).Split(':')[-1]
+$env:AUTH_RLS_TEST_DATABASE_URL = "postgresql://app_user:auth_test_app_only@127.0.0.1:$authTestPort/pharmatrace_auth_rls_test"
+$env:AUTH_RLS_TEST_ADMIN_URL = "postgresql://postgres:auth_test_owner_only@127.0.0.1:$authTestPort/pharmatrace_auth_rls_test"
+
+Push-Location pharmatrace-vn-backend
+npm.cmd test -- --runInBand --runTestsByPath src/common/guards/roles.guard.spec.ts src/modules/auth/strategies/jwt.strategy.spec.ts src/prisma/prisma.service.spec.ts
+npm.cmd run test:e2e -- --runInBand --runTestsByPath test/auth-rls.e2e-spec.ts
+Pop-Location
+```
+
+E2E yêu cầu hai URL test riêng, chỉ chấp nhận localhost với database tên `pharmatrace_auth_rls_test`, không dùng `.env` làm target. Test dùng HTTP, Prisma và PostgreSQL thật; tạo/xóa fixture riêng, kiểm tra lookup, quyền dòng/cột, ID trùng nhau, token cũ, password, đăng ký, context sau rollback và request đồng thời. Nếu không có biến test, suite này được skip; đó không phải kết quả pass integration.
+
+Không chạy các integration suite khác đồng thời trên cùng database này: test có bước chủ động thay FORCE RLS rồi khôi phục để kiểm tra fail-closed.
+
+### Điều kiện trước khi kích hoạt trên database dùng chung
+
+- [ ] Chốt role và các quyền nghiệp vụ liên quan; thay đổi `ADMIN` không được xem là phân quyền xong mọi service.
+- [ ] Chuyển các truy vấn customers/employees của checkout, quản lý khách/nhân viên, review, facility, cron và các module còn lại sang đường truy cập được thiết kế.
+- [ ] Kiểm tra role runtime chung: nó vẫn có các grants nền rộng từ trước; script auth không tuyên bố thu hồi toàn bộ quyền đó. Không dùng role chung với actor tùy ý để thay thế phân quyền theo chức năng.
+- [ ] Kiểm kê ownership, grants và policy trên database đích. Script từ chối policy tài khoản không thuộc nó, RLS đã bật ngoài script và role auth có quyền rộng hơn dự kiến.
+- [ ] Với database hiện hữu, có quy trình cập nhật SQL được theo dõi. Docker init không tự nâng cấp volume cũ và script không tự ghi `_prisma_migrations`.
+- [ ] Backup và thử restore; lưu trạng thái RLS/policy trước thay đổi. Rollback script chỉ dành cho baseline trước auth có RLS tài khoản tắt.
+- [ ] Chạy toàn bộ regression và E2E của các module phụ thuộc trên bản sao database đích.
+- [ ] Cấu hình `JWT_SECRET` riêng, không dùng giá trị mẫu. Người dùng đăng nhập lại để có claim hợp lệ.
+
+**Chỉ đổi `AUTH_RLS_ENABLED=true` không tự bật RLS trên bảng. Chỉ chạy SQL cũng không chuyển toàn bộ module sang role/context mới. Phải triển khai cả hai theo hướng dẫn đã được kiểm chứng.**
+
+### Áp dụng và quay lui
+
+Script `security/03_auth_rls.sql` chạy bằng owner/DBA. Không có cờ kích hoạt thì chỉ chuẩn bị role không login, grants theo cột và policy. Có `-v auth_rls_activate=true` thì thêm bước ENABLE/FORCE RLS. Không có policy compatibility mở toàn bảng. Nếu chạy lại, nó kiểm tra và thay lại các policy do chính script quản lý; không thay policy lạ và không tự tắt RLS đang bật.
+
+Chỉ thực hiện sau khi checklist trên hoàn tất, trong đợt triển khai có kiểm soát. Theo dõi cả lỗi lẫn dữ liệu rỗng bất thường, vì RLS có thể lọc dòng mà không phát sinh lỗi SQL.
+
+Rollback script: `security/04_auth_rls_rollback.sql`, yêu cầu `-v auth_rls_rollback=true` và không được master gọi. Nó khôi phục baseline RLS tắt trên hai bảng, không xóa dữ liệu/tài khoản. **Quay lui làm mở lại phạm vi truy cập nền**, không dùng như fallback tự động và không chạy nếu database có thiết kế RLS khác. Script từ chối policy lạ và giữ role không login để không phá dependency.
+
+Để quay lui: ngừng traffic/job liên quan, đặt `AUTH_RLS_ENABLED=false`, áp dụng rollback script theo baseline đã lưu, khởi động lại và smoke test. Chỉ đặt flag false không tắt RLS trong database; chỉ chạy rollback trong khi flag true sẽ làm auth trả 503.
+
+Thử rollback/kích hoạt lại trên container test, không trên database local:
+
+```powershell
+docker exec pharmatrace-auth-rls-test psql -X -v ON_ERROR_STOP=1 -v auth_rls_rollback=true -U postgres -d pharmatrace_auth_rls_test -f /docker-entrypoint-initdb.d/security/04_auth_rls_rollback.sql
+docker exec pharmatrace-auth-rls-test psql -X -v ON_ERROR_STOP=1 -v auth_rls_activate=true -U postgres -d pharmatrace_auth_rls_test -f /docker-entrypoint-initdb.d/security/03_auth_rls.sql
+```
+
+Sau kiểm thử:
+
+```powershell
+docker rm --force pharmatrace-auth-rls-test
+Remove-Item Env:AUTH_RLS_TEST_DATABASE_URL, Env:AUTH_RLS_TEST_ADMIN_URL
+```
+
+### Giới hạn và công việc nối tiếp
+
+- Đây là nền auth/RBAC và policy tài khoản đã kiểm thử độc lập, chưa phải phân quyền end-to-end toàn ứng dụng.
+- Password change chưa thu hồi mọi JWT đã cấp; logout yêu cầu client bỏ token, không có blacklist/token-version trong đợt này. Khóa tài khoản và thay role/facility được kiểm tra mỗi request.
+- Thông tin nhân viên trong API facility public, scope quản lý khách hàng và context riêng của admin order vẫn cần được xử lý ở các nhánh tương ứng.
+- Quyền quản trị nhân viên không đi qua role auth chỉ sửa hồ sơ cá nhân; cần thiết kế principal/quyền riêng trong module employee.
+- Giữ `database/*.sh` ở LF theo `.gitattributes` để checkout Windows không làm hỏng bootstrap Linux.
 
