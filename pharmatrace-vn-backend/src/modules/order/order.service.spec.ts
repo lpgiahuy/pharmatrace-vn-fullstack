@@ -89,8 +89,8 @@ describe("OrderService inventory reservation", () => {
           prescriptions: null,
         }),
       },
-      $transaction: jest.fn(
-        async (callback: (client: typeof tx) => Promise<unknown>) =>
+      withActor: jest.fn(
+        async (_actor: unknown, callback: (client: typeof tx) => Promise<unknown>) =>
           callback(tx),
       ),
     };
@@ -109,6 +109,12 @@ describe("OrderService inventory reservation", () => {
 
     await service.createOrder(customer.id, dto);
 
+    expect(prisma.withActor).toHaveBeenCalledWith(
+      { id: customer.id, role: 'CUSTOMER', type: 'customer' }, expect.any(Function),
+    );
+    expect(tx.cart_items.deleteMany).toHaveBeenCalledWith({
+      where: { customer_id: customer.id, variant_id: { in: [variant.id] } },
+    });
     expect(tx.$executeRaw).toHaveBeenCalledTimes(1);
     expect(tx.medicine_boxes.updateMany).toHaveBeenCalledWith({
       where: {

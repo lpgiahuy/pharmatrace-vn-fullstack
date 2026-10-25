@@ -17,7 +17,8 @@ database/
 │   ├── 02_prescription_rls.sql     # Prescription grants and access policies
 │   ├── 03_auth_rls.sql             # Auth role/policies; enforcement opt-in
 │   ├── 04_auth_rls_rollback.sql    # Manual rollback, never called by master
-│   └── 05_wishlist_rls.sql         # Enforced customer wishlist ownership
+│   ├── 05_wishlist_rls.sql         # Enforced customer wishlist ownership
+│   └── 06_cart_rls.sql             # Enforced customer cart ownership
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -33,7 +34,8 @@ database/
 └── tests/
     ├── development_seed_test.sql   # Fresh-database fixtures, sequences, and grants
     ├── prescription_rls_test.sql   # Manual RLS isolation checks
-    └── wishlist_rls_test.sql       # Wishlist allow/deny checks, rolled back
+    ├── wishlist_rls_test.sql       # Wishlist allow/deny checks, rolled back
+    └── cart_rls_test.sql           # Cart ownership and column-grant checks
 ```
 
 `backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth role/policies are prepared automatically; account RLS enforcement stays off until dependent modules are ready. Read [Auth RLS rollout](#auth-rls-rollout) before activation. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
@@ -52,6 +54,7 @@ Run the fixture checks on a freshly initialized database, then the RLS checks:
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/development_seed_test.sql
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/prescription_rls_test.sql
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/wishlist_rls_test.sql
+docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/cart_rls_test.sql
 ```
 
 The test uses the IDs from the committed seed data and rolls back its test order.
@@ -139,6 +142,7 @@ Docker runs only the top-level `.sh` and `.sql` entrypoints, in filename order. 
 6. `security/02_prescription_rls.sql` revokes inherited review-table privileges, grants the permitted review operations, and applies prescription policies.
 7. `security/03_auth_rls.sql` prepares auth roles, column grants and policies. It does not enable account RLS unless explicitly invoked with `auth_rls_activate=true`. Master never runs the rollback script.
 8. `security/05_wishlist_rls.sql` restricts `app_user` to SELECT/INSERT/DELETE and enables/forces customer ownership policies on `customer_wishlists`.
+9. `security/06_cart_rls.sql` enables/forces customer cart ownership; UPDATE is limited to quantity/variant, and sequence reset/TRUNCATE are not granted.
 
 All tables must exist before importing the seed. Review grants are explicitly restricted after import so blanket or default privileges cannot add DELETE/TRUNCATE access. The SQL files are intended to run as `postgres` through `psql`.
 
@@ -151,6 +155,55 @@ All tables must exist before importing the seed. Review grants are explicitly re
 - The seed contains synthetic account and personal fields alongside catalog and operational fixtures. Foreign-key triggers remain enabled during import. It is not a production provisioning script.
 - Some seed text already contains corrupted characters. Repair it from a verified source rather than guessing replacements.
 - Existing databases need an explicit upgrade procedure for schema changes, including the `REDEEM_REVERSAL` constraint and review grants. Editing bootstrap files alone does not update an existing Docker volume.
+
+## Cart RLS
+
+Cart RLS is automatically enforced on new Docker databases through `security/06_cart_rls.sql`. It is independent of `AUTH_RLS_ENABLED`; keep that flag false on the shared application database during the account/module rollout.
+
+- Only customer context with matching customer ID can SELECT/INSERT/UPDATE/DELETE cart rows. Missing context and employee identities are denied, even if their numeric IDs match customers.
+- Runtime may insert customer/variant/quantity/timestamp, update only variant/quantity, and use the cart sequence. It cannot change ownership/row IDs, TRUNCATE, or reset the sequence.
+- Every cart operation, helper query and returned cart read uses the same actor transaction. Sync and variant switches do not start nested, unscoped transactions.
+- Checkout now carries customer context for both prescription and non-prescription orders, so purchased cart rows are deleted only for the buyer.
+- Existing quantity, sync-max, pricing and stock-display rules are retained. Variant switching still checks live stock minus reservations. This change does not implement inventory RLS or solve the existing concurrent read/modify/write quantity races.
+
+For an existing database, deploy the new cart **and checkout** backend first, back up/review existing policies and grants, then apply only this file as owner. Docker will not rerun init scripts for existing volumes. Old unscoped code could return an empty cart or leave purchased cart rows behind.
+
+```powershell
+docker compose exec -T db sh -c 'psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /docker-entrypoint-initdb.d/security/06_cart_rls.sql'
+```
+
+The script runs in a transaction, can be reapplied, refuses unknown cart policies and does not delete cart data. `tests/cart_rls_test.sql` verifies SQL allow/deny behavior using temporary fixtures and rolls them back; sequence increments are not rolled back. These changes do not automatically modify the developer's local database.
+
+### Cart integration test
+
+Run these PowerShell commands from the repository root, using a disposable database only:
+
+```powershell
+docker run --detach --name pharmatrace-cart-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=cart_test_owner_only -e APP_DB_PASSWORD=cart_test_app_only -e POSTGRES_DB=pharmatrace_cart_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
+docker logs pharmatrace-cart-rls-test
+```
+
+Wait for `PostgreSQL init process complete; ready for start up.`, then run:
+
+```powershell
+docker exec pharmatrace-cart-rls-test psql -X -v ON_ERROR_STOP=1 -U postgres -d pharmatrace_cart_rls_test -f /docker-entrypoint-initdb.d/tests/cart_rls_test.sql
+$cartTestPort = (docker port pharmatrace-cart-rls-test 5432).Split(':')[-1]
+$env:CART_RLS_TEST_DATABASE_URL = "postgresql://app_user:cart_test_app_only@127.0.0.1:$cartTestPort/pharmatrace_cart_rls_test"
+$env:CART_RLS_TEST_ADMIN_URL = "postgresql://postgres:cart_test_owner_only@127.0.0.1:$cartTestPort/pharmatrace_cart_rls_test"
+$env:CART_RLS_TEST_AUTH_ENABLED = 'false'
+Push-Location pharmatrace-vn-backend
+npm.cmd run test:e2e -- --runInBand --runTestsByPath test/cart-rls.e2e-spec.ts
+Pop-Location
+```
+
+The suite uses explicit localhost test URLs with that exact database name, never `.env` as a target. Without URLs it is skipped. It checks actual HTTP/JWT/Prisma/PostgreSQL behavior: ownership, same-ID employees, totals, quantities, sync, variant switch/merge/stock failures, clear/delete, forbidden direct writes, rollback and non-prescription checkout cart cleanup. Fixtures include synthetic accounts, products and stock, and are cleaned up after testing.
+
+To check cart API compatibility with future account RLS, activate `security/03_auth_rls.sql` on this test database only, set `CART_RLS_TEST_AUTH_ENABLED=true` and rerun. The order checkout regression is explicitly skipped in that mode: full order/account RLS remains a separate module rollout. Do not run suites concurrently against this same database.
+
+```powershell
+docker rm --force pharmatrace-cart-rls-test
+Remove-Item Env:CART_RLS_TEST_DATABASE_URL, Env:CART_RLS_TEST_ADMIN_URL, Env:CART_RLS_TEST_AUTH_ENABLED
+```
 
 ## Wishlist RLS
 

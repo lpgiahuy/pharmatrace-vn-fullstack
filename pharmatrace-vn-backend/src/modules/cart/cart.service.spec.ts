@@ -67,7 +67,7 @@ describe('CartService', () => {
         delete: jest.fn().mockResolvedValue(mockCartRecord),
         deleteMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
-      $transaction: jest.fn().call((cb: any) => cb(prisma)),
+      withActor: jest.fn((_actor: unknown, operation: (tx: any) => Promise<unknown>) => operation(prisma)),
     };
 
     const module: TestingModule = await Test.createTestingModule({
