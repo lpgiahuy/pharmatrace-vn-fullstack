@@ -44,7 +44,7 @@ import { useAuth } from '@/store/useAuthStore';
 import { formatCurrency, formatDateTime } from '@/utils';
 
 const STATUS_TABS: { key: string; label: string; status?: OrderStatus }[] = [
-  { key: 'ALL', label: 'All Status' },
+  { key: 'ALL', label: 'All' },
   { key: 'PENDING', label: 'Pending', status: 'PENDING' },
   { key: 'WAITING_INTERNAL_TRANSFER', label: 'Consolidating', status: 'WAITING_INTERNAL_TRANSFER' },
   { key: 'PROCESSING', label: 'Processing', status: 'PROCESSING' },
@@ -91,8 +91,8 @@ function OrderStatusBadge({ status }: { status?: string }) {
   }
   if (norm === 'CANCELLED') {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600">
-        <XCircle className="w-3.5 h-3.5 text-rose-600" />
+      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#EF4444]">
+        <XCircle className="w-3.5 h-3.5 text-[#EF4444]" />
         {label}
       </span>
     );
@@ -172,20 +172,29 @@ function OrderTrackingTimeline({ status }: { status?: string }) {
         </div>
 
         {steps.map((st, idx) => {
-          const isDone = idx < currentStepIndex;
-          const isCurrent = idx === currentStepIndex;
+          const isCompletedOrder = norm === 'COMPLETED';
+          const isDone = isCompletedOrder ? true : idx < currentStepIndex;
+          const isCurrent = !isCompletedOrder && idx === currentStepIndex;
 
           return (
             <div key={st.key} className="flex flex-col items-center relative z-10">
-              <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${isDone
-                  ? 'bg-[#004996] text-white shadow-xs'
-                  : isCurrent
-                    ? 'bg-[#004996] text-white ring-4 ring-blue-100'
-                    : 'bg-white border-2 border-slate-300 text-slate-400'
-                  }`}
-              >
-                {isDone ? <Check className="w-4 h-4" /> : idx + 1}
+              <div className="relative flex items-center justify-center">
+                {isCurrent && (
+                  <>
+                    <span className="absolute w-8 h-8 rounded-full bg-[#004996] animate-ripple pointer-events-none" />
+                    <span className="absolute w-8 h-8 rounded-full bg-[#004996] animate-ripple-delayed pointer-events-none" />
+                  </>
+                )}
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold relative z-10 transition-all ${isDone
+                    ? 'bg-[#004996] text-white shadow-xs'
+                    : isCurrent
+                      ? 'bg-[#004996] text-white ring-4 ring-blue-100 shadow-sm'
+                      : 'bg-white border-2 border-slate-300 text-slate-400'
+                    }`}
+                >
+                  {isDone ? <Check className="w-4 h-4" /> : idx + 1}
+                </div>
               </div>
               <div className="text-center mt-2">
                 <div
@@ -341,6 +350,10 @@ function CustomerOrdersContent() {
   };
 
   const handleReorder = (order: Order) => {
+    if (formatOrderStatus(order.orderStatus) !== 'COMPLETED') {
+      message.warning('You can only reorder items after your order has been delivered.');
+      return;
+    }
     const orderItems = getOrderItems(order);
     if (!orderItems || orderItems.length === 0) return;
     orderItems.forEach((item) => {
@@ -638,11 +651,6 @@ function CustomerOrdersContent() {
                                   {item.unitName}
                                 </span>
                                 <span>Quantity: {item.quantity}</span>
-                                {item.sourceFacilityName && (
-                                  <span className="text-[11px] text-slate-600 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-[4px]">
-                                    Dispatched from: {item.sourceFacilityName}
-                                  </span>
-                                )}
                               </div>
                             </div>
                           </div>
@@ -719,44 +727,17 @@ function CustomerOrdersContent() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      {['PENDING', 'WAITING_INTERNAL_TRANSFER'].includes(formatOrderStatus(order.orderStatus)) && (
-                        <Popconfirm
-                          title="Cancel Order"
-                          description="Are you sure you want to cancel this order? Allocated items will be returned to stock."
-                          okText="Yes, Cancel"
-                          cancelText="Keep Order"
-                          okButtonProps={{ danger: true, loading: cancellingId === order.id }}
-                          onConfirm={() => handleCancelOrder(order.id)}
-                        >
-                          <button
-                            type="button"
-                            className="px-3.5 py-2 bg-white hover:bg-rose-50 text-rose-700 border border-rose-300 rounded-[6px] text-xs font-semibold transition-colors cursor-pointer"
-                          >
-                            Cancel
-                          </button>
-                        </Popconfirm>
-                      )}
-
-                      <button
-                        type="button"
-                        onClick={() => handleReorder(order)}
-                        className="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-[6px] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
-                      >
-                        <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-                        Reorder
-                      </button>
-
+                    <div>
                       <button
                         type="button"
                         onClick={() => {
                           setSelectedOrder(order);
                           setDetailModalOpen(true);
                         }}
-                        className="px-4 py-2 bg-[#004996] hover:bg-[#003875] text-white rounded-[6px] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                        className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-transparent hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-[6px] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
-                        <Eye className="w-3.5 h-3.5" />
-                        Details
+                        <Eye className="w-3.5 h-3.5 text-slate-500" />
+                        <span>View Details</span>
                       </button>
                     </div>
                   </div>
@@ -811,6 +792,21 @@ function CustomerOrdersContent() {
       >
         {selectedOrder && (
           <div className="space-y-6 pt-3 text-slate-700 max-h-[calc(85vh-90px)] overflow-y-auto pr-1">
+            {selectedOrder.prescriptionReviewStatus === 'PENDING_APPROVAL' && (
+              <div className="rounded-[6px] border border-blue-200 bg-blue-50 px-4 py-3 text-xs sm:text-sm text-[#004996]">
+                This order is waiting for a pharmacist at the preparing facility to review your prescription.
+              </div>
+            )}
+            {selectedOrder.prescriptionReviewStatus === 'REJECTED' && (
+              <div className="rounded-[6px] border border-red-200 bg-red-50 px-4 py-3 text-xs sm:text-sm text-red-800">
+                The prescription was rejected and this order was cancelled.{' '}
+                <Link href="/account/prescriptions" className="font-semibold underline">
+                  View the review
+                </Link>
+                .
+              </div>
+            )}
+
             <OrderTrackingTimeline status={selectedOrder.orderStatus} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -960,11 +956,6 @@ function CustomerOrdersContent() {
                               </span>
                               <span>× {item.quantity}</span>
                               <span>({formatCurrency(item.unitPrice)} each)</span>
-                              {item.sourceFacilityName && (
-                                <span className="text-[10px] text-slate-600 bg-slate-50 border border-slate-200 px-1.5 py-0.2 rounded-[4px]">
-                                  {item.sourceFacilityName}
-                                </span>
-                              )}
                             </div>
                           </div>
                         </div>
@@ -1026,43 +1017,55 @@ function CustomerOrdersContent() {
               );
             })()}
 
-            <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-200">
-              {['PENDING', 'WAITING_INTERNAL_TRANSFER'].includes(formatOrderStatus(selectedOrder.orderStatus)) && (
-                <Popconfirm
-                  title="Cancel Order"
-                  description="Are you sure you want to cancel this order? Allocated items will be returned to stock."
-                  okText="Yes, Cancel"
-                  cancelText="Keep Order"
-                  okButtonProps={{ danger: true, loading: cancellingId === selectedOrder.id }}
-                  onConfirm={() => handleCancelOrder(selectedOrder.id)}
+            <div className="pt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200">
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setDetailModalOpen(false)}
+                  className="px-4 py-2 bg-[#F3F4F6] hover:bg-[#E5E7EB] text-[#374151] rounded-[6px] text-xs font-semibold transition-colors cursor-pointer border border-[#E5E7EB]"
                 >
+                  Close
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                {['PENDING', 'WAITING_INTERNAL_TRANSFER'].includes(formatOrderStatus(selectedOrder.orderStatus)) && (
+                  <Popconfirm
+                    title="Cancel Order"
+                    description="Are you sure you want to cancel this order? Allocated items will be returned to stock."
+                    okText="Yes, Cancel"
+                    cancelText="Keep Order"
+                    okButtonProps={{
+                      danger: true,
+                      loading: cancellingId === selectedOrder.id,
+                      style: { backgroundColor: '#EF4444', borderColor: '#EF4444', color: '#FFFFFF' },
+                    }}
+                    cancelButtonProps={{
+                      style: { backgroundColor: '#F3F4F6', borderColor: '#E5E7EB', color: '#374151' },
+                    }}
+                    onConfirm={() => handleCancelOrder(selectedOrder.id)}
+                  >
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-[#EF4444] hover:bg-[#DC2626] text-white rounded-[6px] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                    >
+                      <XCircle className="w-3.5 h-3.5 text-white" />
+                      Cancel
+                    </button>
+                  </Popconfirm>
+                )}
+
+                {formatOrderStatus(selectedOrder.orderStatus) === 'COMPLETED' && (
                   <button
                     type="button"
-                    className="px-4 py-2 bg-white hover:bg-rose-50 text-rose-700 border border-rose-300 rounded-[6px] text-xs font-semibold transition-colors cursor-pointer"
+                    onClick={() => handleReorder(selectedOrder)}
+                    className="px-4 py-2 bg-[#004996] hover:bg-[#003875] text-white rounded-[6px] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
                   >
-                    Cancel Order
+                    <RotateCcw className="w-3.5 h-3.5 text-white" />
+                    Reorder
                   </button>
-                </Popconfirm>
-              )}
-
-              <button
-                type="button"
-                onClick={() => {
-                  handleReorder(selectedOrder);
-                }}
-                className="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 rounded-[6px] text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
-              >
-                <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-                Reorder Items
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setDetailModalOpen(false)}
-                className="px-5 py-2 bg-[#004996] hover:bg-[#003875] text-white rounded-[6px] text-xs font-semibold transition-colors cursor-pointer shadow-xs"
-              >
-                Close
-              </button>
+                )}
+              </div>
             </div>
           </div>
         )}

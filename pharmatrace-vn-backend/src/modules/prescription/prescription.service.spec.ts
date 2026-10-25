@@ -64,6 +64,30 @@ describe('PrescriptionService review boundaries', () => {
     }));
   });
 
+  it('does not overlap review queries on one transaction connection', async () => {
+    let loading = false;
+    const tx = {
+      order_prescription_reviews: {
+        findMany: jest.fn(async () => {
+          loading = true;
+          await new Promise((resolve) => setImmediate(resolve));
+          loading = false;
+          return [];
+        }),
+        count: jest.fn(() => {
+          if (loading) throw new Error('query already executing');
+          return Promise.resolve(0);
+        }),
+      },
+    };
+    const prisma = { withActor: jest.fn((_actor, run) => run(tx)) };
+    const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
+
+    await expect(service.getReviewQueue(pharmacist, 'PENDING_APPROVAL')).resolves.toMatchObject({
+      items: [], pagination: { total: 0 },
+    });
+  });
+
   it('cannot approve a review belonging to a different facility', async () => {
     const tx = { order_prescription_reviews: { findFirst: jest.fn().mockResolvedValue(null) } };
     const prisma = { withActor: jest.fn((actor, run) => run(tx)) };
@@ -94,6 +118,34 @@ describe('PrescriptionService review boundaries', () => {
 
     await expect(service.decidePrescriptionReview(pharmacist, 5, 'APPROVED')).rejects.toBeInstanceOf(ConflictException);
     expect(tx.orders.update).not.toHaveBeenCalled();
+  });
+
+  it('approves a pending legacy review when the order review status is null', async () => {
+    const tx = {
+      order_prescription_reviews: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 5,
+          status: 'PENDING_APPROVAL',
+          order_id: 140,
+          facility_id: 1,
+          order: { order_status: 'PENDING', prescription_review_status: null, export_facility_id: 1 },
+        }),
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+      },
+      orders: {
+        updateMany: jest.fn().mockImplementation(({ where }) =>
+          Promise.resolve({ count: where.prescription_review_status === null ? 1 : 0 }),
+        ),
+      },
+    };
+    const prisma = { withActor: jest.fn((_actor, run) => run(tx)) };
+    const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
+
+    await expect(service.decidePrescriptionReview(pharmacist, 5, 'APPROVED'))
+      .resolves.toEqual({ id: 5, orderId: 140, status: 'APPROVED' });
+    expect(tx.orders.updateMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: expect.objectContaining({ prescription_review_status: null }),
+    }));
   });
 
   it('requires a reason before rejecting an order', async () => {

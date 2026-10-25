@@ -202,8 +202,9 @@ export default function AdminOrderDetailPage({ params }: Props) {
       setDetailOpen(false);
       const updated = await orderService.getAdminById(orderId);
       setOrder(updated);
-    } catch (err) {
-      message.error(err instanceof Error ? err.message : 'Failed to approve prescription');
+    } catch (err: any) {
+      const msg = err?.message || (typeof err === 'string' ? err : 'Failed to approve prescription');
+      message.error(msg);
     } finally {
       setReviewing(false);
     }
@@ -225,8 +226,9 @@ export default function AdminOrderDetailPage({ params }: Props) {
       setRejectReason('');
       const updated = await orderService.getAdminById(orderId);
       setOrder(updated);
-    } catch (err) {
-      message.error(err instanceof Error ? err.message : 'Failed to reject prescription');
+    } catch (err: any) {
+      const msg = err?.message || (typeof err === 'string' ? err : 'Failed to reject prescription');
+      message.error(msg);
     } finally {
       setReviewing(false);
     }
@@ -270,9 +272,9 @@ export default function AdminOrderDetailPage({ params }: Props) {
           <p className={styles.orderMeta}>{order.orderCode}<span>Placed {formatDateTime(order.createdAt)}</span></p>
         </div>
         <div className={styles.actions}>
-          {canPack && <AButton type="primary" size="large" icon={<ScanOutlined aria-hidden />} onClick={() => setFulfillOpen(true)}>Pack & scan QR</AButton>}
-          {(normStatus === 'PROCESSING' || normStatus === 'DADONGGOI') && <AButton size="large" loading={updating} onClick={handleShip}>Start delivery</AButton>}
-          {(normStatus === 'SHIPPING' || normStatus === 'DANGGIAO') && <AButton type="primary" size="large" loading={updating} onClick={handleComplete}>Confirm delivery</AButton>}
+          {canPack && <AButton type="primary" icon={<ScanOutlined aria-hidden />} onClick={() => setFulfillOpen(true)}>Pack & scan QR</AButton>}
+          {(normStatus === 'PROCESSING' || normStatus === 'DADONGGOI') && <AButton loading={updating} onClick={handleShip}>Start delivery</AButton>}
+          {(normStatus === 'SHIPPING' || normStatus === 'DANGGIAO') && <AButton type="primary" loading={updating} onClick={handleComplete}>Confirm delivery</AButton>}
         </div>
       </header>
 

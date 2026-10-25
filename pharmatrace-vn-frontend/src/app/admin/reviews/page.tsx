@@ -561,7 +561,7 @@ export default function AdminReviewsPage() {
               }}
               className="w-36"
               options={[
-                { value: 'ALL', label: 'All Statuses' },
+                { value: 'ALL', label: 'All' },
                 { value: 'APPROVED', label: 'Approved' },
                 { value: 'PENDING', label: 'Pending' },
                 { value: 'SPAM', label: 'Spam' },

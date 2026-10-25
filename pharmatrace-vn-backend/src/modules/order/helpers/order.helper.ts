@@ -11,6 +11,11 @@ export const ORDER_DETAILS_INCLUDE = {
       to_facility: true,
     },
   },
+  prescription_review: {
+    include: {
+      pharmacist: { select: { id: true, full_name: true } },
+    },
+  },
 } as const satisfies Prisma.ordersInclude;
 
 export const AVAILABLE_BOX_STATUSES = [
@@ -230,6 +235,19 @@ export function formatOrder(order: any) {
       : undefined,
     prescriptionId: order.prescription_id,
     prescriptionReviewStatus: order.prescription_review_status,
+    prescriptionReview: order.prescription_review
+      ? {
+        id: order.prescription_review.id,
+        prescriptionId: order.prescription_review.prescription_id,
+        status: order.prescription_review.status,
+        pharmacistId: order.prescription_review.pharmacist_id,
+        pharmacistName: order.prescription_review.pharmacist?.full_name,
+        facilityId: order.prescription_review.facility_id,
+        note: order.prescription_review.note,
+        reviewedAt: order.prescription_review.reviewed_at,
+        createdAt: order.prescription_review.created_at,
+      }
+      : undefined,
     subtotalAmount: Number(order.subtotal_amount || 0),
     shippingFee: Number(order.shipping_fee || 0),
     discountAmount: voucherDiscount,

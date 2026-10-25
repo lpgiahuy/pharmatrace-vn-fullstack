@@ -331,7 +331,7 @@ export default function CheckoutPage() {
   // Empty checkout guard
   if (selectedItems.length === 0) {
     return (
-      <div className="min-h-screen bg-[#f7f8fa] py-16 px-4">
+      <div className="w-full py-16">
         <div className="max-w-md mx-auto bg-white rounded-lg p-6 border border-gray-200 shadow-xs text-center">
           <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-6 h-6" />
@@ -353,8 +353,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f8fa] pb-16 pt-4 sm:pt-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full pb-16">
+      <div className="w-full">
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-5">
           <Link href="/" className="hover:text-[#004996] transition-colors">
@@ -379,9 +379,9 @@ export default function CheckoutPage() {
         </div>
 
         <form onSubmit={handleSubmitOrder}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* LEFT COLUMN: Shipping details + Payment + Items review (7 cols on lg) */}
-            <div className="lg:col-span-7 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
+            {/* LEFT COLUMN: Shipping details + Payment + Items review */}
+            <div className="lg:col-span-7 xl:col-span-8 space-y-6">
               {/* Section 1: Shipping Address Card */}
               <div className="bg-white rounded-lg border border-gray-200 p-5 sm:p-6 shadow-xs">
                 <div className="pb-3 mb-4 border-b border-gray-200 flex items-center justify-between">
@@ -650,8 +650,8 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Order Financial Summary (5 cols on lg, sticky) */}
-            <div className="lg:col-span-5 lg:sticky lg:top-[112px] space-y-4">
+            {/* RIGHT COLUMN: Order Financial Summary (sticky) */}
+            <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-[112px] space-y-4">
               <div className="bg-white rounded-lg border border-gray-200 p-5 sm:p-6 shadow-xs space-y-4">
                 <h3 className="text-base font-semibold text-gray-900 border-b border-gray-200 pb-3">
                   Order Summary

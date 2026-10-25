@@ -29,8 +29,8 @@
 .titleRow { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
 .titleRow h1 { font-size: 26px; line-height: 1.4; font-weight: 600; margin: 0; letter-spacing: -0.5px; }
 .orderMeta { margin: 8px 0 0; font-size: 13px; line-height: 1.6; color: #536474; display: flex; flex-wrap: wrap; gap: 4px 20px; }
-.actions { display: flex; gap: 8px; flex-wrap: wrap; flex: none; }
-.actions :global(.ant-btn) { font-size: 14px; height: 44px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; flex: none; align-items: center; }
+.actions :global(.ant-btn) { font-size: 13px; height: 36px; border-radius: 6px; font-weight: 500; }
 .orderSheet { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr); border: 1px solid #dce3e9; border-radius: 8px; overflow: hidden; background: white; }
 .lineItems { padding: 26px; min-width: 0; }
 .sectionHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
@@ -183,7 +183,7 @@
 }
 
 .statusCancelled {
-  color: #991b1b;
+  color: #EF4444;
 }
 
 /* Route Stepper Layout */

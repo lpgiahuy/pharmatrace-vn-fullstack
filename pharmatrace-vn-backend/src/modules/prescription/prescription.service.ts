@@ -175,33 +175,32 @@ export class PrescriptionService {
         ...(status === 'PENDING_APPROVAL' ? { order_status: { not: 'CANCELLED' } } : {}),
       },
     };
-    const [rows, total] = await this.prisma.withActor(actor, (tx) =>
-      Promise.all([
-        tx.order_prescription_reviews.findMany({
-          where,
-          select: {
-            id: true,
-            status: true,
-            note: true,
-            created_at: true,
-            reviewed_at: true,
-            facility_id: true,
-            order: {
-              select: {
-                id: true,
-                order_code: true,
-                created_at: true,
-                order_items: { select: { medicine_name: true, quantity: true, medicines: { select: { is_prescription: true } } } },
-              },
+    const { rows, total } = await this.prisma.withActor(actor, async (tx) => {
+      const rows = await tx.order_prescription_reviews.findMany({
+        where,
+        select: {
+          id: true,
+          status: true,
+          note: true,
+          created_at: true,
+          reviewed_at: true,
+          facility_id: true,
+          order: {
+            select: {
+              id: true,
+              order_code: true,
+              created_at: true,
+              order_items: { select: { medicine_name: true, quantity: true, medicines: { select: { is_prescription: true } } } },
             },
           },
-          orderBy: { created_at: 'desc' },
-          skip,
-          take: pageSize,
-        }),
-        tx.order_prescription_reviews.count({ where }),
-      ]),
-    );
+        },
+        orderBy: { created_at: 'desc' },
+        skip,
+        take: pageSize,
+      });
+      const total = await tx.order_prescription_reviews.count({ where });
+      return { rows, total };
+    });
     return {
       items: rows.map((row) => ({
         id: row.id,
@@ -232,7 +231,7 @@ export class PrescriptionService {
           status: true,
           order_id: true,
           facility_id: true,
-          order: { select: { order_status: true, customer_id: true, used_points: true, export_facility_id: true } },
+          order: { select: { order_status: true, prescription_review_status: true, customer_id: true, used_points: true, export_facility_id: true } },
         },
       });
       if (!review) throw new NotFoundException('Prescription review not found');
@@ -242,6 +241,9 @@ export class PrescriptionService {
       }
       if (!['PENDING', 'WAITING_INTERNAL_TRANSFER'].includes(review.order.order_status || '')) {
         throw new ConflictException('This order can no longer be reviewed');
+      }
+      if (review.order.prescription_review_status && review.order.prescription_review_status !== 'PENDING_APPROVAL') {
+        throw new ConflictException('Order review status changed. Reload and try again.');
       }
       const updated = await tx.order_prescription_reviews.updateMany({
         where: { id: reviewId, status: 'PENDING_APPROVAL', facility_id: review.facility_id },
@@ -257,7 +259,7 @@ export class PrescriptionService {
         where: {
           id: review.order_id,
           order_status: { in: ['PENDING', 'WAITING_INTERNAL_TRANSFER'] },
-          prescription_review_status: 'PENDING_APPROVAL',
+          prescription_review_status: review.order.prescription_review_status,
         },
         data: {
           prescription_review_status: decision,

@@ -534,7 +534,7 @@ export default function AdminModerationPage() {
                         { value: 'PENDING', label: 'Status: Pending' },
                         { value: 'RESOLVED', label: 'Status: Resolved' },
                         { value: 'DISMISSED', label: 'Status: Dismissed' },
-                        { value: 'ALL', label: 'All Statuses' },
+                        { value: 'ALL', label: 'All' },
                       ]}
                     />
 
@@ -1083,13 +1083,12 @@ export default function AdminModerationPage() {
                 <span className="text-xs text-gray-500">
                   Target Review Status:{' '}
                   <span
-                    className={`font-semibold ${
-                      resolvingReport.reviews?.status === 'APPROVED'
+                    className={`font-semibold ${resolvingReport.reviews?.status === 'APPROVED'
                         ? 'text-[#15803d]'
                         : resolvingReport.reviews?.status === 'HIDDEN'
                           ? 'text-gray-500'
                           : 'text-[#b45309]'
-                    }`}
+                      }`}
                   >
                     {resolvingReport.reviews?.status || 'APPROVED'}
                   </span>

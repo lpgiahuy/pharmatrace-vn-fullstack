@@ -187,6 +187,7 @@ export class OrderService {
       (!("precision" in customerCoords) || ["house", "alley", "street"].includes(customerCoords.precision));
 
     const allFacilities = await this.prisma.facilities.findMany({
+      where: { facility_type: { in: ['CENTRAL_WAREHOUSE', 'BRANCH_WAREHOUSE', 'PHARMACY'] } },
       include: {
         inventories: {
           where: {
@@ -202,11 +203,25 @@ export class OrderService {
       return inv ? Math.max(0, inv.stock_quantity - (inv.reserved_quantity ?? 0)) : 0;
     };
 
-    const facilitiesWithAllItems = allFacilities.filter((facility) =>
-      itemsToOrder.every((item) => getAvailableStock(facility, item.variantId) >= item.quantity),
+    const scoredFacilities = allFacilities.map((facility) => ({
+      facility,
+      coveredCount: itemsToOrder.filter((item) => getAvailableStock(facility, item.variantId) >= item.quantity).length,
+      distanceToCustomer:
+        hasRouteableCustomerCoords && customerCoords && facility.latitude !== null && facility.longitude !== null
+          && isValidCoordinates(Number(facility.latitude), Number(facility.longitude))
+          ? calculateHaversineDistance(customerCoords.latitude, customerCoords.longitude, Number(facility.latitude), Number(facility.longitude))
+          : Number.POSITIVE_INFINITY,
+    }));
+    scoredFacilities.sort((a, b) =>
+      (a.distanceToCustomer - b.distanceToCustomer) || (b.coveredCount - a.coveredCount),
     );
+    const primaryFacilityObj = scoredFacilities[0]?.facility;
+    if (!primaryFacilityObj) {
+      throw new BadRequestException("No suitable fulfillment facility found.");
+    }
+    const exportFacilityId = primaryFacilityObj.id;
+    const missingItems = itemsToOrder.filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) < item.quantity);
 
-    let exportFacilityId: number;
     let orderInitialStatus = "PENDING";
     const itemSourceFacilityMap = new Map<number, number>();
     let internalTransferPlan: {
@@ -223,64 +238,17 @@ export class OrderService {
       }[];
     }[] = [];
 
-    if (facilitiesWithAllItems.length > 0) {
-      const candidates = hasRouteableCustomerCoords && customerCoords
-        ? facilitiesWithAllItems
-          .filter((f) => f.latitude !== null && f.longitude !== null && isValidCoordinates(Number(f.latitude), Number(f.longitude)))
-          .map((f) => ({
-            id: f.id,
-            distanceKm: calculateHaversineDistance(
-              customerCoords.latitude,
-              customerCoords.longitude,
-              Number(f.latitude),
-              Number(f.longitude),
-            ),
-          }))
-        : [];
-      candidates.sort((a, b) => a.distanceKm - b.distanceKm);
+    itemsToOrder
+      .filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) >= item.quantity)
+      .forEach((item) => itemSourceFacilityMap.set(item.variantId, exportFacilityId));
 
-      exportFacilityId = candidates[0]?.id ?? facilitiesWithAllItems[0]?.id;
-
-      itemsToOrder.forEach((item) => itemSourceFacilityMap.set(item.variantId, exportFacilityId));
-    } else {
+    if (missingItems.length > 0) {
       for (const item of itemsToOrder) {
         const totalNetworkStock = allFacilities.reduce((sum, f) => sum + getAvailableStock(f, item.variantId), 0);
         if (totalNetworkStock < item.quantity) {
           throw new BadRequestException(`Medicine "${item.medicineName}" (${item.unitName}) is out of stock across the entire fulfillment network.`);
         }
       }
-
-      const scoredFacilities = allFacilities.map((f) => {
-        const coveredItems = itemsToOrder.filter((item) => getAvailableStock(f, item.variantId) >= item.quantity);
-        const distanceToCustomer =
-          hasRouteableCustomerCoords && customerCoords && f.latitude && f.longitude && isValidCoordinates(Number(f.latitude), Number(f.longitude))
-            ? calculateHaversineDistance(customerCoords.latitude, customerCoords.longitude, Number(f.latitude), Number(f.longitude))
-            : 999999;
-        return {
-          facility: f,
-          coveredCount: coveredItems.length,
-          distanceToCustomer,
-        };
-      });
-
-      scoredFacilities.sort((a, b) => {
-        if (b.coveredCount !== a.coveredCount) {
-          return b.coveredCount - a.coveredCount;
-        }
-        return a.distanceToCustomer - b.distanceToCustomer;
-      });
-
-      const primaryFacilityObj = scoredFacilities[0]?.facility;
-      if (!primaryFacilityObj) {
-        throw new BadRequestException("No suitable fulfillment facility found.");
-      }
-      exportFacilityId = primaryFacilityObj.id;
-
-      const missingItems = itemsToOrder.filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) < item.quantity);
-
-      itemsToOrder
-        .filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) >= item.quantity)
-        .forEach((item) => itemSourceFacilityMap.set(item.variantId, exportFacilityId));
 
       const transfersBySource = new Map<number, {
         sourceFacility: (typeof allFacilities)[0];
@@ -423,7 +391,8 @@ export class OrderService {
         });
 
         if (boxes.length !== item.quantity) {
-          throw new BadRequestException(`Medicine "${item.medicineName}" only has ${boxes.length} physical box(es) available at the assigned facility.`);
+          // Physical packages can be assigned during transfer receipt or packing.
+          continue;
         }
 
         const boxUids = boxes.map((box) => box.uid);
