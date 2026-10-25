@@ -40,7 +40,7 @@ export default function RootLayout({
               },
             }}
           >
-            <App>
+            <App message={{ top: 24, maxCount: 3 }}>
               {children}
             </App>
           </ConfigProvider>

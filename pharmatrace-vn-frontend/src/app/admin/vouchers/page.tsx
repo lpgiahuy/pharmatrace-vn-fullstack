@@ -409,7 +409,7 @@ export default function AdminVouchersPage() {
               allowClear
               className="text-xs sm:text-sm h-9 sm:h-10 w-full"
               options={[
-                { label: 'All Statuses', value: '' },
+                { label: 'All', value: '' },
                 { label: 'Active', value: 'ACTIVE' },
                 { label: 'Inactive', value: 'INACTIVE' },
                 { label: 'Expired', value: 'EXPIRED' },

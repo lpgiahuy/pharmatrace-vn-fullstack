@@ -43,6 +43,7 @@ model facilities {
   transfers_from           internal_transfers[] @relation("transfers_from")
   transfers_to             internal_transfers[] @relation("transfers_to")
   order_items_sourced      order_items[]        @relation("order_items_source_facility")
+  prescription_reviews     order_prescription_reviews[]
 }
 
 model customers {
@@ -84,6 +85,7 @@ model employees {
   facilities      facilities?       @relation(fields: [facility_id], references: [id], onUpdate: NoAction)
   inventory_logs  inventory_logs[]
   prescriptions   prescriptions[]
+  prescription_reviews order_prescription_reviews[]
   purchase_orders purchase_orders[]
   reported_moderations  moderation_reports[]    @relation("report_reporter_employee")
   resolved_moderations  moderation_reports[]    @relation("report_resolver_employee")
@@ -191,6 +193,7 @@ model prescriptions {
   prescribed_date           DateTime?  @db.Date
   created_at                DateTime?  @default(now()) @db.Timestamptz(6)
   orders                    orders[]
+  order_reviews             order_prescription_reviews[]
   users                     employees? @relation(fields: [approved_by_pharmacist_id], references: [id], onUpdate: NoAction)
   customers                 customers? @relation(fields: [customer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
@@ -218,6 +221,7 @@ model orders {
   customer_id         Int?
   export_facility_id  Int?
   prescription_id     Int?
+  prescription_review_status String? @db.VarChar(30)
   subtotal_amount     Decimal               @default(0) @db.Decimal(15, 2)
   shipping_fee        Decimal?              @default(0) @db.Decimal(15, 2)
   discount_amount     Decimal?              @default(0) @db.Decimal(15, 2)
@@ -238,12 +242,32 @@ model orders {
   customers           customers?            @relation(fields: [customer_id], references: [id], onUpdate: NoAction)
   facilities          facilities?           @relation(fields: [export_facility_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   prescriptions       prescriptions?        @relation(fields: [prescription_id], references: [id], onUpdate: NoAction)
+  prescription_review order_prescription_reviews?
   shipments           shipments?
   internal_transfers  internal_transfers[]
 
   @@index([customer_id], map: "idx_orders_customer_id")
   @@index([order_status], map: "idx_orders_status")
   @@index([created_at], map: "idx_orders_created_at")
+}
+
+model order_prescription_reviews {
+  id              Int           @id @default(autoincrement())
+  order_id        Int           @unique
+  prescription_id Int
+  status          String        @default("PENDING_APPROVAL") @db.VarChar(30)
+  pharmacist_id   Int?
+  facility_id     Int
+  note            String?
+  reviewed_at     DateTime?     @db.Timestamptz(6)
+  created_at      DateTime      @default(now()) @db.Timestamptz(6)
+  order           orders        @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  prescription    prescriptions @relation(fields: [prescription_id], references: [id], onDelete: Restrict)
+  pharmacist      employees?    @relation(fields: [pharmacist_id], references: [id], onDelete: SetNull)
+  facility        facilities    @relation(fields: [facility_id], references: [id], onDelete: Restrict)
+
+  @@index([facility_id, status, created_at], map: "idx_order_prescription_reviews_queue")
+  @@index([prescription_id], map: "idx_order_prescription_reviews_prescription")
 }
 
 model order_items {

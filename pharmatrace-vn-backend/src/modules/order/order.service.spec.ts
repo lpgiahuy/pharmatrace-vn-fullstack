@@ -115,7 +115,7 @@ describe("OrderService inventory reservation", () => {
         uid: { in: ["box-uid-1"] },
         current_facility_id: facility.id,
         status: {
-          in: ["IN_STOCK", "MANUFACTURED"],
+          in: expect.arrayContaining(["IN_STOCK", "MANUFACTURED"]),
         },
       },
       data: { status: "RESERVED" },
@@ -140,6 +140,44 @@ describe("OrderService inventory reservation", () => {
     );
     expect(tx.medicine_boxes.findMany).not.toHaveBeenCalled();
     expect(tx.order_items.createMany).not.toHaveBeenCalled();
+  });
+
+  it("accepts an order with aggregate stock before physical UIDs are available", async () => {
+    const { prisma, tx } = createMocks(1);
+    tx.medicine_boxes.findMany.mockResolvedValue([]);
+    const service = new OrderService(prisma as unknown as PrismaService);
+
+    await expect(service.createOrder(customer.id, dto)).resolves.toMatchObject({ id: 101 });
+
+    expect(tx.medicine_boxes.updateMany).not.toHaveBeenCalled();
+    expect(tx.order_items.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ assigned_uids: [], inventory_reserved: true })],
+    });
+  });
+
+  it("uses the nearest facility even when a farther warehouse has every item", async () => {
+    const { prisma, tx } = createMocks(1);
+    prisma.facilities.findMany.mockResolvedValue([
+      { ...facility, id: 20, latitude: 21.0, longitude: 105.8 },
+      { ...facility, id: 10, latitude: 10.77, longitude: 106.70, inventories: [] },
+    ]);
+    tx.medicine_boxes.findMany.mockResolvedValue([]);
+    const service = new OrderService(prisma as unknown as PrismaService);
+
+    await service.createOrder(customer.id, { ...dto, latitude: 10.775, longitude: 106.705 });
+
+    expect(tx.orders.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ export_facility_id: 10, order_status: 'WAITING_INTERNAL_TRANSFER' }),
+    });
+    expect(tx.internal_transfers.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        from_facility_id: 20, to_facility_id: 10, status: 'REQUESTED',
+        items: [expect.objectContaining({ variantId: variant.id, quantity: 1 })],
+      }),
+    });
+    expect(tx.order_items.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ source_facility_id: 20, assigned_uids: [], inventory_reserved: true })],
+    });
   });
 
   it("atomically applies voucher and reward points", async () => {

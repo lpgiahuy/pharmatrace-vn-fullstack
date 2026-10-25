@@ -15,6 +15,7 @@ import { ReviewModule } from './modules/review/review.module';
 import { ContentModerationModule } from './modules/moderation/content-moderation.module';
 import { OrderModule } from './modules/order/order.module';
 import { CartModule } from './modules/cart/cart.module';
+import { PrescriptionModule } from './modules/prescription/prescription.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -36,6 +37,7 @@ import { AppService } from './app.service';
     ContentModerationModule,
     OrderModule,
     CartModule,
+    PrescriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

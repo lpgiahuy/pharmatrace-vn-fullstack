@@ -661,6 +661,7 @@ export default function ProductDetailPage({
         productId: product.id,
         slug: product.slug || String(product.id),
         medicineName: product.medicineName,
+        isPrescription: product.isPrescription,
         imageUrl: product.imageUrl,
         variantId: activePackaging?.id,
         unitName: activePackaging?.unitName || 'Box',

@@ -4,12 +4,16 @@ import { Prisma } from "@prisma/client";
 export const ORDER_DETAILS_INCLUDE = {
   order_items: { include: { medicines: true, source_facility: true } },
   shipments: true,
-  prescriptions: true,
   facilities: true,
   internal_transfers: {
     include: {
       from_facility: true,
       to_facility: true,
+    },
+  },
+  prescription_review: {
+    include: {
+      pharmacist: { select: { id: true, full_name: true } },
     },
   },
 } as const satisfies Prisma.ordersInclude;
@@ -230,6 +234,20 @@ export function formatOrder(order: any) {
       }
       : undefined,
     prescriptionId: order.prescription_id,
+    prescriptionReviewStatus: order.prescription_review_status,
+    prescriptionReview: order.prescription_review
+      ? {
+        id: order.prescription_review.id,
+        prescriptionId: order.prescription_review.prescription_id,
+        status: order.prescription_review.status,
+        pharmacistId: order.prescription_review.pharmacist_id,
+        pharmacistName: order.prescription_review.pharmacist?.full_name,
+        facilityId: order.prescription_review.facility_id,
+        note: order.prescription_review.note,
+        reviewedAt: order.prescription_review.reviewed_at,
+        createdAt: order.prescription_review.created_at,
+      }
+      : undefined,
     subtotalAmount: Number(order.subtotal_amount || 0),
     shippingFee: Number(order.shipping_fee || 0),
     discountAmount: voucherDiscount,
@@ -258,14 +276,5 @@ export function formatOrder(order: any) {
     shipment: formattedShipment,
     shipments: formattedShipment ? [formattedShipment] : [],
     internalTransfers: formattedTransfers,
-    prescription: order.prescriptions
-      ? {
-        id: order.prescriptions.id,
-        status: order.prescriptions.status,
-        imageUrl: order.prescriptions.prescription_image_url,
-        prescribingDoctor: order.prescriptions.prescribing_doctor,
-        medicalFacility: order.prescriptions.medical_facility,
-      }
-      : undefined,
   };
 }

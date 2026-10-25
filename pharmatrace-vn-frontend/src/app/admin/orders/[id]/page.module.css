@@ -1,13 +1,36 @@
 .page { width: 100%; color: #172b3a; }
-.backLink { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; margin-bottom: 10px; color: #536474; font-size: 13px; cursor: pointer; background: none; border: 0; padding: 0; }
-.backLink:hover { color: var(--color-brand-500); }
-.backLink:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 4px; }
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  margin-bottom: 14px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  background: #ffffff;
+  border: 1px solid #dce3e9;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease;
+}
+.backLink:hover {
+  background: #f8fafc;
+  border-color: #004996;
+  color: #004996;
+}
+.backLink:focus-visible {
+  outline: 2px solid #004996;
+  outline-offset: 2px;
+}
 .header { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 28px; }
 .titleRow { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
 .titleRow h1 { font-size: 26px; line-height: 1.4; font-weight: 600; margin: 0; letter-spacing: -0.5px; }
 .orderMeta { margin: 8px 0 0; font-size: 13px; line-height: 1.6; color: #536474; display: flex; flex-wrap: wrap; gap: 4px 20px; }
-.actions { display: flex; gap: 8px; flex-wrap: wrap; flex: none; }
-.actions :global(.ant-btn) { font-size: 14px; height: 44px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; flex: none; align-items: center; }
+.actions :global(.ant-btn) { font-size: 13px; height: 36px; border-radius: 6px; font-weight: 500; }
 .orderSheet { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr); border: 1px solid #dce3e9; border-radius: 8px; overflow: hidden; background: white; }
 .lineItems { padding: 26px; min-width: 0; }
 .sectionHeading { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
@@ -160,7 +183,7 @@
 }
 
 .statusCancelled {
-  color: #991b1b;
+  color: #EF4444;
 }
 
 /* Route Stepper Layout */
@@ -356,3 +379,140 @@
   .itemPrice { grid-column: 2; }
   .totals { max-width: none; }
 }
+
+/* Prescription Review Section */
+.prescriptionSection {
+  margin-top: 24px;
+  background: #ffffff;
+  border: 1px solid #dce3e9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.prescriptionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 22px;
+  background: #fafbfc;
+  border-bottom: 1px solid #e6ebef;
+}
+
+.prescriptionTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.prescriptionTitleGroup h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #172b3a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.prescriptionBody {
+  padding: 18px 22px;
+}
+
+.prescriptionNoticeText {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.prescriptionMetaBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 18px;
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 6px;
+}
+
+.metaDocCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 0 0 210px;
+}
+
+.metaDrugsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.metaReviewerCol,
+.metaNoteCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 0 1 auto;
+  min-width: 180px;
+}
+
+.metaActionCol {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.metaLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.metaValue {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1e293b;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.metaRejectValue {
+  font-size: 13px;
+  font-weight: 500;
+  color: #dc2626;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .prescriptionMetaBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .metaDocCol,
+  .metaDrugsCol,
+  .metaReviewerCol,
+  .metaNoteCol {
+    flex: none;
+    width: 100%;
+  }
+  .metaActionCol {
+    margin-left: 0;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px dashed #e2e8f0;
+  }
+}
+
+

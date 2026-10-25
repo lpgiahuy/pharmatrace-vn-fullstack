@@ -10,6 +10,7 @@ import {
   Banknote,
   CheckCircle2,
   ChevronRight,
+  ChevronDown,
   ArrowLeft,
   Tag,
   AlertCircle,
@@ -33,6 +34,7 @@ import { useCartStore } from '@/store/useCartStore';
 import { useAuth } from '@/store/useAuthStore';
 import { orderService, PaymentMethod } from '@/services/order.service';
 import { voucherService } from '@/services/voucher.service';
+import { Prescription, prescriptionService } from '@/services/prescription.service';
 import { formatCurrency } from '@/utils';
 
 export default function CheckoutPage() {
@@ -47,6 +49,7 @@ export default function CheckoutPage() {
   const applyVoucherStore = useCartStore((s) => s.applyVoucher);
   const removeVoucherStore = useCartStore((s) => s.removeVoucher);
   const removeSelectedItems = useCartStore((s) => s.removeSelectedItems);
+  const fetchServerCart = useCartStore((s) => s.fetchServerCart);
 
   // Form State
   const [recipientName, setRecipientName] = useState('');
@@ -66,6 +69,8 @@ export default function CheckoutPage() {
   const [useLoyaltyPoints, setUseLoyaltyPoints] = useState(false);
   const [pointsInput, setPointsInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
+  const [prescriptionId, setPrescriptionId] = useState<number | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -75,6 +80,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (isAuthenticated) {
       fetchProfile();
+      void fetchServerCart();
     }
   }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -94,6 +100,14 @@ export default function CheckoutPage() {
   const selectedItems = useMemo(() => {
     return items.filter((item) => selectedItemIds.includes(item.id));
   }, [items, selectedItemIds]);
+  const needsPrescription = selectedItems.some((item) => item.isPrescription);
+
+  useEffect(() => {
+    if (!isAuthenticated || !needsPrescription) return;
+    prescriptionService.listMine().then((response) => setPrescriptions(response.data)).catch(() => {
+      message.error('Could not load your prescriptions. Refresh and try again.');
+    });
+  }, [isAuthenticated, needsPrescription, message]);
 
   // Financial calculations
   const subtotal = useMemo(() => {
@@ -221,6 +235,10 @@ export default function CheckoutPage() {
       router.push('/cart');
       return;
     }
+    if (needsPrescription && !prescriptionId) {
+      message.error('Select a prescription for the prescription medicine in this order.');
+      return;
+    }
 
     // Prepare items payload
     const orderItems = selectedItems
@@ -247,6 +265,7 @@ export default function CheckoutPage() {
         voucherCode: appliedVoucher?.voucherCode || undefined,
         usedPoints: useLoyaltyPoints && effectivePointsToUse > 0 ? effectivePointsToUse : undefined,
         note: note.trim() || undefined,
+        prescriptionId: prescriptionId || undefined,
         items: orderItems,
       });
 
@@ -312,7 +331,7 @@ export default function CheckoutPage() {
   // Empty checkout guard
   if (selectedItems.length === 0) {
     return (
-      <div className="min-h-screen bg-[#f7f8fa] py-16 px-4">
+      <div className="w-full py-16">
         <div className="max-w-md mx-auto bg-white rounded-lg p-6 border border-gray-200 shadow-xs text-center">
           <div className="w-12 h-12 rounded-full bg-amber-50 text-amber-700 flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-6 h-6" />
@@ -334,8 +353,8 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f8fa] pb-16 pt-4 sm:pt-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full pb-16">
+      <div className="w-full">
         {/* Breadcrumb Navigation */}
         <nav className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-5">
           <Link href="/" className="hover:text-[#004996] transition-colors">
@@ -360,9 +379,9 @@ export default function CheckoutPage() {
         </div>
 
         <form onSubmit={handleSubmitOrder}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* LEFT COLUMN: Shipping details + Payment + Items review (7 cols on lg) */}
-            <div className="lg:col-span-7 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
+            {/* LEFT COLUMN: Shipping details + Payment + Items review */}
+            <div className="lg:col-span-7 xl:col-span-8 space-y-6">
               {/* Section 1: Shipping Address Card */}
               <div className="bg-white rounded-lg border border-gray-200 p-5 sm:p-6 shadow-xs">
                 <div className="pb-3 mb-4 border-b border-gray-200 flex items-center justify-between">
@@ -542,6 +561,34 @@ export default function CheckoutPage() {
                 )}
               </div>
 
+              {needsPrescription && (
+                <section className="rounded-lg border border-gray-200 bg-white p-5 sm:p-6 shadow-xs" aria-labelledby="prescription-heading">
+                  <h2 id="prescription-heading" className="text-base font-semibold text-gray-900">Prescription for this order</h2>
+                  <p className="mt-2 text-sm text-gray-600">The pharmacist at the facility preparing your order will review your prescription before the order is packed or delivered.</p>
+                  <label htmlFor="checkout-prescription" className="mt-4 block text-sm font-medium text-gray-800">Choose an uploaded prescription</label>
+                  <div className="relative mt-2">
+                    <select
+                      id="checkout-prescription"
+                      value={prescriptionId || ''}
+                      onChange={(event) => setPrescriptionId(Number(event.target.value) || null)}
+                      required
+                      className="min-h-11 w-full rounded-lg border border-gray-300 bg-white pl-3.5 pr-10 text-sm appearance-none focus:outline-none focus:border-[#004996] focus-visible:outline-2 focus-visible:outline-[#004996] text-gray-900 cursor-pointer shadow-2xs"
+                    >
+                      <option value="">Select a prescription</option>
+                      {prescriptions.map((prescription) => (
+                        <option key={prescription.id} value={prescription.id}>
+                          Prescription #{prescription.id} · {new Date(prescription.createdAt).toLocaleDateString()}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+                  </div>
+                  <Link href="/account/prescriptions" className="mt-3 inline-block text-sm font-medium text-[#004996] underline-offset-2 hover:underline">
+                    Upload or view prescriptions
+                  </Link>
+                </section>
+              )}
+
               {/* Section 3: Selected Order Items Review */}
               <div className="bg-white rounded-lg border border-gray-200 p-5 sm:p-6 shadow-xs">
                 <div className="flex items-center justify-between pb-3 mb-4 border-b border-gray-200">
@@ -603,8 +650,8 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Order Financial Summary (5 cols on lg, sticky) */}
-            <div className="lg:col-span-5 lg:sticky lg:top-[112px] space-y-4">
+            {/* RIGHT COLUMN: Order Financial Summary (sticky) */}
+            <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-[112px] space-y-4">
               <div className="bg-white rounded-lg border border-gray-200 p-5 sm:p-6 shadow-xs space-y-4">
                 <h3 className="text-base font-semibold text-gray-900 border-b border-gray-200 pb-3">
                   Order Summary

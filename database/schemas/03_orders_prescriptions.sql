@@ -65,7 +65,8 @@ CREATE TABLE IF NOT EXISTS public.order_items (
     assigned_uids UUID[] DEFAULT '{}'::uuid[],
     inventory_reserved BOOLEAN NOT NULL DEFAULT FALSE,
     medicine_name VARCHAR(255),
-    unit_name VARCHAR(50)
+    unit_name VARCHAR(50),
+    source_facility_id INTEGER REFERENCES public.facilities(id) ON DELETE SET NULL
 );
 
 -- 5. Shopping Cart Items
@@ -102,8 +103,8 @@ CREATE TABLE IF NOT EXISTS public.moderation_reports (
     review_id INTEGER REFERENCES public.reviews(id) ON DELETE CASCADE,
     reporter_customer_id INTEGER REFERENCES public.customers(id) ON DELETE SET NULL,
     reporter_employee_id INTEGER REFERENCES public.employees(id) ON DELETE SET NULL,
-    reason_category VARCHAR(50) NOT NULL,
-    details TEXT,
+    reason VARCHAR(50) NOT NULL,
+    description TEXT,
     status VARCHAR(50) DEFAULT 'PENDING',
     resolved_by_employee_id INTEGER REFERENCES public.employees(id) ON DELETE SET NULL,
     resolver_note TEXT,

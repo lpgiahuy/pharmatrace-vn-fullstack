@@ -107,6 +107,7 @@ function WishlistContent() {
       productId: product.id,
       slug: product.slug || String(product.id),
       medicineName: product.medicineName,
+      isPrescription: product.isPrescription,
       imageUrl: product.imageUrl,
       variantId: activeVariant.id ? Number(activeVariant.id) : undefined,
       unitName: activeVariant.unitName || 'Box',

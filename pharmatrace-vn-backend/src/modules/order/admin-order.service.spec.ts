@@ -1,6 +1,98 @@
 import { PrismaService } from "../../prisma/prisma.service";
 import { AdminOrderService } from "./admin-order.service";
 
+describe("AdminOrderService receiving unassigned packages", () => {
+  function setup(uids: string[]) {
+    const tx = {
+      internal_transfers: { update: jest.fn(), count: jest.fn().mockResolvedValue(0) },
+      inventories: { findFirst: jest.fn().mockResolvedValue({ id: 9 }), update: jest.fn() },
+      medicine_boxes: {
+        findMany: jest.fn().mockResolvedValue(uids.map((uid) => ({ uid }))),
+        updateMany: jest.fn().mockResolvedValue({ count: uids.length }),
+      },
+      order_items: { update: jest.fn() },
+      inventory_logs: { create: jest.fn() },
+      orders: { update: jest.fn() },
+      $executeRaw: jest.fn().mockResolvedValue(1),
+    };
+    const prisma = {
+      internal_transfers: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 8, order_id: 101, transfer_code: "ITR-1", status: "DISPATCHED",
+          from_facility_id: 20, to_facility_id: 10,
+          items: [{ variantId: 11, medicineId: 21, quantity: 1 }],
+          orders: {
+            order_code: "ORD-1", order_status: "WAITING_INTERNAL_TRANSFER",
+            order_items: [{ id: 6, variant_id: 11, medicine_id: 21, unit_name: "Tube", assigned_uids: [] }],
+          },
+        }),
+        findUnique: jest.fn().mockResolvedValue({ id: 8, status: "RECEIVED" }),
+      },
+      $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
+    };
+    return { tx, service: new AdminOrderService(prisma as unknown as PrismaService) };
+  }
+
+  it("assigns and moves physical UIDs when checkout deferred package assignment", async () => {
+    const { tx, service } = setup(["tube-uid"]);
+
+    await service.adminReceiveInternalTransfer(8, { id: 1, role: "SUPER_ADMIN" });
+
+    expect(tx.medicine_boxes.updateMany).toHaveBeenCalledWith({
+      where: expect.objectContaining({ uid: { in: ["tube-uid"] }, current_facility_id: 20 }),
+      data: { current_facility_id: 10, status: "RESERVED" },
+    });
+    expect(tx.order_items.update).toHaveBeenCalledWith({
+      where: { id: 6 }, data: { source_facility_id: 10, assigned_uids: ["tube-uid"] },
+    });
+    expect(tx.orders.update).toHaveBeenCalledWith({ where: { id: 101 }, data: { order_status: "PROCESSING" } });
+  });
+
+  it("keeps the order waiting when physical packages are not ready for receipt", async () => {
+    const { tx, service } = setup([]);
+
+    await expect(service.adminReceiveInternalTransfer(8, { id: 1, role: "SUPER_ADMIN" }))
+      .rejects.toThrow(/physical package/i);
+    expect(tx.orders.update).not.toHaveBeenCalled();
+  });
+
+  it("rejects receipt when another order claims the selected package", async () => {
+    const { tx, service } = setup(["tube-uid"]);
+    tx.medicine_boxes.updateMany.mockResolvedValue({ count: 0 });
+
+    await expect(service.adminReceiveInternalTransfer(8, { id: 1, role: "SUPER_ADMIN" }))
+      .rejects.toThrow(/availability changed/i);
+    expect(tx.order_items.update).not.toHaveBeenCalled();
+    expect(tx.orders.update).not.toHaveBeenCalled();
+  });
+});
+
+describe("AdminOrderService listing", () => {
+  it("does not overlap order queries on one transaction connection", async () => {
+    let counting = false;
+    const tx = {
+      $queryRaw: jest.fn().mockResolvedValue([]),
+      orders: {
+        count: jest.fn(async () => {
+          counting = true;
+          await new Promise((resolve) => setImmediate(resolve));
+          counting = false;
+          return 0;
+        }),
+        findMany: jest.fn(() => {
+          if (counting) throw new Error("query already executing");
+          return Promise.resolve([]);
+        }),
+      },
+    };
+    const prisma = { $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)) };
+    const service = new AdminOrderService(prisma as unknown as PrismaService);
+
+    await expect(service.adminGetAllOrders({}, { id: 12, role: "SUPER_ADMIN" }))
+      .resolves.toMatchObject({ items: [], pagination: { total: 0 } });
+  });
+});
+
 describe("AdminOrderService packing", () => {
   const ownUid = "11111111-1111-4111-8111-111111111111";
   const otherUid = "22222222-2222-4222-8222-222222222222";
@@ -31,7 +123,7 @@ describe("AdminOrderService packing", () => {
     ],
   };
 
-  function setup(otherStatus = "RESERVED") {
+  function setup(otherStatus = "RESERVED", reviewStatus?: string) {
     const boxes = [ownUid, otherUid].map((uid) => ({
       uid,
       status: uid === ownUid ? "RESERVED" : otherStatus,
@@ -59,7 +151,7 @@ describe("AdminOrderService packing", () => {
       orders: { update: jest.fn() },
     };
     const prisma = {
-      orders: { findFirst: jest.fn().mockResolvedValue(order) },
+      orders: { findFirst: jest.fn().mockResolvedValue({ ...order, prescription_review_status: reviewStatus }) },
       medicine_boxes: { findMany: tx.medicine_boxes.findMany },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) =>
         run(tx),
@@ -68,6 +160,7 @@ describe("AdminOrderService packing", () => {
     return {
       service: new AdminOrderService(prisma as unknown as PrismaService),
       tx,
+      prisma,
     };
   }
 
@@ -76,6 +169,13 @@ describe("AdminOrderService packing", () => {
     await expect(service.adminPackOrder(1, {}, facilityStaff)).rejects.toThrow(
       /scan|UID|confirm/i,
     );
+    expect(tx.shipments.create).not.toHaveBeenCalled();
+  });
+
+  it("does not pack an order before pharmacist approval", async () => {
+    const { service, tx } = setup('RESERVED', 'PENDING_APPROVAL');
+    await expect(service.adminPackOrder(1, { boxUids: [ownUid] }, facilityStaff))
+      .rejects.toThrow(/pharmacist approval/i);
     expect(tx.shipments.create).not.toHaveBeenCalled();
   });
 
@@ -102,6 +202,21 @@ describe("AdminOrderService packing", () => {
     });
   });
 
+  it("assigns a scanned package when checkout did not reserve physical UIDs", async () => {
+    const { service, tx, prisma } = setup("IN_STOCK");
+    prisma.orders.findFirst.mockResolvedValue({
+      ...order, prescription_review_status: undefined,
+      order_items: [{ ...order.order_items[0], assigned_uids: [] }],
+    });
+
+    await service.adminPackOrder(1, { boxUids: [otherUid] }, facilityStaff);
+
+    expect(tx.order_items.update).toHaveBeenCalledWith({
+      where: { id: 10 }, data: { assigned_uids: [otherUid], inventory_reserved: false },
+    });
+    expect(tx.shipments.create).toHaveBeenCalled();
+  });
+
   it("claims a free replacement and releases the original reservation", async () => {
     const { service, tx } = setup("IN_STOCK");
     await service.adminPackOrder(1, { boxUids: [otherUid] }, facilityStaff);
@@ -110,7 +225,7 @@ describe("AdminOrderService packing", () => {
       where: {
         uid: { in: [otherUid] },
         current_facility_id: 3,
-        status: { in: ["IN_STOCK", "MANUFACTURED"] },
+        status: { in: expect.arrayContaining(["IN_STOCK", "MANUFACTURED"]) },
       },
       data: { status: "RESERVED" },
     });

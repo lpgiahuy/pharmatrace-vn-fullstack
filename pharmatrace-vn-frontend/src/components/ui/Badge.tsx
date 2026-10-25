@@ -72,7 +72,7 @@ export const OrderStatusBadge: React.FC<{
     icon = '✓';
     label = 'Delivered';
   } else if (['CANCELLED', 'CANCELED'].includes(norm)) {
-    textColor = 'text-rose-600';
+    textColor = 'text-[#EF4444]';
     icon = '×';
     label = 'Cancelled';
   } else if (['RETURNED', 'PARTIALLY_RETURNED'].includes(norm)) {

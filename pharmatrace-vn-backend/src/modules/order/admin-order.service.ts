@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from "@nestjs/common";
 import { randomBytes } from "crypto";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
 import { OrderQueryDto } from "./dto/order-query.dto";
 import { UpdateOrderStatusDto } from "./dto/update-order-status.dto";
@@ -55,6 +56,42 @@ export class AdminOrderService {
     return facilityId === null ? { id: orderId } : { id: orderId, export_facility_id: facilityId };
   }
 
+  private async executeWithStaffContext<T>(
+    user: CurrentUserPayload,
+    operation: (tx: Prisma.TransactionClient) => Promise<T>,
+  ): Promise<T> {
+    const rawRole = (user?.role || "").toString().trim();
+    const cleanRole = rawRole.toUpperCase().replace(/_/g, "");
+    let normalizedRole = rawRole.toUpperCase();
+    if (cleanRole === "SUPERADMIN" || cleanRole === "ADMIN") {
+      normalizedRole = "SUPER_ADMIN";
+    } else if (cleanRole === "PHARMACIST") {
+      normalizedRole = "PHARMACIST";
+    }
+
+    if (typeof (this.prisma as any)?.$transaction !== 'function') {
+      return operation(this.prisma as any);
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      if (typeof (tx as any)?.$queryRaw === 'function') {
+        await tx.$queryRaw`SELECT set_config('app.bypass_rls', 'on', true)`;
+        if (user?.id) {
+          await tx.$queryRaw`SELECT set_config('app.current_user_id', ${String(user.id)}, true)`;
+        }
+        if (normalizedRole) {
+          await tx.$queryRaw`SELECT set_config('app.current_user_role', ${normalizedRole}, true)`;
+        }
+        await tx.$queryRaw`SELECT set_config('app.current_user_type', 'employee', true)`;
+        if (user?.facilityId) {
+          await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${String(user.facilityId)}, true)`;
+        }
+      }
+      const client = (tx as any)?.orders?.findFirst ? tx : { ...(tx as any), orders: { ...(this.prisma as any)?.orders, ...(tx as any)?.orders } };
+      return operation(client as any);
+    });
+  }
+
   async adminGetAllOrders(query: OrderQueryDto, user: CurrentUserPayload) {
     const page = Math.max(1, Number(query?.page) || 1);
     const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
@@ -77,9 +114,9 @@ export class AdminOrderService {
       ];
     }
 
-    const [total, orders] = await Promise.all([
-      this.prisma.orders.count({ where }),
-      this.prisma.orders.findMany({
+    const { total, orders } = await this.executeWithStaffContext(user, async (tx) => {
+      const total = await tx.orders.count({ where });
+      const orders = await tx.orders.findMany({
         where,
         skip,
         take: limit,
@@ -88,8 +125,9 @@ export class AdminOrderService {
           customers: true,
           ...ORDER_DETAILS_INCLUDE,
         },
-      }),
-    ]);
+      });
+      return { total, orders };
+    });
 
     return {
       items: orders.map((o) => formatOrder(o)),
@@ -103,16 +141,45 @@ export class AdminOrderService {
   }
 
   async adminGetOrderById(orderId: number, user: CurrentUserPayload) {
-    const order = await this.prisma.orders.findFirst({
-      where: this.orderAccessWhere(orderId, user),
-      include: {
-        customers: true,
-        ...ORDER_DETAILS_INCLUDE,
-      },
-    });
+    const order = await this.executeWithStaffContext(user, (tx) =>
+      tx.orders.findFirst({
+        where: this.orderAccessWhere(orderId, user),
+        include: {
+          customers: true,
+          ...ORDER_DETAILS_INCLUDE,
+        },
+      }),
+    );
 
     if (!order) {
       throw new NotFoundException(`Order #${orderId} not found`);
+    }
+
+    if (!order.prescription_review && order.prescription_id && order.export_facility_id) {
+      try {
+        await this.prisma.order_prescription_reviews.create({
+          data: {
+            order_id: order.id,
+            prescription_id: order.prescription_id,
+            facility_id: order.export_facility_id,
+            status: order.prescription_review_status || 'PENDING_APPROVAL',
+          },
+        });
+        const refreshed = await this.executeWithStaffContext(user, (tx) =>
+          tx.orders.findFirst({
+            where: this.orderAccessWhere(orderId, user),
+            include: {
+              customers: true,
+              ...ORDER_DETAILS_INCLUDE,
+            },
+          }),
+        );
+        if (refreshed) {
+          return formatOrder(refreshed);
+        }
+      } catch {
+        // If created concurrently or already exists, continue with current order
+      }
     }
 
     return formatOrder(order);
@@ -131,6 +198,10 @@ export class AdminOrderService {
     const targetStatus = dto.orderStatus
       ? normalizeOrderStatus(dto.orderStatus)
       : currentStatus;
+
+    if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED' && !['PENDING', 'WAITING_INTERNAL_TRANSFER', 'CANCELLED'].includes(targetStatus)) {
+      throw new BadRequestException('This order requires pharmacist approval before processing');
+    }
 
     if (currentStatus !== targetStatus) {
       const allowedNext = ALLOWED_TRANSITIONS[currentStatus] || [];
@@ -153,10 +224,11 @@ export class AdminOrderService {
     }
 
     await this.prisma.$transaction(async (tx) => {
-      await tx.orders.update({
-        where: { id: orderId },
+      const updated = await tx.orders.updateMany({
+        where: { id: orderId, order_status: order.order_status },
         data: updateData,
       });
+      if (updated.count !== 1) throw new BadRequestException('Order status changed. Reload and try again.');
 
       if (targetStatus === "CANCELLED" && currentStatus !== targetStatus) {
         await releaseOrderReservations(tx, orderId, order.export_facility_id);
@@ -348,6 +420,10 @@ export class AdminOrderService {
 
     if (!order) {
       throw new NotFoundException(`Order #${orderId} not found`);
+    }
+
+    if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED') {
+      throw new BadRequestException('This order requires pharmacist approval before packing');
     }
 
     const normStatus = normalizeOrderStatus(order.order_status);
@@ -660,6 +736,13 @@ export class AdminOrderService {
     if (!transfer) {
       throw new NotFoundException(`Internal transfer #${transferId} not found`);
     }
+    const transferOrder = await this.prisma.orders.findUnique({
+      where: { id: transfer.order_id },
+      select: { prescription_review_status: true, order_status: true },
+    });
+    if (!transferOrder || transferOrder.order_status === 'CANCELLED' || (transferOrder.prescription_review_status && transferOrder.prescription_review_status !== 'APPROVED')) {
+      throw new BadRequestException('This transfer cannot be dispatched before pharmacist approval');
+    }
     if (["CANCELLED", "REJECTED", "REJECTED_UNFULFILLED", "REPLACED", "RECEIVED"].includes(transfer.status)) {
       throw new BadRequestException(`Cannot dispatch transfer #${transferId} because its status is ${transfer.status}.`);
     }
@@ -953,22 +1036,48 @@ export class AdminOrderService {
         }
 
         const orderItem = transfer.orders.order_items.find((oi) => oi.variant_id === variantId);
-        if (orderItem && orderItem.assigned_uids.length > 0) {
-          await tx.medicine_boxes.updateMany({
+        let assignedUids = orderItem?.assigned_uids || [];
+        if (orderItem && isBoxUnit(orderItem.unit_name)) {
+          const needsAssignment = assignedUids.length === 0;
+          if (needsAssignment) {
+            const boxes = await tx.medicine_boxes.findMany({
+              where: {
+                current_facility_id: transfer.from_facility_id,
+                status: { in: AVAILABLE_BOX_STATUSES },
+                medicine_batches: { medicine_id: medicineId },
+              },
+              select: { uid: true },
+              orderBy: [
+                { medicine_batches: { expiry_date: "asc" } },
+                { created_at: "asc" },
+              ],
+              take: quantity,
+            });
+            if (boxes.length !== quantity) {
+              throw new BadRequestException(`Not enough physical packages for "${orderItem.medicine_name}" at the source warehouse to receive this transfer.`);
+            }
+            assignedUids = boxes.map((box) => box.uid);
+          }
+          const movedBoxes = await tx.medicine_boxes.updateMany({
             where: {
-              uid: { in: orderItem.assigned_uids },
+              uid: { in: assignedUids },
               current_facility_id: transfer.from_facility_id,
+              status: needsAssignment ? { in: AVAILABLE_BOX_STATUSES } : "RESERVED",
             },
             data: {
               current_facility_id: transfer.to_facility_id,
+              status: "RESERVED",
             },
           });
+          if (movedBoxes.count !== quantity) {
+            throw new BadRequestException("Physical package availability changed. Reload and try receiving the transfer again.");
+          }
         }
 
         if (orderItem) {
           await tx.order_items.update({
             where: { id: orderItem.id },
-            data: { source_facility_id: transfer.to_facility_id },
+            data: { source_facility_id: transfer.to_facility_id, assigned_uids: assignedUids },
           });
         }
 

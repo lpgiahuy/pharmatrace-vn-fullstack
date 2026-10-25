@@ -5,6 +5,7 @@ import {
   ForbiddenException,
 } from "@nestjs/common";
 import { randomBytes } from "crypto";
+import { Prisma } from '@prisma/client';
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrderQueryDto } from "./dto/order-query.dto";
@@ -93,15 +94,22 @@ export class OrderService {
     }
 
     const hasPrescriptionDrug = itemsToOrder.some((i) => i.isPrescription);
+    if (!hasPrescriptionDrug && dto.prescriptionId) {
+      throw new BadRequestException('A prescription can only be attached to an order containing prescription medicine');
+    }
     if (hasPrescriptionDrug && !dto.prescriptionId) {
       throw new BadRequestException("Your order contains prescription drugs (Rx). Please provide or upload an approved doctor prescription.");
     }
 
     if (dto.prescriptionId) {
-      const prescription = await this.prisma.prescriptions.findUnique({
-        where: { id: dto.prescriptionId },
-      });
-      if (!prescription || prescription.customer_id !== customerId) {
+      const prescription = await this.prisma.withActor(
+        { id: customerId, role: 'CUSTOMER', type: 'customer' },
+        (tx) => tx.prescriptions.findFirst({
+          where: { id: dto.prescriptionId, customer_id: customerId },
+          select: { id: true },
+        }),
+      );
+      if (!prescription) {
         throw new BadRequestException("Invalid prescription or prescription does not belong to your account");
       }
     }
@@ -179,6 +187,7 @@ export class OrderService {
       (!("precision" in customerCoords) || ["house", "alley", "street"].includes(customerCoords.precision));
 
     const allFacilities = await this.prisma.facilities.findMany({
+      where: { facility_type: { in: ['CENTRAL_WAREHOUSE', 'BRANCH_WAREHOUSE', 'PHARMACY'] } },
       include: {
         inventories: {
           where: {
@@ -194,11 +203,25 @@ export class OrderService {
       return inv ? Math.max(0, inv.stock_quantity - (inv.reserved_quantity ?? 0)) : 0;
     };
 
-    const facilitiesWithAllItems = allFacilities.filter((facility) =>
-      itemsToOrder.every((item) => getAvailableStock(facility, item.variantId) >= item.quantity),
+    const scoredFacilities = allFacilities.map((facility) => ({
+      facility,
+      coveredCount: itemsToOrder.filter((item) => getAvailableStock(facility, item.variantId) >= item.quantity).length,
+      distanceToCustomer:
+        hasRouteableCustomerCoords && customerCoords && facility.latitude !== null && facility.longitude !== null
+          && isValidCoordinates(Number(facility.latitude), Number(facility.longitude))
+          ? calculateHaversineDistance(customerCoords.latitude, customerCoords.longitude, Number(facility.latitude), Number(facility.longitude))
+          : Number.POSITIVE_INFINITY,
+    }));
+    scoredFacilities.sort((a, b) =>
+      (a.distanceToCustomer - b.distanceToCustomer) || (b.coveredCount - a.coveredCount),
     );
+    const primaryFacilityObj = scoredFacilities[0]?.facility;
+    if (!primaryFacilityObj) {
+      throw new BadRequestException("No suitable fulfillment facility found.");
+    }
+    const exportFacilityId = primaryFacilityObj.id;
+    const missingItems = itemsToOrder.filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) < item.quantity);
 
-    let exportFacilityId: number;
     let orderInitialStatus = "PENDING";
     const itemSourceFacilityMap = new Map<number, number>();
     let internalTransferPlan: {
@@ -215,64 +238,17 @@ export class OrderService {
       }[];
     }[] = [];
 
-    if (facilitiesWithAllItems.length > 0) {
-      const candidates = hasRouteableCustomerCoords && customerCoords
-        ? facilitiesWithAllItems
-          .filter((f) => f.latitude !== null && f.longitude !== null && isValidCoordinates(Number(f.latitude), Number(f.longitude)))
-          .map((f) => ({
-            id: f.id,
-            distanceKm: calculateHaversineDistance(
-              customerCoords.latitude,
-              customerCoords.longitude,
-              Number(f.latitude),
-              Number(f.longitude),
-            ),
-          }))
-        : [];
-      candidates.sort((a, b) => a.distanceKm - b.distanceKm);
+    itemsToOrder
+      .filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) >= item.quantity)
+      .forEach((item) => itemSourceFacilityMap.set(item.variantId, exportFacilityId));
 
-      exportFacilityId = candidates[0]?.id ?? facilitiesWithAllItems[0]?.id;
-
-      itemsToOrder.forEach((item) => itemSourceFacilityMap.set(item.variantId, exportFacilityId));
-    } else {
+    if (missingItems.length > 0) {
       for (const item of itemsToOrder) {
         const totalNetworkStock = allFacilities.reduce((sum, f) => sum + getAvailableStock(f, item.variantId), 0);
         if (totalNetworkStock < item.quantity) {
           throw new BadRequestException(`Medicine "${item.medicineName}" (${item.unitName}) is out of stock across the entire fulfillment network.`);
         }
       }
-
-      const scoredFacilities = allFacilities.map((f) => {
-        const coveredItems = itemsToOrder.filter((item) => getAvailableStock(f, item.variantId) >= item.quantity);
-        const distanceToCustomer =
-          hasRouteableCustomerCoords && customerCoords && f.latitude && f.longitude && isValidCoordinates(Number(f.latitude), Number(f.longitude))
-            ? calculateHaversineDistance(customerCoords.latitude, customerCoords.longitude, Number(f.latitude), Number(f.longitude))
-            : 999999;
-        return {
-          facility: f,
-          coveredCount: coveredItems.length,
-          distanceToCustomer,
-        };
-      });
-
-      scoredFacilities.sort((a, b) => {
-        if (b.coveredCount !== a.coveredCount) {
-          return b.coveredCount - a.coveredCount;
-        }
-        return a.distanceToCustomer - b.distanceToCustomer;
-      });
-
-      const primaryFacilityObj = scoredFacilities[0]?.facility;
-      if (!primaryFacilityObj) {
-        throw new BadRequestException("No suitable fulfillment facility found.");
-      }
-      exportFacilityId = primaryFacilityObj.id;
-
-      const missingItems = itemsToOrder.filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) < item.quantity);
-
-      itemsToOrder
-        .filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) >= item.quantity)
-        .forEach((item) => itemSourceFacilityMap.set(item.variantId, exportFacilityId));
 
       const transfersBySource = new Map<number, {
         sourceFacility: (typeof allFacilities)[0];
@@ -344,13 +320,14 @@ export class OrderService {
     const datePart = new Date().toISOString().slice(2, 10).replace(/-/g, "");
     const orderCode = `ORD-${datePart}-${randomBytes(4).toString("hex").toUpperCase()}`;
 
-    const newOrder = await this.prisma.$transaction(async (tx) => {
+    const saveOrder = async (tx: Prisma.TransactionClient) => {
       const order = await tx.orders.create({
         data: {
           order_code: orderCode,
           customer_id: customerId,
           export_facility_id: exportFacilityId,
           prescription_id: dto.prescriptionId || null,
+          prescription_review_status: hasPrescriptionDrug ? 'PENDING_APPROVAL' : null,
           subtotal_amount: subtotal,
           shipping_fee: shippingFee,
           discount_amount: discountFromVoucher,
@@ -365,6 +342,17 @@ export class OrderService {
           note: dto.note || null,
         },
       });
+
+      if (hasPrescriptionDrug && dto.prescriptionId) {
+        await tx.order_prescription_reviews.create({
+          data: {
+            order_id: order.id,
+            prescription_id: dto.prescriptionId,
+            facility_id: exportFacilityId,
+            status: 'PENDING_APPROVAL',
+          },
+        });
+      }
 
       const reservedUidsByVariant = new Map<number, string[]>();
 
@@ -403,7 +391,8 @@ export class OrderService {
         });
 
         if (boxes.length !== item.quantity) {
-          throw new BadRequestException(`Medicine "${item.medicineName}" only has ${boxes.length} physical box(es) available at the assigned facility.`);
+          // Physical packages can be assigned during transfer receipt or packing.
+          continue;
         }
 
         const boxUids = boxes.map((box) => box.uid);
@@ -505,7 +494,14 @@ export class OrderService {
       });
 
       return order;
-    });
+    };
+
+    const newOrder = hasPrescriptionDrug
+      ? await this.prisma.withActor(
+          { id: customerId, role: 'CUSTOMER', type: 'customer' },
+          saveOrder,
+        )
+      : await this.prisma.$transaction(saveOrder);
 
     return this.getMyOrderById(customerId, newOrder.id);
   }
@@ -586,10 +582,11 @@ export class OrderService {
     }
 
     await this.prisma.$transaction(async (tx) => {
-      await tx.orders.update({
-        where: { id: orderId },
+      const cancelled = await tx.orders.updateMany({
+        where: { id: orderId, order_status: order.order_status },
         data: { order_status: "CANCELLED" },
       });
+      if (cancelled.count !== 1) throw new BadRequestException('Order status changed. Reload and try again.');
 
       await releaseOrderReservations(
         tx,

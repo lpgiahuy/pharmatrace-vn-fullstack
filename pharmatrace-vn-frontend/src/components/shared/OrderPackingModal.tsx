@@ -165,24 +165,16 @@ export function OrderPackingModal({ open, onClose, orderId, orderData, onSuccess
         <div className={styles.workspace}>
           <section className={styles.pickList} aria-labelledby="packing-items-heading">
             <div className={styles.sectionHeading}><h2 id="packing-items-heading">Items to pack</h2><span>{total} package{total === 1 ? '' : 's'}</span></div>
-            {items.map((item) => {
-              const reserved = item.assignedUids || item.assigned_uids || [];
-              return (
-                <article className={styles.pickItem} key={item.id}>
-                  <div className={styles.itemHeading}>
-                    <h3>{item.medicineName}</h3>
-                    <span className={styles.quantity}>×{item.quantity}</span>
-                  </div>
-                  <p className={styles.itemMeta}><span>{item.unitName}</span>{item.sourceFacilityName && <span>{item.sourceFacilityName}</span>}</p>
-                  {reserved.length > 0 ? (
-                    <details className={styles.reservedCodes} open>
-                      <summary>Reserved package{reserved.length === 1 ? '' : 's'}</summary>
-                      {reserved.map((uid) => <code key={uid}>{uid}</code>)}
-                    </details>
-                  ) : <p className={styles.itemNote}>Scan the UID on the package you pick.</p>}
-                </article>
-              );
-            })}
+            {items.map((item) => (
+              <article className={styles.pickItem} key={item.id}>
+                <div className={styles.itemHeading}>
+                  <h3>{item.medicineName}</h3>
+                  <span className={styles.quantity}>×{item.quantity}</span>
+                </div>
+                <p className={styles.itemMeta}><span>{item.unitName}</span>{item.sourceFacilityName && <span>{item.sourceFacilityName}</span>}</p>
+                <p className={styles.itemNote}>Scan the UID on the package you pick.</p>
+              </article>
+            ))}
             {items.length === 0 && <p className={styles.itemNote}>No package QR codes are required for this order.</p>}
           </section>
 

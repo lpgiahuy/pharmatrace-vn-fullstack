@@ -149,11 +149,25 @@ export interface InternalTransfer {
   createdAt: string;
 }
 
+export interface OrderPrescriptionReview {
+  id: number;
+  prescriptionId: number;
+  status: 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED';
+  pharmacistId?: number | null;
+  pharmacistName?: string | null;
+  facilityId: number;
+  note?: string | null;
+  reviewedAt?: string | null;
+  createdAt: string;
+}
+
 export interface Order {
   id: number;
   orderCode: string;
   customerId: number;
   prescriptionId?: number | null;
+  prescriptionReviewStatus?: 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED' | null;
+  prescriptionReview?: OrderPrescriptionReview;
   exportFacilityId?: number | null;
   exportFacility?: {
     id: number;
