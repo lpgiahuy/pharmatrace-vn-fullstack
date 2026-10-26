@@ -26,6 +26,8 @@ import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current
 @Roles(
   'SUPER_ADMIN',
   'SuperAdmin',
+  'ADMIN',
+  'Admin',
   'STORE_MANAGER',
   'StoreManager',
   'SALES_STAFF',
@@ -43,8 +45,8 @@ export class AdminReviewController {
     description: 'Lists all reviews with filtering by status (APPROVED, PENDING, HIDDEN, SPAM), rating, and search.',
   })
   @ApiResponse({ status: 200, description: 'Reviews retrieved successfully' })
-  async getAllReviews(@Query() query: AdminReviewQueryDto) {
-    const result = await this.reviewService.getAllReviewsForAdmin(query);
+  async getAllReviews(@Query() query: AdminReviewQueryDto, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.reviewService.getAllReviewsForAdmin(query, user);
     return {
       success: true,
       data: result.items,
@@ -64,7 +66,7 @@ export class AdminReviewController {
     @CurrentUser() user: CurrentUserPayload,
     @Body() dto: UpdateReviewStatusDto,
   ) {
-    const adminRole = user.role || 'SUPER_ADMIN';
+    const adminRole = user.role || '';
     return this.reviewService.updateReviewStatus(
       id,
       dto.status,
@@ -86,7 +88,7 @@ export class AdminReviewController {
     @Body() dto: ReplyReviewDto,
   ) {
     const adminName = (user.fullName as string) || (user.name as string) || 'PharmaTrace Pharmacist';
-    const adminRole = user.role || 'PHARMACIST';
+    const adminRole = user.role || '';
     return this.reviewService.replyToReview(id, dto, adminName, user.id, adminRole);
   }
 
@@ -100,7 +102,7 @@ export class AdminReviewController {
     @Param('id', ParseIntPipe) id: number,
     @CurrentUser() user: CurrentUserPayload,
   ) {
-    const adminRole = user.role || 'SUPER_ADMIN';
+    const adminRole = user.role || '';
     return this.reviewService.deleteReview(id, user.id, adminRole);
   }
 }

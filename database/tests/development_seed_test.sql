@@ -47,6 +47,13 @@ BEGIN
     END IF;
     RAISE NOTICE 'PASS excluded tables and loyalty transaction types';
 
+    IF EXISTS (SELECT FROM public.orders
+        WHERE upper(btrim(order_status)) = 'HOANTHANH'
+            OR (upper(btrim(order_status)) IN ('DELIVERED', 'COMPLETED') AND order_status <> upper(btrim(order_status)))) THEN
+        RAISE EXCEPTION 'Completed order statuses must use uppercase English values';
+    END IF;
+    RAISE NOTICE 'PASS English completed order statuses';
+
     FOR fixture IN
         SELECT table_name, column_name FROM information_schema.columns
         WHERE table_schema = 'public'

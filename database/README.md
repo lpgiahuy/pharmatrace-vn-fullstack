@@ -18,7 +18,8 @@ database/
 │   ├── 03_auth_rls.sql             # Auth role/policies; enforcement opt-in
 │   ├── 04_auth_rls_rollback.sql    # Manual rollback, never called by master
 │   ├── 05_wishlist_rls.sql         # Enforced customer wishlist ownership
-│   └── 06_cart_rls.sql             # Enforced customer cart ownership
+│   ├── 06_cart_rls.sql             # Enforced customer cart ownership
+│   └── 07_review_rls.sql           # Review ownership, moderation, reports and audit
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -35,7 +36,8 @@ database/
     ├── development_seed_test.sql   # Fresh-database fixtures, sequences, and grants
     ├── prescription_rls_test.sql   # Manual RLS isolation checks
     ├── wishlist_rls_test.sql       # Wishlist allow/deny checks, rolled back
-    └── cart_rls_test.sql           # Cart ownership and column-grant checks
+    ├── cart_rls_test.sql           # Cart ownership and column-grant checks
+    └── review_rls_test.sql         # Review visibility and write restrictions
 ```
 
 `backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth role/policies are prepared automatically; account RLS enforcement stays off until dependent modules are ready. Read [Auth RLS rollout](#auth-rls-rollout) before activation. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
@@ -55,6 +57,8 @@ docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entry
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/prescription_rls_test.sql
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/wishlist_rls_test.sql
 docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/cart_rls_test.sql
+
+docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/tests/review_rls_test.sql
 ```
 
 The test uses the IDs from the committed seed data and rolls back its test order.
@@ -376,4 +380,59 @@ Remove-Item Env:AUTH_RLS_TEST_DATABASE_URL, Env:AUTH_RLS_TEST_ADMIN_URL
 - Thông tin nhân viên trong API facility public, scope quản lý khách hàng và context riêng của admin order vẫn cần được xử lý ở các nhánh tương ứng.
 - Quyền quản trị nhân viên không đi qua role auth chỉ sửa hồ sơ cá nhân; cần thiết kế principal/quyền riêng trong module employee.
 - Giữ `database/*.sh` ở LF theo `.gitattributes` để checkout Windows không làm hỏng bootstrap Linux.
+
+## Review RLS
+
+`security/07_review_rls.sql` bật ENABLE + FORCE RLS cho `reviews`, `moderation_reports`, `moderation_audit_logs`. Master tự gọi script này khi Docker khởi tạo volume mới. Backend tiếp tục kết nối bằng `app_user`; không thêm role membership và không dùng `SECURITY DEFINER`.
+
+| Người dùng | Quyền |
+|---|---|
+| Public | Xem review APPROVED, thống kê và danh sách review trong chi tiết sản phẩm; helpful chỉ sửa bộ đếm của review APPROVED |
+| Customer | Xem lịch sử của mình; tạo review khi có đơn DELIVERED/COMPLETED tương ứng; sửa/xóa review của mình; gửi report và chỉ đọc report do mình gửi |
+| STORE_MANAGER / SALES_STAFF / PHARMACIST | Xem review mọi trạng thái và trả lời; không đổi trạng thái, xóa review, xem report hoặc audit; response danh sách không chứa email/điện thoại khách |
+| ADMIN / SUPER_ADMIN | Xem, trả lời, duyệt/ẩn/spam/xóa review; xem và xử lý report; xem audit |
+| Vai trò nhân viên khác | Không được vào API quản trị review hoặc dùng ID trùng khách để truy cập lịch sử khách |
+
+Quyền nhân viên ở đây áp dụng toàn hệ thống, giữ phạm vi đã khai báo trong controller; review chưa có mô hình phân công theo cơ sở. Public được đọc các review APPROVED dù thiếu context; mọi quyền ghi và đọc dữ liệu kiểm duyệt cần scope phù hợp. `withReview()` đặt context bằng `set_config(..., true)` trong transaction, kiểm tra runtime không phải superuser/BYPASSRLS/owner và cả ba bảng đã bật RLS. Thiếu cấu hình trả 503. Các custom settings vẫn là dữ liệu do backend tin cậy đặt, không bảo vệ trước người có credential `app_user` hoặc quyền thực thi SQL tùy ý.
+
+Grant theo cột và trigger invoker chặn customer sửa phản hồi nhân viên, nhân viên thường sửa trạng thái, hoặc helpful sửa nội dung. Review chưa APPROVED sau khi khách sửa vẫn cần quản trị viên duyệt; review mới an toàn vẫn được bộ kiểm duyệt hiện có tự duyệt. Luồng thay đổi review/report và ghi audit dùng cùng transaction; audit lỗi thì thao tác bị rollback. App không có quyền sửa/xóa/TRUNCATE audit. Xóa review giữ audit với `review_id = NULL` và ID gốc trong `meta.reviewId`; audit cũ giữ metadata đã có, không tự khôi phục bản ghi từng bị cascade xóa trước đây.
+
+### Database hiện có
+
+Script review cũng chuyển `HoanThanh` (không phân biệt hoa/thường) thành `COMPLETED`, và chuẩn hóa `delivered`/`completed` về chữ hoa. Seed và điều kiện review chỉ dùng `DELIVERED`/`COMPLETED`; không đổi `DELIVERED` của đơn hàng hoặc shipment thành trạng thái khác.
+
+Không chạy lại master/seed và không xóa volume. Backup database, thử restore và thử script trên bản sao trước. Tạm dừng backend/job liên quan, áp dụng file dưới bằng owner/DBA, rồi khởi động backend với code cùng nhánh và smoke test các quyền ở bảng trên:
+
+```powershell
+docker exec phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/07_review_rls.sql
+```
+
+Tên container/database phải khớp môi trường của bạn. Script chạy trong transaction, có thể áp dụng lại và từ chối policy hoặc khóa ngoại audit lạ để kiểm tra thủ công. Thay FK audit sang SET NULL có thể chờ khóa bảng; cần khoảng bảo trì phù hợp. Không chỉ rollback code cũ vì code cũ chưa truyền context ghi review. Nếu cần quay lui, dừng traffic và khôi phục đồng bộ code/quyền/FK/policy theo baseline đã lưu; không tự động tắt RLS khi gặp lỗi.
+
+Giữ `AUTH_RLS_ENABLED=false` trên database dùng chung trong giai đoạn này. Các truy vấn tên khách/nhân viên trong review chưa tương thích với việc bật RLS toàn bộ bảng tài khoản; phần đó cần hoàn tất cùng rollout account và các module phụ thuộc.
+
+### Kiểm thử riêng cho review
+
+Chạy tại root dự án, chờ log `PostgreSQL init process complete` trước khi chạy test:
+
+```powershell
+docker run --detach --name pharmatrace-review-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=review_test_owner_only -e APP_DB_PASSWORD=review_test_app_only -e POSTGRES_DB=pharmatrace_review_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
+docker logs pharmatrace-review-rls-test
+
+docker exec pharmatrace-review-rls-test psql -X -v ON_ERROR_STOP=1 -U postgres -d pharmatrace_review_rls_test -f /docker-entrypoint-initdb.d/tests/development_seed_test.sql -f /docker-entrypoint-initdb.d/tests/review_rls_test.sql
+$reviewTestPort = (docker port pharmatrace-review-rls-test 5432).Split(':')[-1]
+$env:REVIEW_RLS_TEST_DATABASE_URL = "postgresql://app_user:review_test_app_only@127.0.0.1:$reviewTestPort/pharmatrace_review_rls_test"
+$env:REVIEW_RLS_TEST_ADMIN_URL = "postgresql://postgres:review_test_owner_only@127.0.0.1:$reviewTestPort/pharmatrace_review_rls_test"
+Push-Location pharmatrace-vn-backend
+npm.cmd test -- --runInBand
+npm.cmd run test:e2e -- --runInBand --runTestsByPath test/review-rls.e2e-spec.ts
+Pop-Location
+
+docker rm --force pharmatrace-review-rls-test
+Remove-Item Env:REVIEW_RLS_TEST_DATABASE_URL, Env:REVIEW_RLS_TEST_ADMIN_URL
+```
+
+E2E chỉ chấp nhận database tạm localhost tên `pharmatrace_review_rls_test`; thiếu biến môi trường thì skip, không phải pass integration. Nó kiểm tra public, khách, nhân viên cùng ID, moderator, điều kiện đã mua hàng, report/APPROVE, helpful, audit giữ sau xóa, rollback khi audit lỗi, context trên connection pool và trả 503 khi thiếu FORCE RLS. Không chạy suite khác đồng thời trên database này vì có bước thử tắt FORCE rồi khôi phục. SQL test dùng transaction rồi ROLLBACK dữ liệu fixture.
+
+Helpful và rate limit hiện vẫn lưu theo IP/bộ nhớ một tiến trình; chưa chống gian lận bỏ phiếu hay đồng bộ nhiều backend. Upload ảnh dùng Cloudinary được giữ nguyên và không được gọi trong integration suite này.
 

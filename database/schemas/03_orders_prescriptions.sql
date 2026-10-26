@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS public.moderation_reports (
 -- 8. Moderation Audit Logs
 CREATE TABLE IF NOT EXISTS public.moderation_audit_logs (
     id SERIAL PRIMARY KEY,
-    review_id INTEGER REFERENCES public.reviews(id) ON DELETE CASCADE,
+    review_id INTEGER REFERENCES public.reviews(id) ON DELETE SET NULL,
     action VARCHAR(50) NOT NULL,
     performed_by_employee_id INTEGER REFERENCES public.employees(id) ON DELETE SET NULL,
     performed_by_customer_id INTEGER REFERENCES public.customers(id) ON DELETE SET NULL,

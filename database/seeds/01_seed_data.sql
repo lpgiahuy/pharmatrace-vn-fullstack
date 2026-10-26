@@ -315,7 +315,7 @@ COPY public.orders (id, order_code, customer_id, export_facility_id, prescriptio
 14	DEMO-ORDER-14	3	\N	\N	0.00	30000.00	0.00	0	41600.00	COD	ChuaThanhToan	DaHuy	Demo shipping address 14	\N	\N	\N	2026-04-10 20:42:33.713	\N
 15	DEMO-ORDER-15	3	\N	\N	0.00	15000.00	0.00	0	26600.00	COD	ChuaThanhToan	DaHuy	Demo shipping address 15	\N	\N	\N	2026-04-10 20:50:19.027	\N
 16	DEMO-ORDER-16	3	\N	\N	0.00	15000.00	0.00	0	26600.00	COD	ChuaThanhToan	DangGiao	Demo shipping address 16	\N	\N	\N	2026-04-10 22:42:39.598	\N
-41	DEMO-ORDER-41	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	DaThanhToan	HoanThanh	Demo shipping address 41	\N	\N	\N	2026-05-01 22:47:09.168	\N
+41	DEMO-ORDER-41	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	DaThanhToan	COMPLETED	Demo shipping address 41	\N	\N	\N	2026-05-01 22:47:09.168	\N
 42	DEMO-ORDER-42	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	ChuaThanhToan	DaHuy	Demo shipping address 42	\N	\N	\N	2026-05-01 23:22:06.977	\N
 43	DEMO-ORDER-43	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	ChuaThanhToan	DaHuy	Demo shipping address 43	\N	\N	\N	2026-05-01 23:26:16.857	\N
 44	DEMO-ORDER-44	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	ChuaThanhToan	DaHuy	Demo shipping address 44	\N	\N	\N	2026-05-02 00:38:03.265	\N
@@ -325,7 +325,7 @@ COPY public.orders (id, order_code, customer_id, export_facility_id, prescriptio
 48	DEMO-ORDER-48	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	DaThanhToan	TraHang	Demo shipping address 48	\N	\N	\N	2026-05-10 16:21:05.436	\N
 50	DEMO-ORDER-50	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	ChuaThanhToan	ChoXacNhan	Demo shipping address 50	\N	\N	\N	2026-05-12 18:59:55.109	\N
 140	DEMO-ORDER-140	9	1	4	497000.00	35000.00	0.00	0	532000.00	COD	UNPAID	PENDING	Demo shipping address 140	0900000009	Demo recipient 140	Development fixture note	2026-10-24 08:55:46.486	APPROVED
-2	DEMO-ORDER-2	1	\N	\N	0.00	0.00	0.00	0	43200.00	COD	ChuaThanhToan	HoanThanh	Demo shipping address 2	\N	\N	\N	2026-03-24 16:54:54.431	\N
+2	DEMO-ORDER-2	1	\N	\N	0.00	0.00	0.00	0	43200.00	COD	ChuaThanhToan	COMPLETED	Demo shipping address 2	\N	\N	\N	2026-03-24 16:54:54.431	\N
 102	DEMO-ORDER-102	3	\N	\N	0.00	0.00	0.00	0	100000.00	COD	ChuaThanhToan	DangGiao	Demo shipping address 102	\N	\N	\N	2026-05-01 19:37:27.207	\N
 107	DEMO-ORDER-107	3	\N	\N	0.00	30000.00	0.00	0	40800.00	COD	DaThanhToan	ChoHoanTat	Demo shipping address 107	\N	\N	\N	2026-05-26 21:47:36.584	\N
 51	DEMO-ORDER-51	3	\N	\N	0.00	30000.00	0.00	0	51600.00	COD	ChuaThanhToan	SHIPPING	Demo shipping address 51	\N	\N	\N	2026-05-14 09:17:04.754	\N

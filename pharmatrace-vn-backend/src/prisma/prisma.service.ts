@@ -1,8 +1,10 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy, ServiceUnavailableException, ForbiddenException } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
-import { AuthActor } from '../common/auth-identity';
+import { AuthActor, authActor } from '../common/auth-identity';
+
+export type ReviewScope = 'public' | 'customer' | 'staff' | 'moderator' | 'helpful';
 
 export interface AuthContext {
   actor?: AuthActor;
@@ -60,6 +62,35 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${actor?.facilityId ? String(actor.facilityId) : ''}, true)`;
       await tx.$queryRaw`SELECT set_config('app.auth_operation', ${context.operation || ''}, true)`;
       await tx.$queryRaw`SELECT set_config('app.auth_identifier', ${context.identifier || ''}, true)`;
+      return operation(tx);
+    });
+  }
+
+  async withReview<T>(scope: ReviewScope, operation: (tx: Prisma.TransactionClient) => Promise<T>, identity?: AuthActor): Promise<T> {
+    const actor = identity ? authActor(identity) : undefined;
+    const staffRoles = ['SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'SALES_STAFF', 'PHARMACIST'];
+    if (!['public', 'customer', 'staff', 'moderator', 'helpful'].includes(scope)
+      || (scope === 'customer' && (actor?.type !== 'customer' || actor.role !== 'CUSTOMER'))
+      || (scope === 'staff' && (actor?.type !== 'employee' || !staffRoles.includes(actor.role)))
+      || (scope === 'moderator' && (actor?.type !== 'employee' || !['SUPER_ADMIN', 'ADMIN'].includes(actor.role)))
+      || (['public', 'helpful'].includes(scope) && actor)) {
+      throw new ForbiddenException('Invalid review access scope');
+    }
+    return this.$transaction(async (tx) => {
+      const [state] = await tx.$queryRaw<{ ready: boolean }[]>`
+        SELECT NOT runtime.rolsuper AND NOT runtime.rolbypassrls
+          AND (SELECT count(*) = 3 AND bool_and(c.relrowsecurity AND c.relforcerowsecurity
+              AND c.relowner <> runtime.oid)
+            FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE n.nspname = 'public' AND c.relname IN ('reviews', 'moderation_reports', 'moderation_audit_logs')) AS ready
+        FROM pg_roles runtime WHERE runtime.rolname = current_user
+      `;
+      if (!state?.ready) throw new ServiceUnavailableException('Review RLS setup is not ready');
+      await tx.$queryRaw`SELECT set_config('app.review_scope', ${scope}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_id', ${actor ? String(actor.id) : ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_type', ${actor?.type || ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_role', ${actor?.role || ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${actor?.facilityId ? String(actor.facilityId) : ''}, true)`;
       return operation(tx);
     });
   }

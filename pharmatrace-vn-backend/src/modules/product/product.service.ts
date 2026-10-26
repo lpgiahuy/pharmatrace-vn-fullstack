@@ -409,7 +409,7 @@ export class ProductService {
           orderBy: { created_at: 'desc' },
           include: {
             customers: {
-              select: { id: true, full_name: true, email: true },
+              select: { id: true, full_name: true },
             },
           },
         },

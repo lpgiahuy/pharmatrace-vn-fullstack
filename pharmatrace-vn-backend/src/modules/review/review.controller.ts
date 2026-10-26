@@ -27,6 +27,8 @@ import { ReviewQueryDto } from './dto/review-query.dto';
 import { CreateReportDto } from '../moderation/dto/create-report.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CustomerGuard } from '../../common/guards/customer.guard';
+import { authActor } from '../../common/auth-identity';
+import { HelpfulVoteDto } from './dto/helpful-vote.dto';
 import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Reviews')
@@ -132,16 +134,12 @@ export class ReviewController {
   @ApiResponse({ status: 200, description: 'Voted successfully' })
   async voteHelpful(
     @Param('id', ParseIntPipe) id: number,
-    @Body('isUnvote') isUnvote: boolean | undefined,
+    @Body() dto: HelpfulVoteDto,
     @Req() req: any,
   ) {
-    const rawIp =
-      req.headers['x-forwarded-for'] ||
-      req.connection?.remoteAddress ||
-      req.socket?.remoteAddress ||
-      'unknown-client';
-    const clientIp = Array.isArray(rawIp) ? rawIp[0] : String(rawIp).split(',')[0].trim();
-    const result = await this.reviewService.voteHelpful(id, Boolean(isUnvote), clientIp);
+    const isUnvote = dto.isUnvote === true;
+    const clientIp = req.ip || req.socket?.remoteAddress || 'unknown-client';
+    const result = await this.reviewService.voteHelpful(id, isUnvote, clientIp);
     return {
       success: true,
       message: isUnvote ? 'Helpful vote removed' : 'Thank you for your feedback!',
@@ -153,8 +151,8 @@ export class ReviewController {
   @ApiBearerAuth('bearerAuth')
   @UseGuards(JwtAuthGuard, CustomerGuard)
   @ApiOperation({
-    summary: 'Report review (Customer / Staff)',
-    description: 'Allows an authenticated user to flag a review for spam, harassment, or policy violation.',
+    summary: 'Report review (Customer)',
+    description: 'Allows an authenticated customer to flag a review for spam, harassment, or policy violation.',
   })
   @ApiResponse({ status: 201, description: 'Review reported successfully' })
   async reportReview(
@@ -162,13 +160,7 @@ export class ReviewController {
     @CurrentUser() user: CurrentUserPayload,
     @Body() dto: CreateReportDto,
   ) {
-    const isEmployee = user.role && user.role !== 'CUSTOMER';
-    const reporter = {
-      customerId: !isEmployee ? user.id : undefined,
-      employeeId: isEmployee ? user.id : undefined,
-      role: user.role || (isEmployee ? 'EMPLOYEE' : 'CUSTOMER'),
-    };
-    return this.reviewService.reportReview(id, reporter, dto);
+    return this.reviewService.reportReview(id, authActor(user), dto);
   }
 
   @Get('customer/my-reviews')

@@ -32,3 +32,6 @@
 -- 8. Cart ownership, including checkout cleanup.
 \i /docker-entrypoint-initdb.d/security/06_cart_rls.sql
 
+-- 9. Review/moderation ownership, write-column guards and retained audit history.
+\i /docker-entrypoint-initdb.d/security/07_review_rls.sql
+

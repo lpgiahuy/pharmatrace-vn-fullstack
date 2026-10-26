@@ -34,8 +34,8 @@ export class AdminModerationController {
     description: 'Retrieves user/shop reported reviews with status and reason filtering.',
   })
   @ApiResponse({ status: 200, description: 'Reports retrieved successfully' })
-  async getReports(@Query() query: AdminModerationQueryDto) {
-    const result = await this.moderationService.getReportsForAdmin(query);
+  async getReports(@Query() query: AdminModerationQueryDto, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.moderationService.getReportsForAdmin(query, user);
     return {
       success: true,
       data: result.items,
@@ -54,7 +54,7 @@ export class AdminModerationController {
     @CurrentUser() user: CurrentUserPayload,
     @Body() dto: ResolveReportDto,
   ) {
-    const adminRole = user.role || 'SUPER_ADMIN';
+    const adminRole = user.role || '';
     return this.moderationService.resolveReport(
       id,
       user.id,
@@ -75,7 +75,7 @@ export class AdminModerationController {
     @CurrentUser() user: CurrentUserPayload,
     @Body() dto: ResolveReportDto,
   ) {
-    const adminRole = user.role || 'SUPER_ADMIN';
+    const adminRole = user.role || '';
     return this.moderationService.dismissReport(id, user.id, adminRole, dto.note);
   }
 
@@ -85,8 +85,8 @@ export class AdminModerationController {
     description: 'Retrieves all automated and human moderation audit entries.',
   })
   @ApiResponse({ status: 200, description: 'Audit logs retrieved successfully' })
-  async getAuditLogs(@Query() query: AdminAuditQueryDto) {
-    const result = await this.moderationService.getAuditLogs(query);
+  async getAuditLogs(@Query() query: AdminAuditQueryDto, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.moderationService.getAuditLogs(query, user);
     return {
       success: true,
       data: result.items,
