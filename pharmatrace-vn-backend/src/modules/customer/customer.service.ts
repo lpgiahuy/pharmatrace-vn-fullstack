@@ -183,7 +183,7 @@ export class CustomerService {
     for (const o of orders) {
       totalSpent += Number(o.total_amount || 0);
       const statusUpper = (o.order_status || '').toUpperCase();
-      if (statusUpper === 'DELIVERED' || statusUpper === 'COMPLETED' || statusUpper === 'HOANTHANH') {
+      if (statusUpper === 'DELIVERED' || statusUpper === 'COMPLETED') {
         completedOrders++;
       } else if (statusUpper === 'CANCELLED' || statusUpper === 'DAHUY') {
         cancelledOrders++;

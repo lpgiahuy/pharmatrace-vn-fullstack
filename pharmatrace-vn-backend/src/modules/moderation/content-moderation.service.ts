@@ -5,6 +5,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { AuthActor, authActor } from '../../common/auth-identity';
+import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 export interface ModerationCheckResult {
   isApproved: boolean;
@@ -350,100 +353,96 @@ export class ContentModerationService {
     role?: string;
     reason?: string;
     meta?: any;
-  }) {
-    try {
-      await this.prisma.moderation_audit_logs.create({
-        data: {
-          review_id: params.reviewId || null,
-          action: params.action,
-          performed_by_employee_id: params.employeeId || null,
-          performed_by_customer_id: params.customerId || null,
-          performed_by_role: params.role || null,
-          reason: params.reason || null,
-          meta: params.meta || {},
-        },
-      });
-    } catch (err) {
-      console.error('Failed to write moderation audit log:', err);
-    }
+  }, tx: Prisma.TransactionClient) {
+    const meta = { ...(params.meta || {}), ...(params.reviewId ? { reviewId: params.reviewId } : {}) };
+    await tx.$executeRaw`
+      INSERT INTO public.moderation_audit_logs
+        (review_id, action, performed_by_employee_id, performed_by_customer_id, performed_by_role, reason, meta)
+      VALUES (${params.reviewId || null}, ${params.action}, ${params.employeeId || null},
+        ${params.customerId || null}, ${params.role || null}, ${params.reason || null}, ${JSON.stringify(meta)}::jsonb)
+    `;
   }
 
   // ================= LAYER 6: REPORTING OPERATIONS =================
 
   /**
-   * Customer / Staff reports an inappropriate or spam review
+   * Customer reports an inappropriate or spam review
    */
   async reportReview(
     reviewId: number,
-    reporter: {
-      customerId?: number;
-      employeeId?: number;
-      role?: string;
-    },
+    identity: AuthActor,
     reason: string,
     description?: string,
   ) {
-    // 1. Rate limit check (if customer)
-    if (reporter.customerId) {
-      this.checkReportRateLimit(reporter.customerId);
-    }
+    return this.prisma.withReview('customer', async (tx) => {
+      const actor = authActor(identity);
+      const reporter = {
+        customerId: actor.type === 'customer' ? actor.id : undefined,
+        employeeId: actor.type === 'employee' ? actor.id : undefined,
+        role: actor.role,
+      };
+      // 1. Rate limit check (if customer)
+      if (reporter.customerId) {
+        this.checkReportRateLimit(reporter.customerId);
+      }
 
-    // 2. Verify review exists
-    const review = await this.prisma.reviews.findUnique({
-      where: { id: reviewId },
-    });
-    if (!review) {
-      throw new BadRequestException(`Review #${reviewId} not found`);
-    }
+      // 2. Verify review exists
+      const review = await tx.reviews.findUnique({
+        where: { id: reviewId },
+      });
+      if (!review) {
+        throw new BadRequestException(`Review #${reviewId} not found`);
+      }
 
-    // 3. Check if this reporter already reported this review
-    const existingReportWhere: any = { review_id: reviewId };
-    if (reporter.customerId) {
-      existingReportWhere.reporter_customer_id = reporter.customerId;
-    } else if (reporter.employeeId) {
-      existingReportWhere.reporter_employee_id = reporter.employeeId;
-    }
+      // 3. Check if this reporter already reported this review
+      const existingReportWhere: any = { review_id: reviewId };
+      if (reporter.customerId) {
+        existingReportWhere.reporter_customer_id = reporter.customerId;
+      } else if (reporter.employeeId) {
+        existingReportWhere.reporter_employee_id = reporter.employeeId;
+      }
 
-    const existingReport = await this.prisma.moderation_reports.findFirst({
-      where: existingReportWhere,
-    });
-    if (existingReport) {
-      throw new BadRequestException('You have already submitted a report for this review.');
-    }
+      const existingReport = await tx.moderation_reports.findFirst({
+        where: existingReportWhere,
+      });
+      if (existingReport) {
+        throw new BadRequestException('You have already submitted a report for this review.');
+      }
 
-    // 3. Create report record
-    const report = await this.prisma.moderation_reports.create({
-      data: {
-        review_id: reviewId,
-        reporter_customer_id: reporter.customerId || null,
-        reporter_employee_id: reporter.employeeId || null,
-        reason,
-        description: description ? this.sanitizeText(description) : null,
-        status: 'PENDING',
-      },
-      include: {
-        reviews: {
-          select: { id: true, comment: true, status: true },
+      // 3. Create report record
+      const report = await tx.moderation_reports.create({
+        data: {
+          review_id: reviewId,
+          reporter_customer_id: reporter.customerId || null,
+          reporter_employee_id: reporter.employeeId || null,
+          reason,
+          description: description ? this.sanitizeText(description) : null,
+          status: 'PENDING',
         },
-      },
-    });
+        include: {
+          reviews: {
+            select: { id: true, comment: true, status: true },
+          },
+        },
+      });
 
-    // 4. Log to audit trail
-    await this.logAudit({
-      reviewId,
-      action: reporter.employeeId ? 'STAFF_REPORT' : 'USER_REPORT',
-      customerId: reporter.customerId,
-      employeeId: reporter.employeeId,
-      role: reporter.role || (reporter.employeeId ? 'EMPLOYEE' : 'CUSTOMER'),
-      reason: `Reported by ${reporter.employeeId ? 'staff' : 'user'} as ${reason}: ${description || 'No description'}`,
-      meta: { reportId: report.id, reason, description },
-    });
+      // 4. Log to audit trail
+      await this.logAudit({
+        reviewId,
+        action: reporter.employeeId ? 'STAFF_REPORT' : 'USER_REPORT',
+        customerId: reporter.customerId,
+        employeeId: reporter.employeeId,
+        role: reporter.role || (reporter.employeeId ? 'EMPLOYEE' : 'CUSTOMER'),
+        reason: `Reported by ${reporter.employeeId ? 'staff' : 'user'} as ${reason}: ${description || 'No description'}`,
+        meta: { reportId: report.id, reason, description },
+      }, tx);
 
-    return {
-      success: true,
-      message: 'Review reported successfully. Our moderation team will investigate.',
-      data: report,
-    };
+      return {
+        success: true,
+        message: 'Review reported successfully. Our moderation team will investigate.',
+        data: report,
+      };
+    }, authActor(identity));
   }
 
   /**
@@ -454,64 +453,66 @@ export class ContentModerationService {
     limit?: number;
     status?: string;
     reason?: string;
-  }) {
-    const page = Math.max(1, query?.page || 1);
-    const limit = Math.max(1, Math.min(100, query?.limit || 10));
-    const skip = (page - 1) * limit;
+  }, user: CurrentUserPayload) {
+    return this.prisma.withReview('moderator', async (tx) => {
+      const page = Math.max(1, query?.page || 1);
+      const limit = Math.max(1, Math.min(100, query?.limit || 10));
+      const skip = (page - 1) * limit;
 
-    const where: any = {};
-    if (query?.status && query.status !== 'ALL') {
-      where.status = query.status;
-    }
-    if (query?.reason) {
-      where.reason = query.reason;
-    }
+      const where: any = {};
+      if (query?.status && query.status !== 'ALL') {
+        where.status = query.status;
+      }
+      if (query?.reason) {
+        where.reason = query.reason;
+      }
 
-    const [total, records] = await Promise.all([
-      this.prisma.moderation_reports.count({ where }),
-      this.prisma.moderation_reports.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { created_at: 'desc' },
-        include: {
-          reviews: {
-            select: {
-              id: true,
-              comment: true,
-              rating_stars: true,
-              status: true,
-              created_at: true,
-              medicines: {
-                select: { id: true, medicine_name: true, slug: true, image_url: true },
-              },
-              customers: {
-                select: { id: true, full_name: true, email: true },
+      const [total, records] = await Promise.all([
+        tx.moderation_reports.count({ where }),
+        tx.moderation_reports.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { created_at: 'desc' },
+          include: {
+            reviews: {
+              select: {
+                id: true,
+                comment: true,
+                rating_stars: true,
+                status: true,
+                created_at: true,
+                medicines: {
+                  select: { id: true, medicine_name: true, slug: true, image_url: true },
+                },
+                customers: {
+                  select: { id: true, full_name: true, email: true },
+                },
               },
             },
+            reporter_customer: {
+              select: { id: true, full_name: true, email: true },
+            },
+            reporter_employee: {
+              select: { id: true, full_name: true, email: true, role: true },
+            },
+            resolver_employee: {
+              select: { id: true, full_name: true, role: true },
+            },
           },
-          reporter_customer: {
-            select: { id: true, full_name: true, email: true },
-          },
-          reporter_employee: {
-            select: { id: true, full_name: true, email: true, role: true },
-          },
-          resolver_employee: {
-            select: { id: true, full_name: true, role: true },
-          },
-        },
-      }),
-    ]);
+        }),
+      ]);
 
-    return {
-      items: records,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit) || 1,
-      },
-    };
+      return {
+        items: records,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit) || 1,
+        },
+      };
+    }, authActor(user));
   }
 
   /**
@@ -524,48 +525,50 @@ export class ContentModerationService {
     resolverNote?: string,
     actionOnReview?: 'HIDE' | 'SPAM' | 'APPROVE' | 'KEEP',
   ) {
-    const report = await this.prisma.moderation_reports.findUnique({
-      where: { id: reportId },
-      include: { reviews: true },
-    });
-
-    if (!report) {
-      throw new BadRequestException(`Report #${reportId} not found`);
-    }
-
-    const updatedReport = await this.prisma.moderation_reports.update({
-      where: { id: reportId },
-      data: {
-        status: 'RESOLVED',
-        resolved_by_employee_id: adminId,
-        resolver_note: resolverNote || 'Resolved by SuperAdmin',
-        resolved_at: new Date(),
-      },
-    });
-
-    // Optionally update review status if requested
-    if (actionOnReview && actionOnReview !== 'KEEP') {
-      await this.prisma.reviews.update({
-        where: { id: report.review_id },
-        data: { status: actionOnReview === 'HIDE' ? 'HIDDEN' : actionOnReview },
+    return this.prisma.withReview('moderator', async (tx) => {
+      const report = await tx.moderation_reports.findUnique({
+        where: { id: reportId },
+        include: { reviews: true },
       });
-    }
 
-    // Log to audit
-    await this.logAudit({
-      reviewId: report.review_id,
-      action: 'RESOLVE_REPORT',
-      employeeId: adminId,
-      role: adminRole,
-      reason: resolverNote || 'Report resolved',
-      meta: { reportId, actionOnReview },
-    });
+      if (!report) {
+        throw new BadRequestException(`Report #${reportId} not found`);
+      }
 
-    return {
-      success: true,
-      message: `Report #${reportId} has been resolved successfully.`,
-      data: updatedReport,
-    };
+      const updatedReport = await tx.moderation_reports.update({
+        where: { id: reportId },
+        data: {
+          status: 'RESOLVED',
+          resolved_by_employee_id: adminId,
+          resolver_note: resolverNote || 'Resolved by SuperAdmin',
+          resolved_at: new Date(),
+        },
+      });
+
+      // Optionally update review status if requested
+      if (actionOnReview && actionOnReview !== 'KEEP') {
+        await tx.reviews.update({
+          where: { id: report.review_id },
+          data: { status: actionOnReview === 'HIDE' ? 'HIDDEN' : actionOnReview === 'APPROVE' ? 'APPROVED' : actionOnReview },
+        });
+      }
+
+      // Log to audit
+      await this.logAudit({
+        reviewId: report.review_id,
+        action: 'RESOLVE_REPORT',
+        employeeId: adminId,
+        role: adminRole,
+        reason: resolverNote || 'Report resolved',
+        meta: { reportId, actionOnReview },
+      }, tx);
+
+      return {
+        success: true,
+        message: `Report #${reportId} has been resolved successfully.`,
+        data: updatedReport,
+      };
+    }, authActor({ id: adminId, role: adminRole, type: 'employee' }));
   }
 
   /**
@@ -577,38 +580,40 @@ export class ContentModerationService {
     adminRole: string,
     resolverNote?: string,
   ) {
-    const report = await this.prisma.moderation_reports.findUnique({
-      where: { id: reportId },
-    });
+    return this.prisma.withReview('moderator', async (tx) => {
+      const report = await tx.moderation_reports.findUnique({
+        where: { id: reportId },
+      });
 
-    if (!report) {
-      throw new BadRequestException(`Report #${reportId} not found`);
-    }
+      if (!report) {
+        throw new BadRequestException(`Report #${reportId} not found`);
+      }
 
-    const updated = await this.prisma.moderation_reports.update({
-      where: { id: reportId },
-      data: {
-        status: 'DISMISSED',
-        resolved_by_employee_id: adminId,
-        resolver_note: resolverNote || 'Report dismissed as invalid',
-        resolved_at: new Date(),
-      },
-    });
+      const updated = await tx.moderation_reports.update({
+        where: { id: reportId },
+        data: {
+          status: 'DISMISSED',
+          resolved_by_employee_id: adminId,
+          resolver_note: resolverNote || 'Report dismissed as invalid',
+          resolved_at: new Date(),
+        },
+      });
 
-    await this.logAudit({
-      reviewId: report.review_id,
-      action: 'DISMISS_REPORT',
-      employeeId: adminId,
-      role: adminRole,
-      reason: resolverNote || 'Report dismissed',
-      meta: { reportId },
-    });
+      await this.logAudit({
+        reviewId: report.review_id,
+        action: 'DISMISS_REPORT',
+        employeeId: adminId,
+        role: adminRole,
+        reason: resolverNote || 'Report dismissed',
+        meta: { reportId },
+      }, tx);
 
-    return {
-      success: true,
-      message: `Report #${reportId} dismissed.`,
-      data: updated,
-    };
+      return {
+        success: true,
+        message: `Report #${reportId} dismissed.`,
+        data: updated,
+      };
+    }, authActor({ id: adminId, role: adminRole, type: 'employee' }));
   }
 
   /**
@@ -619,56 +624,58 @@ export class ContentModerationService {
     limit?: number;
     reviewId?: number;
     action?: string;
-  }) {
-    const page = Math.max(1, query?.page || 1);
-    const limit = Math.max(1, Math.min(100, query?.limit || 20));
-    const skip = (page - 1) * limit;
+  }, user: CurrentUserPayload) {
+    return this.prisma.withReview('moderator', async (tx) => {
+      const page = Math.max(1, query?.page || 1);
+      const limit = Math.max(1, Math.min(100, query?.limit || 20));
+      const skip = (page - 1) * limit;
 
-    const where: any = {};
-    if (query?.reviewId) {
-      where.review_id = query.reviewId;
-    }
-    if (query?.action) {
-      where.action = query.action;
-    }
+      const where: any = {};
+      if (query?.reviewId) {
+        where.review_id = query.reviewId;
+      }
+      if (query?.action) {
+        where.action = query.action;
+      }
 
-    const [total, records] = await Promise.all([
-      this.prisma.moderation_audit_logs.count({ where }),
-      this.prisma.moderation_audit_logs.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { created_at: 'desc' },
-        include: {
-          reviews: {
-            select: {
-              id: true,
-              comment: true,
-              rating_stars: true,
-              status: true,
-              medicines: {
-                select: { id: true, medicine_name: true },
+      const [total, records] = await Promise.all([
+        tx.moderation_audit_logs.count({ where }),
+        tx.moderation_audit_logs.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { created_at: 'desc' },
+          include: {
+            reviews: {
+              select: {
+                id: true,
+                comment: true,
+                rating_stars: true,
+                status: true,
+                medicines: {
+                  select: { id: true, medicine_name: true },
+                },
               },
             },
+            performed_by_employee: {
+              select: { id: true, full_name: true, role: true, email: true },
+            },
+            performed_by_customer: {
+              select: { id: true, full_name: true, email: true },
+            },
           },
-          performed_by_employee: {
-            select: { id: true, full_name: true, role: true, email: true },
-          },
-          performed_by_customer: {
-            select: { id: true, full_name: true, email: true },
-          },
-        },
-      }),
-    ]);
+        }),
+      ]);
 
-    return {
-      items: records,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit) || 1,
-      },
-    };
+      return {
+        items: records,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit) || 1,
+        },
+      };
+    }, authActor(user));
   }
 }

@@ -669,7 +669,7 @@ model moderation_audit_logs {
   meta                     Json?      @default("{}")
   created_at               DateTime?  @default(now()) @db.Timestamptz(6)
 
-  reviews                  reviews?   @relation(fields: [review_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  reviews                  reviews?   @relation(fields: [review_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   performed_by_employee    employees? @relation("audit_employee", fields: [performed_by_employee_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   performed_by_customer    customers? @relation("audit_customer", fields: [performed_by_customer_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
 
