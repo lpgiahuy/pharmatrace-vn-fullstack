@@ -39,16 +39,13 @@ export default function WarehouseLoginPage() {
       const userRole = result.user?.role;
 
       const allowedWarehouseRoles = [
-        'QuanLyKho',
-        'NhanVienKho',
+        'SUPER_ADMIN',
         'WAREHOUSE_MANAGER',
         'WAREHOUSE_STAFF',
-        'SuperAdmin',
-        'superadmin',
-        'SUPER_ADMIN',
+        'FACTORY_WAREHOUSE_STAFF',
       ];
 
-      if (!allowedWarehouseRoles.some((r) => r.toLowerCase() === (userRole || '').toLowerCase())) {
+      if (!allowedWarehouseRoles.includes(userRole || '')) {
         await useAuthStore.getState().logout();
         message.error('Incorrect username or password!');
         return;

@@ -40,20 +40,13 @@ export default function CustomerLoginPage() {
       const userRole = result.user?.role;
 
       const internalRoles = [
-        'QuanLyKho',
-        'NhanVienKho',
+        'SUPER_ADMIN',
+        'ADMIN',
+        'STORE_MANAGER',
+        'PHARMACIST',
         'WAREHOUSE_MANAGER',
         'WAREHOUSE_STAFF',
-        'SuperAdmin',
-        'superadmin',
-        'SUPER_ADMIN',
-        'Admin',
-        'admin',
-        'ADMIN',
-        'NhanVienBanHang',
-        'QuanLyCuaHang',
-        'STORE_MANAGER',
-        'SALES_STAFF',
+        'FACTORY_WAREHOUSE_STAFF',
       ];
 
       if (internalRoles.includes(userRole)) {

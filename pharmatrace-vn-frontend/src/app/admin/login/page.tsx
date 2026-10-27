@@ -40,21 +40,13 @@ export default function AdminLoginPage() {
       const userRole = result.user?.role;
 
       const allowedAdminRoles = [
-        'SuperAdmin',
-        'superadmin',
         'SUPER_ADMIN',
-        'Admin',
-        'admin',
         'ADMIN',
-        'NhanVienBanHang',
-        'QuanLyCuaHang',
         'STORE_MANAGER',
-        'SALES_STAFF',
-        'manager',
-        'staff',
+        'PHARMACIST',
       ];
 
-      if (!allowedAdminRoles.some((r) => r.toLowerCase() === (userRole || '').toLowerCase())) {
+      if (!allowedAdminRoles.includes(userRole || '')) {
         await useAuthStore.getState().logout();
         message.error('Incorrect username or password!');
         return;

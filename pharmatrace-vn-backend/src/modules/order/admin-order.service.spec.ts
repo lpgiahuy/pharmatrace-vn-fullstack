@@ -4,7 +4,7 @@ import { AdminOrderService } from "./admin-order.service";
 describe("AdminOrderService receiving unassigned packages", () => {
   function setup(uids: string[]) {
     const tx = {
-      internal_transfers: { update: jest.fn(), count: jest.fn().mockResolvedValue(0) },
+      internal_transfers: { updateMany: jest.fn().mockResolvedValue({ count: 1 }), update: jest.fn(), count: jest.fn().mockResolvedValue(0) },
       inventories: { findFirst: jest.fn().mockResolvedValue({ id: 9 }), update: jest.fn() },
       medicine_boxes: {
         findMany: jest.fn().mockResolvedValue(uids.map((uid) => ({ uid }))),
@@ -30,13 +30,13 @@ describe("AdminOrderService receiving unassigned packages", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    return { tx, service: new AdminOrderService(prisma as unknown as PrismaService) };
+    return { tx, service: new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService) };
   }
 
   it("assigns and moves physical UIDs when checkout deferred package assignment", async () => {
     const { tx, service } = setup(["tube-uid"]);
 
-    await service.adminReceiveInternalTransfer(8, { id: 1, role: "SUPER_ADMIN" });
+    await service.adminReceiveInternalTransfer(8, { type: "employee" as const,  id: 1, role: "SUPER_ADMIN" });
 
     expect(tx.medicine_boxes.updateMany).toHaveBeenCalledWith({
       where: expect.objectContaining({ uid: { in: ["tube-uid"] }, current_facility_id: 20 }),
@@ -51,7 +51,7 @@ describe("AdminOrderService receiving unassigned packages", () => {
   it("keeps the order waiting when physical packages are not ready for receipt", async () => {
     const { tx, service } = setup([]);
 
-    await expect(service.adminReceiveInternalTransfer(8, { id: 1, role: "SUPER_ADMIN" }))
+    await expect(service.adminReceiveInternalTransfer(8, { type: "employee" as const,  id: 1, role: "SUPER_ADMIN" }))
       .rejects.toThrow(/physical package/i);
     expect(tx.orders.update).not.toHaveBeenCalled();
   });
@@ -60,7 +60,7 @@ describe("AdminOrderService receiving unassigned packages", () => {
     const { tx, service } = setup(["tube-uid"]);
     tx.medicine_boxes.updateMany.mockResolvedValue({ count: 0 });
 
-    await expect(service.adminReceiveInternalTransfer(8, { id: 1, role: "SUPER_ADMIN" }))
+    await expect(service.adminReceiveInternalTransfer(8, { type: "employee" as const,  id: 1, role: "SUPER_ADMIN" }))
       .rejects.toThrow(/availability changed/i);
     expect(tx.order_items.update).not.toHaveBeenCalled();
     expect(tx.orders.update).not.toHaveBeenCalled();
@@ -86,9 +86,9 @@ describe("AdminOrderService listing", () => {
       },
     };
     const prisma = { $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)) };
-    const service = new AdminOrderService(prisma as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
 
-    await expect(service.adminGetAllOrders({}, { id: 12, role: "SUPER_ADMIN" }))
+    await expect(service.adminGetAllOrders({}, { type: "employee" as const,  id: 12, role: "SUPER_ADMIN" }))
       .resolves.toMatchObject({ items: [], pagination: { total: 0 } });
   });
 });
@@ -96,7 +96,7 @@ describe("AdminOrderService listing", () => {
 describe("AdminOrderService packing", () => {
   const ownUid = "11111111-1111-4111-8111-111111111111";
   const otherUid = "22222222-2222-4222-8222-222222222222";
-  const facilityStaff = {
+  const facilityStaff = { type: "employee" as const,
     id: 12,
     role: "WAREHOUSE_STAFF",
     facilityId: 3,
@@ -158,7 +158,7 @@ describe("AdminOrderService packing", () => {
       ),
     };
     return {
-      service: new AdminOrderService(prisma as unknown as PrismaService),
+      service: new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService),
       tx,
       prisma,
     };
@@ -256,12 +256,12 @@ describe("AdminOrderService packing", () => {
 });
 
 describe("AdminOrderService facility access", () => {
-  const facilityStaff = {
+  const facilityStaff = { type: "employee" as const,
     id: 21,
     role: "WAREHOUSE_STAFF",
     facilityId: 3,
   };
-  const superAdmin = {
+  const superAdmin = { type: "employee" as const,
     id: 1,
     role: "SUPER_ADMIN",
     facilityId: 1,
@@ -282,7 +282,7 @@ describe("AdminOrderService facility access", () => {
 
     return {
       prisma,
-      service: new AdminOrderService(prisma as unknown as PrismaService),
+      service: new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService),
     };
   }
 
@@ -315,7 +315,7 @@ describe("AdminOrderService facility access", () => {
     const { service } = setup();
 
     await expect(
-      service.adminGetAllOrders({} as any, {
+      service.adminGetAllOrders({} as any, { type: "employee" as const,
         id: 22,
         role: "WAREHOUSE_STAFF",
       }),
@@ -380,8 +380,7 @@ describe("AdminOrderService facility access", () => {
 describe("AdminOrderService transfer completion", () => {
   it("keeps the order waiting when another transfer was cancelled", async () => {
     const tx = {
-      internal_transfers: {
-        update: jest.fn(),
+      internal_transfers: { updateMany: jest.fn().mockResolvedValue({ count: 1 }), update: jest.fn(),
         count: jest.fn().mockResolvedValue(1),
       },
       orders: { update: jest.fn() },
@@ -399,9 +398,9 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) => run(tx)),
     };
-    const service = new AdminOrderService(prisma as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
 
-    await service.adminReceiveInternalTransfer(8, {
+    await service.adminReceiveInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
     });
 
@@ -417,8 +416,7 @@ describe("AdminOrderService transfer completion", () => {
 
   it("starts processing after the replacement is received", async () => {
     const tx = {
-      internal_transfers: {
-        update: jest.fn(),
+      internal_transfers: { updateMany: jest.fn().mockResolvedValue({ count: 1 }), update: jest.fn(),
         count: jest.fn().mockResolvedValue(0),
       },
       orders: { update: jest.fn() },
@@ -436,9 +434,9 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) => run(tx)),
     };
-    const service = new AdminOrderService(prisma as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
 
-    await service.adminReceiveInternalTransfer(9, {
+    await service.adminReceiveInternalTransfer(9, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
     });
 
@@ -485,9 +483,9 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new AdminOrderService(prisma as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
 
-    await service.adminRejectDamagedInternalTransfer(8, {
+    await service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
     });
 
@@ -541,9 +539,9 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new AdminOrderService(prisma as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
 
-    await expect(service.adminRejectDamagedInternalTransfer(8, {
+    await expect(service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
     })).resolves.toEqual({ id: 8, status: "REJECTED_UNFULFILLED" });
     expect(tx.internal_transfers.update).toHaveBeenCalledWith({
@@ -598,9 +596,9 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new AdminOrderService(prisma as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
 
-    await expect(service.adminRejectDamagedInternalTransfer(8, {
+    await expect(service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
     })).resolves.toEqual({ id: 8, status: "REJECTED_UNFULFILLED" });
 
@@ -612,3 +610,18 @@ describe("AdminOrderService transfer completion", () => {
     expect(tx.internal_transfers.create).not.toHaveBeenCalled();
   });
 });
+
+// Transaction mocks expose the same delegates as the production scoped transaction.
+function scopedPrisma(prisma: any): any {
+  return { ...prisma, withOrder: jest.fn((_operation, run) => {
+    const execute = (tx: any) => {
+      const client = { ...prisma, ...tx };
+      for (const key of Object.keys(prisma)) {
+        if (typeof prisma[key] === 'object' && tx[key]) client[key] = { ...prisma[key], ...tx[key] };
+      }
+      client.$queryRaw ||= jest.fn().mockResolvedValue([]);
+      return run(client);
+    };
+    return prisma.$transaction ? prisma.$transaction(execute) : execute(prisma);
+  }) };
+}

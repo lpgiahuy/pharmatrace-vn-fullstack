@@ -4,6 +4,7 @@ import {
   BadRequestException,
   ForbiddenException,
 } from "@nestjs/common";
+import { authActor } from "../../common/auth-identity";
 import { randomBytes } from "crypto";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
@@ -39,7 +40,7 @@ export class AdminOrderService {
   private getFacilityScope(user: CurrentUserPayload): number | null {
     const role = (user?.role || "").toString().toLowerCase().replace(/_/g, "");
 
-    if (role === "superadmin" || role === "admin") {
+    if (role === "superadmin") {
       return null;
     }
 
@@ -60,36 +61,7 @@ export class AdminOrderService {
     user: CurrentUserPayload,
     operation: (tx: Prisma.TransactionClient) => Promise<T>,
   ): Promise<T> {
-    const rawRole = (user?.role || "").toString().trim();
-    const cleanRole = rawRole.toUpperCase().replace(/_/g, "");
-    let normalizedRole = rawRole.toUpperCase();
-    if (cleanRole === "SUPERADMIN" || cleanRole === "ADMIN") {
-      normalizedRole = "SUPER_ADMIN";
-    } else if (cleanRole === "PHARMACIST") {
-      normalizedRole = "PHARMACIST";
-    }
-
-    if (typeof (this.prisma as any)?.$transaction !== 'function') {
-      return operation(this.prisma as any);
-    }
-
-    return this.prisma.$transaction(async (tx) => {
-      if (typeof (tx as any)?.$queryRaw === 'function') {
-        await tx.$queryRaw`SELECT set_config('app.bypass_rls', 'on', true)`;
-        if (user?.id) {
-          await tx.$queryRaw`SELECT set_config('app.current_user_id', ${String(user.id)}, true)`;
-        }
-        if (normalizedRole) {
-          await tx.$queryRaw`SELECT set_config('app.current_user_role', ${normalizedRole}, true)`;
-        }
-        await tx.$queryRaw`SELECT set_config('app.current_user_type', 'employee', true)`;
-        if (user?.facilityId) {
-          await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${String(user.facilityId)}, true)`;
-        }
-      }
-      const client = (tx as any)?.orders?.findFirst ? tx : { ...(tx as any), orders: { ...(this.prisma as any)?.orders, ...(tx as any)?.orders } };
-      return operation(client as any);
-    });
+    return this.prisma.withOrder('read', operation, authActor(user));
   }
 
   async adminGetAllOrders(query: OrderQueryDto, user: CurrentUserPayload) {
@@ -122,7 +94,7 @@ export class AdminOrderService {
         take: limit,
         orderBy: { created_at: query.sort === "oldest" ? "asc" : "desc" },
         include: {
-          customers: true,
+          customers: { select: { id: true, full_name: true, email: true, phone_number: true } },
           ...ORDER_DETAILS_INCLUDE,
         },
       });
@@ -145,7 +117,7 @@ export class AdminOrderService {
       tx.orders.findFirst({
         where: this.orderAccessWhere(orderId, user),
         include: {
-          customers: true,
+          customers: { select: { id: true, full_name: true, email: true, phone_number: true } },
           ...ORDER_DETAILS_INCLUDE,
         },
       }),
@@ -155,75 +127,50 @@ export class AdminOrderService {
       throw new NotFoundException(`Order #${orderId} not found`);
     }
 
-    if (!order.prescription_review && order.prescription_id && order.export_facility_id) {
-      try {
-        await this.prisma.order_prescription_reviews.create({
-          data: {
-            order_id: order.id,
-            prescription_id: order.prescription_id,
-            facility_id: order.export_facility_id,
-            status: order.prescription_review_status || 'PENDING_APPROVAL',
-          },
-        });
-        const refreshed = await this.executeWithStaffContext(user, (tx) =>
-          tx.orders.findFirst({
-            where: this.orderAccessWhere(orderId, user),
-            include: {
-              customers: true,
-              ...ORDER_DETAILS_INCLUDE,
-            },
-          }),
-        );
-        if (refreshed) {
-          return formatOrder(refreshed);
-        }
-      } catch {
-        // If created concurrently or already exists, continue with current order
-      }
-    }
+
 
     return formatOrder(order);
   }
 
   async adminUpdateOrderStatus(orderId: number, dto: UpdateOrderStatusDto, user: CurrentUserPayload) {
-    const order = await this.prisma.orders.findFirst({
-      where: this.orderAccessWhere(orderId, user),
-    });
+    return this.prisma.withOrder('status', async (tx) => {
+      const order = await tx.orders.findFirst({
+        where: this.orderAccessWhere(orderId, user),
+      });
 
-    if (!order) {
-      throw new NotFoundException(`Order #${orderId} not found`);
-    }
-
-    const currentStatus = normalizeOrderStatus(order.order_status || "PENDING");
-    const targetStatus = dto.orderStatus
-      ? normalizeOrderStatus(dto.orderStatus)
-      : currentStatus;
-
-    if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED' && !['PENDING', 'WAITING_INTERNAL_TRANSFER', 'CANCELLED'].includes(targetStatus)) {
-      throw new BadRequestException('This order requires pharmacist approval before processing');
-    }
-
-    if (currentStatus !== targetStatus) {
-      const allowedNext = ALLOWED_TRANSITIONS[currentStatus] || [];
-      if (!allowedNext.includes(targetStatus)) {
-        throw new BadRequestException(
-          `Invalid status transition: Cannot move order from ${currentStatus} to ${targetStatus}. Allowed transitions: ${allowedNext.join(", ") || "None"}`,
-        );
+      if (!order) {
+        throw new NotFoundException(`Order #${orderId} not found`);
       }
-    }
 
-    const updateData: any = {
-      order_status: targetStatus,
-    };
+      const currentStatus = normalizeOrderStatus(order.order_status || "PENDING");
+      const targetStatus = dto.orderStatus
+        ? normalizeOrderStatus(dto.orderStatus)
+        : currentStatus;
 
-    if (dto.paymentStatus) {
-      updateData.payment_status = dto.paymentStatus;
-    }
-    if (dto.note) {
-      updateData.note = dto.note;
-    }
+      if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED' && !['PENDING', 'WAITING_INTERNAL_TRANSFER', 'CANCELLED'].includes(targetStatus)) {
+        throw new BadRequestException('This order requires pharmacist approval before processing');
+      }
 
-    await this.prisma.$transaction(async (tx) => {
+      if (currentStatus !== targetStatus) {
+        const allowedNext = ALLOWED_TRANSITIONS[currentStatus] || [];
+        if (!allowedNext.includes(targetStatus)) {
+          throw new BadRequestException(
+            `Invalid status transition: Cannot move order from ${currentStatus} to ${targetStatus}. Allowed transitions: ${allowedNext.join(", ") || "None"}`,
+          );
+        }
+      }
+
+      const updateData: any = {
+        order_status: targetStatus,
+      };
+
+      if (dto.paymentStatus) {
+        updateData.payment_status = dto.paymentStatus;
+      }
+      if (dto.note) {
+        updateData.note = dto.note;
+      }
+
       const updated = await tx.orders.updateMany({
         where: { id: orderId, order_status: order.order_status },
         data: updateData,
@@ -245,6 +192,7 @@ export class AdminOrderService {
 
       if (
         targetStatus === "CANCELLED" &&
+        currentStatus !== targetStatus &&
         order.used_points &&
         order.used_points > 0 &&
         order.customer_id
@@ -292,45 +240,83 @@ export class AdminOrderService {
           });
         }
       }
-    });
 
-    return this.adminGetOrderById(orderId, user);
+
+      return formatOrder(await tx.orders.findFirst({ where: this.orderAccessWhere(orderId, user), include: ORDER_DETAILS_INCLUDE }));
+
+    }, authActor(user));
   }
 
   async adminGetAvailableBoxesForOrder(orderId: number, user: CurrentUserPayload) {
-    const order = await this.prisma.orders.findFirst({
-      where: this.orderAccessWhere(orderId, user),
-      include: {
-        order_items: {
-          select: {
-            id: true,
-            medicine_id: true,
-            medicine_name: true,
-            unit_name: true,
-            quantity: true,
-            assigned_uids: true,
+    return this.prisma.withOrder('pack', async (tx) => {
+      const order = await tx.orders.findFirst({
+        where: this.orderAccessWhere(orderId, user),
+        include: {
+          order_items: {
+            select: {
+              id: true,
+              medicine_id: true,
+              medicine_name: true,
+              unit_name: true,
+              quantity: true,
+              assigned_uids: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    if (!order) {
-      throw new NotFoundException(`Order #${orderId} not found`);
-    }
+      if (!order) {
+        throw new NotFoundException(`Order #${orderId} not found`);
+      }
 
-    const boxItems = order.order_items.filter((item) =>
-      isBoxUnit(item.unit_name),
-    );
+      const boxItems = order.order_items.filter((item) =>
+        isBoxUnit(item.unit_name),
+      );
 
-    const reservedUids = boxItems.flatMap((item) => item.assigned_uids);
+      const reservedUids = boxItems.flatMap((item) => item.assigned_uids);
 
-    const reservedBoxes =
-      reservedUids.length > 0
-        ? await this.prisma.medicine_boxes.findMany({
+      const reservedBoxes =
+        reservedUids.length > 0
+          ? await tx.medicine_boxes.findMany({
+            where: {
+              uid: { in: reservedUids },
+              current_facility_id: order.export_facility_id,
+              status: "RESERVED",
+            },
+            include: {
+              medicine_batches: {
+                include: {
+                  medicines: {
+                    select: {
+                      id: true,
+                      medicine_name: true,
+                      registration_number: true,
+                    },
+                  },
+                },
+              },
+            },
+            orderBy: [
+              { medicine_batches: { expiry_date: "asc" } },
+              { created_at: "asc" },
+            ],
+          })
+          : [];
+
+      const existingUids = new Set(reservedBoxes.map((b) => b.uid));
+      const fallbackBoxes: typeof reservedBoxes = [];
+
+      for (const item of boxItems) {
+        if (!item.medicine_id) continue;
+        const countNeeded = item.quantity - item.assigned_uids.length;
+        if (countNeeded <= 0) continue;
+
+        const available = await tx.medicine_boxes.findMany({
           where: {
-            uid: { in: reservedUids },
             current_facility_id: order.export_facility_id,
-            status: "RESERVED",
+            status: { in: AVAILABLE_BOX_STATUSES },
+            medicine_batches: { medicine_id: item.medicine_id },
+            uid: { notIn: Array.from(existingUids) },
           },
           include: {
             medicine_batches: {
@@ -349,184 +335,152 @@ export class AdminOrderService {
             { medicine_batches: { expiry_date: "asc" } },
             { created_at: "asc" },
           ],
-        })
-        : [];
+          take: Math.max(countNeeded * 3, 10),
+        });
 
-    const existingUids = new Set(reservedBoxes.map((b) => b.uid));
-    const fallbackBoxes: typeof reservedBoxes = [];
-
-    for (const item of boxItems) {
-      if (!item.medicine_id) continue;
-      const countNeeded = item.quantity - item.assigned_uids.length;
-      if (countNeeded <= 0) continue;
-
-      const available = await this.prisma.medicine_boxes.findMany({
-        where: {
-          current_facility_id: order.export_facility_id,
-          status: { in: AVAILABLE_BOX_STATUSES },
-          medicine_batches: { medicine_id: item.medicine_id },
-          uid: { notIn: Array.from(existingUids) },
-        },
-        include: {
-          medicine_batches: {
-            include: {
-              medicines: {
-                select: {
-                  id: true,
-                  medicine_name: true,
-                  registration_number: true,
-                },
-              },
-            },
-          },
-        },
-        orderBy: [
-          { medicine_batches: { expiry_date: "asc" } },
-          { created_at: "asc" },
-        ],
-        take: Math.max(countNeeded * 3, 10),
-      });
-
-      for (const box of available) {
-        existingUids.add(box.uid);
-        fallbackBoxes.push(box);
+        for (const box of available) {
+          existingUids.add(box.uid);
+          fallbackBoxes.push(box);
+        }
       }
-    }
 
-    const allBoxes = [...reservedBoxes, ...fallbackBoxes];
+      const allBoxes = [...reservedBoxes, ...fallbackBoxes];
 
-    return allBoxes.map((box) => ({
-      uid: box.uid,
-      status: box.status,
-      batchId: box.batch_id,
-      batchNumber: box.medicine_batches?.batch_number ?? null,
-      expiryDate: box.medicine_batches?.expiry_date ?? null,
-      medicineId: box.medicine_batches?.medicines?.id ?? null,
-      medicineName: box.medicine_batches?.medicines?.medicine_name ?? null,
-      facilityId: box.current_facility_id,
-    }));
+      return allBoxes.map((box) => ({
+        uid: box.uid,
+        status: box.status,
+        batchId: box.batch_id,
+        batchNumber: box.medicine_batches?.batch_number ?? null,
+        expiryDate: box.medicine_batches?.expiry_date ?? null,
+        medicineId: box.medicine_batches?.medicines?.id ?? null,
+        medicineName: box.medicine_batches?.medicines?.medicine_name ?? null,
+        facilityId: box.current_facility_id,
+      }));
+
+    }, authActor(user));
   }
 
   async adminPackOrder(orderId: number, dto: PackOrderDto | undefined, user: CurrentUserPayload) {
-    const order = await this.prisma.orders.findFirst({
-      where: this.orderAccessWhere(orderId, user),
-      include: {
-        order_items: {
-          include: { medicines: true },
-        },
-        shipments: true,
-      },
-    });
-
-    if (!order) {
-      throw new NotFoundException(`Order #${orderId} not found`);
-    }
-
-    if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED') {
-      throw new BadRequestException('This order requires pharmacist approval before packing');
-    }
-
-    const normStatus = normalizeOrderStatus(order.order_status);
-    if (!["PENDING", "PROCESSING"].includes(normStatus)) {
-      throw new BadRequestException(
-        `Only orders with status PENDING or PROCESSING can be packed. Current status is ${order.order_status}.`,
-      );
-    }
-
-    if (order.shipments) {
-      throw new BadRequestException(
-        "A shipment is already created for this order.",
-      );
-    }
-
-    const boxItems = order.order_items.filter((item) =>
-      isBoxUnit(item.unit_name),
-    );
-
-    const totalRequired = boxItems.reduce(
-      (sum, item) => sum + item.quantity,
-      0,
-    );
-    const reservedUids = boxItems.flatMap((item) => item.assigned_uids);
-
-    const submittedUids = (dto?.boxUids || [])
-      .map((u) => u.trim())
-      .filter(Boolean);
-
-    if (new Set(submittedUids).size !== submittedUids.length) {
-      throw new BadRequestException(
-        "Duplicate box UIDs detected in packing request.",
-      );
-    }
-
-    if (submittedUids.length !== totalRequired) {
-      throw new BadRequestException(
-        `Confirm the UID on each physical package. Received ${submittedUids.length} of ${totalRequired} required UID(s).`,
-      );
-    }
-    const uidsToPack = submittedUids;
-    const reservedUidSet = new Set(reservedUids);
-    if (reservedUidSet.size !== reservedUids.length) {
-      throw new BadRequestException(
-        "The order has duplicate reserved package UIDs.",
-      );
-    }
-
-    const boxesToPack =
-      totalRequired > 0
-        ? await this.prisma.medicine_boxes.findMany({
-          where: {
-            uid: { in: uidsToPack },
-            current_facility_id: order.export_facility_id,
-            status: { in: ["RESERVED", ...AVAILABLE_BOX_STATUSES] },
+    return this.prisma.withOrder('pack', async (tx) => {
+      await tx.$queryRaw`SELECT id FROM public.orders WHERE id = ${orderId} FOR UPDATE`;
+      const order = await tx.orders.findFirst({
+        where: this.orderAccessWhere(orderId, user),
+        include: {
+          order_items: {
+            include: { medicines: true },
           },
-          include: { medicine_batches: true },
-        })
-        : [];
+          shipments: true,
+        },
+      });
 
-    if (boxesToPack.length !== totalRequired) {
-      throw new BadRequestException(
-        "One or more physical packages for this order are invalid, already dispatched, or not at the export facility.",
-      );
-    }
-
-    if (
-      boxesToPack.some(
-        (box) => box.status === "RESERVED" && !reservedUidSet.has(box.uid),
-      )
-    ) {
-      throw new BadRequestException(
-        "A scanned package is reserved for another order.",
-      );
-    }
-
-    const boxesByMedicine = new Map<number, typeof boxesToPack>();
-    for (const box of boxesToPack) {
-      const medId = box.medicine_batches?.medicine_id;
-      if (medId) {
-        const list = boxesByMedicine.get(medId) || [];
-        list.push(box);
-        boxesByMedicine.set(medId, list);
+      if (!order) {
+        throw new NotFoundException(`Order #${orderId} not found`);
       }
-    }
 
-    for (const item of boxItems) {
-      if (!item.medicine_id) {
+      if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED') {
+        throw new BadRequestException('This order requires pharmacist approval before packing');
+      }
+
+      const normStatus = normalizeOrderStatus(order.order_status);
+      if (!["PENDING", "PROCESSING"].includes(normStatus)) {
         throw new BadRequestException(
-          `Order item "${item.medicine_name}" is missing medicine ID.`,
+          `Only orders with status PENDING or PROCESSING can be packed. Current status is ${order.order_status}.`,
         );
       }
-      const availableForMed = boxesByMedicine.get(item.medicine_id!) || [];
-      if (availableForMed.length < item.quantity) {
+
+      if (order.shipments) {
         throw new BadRequestException(
-          `Verified packages do not match medicine "${item.medicine_name}". Required: ${item.quantity}, provided: ${availableForMed.length}.`,
+          "A shipment is already created for this order.",
         );
       }
-    }
 
-    const reservedBoxMap = new Map(boxesToPack.map((box) => [box.uid, box]));
+      const boxItems = order.order_items.filter((item) =>
+        isBoxUnit(item.unit_name),
+      );
 
-    await this.prisma.$transaction(async (tx) => {
+      const totalRequired = boxItems.reduce(
+        (sum, item) => sum + item.quantity,
+        0,
+      );
+      const reservedUids = boxItems.flatMap((item) => item.assigned_uids);
+
+      const submittedUids = (dto?.boxUids || [])
+        .map((u) => u.trim())
+        .filter(Boolean);
+
+      if (new Set(submittedUids).size !== submittedUids.length) {
+        throw new BadRequestException(
+          "Duplicate box UIDs detected in packing request.",
+        );
+      }
+
+      if (submittedUids.length !== totalRequired) {
+        throw new BadRequestException(
+          `Confirm the UID on each physical package. Received ${submittedUids.length} of ${totalRequired} required UID(s).`,
+        );
+      }
+      const uidsToPack = submittedUids;
+      const reservedUidSet = new Set(reservedUids);
+      if (reservedUidSet.size !== reservedUids.length) {
+        throw new BadRequestException(
+          "The order has duplicate reserved package UIDs.",
+        );
+      }
+
+      const boxesToPack =
+        totalRequired > 0
+          ? await tx.medicine_boxes.findMany({
+            where: {
+              uid: { in: uidsToPack },
+              current_facility_id: order.export_facility_id,
+              status: { in: ["RESERVED", ...AVAILABLE_BOX_STATUSES] },
+            },
+            include: { medicine_batches: true },
+          })
+          : [];
+
+      if (boxesToPack.length !== totalRequired) {
+        throw new BadRequestException(
+          "One or more physical packages for this order are invalid, already dispatched, or not at the export facility.",
+        );
+      }
+
+      if (
+        boxesToPack.some(
+          (box) => box.status === "RESERVED" && !reservedUidSet.has(box.uid),
+        )
+      ) {
+        throw new BadRequestException(
+          "A scanned package is reserved for another order.",
+        );
+      }
+
+      const boxesByMedicine = new Map<number, typeof boxesToPack>();
+      for (const box of boxesToPack) {
+        const medId = box.medicine_batches?.medicine_id;
+        if (medId) {
+          const list = boxesByMedicine.get(medId) || [];
+          list.push(box);
+          boxesByMedicine.set(medId, list);
+        }
+      }
+
+      for (const item of boxItems) {
+        if (!item.medicine_id) {
+          throw new BadRequestException(
+            `Order item "${item.medicine_name}" is missing medicine ID.`,
+          );
+        }
+        const availableForMed = boxesByMedicine.get(item.medicine_id!) || [];
+        if (availableForMed.length < item.quantity) {
+          throw new BadRequestException(
+            `Verified packages do not match medicine "${item.medicine_name}". Required: ${item.quantity}, provided: ${availableForMed.length}.`,
+          );
+        }
+      }
+
+      const reservedBoxMap = new Map(boxesToPack.map((box) => [box.uid, box]));
+
       const replacementUids = boxesToPack
         .filter((box) => !reservedUidSet.has(box.uid))
         .map((box) => box.uid);
@@ -693,97 +647,94 @@ export class AdminOrderService {
         where: { id: orderId },
         data: { order_status: "SHIPPING" },
       });
-    });
 
-    return this.adminGetOrderById(orderId, user);
+
+      return formatOrder(await tx.orders.findFirst({ where: this.orderAccessWhere(orderId, user), include: ORDER_DETAILS_INCLUDE }));
+
+    }, authActor(user));
   }
 
   async adminGetInternalTransfers(orderId: number | undefined, user: CurrentUserPayload,) {
-    const facilityId = this.getFacilityScope(user);
-    const where: any = {};
-    if (orderId) {
-      where.order_id = orderId;
-    }
-    if (facilityId !== null) {
-      where.OR = [
-        { from_facility_id: facilityId },
-        { to_facility_id: facilityId },
-      ];
-    }
-    return this.prisma.internal_transfers.findMany({
-      where,
-      orderBy: { created_at: "desc" },
-      include: {
-        from_facility: true,
-        to_facility: true,
-        orders: {
-          select: {
-            id: true,
-            order_code: true,
-            order_status: true,
-            recipient_name: true,
-          },
+    return this.prisma.withOrder('transfer_read', async (tx) => {
+      const facilityId = this.getFacilityScope(user);
+      const where: any = {};
+      if (orderId) {
+        where.order_id = orderId;
+      }
+      if (facilityId !== null) {
+        where.OR = [
+          { from_facility_id: facilityId },
+          { to_facility_id: facilityId },
+        ];
+      }
+      return tx.internal_transfers.findMany({
+        where,
+        orderBy: { created_at: "desc" },
+        include: {
+          from_facility: true,
+          to_facility: true,
+
         },
-      },
-    });
+      });
+
+    }, authActor(user));
   }
 
   async adminDispatchInternalTransfer(transferId: number, trackingCode: string | undefined, user: CurrentUserPayload,) {
-    const facilityId = this.getFacilityScope(user);
-    const transfer = await this.prisma.internal_transfers.findFirst({
-      where: facilityId === null ? { id: transferId } : { id: transferId, from_facility_id: facilityId },
-    });
-    if (!transfer) {
-      throw new NotFoundException(`Internal transfer #${transferId} not found`);
-    }
-    const transferOrder = await this.prisma.orders.findUnique({
-      where: { id: transfer.order_id },
-      select: { prescription_review_status: true, order_status: true },
-    });
-    if (!transferOrder || transferOrder.order_status === 'CANCELLED' || (transferOrder.prescription_review_status && transferOrder.prescription_review_status !== 'APPROVED')) {
-      throw new BadRequestException('This transfer cannot be dispatched before pharmacist approval');
-    }
-    if (["CANCELLED", "REJECTED", "REJECTED_UNFULFILLED", "REPLACED", "RECEIVED"].includes(transfer.status)) {
-      throw new BadRequestException(`Cannot dispatch transfer #${transferId} because its status is ${transfer.status}.`);
-    }
+    return this.prisma.withOrder('dispatch', async (tx) => {
+      const facilityId = this.getFacilityScope(user);
+      const transfer = await tx.internal_transfers.findFirst({
+        where: facilityId === null ? { id: transferId } : { id: transferId, from_facility_id: facilityId },
+      });
+      if (!transfer) {
+        throw new NotFoundException(`Internal transfer #${transferId} not found`);
+      }
+      const [transferOrder] = await tx.$queryRaw<{ prescription_review_status: string | null; order_status: string }[]>`SELECT * FROM public.transfer_order_state(${transfer.order_id})`;
+      if (!transferOrder || transferOrder.order_status === 'CANCELLED' || (transferOrder.prescription_review_status && transferOrder.prescription_review_status !== 'APPROVED')) {
+        throw new BadRequestException('This transfer cannot be dispatched before pharmacist approval');
+      }
+      if (["CANCELLED", "REJECTED", "REJECTED_UNFULFILLED", "REPLACED", "RECEIVED"].includes(transfer.status)) {
+        throw new BadRequestException(`Cannot dispatch transfer #${transferId} because its status is ${transfer.status}.`);
+      }
 
-    return this.prisma.internal_transfers.update({
-      where: { id: transferId },
-      data: {
-        status: "DISPATCHED",
-        tracking_code:
-          trackingCode ||
-          transfer.tracking_code ||
-          `ITR-TRK-${new Date().toISOString().slice(2, 10).replace(/-/g, "")}-${randomBytes(3).toString("hex").toUpperCase()}`,
-        dispatched_at: new Date(),
-      },
-      include: {
-        from_facility: true,
-        to_facility: true,
-        orders: true,
-      },
-    });
+      return tx.internal_transfers.update({
+        where: { id: transferId },
+        data: {
+          status: "DISPATCHED",
+          tracking_code:
+            trackingCode ||
+            transfer.tracking_code ||
+            `ITR-TRK-${new Date().toISOString().slice(2, 10).replace(/-/g, "")}-${randomBytes(3).toString("hex").toUpperCase()}`,
+          dispatched_at: new Date(),
+        },
+        include: {
+          from_facility: true,
+          to_facility: true,
+        },
+      });
+
+    }, authActor(user));
   }
 
   async adminRejectDamagedInternalTransfer(transferId: number, user: CurrentUserPayload) {
-    const facilityId = this.getFacilityScope(user);
-    const transfer = await this.prisma.internal_transfers.findFirst({
-      where: facilityId === null ? { id: transferId } : { id: transferId, to_facility_id: facilityId },
-      include: { orders: { include: { order_items: true } } },
-    });
-    if (!transfer) {
-      throw new NotFoundException(`Internal transfer #${transferId} not found`);
-    }
-    if (transfer.status !== "DISPATCHED" || transfer.orders.order_status !== "WAITING_INTERNAL_TRANSFER") {
-      throw new BadRequestException("Only dispatched transfers for waiting orders can be rejected as damaged.");
-    }
+    return this.prisma.withOrder('replace', async (tx) => {
+      const facilityId = this.getFacilityScope(user);
+      const transfer = await tx.internal_transfers.findFirst({
+        where: facilityId === null ? { id: transferId } : { id: transferId, to_facility_id: facilityId },
+        include: { orders: { include: { order_items: true } } },
+      });
+      if (!transfer) {
+        throw new NotFoundException(`Internal transfer #${transferId} not found`);
+      }
+      if (transfer.status !== "DISPATCHED" || transfer.orders.order_status !== "WAITING_INTERNAL_TRANSFER") {
+        throw new BadRequestException("Only dispatched transfers for waiting orders can be rejected as damaged.");
+      }
 
-    const items = (transfer.items as any[]) || [];
-    if (items.length === 0) {
-      throw new BadRequestException("Transfer has no items to replace.");
-    }
-    const datePart = new Date().toISOString().slice(2, 10).replace(/-/g, "");
-    return this.prisma.$transaction(async (tx) => {
+      const items = (transfer.items as any[]) || [];
+      if (items.length === 0) {
+        throw new BadRequestException("Transfer has no items to replace.");
+      }
+      const datePart = new Date().toISOString().slice(2, 10).replace(/-/g, "");
       const rejected = await tx.internal_transfers.updateMany({
         where: { id: transferId, status: "DISPATCHED" },
         data: { status: "REJECTED_UNFULFILLED", notes: `Damaged in transit; replacement required. ${transfer.notes || ""}`.trim() },
@@ -944,50 +895,53 @@ export class AdminOrderService {
           notes: `Replacement for damaged transfer #${transfer.transfer_code}`,
         },
       });
-    });
+
+
+    }, authActor(user));
   }
 
   async adminReceiveInternalTransfer(transferId: number, user: CurrentUserPayload,) {
-    const facilityId = this.getFacilityScope(user);
-    const transfer = await this.prisma.internal_transfers.findFirst({
-      where: facilityId === null ? { id: transferId } : { id: transferId, to_facility_id: facilityId },
-      include: {
-        orders: {
-          include: {
-            order_items: true,
-            internal_transfers: true,
+    return this.prisma.withOrder('receive', async (tx) => {
+      const facilityId = this.getFacilityScope(user);
+      const transfer = await tx.internal_transfers.findFirst({
+        where: facilityId === null ? { id: transferId } : { id: transferId, to_facility_id: facilityId },
+        include: {
+          orders: {
+            include: {
+              order_items: true,
+              internal_transfers: true,
+            },
           },
+          from_facility: true,
+          to_facility: true,
         },
-        from_facility: true,
-        to_facility: true,
-      },
-    });
+      });
 
-    if (!transfer) {
-      throw new NotFoundException(`Internal transfer #${transferId} not found`);
-    }
+      if (!transfer) {
+        throw new NotFoundException(`Internal transfer #${transferId} not found`);
+      }
 
-    if (transfer.status === "RECEIVED") {
-      return transfer;
-    }
+      if (transfer.status === "RECEIVED") {
+        return transfer;
+      }
 
-    if (["CANCELLED", "REJECTED", "REJECTED_UNFULFILLED", "REPLACED"].includes(transfer.status)) {
-      throw new BadRequestException(`Cannot receive transfer #${transferId} because its status is ${transfer.status}.`);
-    }
-    if (transfer.status !== "DISPATCHED") {
-      throw new BadRequestException(`Transfer #${transferId} must be dispatched before it can be received.`);
-    }
+      if (["CANCELLED", "REJECTED", "REJECTED_UNFULFILLED", "REPLACED"].includes(transfer.status)) {
+        throw new BadRequestException(`Cannot receive transfer #${transferId} because its status is ${transfer.status}.`);
+      }
+      if (transfer.status !== "DISPATCHED") {
+        throw new BadRequestException(`Transfer #${transferId} must be dispatched before it can be received.`);
+      }
 
-    const transferItems = (transfer.items as any[]) || [];
+      const transferItems = (transfer.items as any[]) || [];
 
-    await this.prisma.$transaction(async (tx) => {
-      await tx.internal_transfers.update({
-        where: { id: transferId },
+      const received = await tx.internal_transfers.updateMany({
+        where: { id: transferId, status: 'DISPATCHED' },
         data: {
           status: "RECEIVED",
           received_at: new Date(),
         },
       });
+      if (received.count !== 1) throw new BadRequestException('Transfer status changed. Reload and try again.');
 
       for (const item of transferItems) {
         const variantId = Number(item.variantId);
@@ -1122,15 +1076,16 @@ export class AdminOrderService {
           data: { order_status: "PROCESSING" },
         });
       }
-    });
 
-    return this.prisma.internal_transfers.findUnique({
-      where: { id: transferId },
-      include: {
-        from_facility: true,
-        to_facility: true,
-        orders: true,
-      },
-    });
+
+      return tx.internal_transfers.findUnique({
+        where: { id: transferId },
+        include: {
+          from_facility: true,
+          to_facility: true,
+        },
+      });
+
+    }, authActor(user));
   }
 }

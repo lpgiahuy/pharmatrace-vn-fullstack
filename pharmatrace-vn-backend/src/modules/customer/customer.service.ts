@@ -1,3 +1,5 @@
+import { CurrentUserPayload } from "../../common/decorators/current-user.decorator";
+import { authActor } from "../../common/auth-identity";
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CustomerQueryDto } from './dto/customer-query.dto';
@@ -108,96 +110,102 @@ function formatCustomerOrder(order: any) {
 export class CustomerService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async findAll(query?: CustomerQueryDto) {
-    const page = Math.max(1, Number(query?.page) || 1);
-    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
-    const skip = (page - 1) * limit;
+  async findAll(query: CustomerQueryDto | undefined, user: CurrentUserPayload) {
+    return this.prisma.withOrder('read', async tx => {
+      const page = Math.max(1, Number(query?.page) || 1);
+      const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
+      const skip = (page - 1) * limit;
 
-    const where: any = {};
+      const where: any = {};
 
-    if (query?.search && query.search.trim() !== '') {
-      const s = query.search.trim();
-      where.OR = [
-        { full_name: { contains: s, mode: 'insensitive' } },
-        { email: { contains: s, mode: 'insensitive' } },
-        { phone_number: { contains: s, mode: 'insensitive' } },
-      ];
-    }
+      if (query?.search && query.search.trim() !== '') {
+        const s = query.search.trim();
+        where.OR = [
+          { full_name: { contains: s, mode: 'insensitive' } },
+          { email: { contains: s, mode: 'insensitive' } },
+          { phone_number: { contains: s, mode: 'insensitive' } },
+        ];
+      }
 
-    if (query?.membershipTier && query.membershipTier.trim() !== '') {
-      where.membership_tier = { equals: query.membershipTier.trim(), mode: 'insensitive' };
-    }
+      if (query?.membershipTier && query.membershipTier.trim() !== '') {
+        where.membership_tier = { equals: query.membershipTier.trim(), mode: 'insensitive' };
+      }
 
-    if (query?.status && query.status.trim() !== '') {
-      where.status = { equals: query.status.trim(), mode: 'insensitive' };
-    }
+      if (query?.status && query.status.trim() !== '') {
+        where.status = { equals: query.status.trim(), mode: 'insensitive' };
+      }
 
-    const [total, items] = await Promise.all([
-      this.prisma.customers.count({ where }),
-      this.prisma.customers.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { id: 'desc' },
-        include: {
-          _count: {
-            select: { orders: true },
+      const [total, items] = await Promise.all([
+        tx.customers.count({ where }),
+        tx.customers.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { id: 'desc' },
+          include: {
+            _count: {
+              select: { orders: true },
+            },
           },
-        },
-      }),
-    ]);
+        }),
+      ]);
 
-    return {
-      items: items.map((c) => formatCustomer(c)),
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit) || 1,
-      },
-    };
+      return {
+        items: items.map((c) => formatCustomer(c)),
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit) || 1,
+        },
+      };
+
+    }, authActor(user));
   }
 
-  async findOne(id: number) {
-    const customer = await this.prisma.customers.findUnique({
-      where: { id },
-    });
+  async findOne(id: number, user: CurrentUserPayload) {
+    return this.prisma.withOrder('read', async tx => {
+      const customer = await tx.customers.findUnique({
+        where: { id },
+      });
 
-    if (!customer) {
-      throw new NotFoundException(`Customer with ID ${id} not found`);
-    }
-
-    const orders = await this.prisma.orders.findMany({
-      where: { customer_id: id },
-      select: {
-        total_amount: true,
-        order_status: true,
-      },
-    });
-
-    const totalOrders = orders.length;
-    let totalSpent = 0;
-    let completedOrders = 0;
-    let cancelledOrders = 0;
-
-    for (const o of orders) {
-      totalSpent += Number(o.total_amount || 0);
-      const statusUpper = (o.order_status || '').toUpperCase();
-      if (statusUpper === 'DELIVERED' || statusUpper === 'COMPLETED') {
-        completedOrders++;
-      } else if (statusUpper === 'CANCELLED' || statusUpper === 'DAHUY') {
-        cancelledOrders++;
+      if (!customer) {
+        throw new NotFoundException(`Customer with ID ${id} not found`);
       }
-    }
 
-    const orderStats = {
-      totalOrders,
-      totalSpent,
-      completedOrders,
-      cancelledOrders,
-    };
+      const orders = await tx.orders.findMany({
+        where: { customer_id: id },
+        select: {
+          total_amount: true,
+          order_status: true,
+        },
+      });
 
-    return formatCustomer(customer, orderStats);
+      const totalOrders = orders.length;
+      let totalSpent = 0;
+      let completedOrders = 0;
+      let cancelledOrders = 0;
+
+      for (const o of orders) {
+        totalSpent += Number(o.total_amount || 0);
+        const statusUpper = (o.order_status || '').toUpperCase();
+        if (statusUpper === 'DELIVERED' || statusUpper === 'COMPLETED') {
+          completedOrders++;
+        } else if (statusUpper === 'CANCELLED') {
+          cancelledOrders++;
+        }
+      }
+
+      const orderStats = {
+        totalOrders,
+        totalSpent,
+        completedOrders,
+        cancelledOrders,
+      };
+
+      return formatCustomer(customer, orderStats);
+
+    }, authActor(user));
   }
 
   async updateStatus(id: number, dto: UpdateCustomerStatusDto) {
@@ -219,60 +227,63 @@ export class CustomerService {
     return formatCustomer(updated);
   }
 
-  async getCustomerOrders(id: number, query?: CustomerOrderQueryDto) {
-    const customer = await this.prisma.customers.findUnique({
-      where: { id },
-      select: { id: true, full_name: true },
-    });
+  async getCustomerOrders(id: number, query: CustomerOrderQueryDto | undefined, user: CurrentUserPayload) {
+    return this.prisma.withOrder('read', async tx => {
+      const customer = await tx.customers.findUnique({
+        where: { id },
+        select: { id: true, full_name: true },
+      });
 
-    if (!customer) {
-      throw new NotFoundException(`Customer with ID ${id} not found`);
-    }
+      if (!customer) {
+        throw new NotFoundException(`Customer with ID ${id} not found`);
+      }
 
-    const page = Math.max(1, Number(query?.page) || 1);
-    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
-    const skip = (page - 1) * limit;
+      const page = Math.max(1, Number(query?.page) || 1);
+      const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
+      const skip = (page - 1) * limit;
 
-    const where: any = {
-      customer_id: id,
-    };
+      const where: any = {
+        customer_id: id,
+      };
 
-    if (query?.orderStatus && query.orderStatus.trim() !== '') {
-      where.order_status = { equals: query.orderStatus.trim(), mode: 'insensitive' };
-    }
+      if (query?.orderStatus && query.orderStatus.trim() !== '') {
+        where.order_status = { equals: query.orderStatus.trim(), mode: 'insensitive' };
+      }
 
-    if (query?.paymentStatus && query.paymentStatus.trim() !== '') {
-      where.payment_status = { equals: query.paymentStatus.trim(), mode: 'insensitive' };
-    }
+      if (query?.paymentStatus && query.paymentStatus.trim() !== '') {
+        where.payment_status = { equals: query.paymentStatus.trim(), mode: 'insensitive' };
+      }
 
-    const [total, items] = await Promise.all([
-      this.prisma.orders.count({ where }),
-      this.prisma.orders.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { id: 'desc' },
-        include: {
-          facilities: true,
-          shipments: true,
-          order_items: {
-            include: {
-              medicines: true,
-              packaging_variants: true,
+      const [total, items] = await Promise.all([
+        tx.orders.count({ where }),
+        tx.orders.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { id: 'desc' },
+          include: {
+            facilities: true,
+            shipments: true,
+            order_items: {
+              include: {
+                medicines: true,
+                packaging_variants: true,
+              },
             },
           },
-        },
-      }),
-    ]);
+        }),
+      ]);
 
-    return {
-      items: items.map(formatCustomerOrder),
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit) || 1,
-      },
-    };
+      return {
+        items: items.map(formatCustomerOrder),
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit) || 1,
+        },
+      };
+
+    }, authActor(user));
   }
 }

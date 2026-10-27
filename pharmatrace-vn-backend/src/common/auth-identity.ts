@@ -7,10 +7,12 @@ export interface AuthActor {
   facilityId?: number | null;
 }
 
-const roles = [
-  'CUSTOMER', 'SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'SALES_STAFF',
+export const EMPLOYEE_ROLES = [
+  'SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER',
   'PHARMACIST', 'WAREHOUSE_STAFF', 'WAREHOUSE_MANAGER', 'FACTORY_WAREHOUSE_STAFF',
 ];
+
+const roles = ['CUSTOMER', ...EMPLOYEE_ROLES];
 
 export function normalizeRole(role?: string): string | undefined {
   if (typeof role !== 'string') return undefined;

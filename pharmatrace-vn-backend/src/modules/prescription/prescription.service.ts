@@ -220,7 +220,7 @@ export class PrescriptionService {
   async decidePrescriptionReview(user: CurrentUserPayload, reviewId: number, decision: 'APPROVED' | 'REJECTED', note?: string) {
     const actor = this.staffActor(user);
     if (decision === 'REJECTED' && !note?.trim()) throw new BadRequestException('A rejection reason is required');
-    return this.prisma.withActor(actor, async (tx) => {
+    return this.prisma.withOrder('prescription', async (tx) => {
       const review = await tx.order_prescription_reviews.findFirst({
         where: {
           id: reviewId,
@@ -285,6 +285,6 @@ export class PrescriptionService {
         }
       }
       return { id: reviewId, orderId: review.order_id, status: decision };
-    });
+    }, actor);
   }
 }

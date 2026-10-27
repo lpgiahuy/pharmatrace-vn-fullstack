@@ -48,7 +48,6 @@ const ROLES_OPTIONS = [
   { value: 'SUPER_ADMIN', label: 'Super Admin', color: 'red' },
   { value: 'STORE_MANAGER', label: 'Store Manager', color: 'orange' },
   { value: 'WAREHOUSE_MANAGER', label: 'Warehouse Manager', color: 'purple' },
-  { value: 'SALES_STAFF', label: 'Sales Staff', color: 'blue' },
   { value: 'PHARMACIST', label: 'Pharmacist', color: 'cyan' },
 ];
 
@@ -68,8 +67,6 @@ const ROLE_MAP: Record<string, { label: string; color: string }> = {
   WAREHOUSESTAFF: { label: 'Warehouse Staff', color: 'purple' },
   FACTORY_WAREHOUSE_STAFF: { label: 'Factory Staff', color: 'purple' },
   FACTORYWAREHOUSESTAFF: { label: 'Factory Staff', color: 'purple' },
-  SALES_STAFF: { label: 'Sales Staff', color: 'blue' },
-  SALESSTAFF: { label: 'Sales Staff', color: 'blue' },
   PHARMACIST: { label: 'Pharmacist', color: 'cyan' },
 };
 

@@ -31,6 +31,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Products')
 @Controller()
@@ -159,8 +160,8 @@ export class ProductController {
   })
   @ApiResponse({ status: 200, description: 'Product removed or deactivated' })
   @ApiResponse({ status: 404, description: 'Product not found' })
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    const result = await this.productService.delete(id);
+  async delete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.productService.delete(id, user);
     return {
       success: true,
       message: result.message,

@@ -1,5 +1,6 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsInt, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsEmail, IsNotEmpty, IsString, MinLength, IsInt, IsOptional, IsIn } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
+import { EMPLOYEE_ROLES, normalizeRole } from '../../../common/auth-identity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateEmployeeDto {
@@ -20,10 +21,12 @@ export class CreateEmployeeDto {
 
   @ApiProperty({
     example: 'STORE_MANAGER',
-    description: 'System role (e.g. SUPER_ADMIN, STORE_MANAGER, WAREHOUSE_MANAGER, SALES_STAFF, PHARMACIST)',
+    description: 'System role (e.g. SUPER_ADMIN, STORE_MANAGER, WAREHOUSE_MANAGER, PHARMACIST)',
   })
   @IsString()
   @IsNotEmpty({ message: 'Role is required' })
+  @Transform(({ value }) => normalizeRole(value) ?? value)
+  @IsIn(EMPLOYEE_ROLES, { message: 'Role must be a supported employee role' })
   role!: string;
 
   @ApiProperty({ example: 1, description: 'Assigned facility ID' })

@@ -172,9 +172,9 @@ export const useAuthStore = create<AuthState>()(
         const userRole = currentUser?.role;
 
         let redirectUrl = '/login';
-        if (['QuanLyKho', 'NhanVienKho', 'WAREHOUSE_MANAGER', 'WAREHOUSE_STAFF'].includes(userRole) || portal === 'warehouse') {
+        if (['WAREHOUSE_MANAGER', 'WAREHOUSE_STAFF', 'FACTORY_WAREHOUSE_STAFF'].includes(userRole) || portal === 'warehouse') {
           redirectUrl = '/warehouse/login';
-        } else if (['SuperAdmin', 'superadmin', 'Admin', 'admin', 'NhanVienBanHang', 'QuanLyCuaHang', 'STORE_MANAGER', 'SALES_STAFF'].includes(userRole) || portal === 'admin') {
+        } else if (['SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'PHARMACIST'].includes(userRole) || portal === 'admin') {
           redirectUrl = '/admin/login';
         }
 

@@ -8,6 +8,8 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
+import { authActor } from '../../common/auth-identity';
 
 export function formatProduct(item: any) {
   let realStock = 0;
@@ -654,11 +656,14 @@ export class ProductService {
     return formatProduct(updated);
   }
 
-  async delete(id: number) {
+  async delete(id: number, user: CurrentUserPayload) {
     const item = await this.findOne(id);
 
     const [orderItemCount, batchCount] = await Promise.all([
-      this.prisma.order_items.count({ where: { medicine_id: id } }),
+      this.prisma.withOrder('read', async tx => {
+        const [history] = await tx.$queryRaw<{ present: boolean }[]>`SELECT public.product_has_order_history(${id}) AS present`;
+        return history.present ? 1 : 0;
+      }, authActor(user)),
       this.prisma.batches.count({ where: { medicine_id: id } }),
     ]);
 

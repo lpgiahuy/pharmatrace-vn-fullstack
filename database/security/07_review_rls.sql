@@ -13,12 +13,7 @@ DO $$ BEGIN
         RAISE EXCEPTION 'Audit foreign key needs manual review';
     END IF;
 END $$;
--- Preserve review eligibility while retiring legacy order-status spellings.
-UPDATE public.orders
-SET order_status = CASE WHEN upper(btrim(order_status)) = 'HOANTHANH' THEN 'COMPLETED'
-    ELSE upper(btrim(order_status)) END
-WHERE upper(btrim(order_status)) IN ('HOANTHANH', 'DELIVERED', 'COMPLETED')
-    AND order_status NOT IN ('DELIVERED', 'COMPLETED');
+
 ALTER TABLE public.moderation_audit_logs DROP CONSTRAINT IF EXISTS moderation_audit_logs_review_id_fkey;
 ALTER TABLE public.moderation_audit_logs ADD CONSTRAINT moderation_audit_logs_review_id_fkey
     FOREIGN KEY (review_id) REFERENCES public.reviews(id) ON DELETE SET NULL;
@@ -46,7 +41,7 @@ LANGUAGE sql STABLE SET search_path = pg_catalog AS $$
         WHEN 'customer' THEN current_setting('app.current_user_type', true) = 'customer'
             AND current_setting('app.current_user_role', true) = 'CUSTOMER'
         WHEN 'staff' THEN current_setting('app.current_user_type', true) = 'employee'
-            AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'SALES_STAFF', 'PHARMACIST')
+            AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'PHARMACIST')
         WHEN 'moderator' THEN current_setting('app.current_user_type', true) = 'employee'
             AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'ADMIN')
         ELSE false END

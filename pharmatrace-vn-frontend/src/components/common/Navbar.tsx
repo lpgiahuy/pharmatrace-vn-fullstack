@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
       ),
     },
     { type: 'divider' },
-    ...(user?.role && ['SuperAdmin', 'Admin', 'STORE_MANAGER'].includes(user.role)
+    ...(user?.role && ['SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'PHARMACIST'].includes(user.role)
       ? [
         {
           key: 'admin',
@@ -47,7 +47,7 @@ export const Navbar: React.FC = () => {
         },
       ]
       : []),
-    ...(user?.role && ['QuanLyKho', 'NhanVienKho', 'WAREHOUSE_MANAGER', 'WAREHOUSE_STAFF'].includes(user.role)
+    ...(user?.role && ['WAREHOUSE_MANAGER', 'WAREHOUSE_STAFF', 'FACTORY_WAREHOUSE_STAFF'].includes(user.role)
       ? [
         {
           key: 'warehouse',

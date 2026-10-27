@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS public.loyalty_point_logs (
     id SERIAL PRIMARY KEY,
     customer_id INTEGER NOT NULL REFERENCES public.customers(id) ON DELETE CASCADE,
     order_id INTEGER REFERENCES public.orders(id) ON DELETE SET NULL,
-    transaction_type VARCHAR(50) NOT NULL CHECK (transaction_type IN ('EARN', 'REDEEM', 'REDEEM_REVERSAL', 'RANK_BONUS', 'RMA_DEDUCTION', 'ADMIN_ADJUSTMENT')),
+    transaction_type VARCHAR(50) NOT NULL CHECK (transaction_type IN ('EARN', 'REDEEM', 'REDEEM_REVERSAL', 'EARN_REVERSAL', 'RANK_BONUS', 'RMA_DEDUCTION', 'ADMIN_ADJUSTMENT')),
     points INTEGER NOT NULL,
     description TEXT,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP

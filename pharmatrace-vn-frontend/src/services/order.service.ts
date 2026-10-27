@@ -119,9 +119,9 @@ export function formatPaymentStatus(status?: string): PaymentStatus {
 export function formatPaymentMethod(method?: string): string {
   if (!method) return 'COD';
   const s = method.trim().toUpperCase();
-  if (['TIEN_MAT', 'TIENMAT', 'COD', 'CASH'].includes(s)) return 'COD';
-  if (['CHUYEN_KHOAN', 'CHUYENKHOAN', 'BANK_TRANSFER', 'VIETQR', 'BANK'].includes(s)) return 'Bank Transfer';
-  if (['VI_DIEN_TU', 'E_WALLET', 'VNPAY', 'MOMO', 'ZALOPAY'].includes(s)) return 'E-Wallet';
+  if (['COD', 'CASH'].includes(s)) return 'COD';
+  if (['BANK_TRANSFER', 'VIETQR', 'BANK'].includes(s)) return 'Bank Transfer';
+  if (['E_WALLET', 'VNPAY', 'MOMO', 'ZALOPAY'].includes(s)) return 'E-Wallet';
   return method;
 }
 

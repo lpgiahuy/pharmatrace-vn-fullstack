@@ -23,7 +23,7 @@ describe('PrescriptionService review boundaries', () => {
         create: jest.fn().mockResolvedValue({ id: 9, created_at: new Date('2026-10-20T00:00:00.000Z') }),
       },
     };
-    const prisma = { withActor: jest.fn((_actor, run) => run(tx)) };
+    const prisma = { withActor: jest.fn((_actor, run) => run(tx)), withOrder: jest.fn((_actor, run) => run(tx)) };
     cloudinary.uploadPrivateImage.mockResolvedValue({ publicId: 'pharmatrace/prescriptions/abc', bytes: 1200, width: 2200, height: 1467 });
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
@@ -39,7 +39,7 @@ describe('PrescriptionService review boundaries', () => {
   });
 
   it('rejects non-pharmacist staff before reading review data', async () => {
-    const prisma = { withActor: jest.fn() };
+    const prisma = { withActor: jest.fn(), withOrder: jest.fn() };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await expect(service.getReviewQueue({ ...pharmacist, role: 'WAREHOUSE_STAFF' }, 'PENDING_APPROVAL', 1, 20))
@@ -54,7 +54,7 @@ describe('PrescriptionService review boundaries', () => {
         count: jest.fn().mockResolvedValue(0),
       },
     };
-    const prisma = { withActor: jest.fn((actor, run) => run(tx)) };
+    const prisma = { withActor: jest.fn((actor, run) => run(tx)), withOrder: jest.fn((actor, run) => run(tx)) };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await service.getReviewQueue(pharmacist, 'PENDING_APPROVAL', 1, 20);
@@ -80,7 +80,7 @@ describe('PrescriptionService review boundaries', () => {
         }),
       },
     };
-    const prisma = { withActor: jest.fn((_actor, run) => run(tx)) };
+    const prisma = { withActor: jest.fn((_actor, run) => run(tx)), withOrder: jest.fn((_actor, run) => run(tx)) };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await expect(service.getReviewQueue(pharmacist, 'PENDING_APPROVAL')).resolves.toMatchObject({
@@ -90,7 +90,7 @@ describe('PrescriptionService review boundaries', () => {
 
   it('cannot approve a review belonging to a different facility', async () => {
     const tx = { order_prescription_reviews: { findFirst: jest.fn().mockResolvedValue(null) } };
-    const prisma = { withActor: jest.fn((actor, run) => run(tx)) };
+    const prisma = { withActor: jest.fn((actor, run) => run(tx)), withOrder: jest.fn((actor, run) => run(tx)) };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await expect(service.decidePrescriptionReview(pharmacist, 42, 'APPROVED')).rejects.toBeInstanceOf(NotFoundException);
@@ -113,7 +113,7 @@ describe('PrescriptionService review boundaries', () => {
       },
       orders: { update: jest.fn() },
     };
-    const prisma = { withActor: jest.fn((actor, run) => run(tx)) };
+    const prisma = { withActor: jest.fn((actor, run) => run(tx)), withOrder: jest.fn((actor, run) => run(tx)) };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await expect(service.decidePrescriptionReview(pharmacist, 5, 'APPROVED')).rejects.toBeInstanceOf(ConflictException);
@@ -138,7 +138,7 @@ describe('PrescriptionService review boundaries', () => {
         ),
       },
     };
-    const prisma = { withActor: jest.fn((_actor, run) => run(tx)) };
+    const prisma = { withActor: jest.fn((_actor, run) => run(tx)), withOrder: jest.fn((_actor, run) => run(tx)) };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await expect(service.decidePrescriptionReview(pharmacist, 5, 'APPROVED'))
@@ -149,7 +149,7 @@ describe('PrescriptionService review boundaries', () => {
   });
 
   it('requires a reason before rejecting an order', async () => {
-    const prisma = { withActor: jest.fn() };
+    const prisma = { withActor: jest.fn(), withOrder: jest.fn() };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await expect(service.decidePrescriptionReview(pharmacist, 5, 'REJECTED', '  ')).rejects.toBeInstanceOf(BadRequestException);

@@ -19,7 +19,8 @@ database/
 │   ├── 04_auth_rls_rollback.sql    # Manual rollback, never called by master
 │   ├── 05_wishlist_rls.sql         # Enforced customer wishlist ownership
 │   ├── 06_cart_rls.sql             # Enforced customer cart ownership
-│   └── 07_review_rls.sql           # Review ownership, moderation, reports and audit
+│   ├── 07_review_rls.sql           # Review ownership, moderation, reports and audit
+│   └── 08_order_rls.sql            # Orders, fulfillment, transfers and loyalty ledger
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -37,7 +38,8 @@ database/
     ├── prescription_rls_test.sql   # Manual RLS isolation checks
     ├── wishlist_rls_test.sql       # Wishlist allow/deny checks, rolled back
     ├── cart_rls_test.sql           # Cart ownership and column-grant checks
-    └── review_rls_test.sql         # Review visibility and write restrictions
+    ├── review_rls_test.sql         # Review visibility and write restrictions
+    └── order_rls_test.sql          # Customer/facility ownership and transfer projection
 ```
 
 `backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth role/policies are prepared automatically; account RLS enforcement stays off until dependent modules are ready. Read [Auth RLS rollout](#auth-rls-rollout) before activation. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
@@ -269,54 +271,54 @@ Remove-Item Env:WISHLIST_RLS_TEST_AUTH_ENABLED -ErrorAction SilentlyContinue
 
 ## Auth RLS rollout
 
-Nhánh triển khai: `feature/auth-rbac`. Ngày: 25/10/2026.
+Implementation branch: `feature/auth-rbac`. Date: 2026-10-25.
 
-### Trạng thái rollout
+### Rollout status
 
-**Docker tự chuẩn bị role và policy auth khi khởi tạo database mới**, qua `security/03_auth_rls.sql` được master gọi. Script mặc định không ENABLE/FORCE RLS trên hai bảng tài khoản. `AUTH_RLS_ENABLED` của backend vẫn mặc định là `false`.
+**Docker automatically prepares auth roles and policies for new databases** through `security/03_auth_rls.sql`, called by master initialization. The script does not ENABLE/FORCE RLS on the two account tables by default. The backend still defaults `AUTH_RLS_ENABLED` to `false`.
 
-Chuẩn bị policy và bật cưỡng chế là hai bước khác nhau. Prescription có thể bật ngay vì luồng tương ứng đã được chuyển đổi; customers/employees còn được nhiều module chưa có context sử dụng. Không xóa volume đang có dữ liệu để ép Docker chạy lại init.
+Policy preparation and enforcement activation are separate steps. Prescription enforcement can run because its workflow has been adapted; customers/employees are still used by modules without the required context. Do not delete an existing data volume to force Docker initialization to run again.
 
-Chỉ bật trên database dùng chung sau khi các module còn lại đã chuyển sang context/role phù hợp. Không thêm policy mở toàn bảng để tránh lỗi: điều đó sẽ vô hiệu hóa cách ly dữ liệu cần triển khai.
+Activate enforcement on the shared database only after the remaining modules use the appropriate context and roles. Do not add unrestricted table policies to avoid errors, as that would defeat the intended isolation.
 
-#### Khi chưa bật
+#### Before enforcement is enabled
 
-- Auth đã phân biệt customer/employee khi đọc/sửa hồ sơ và mật khẩu, kể cả khi trùng ID.
-- JWT yêu cầu type/role hợp lệ và kiểm tra lại tài khoản trong database mỗi request; tài khoản khóa, role hoặc facility thay đổi làm token bị từ chối.
-- `ADMIN` không còn vượt mọi danh sách role; `SUPER_ADMIN` cũng phải được liệt kê trên endpoint. Alias được chuẩn hóa theo danh sách role hỗ trợ.
-- Cart, wishlist, customer order và các thao tác review của khách có guard kiểm tra đúng loại tài khoản.
-- API `POST /admin/auth/setup` trả 410 và không ghi database. Quản trị ban đầu phải được tạo qua quy trình DBA; seed development đã có tài khoản demo.
-- `JWT_SECRET` phải được cấu hình; không còn fallback secret trong code. Token thiếu type phải đăng nhập lại.
-- Transaction auth truyền context nhưng vẫn dùng role kết nối cũ. Đây chưa phải RLS bảo vệ tài khoản ở tầng database.
+- Auth distinguishes customers from employees when reading/updating profiles and passwords, including accounts with matching numeric IDs.
+- JWTs require valid type/role claims and accounts are checked in the database on every request. Locked accounts or role/facility changes cause existing tokens to be rejected.
+- `ADMIN` no longer bypasses endpoint role lists; `SUPER_ADMIN` must also be listed explicitly. Aliases are normalized against the supported roles.
+- Cart, wishlist, customer order and customer review operations have guards that enforce the correct account type.
+- `POST /admin/auth/setup` returns 410 without writing to the database. Provision the initial administrator through the DBA process; the development seed provides demo accounts.
+- `JWT_SECRET` is required; the code has no fallback secret. Tokens without a type claim require the user to log in again.
+- Auth transactions carry context but still use the existing connection role. Account RLS is not yet enforced at the database layer.
 
-#### Khi bật trên database đã cấu hình auth RLS
+#### After enforcement is enabled on a configured database
 
-`withAuth()` kiểm tra role không phải superuser/BYPASSRLS/owner và hai bảng tài khoản đã ENABLE + FORCE RLS. Nếu chưa sẵn sàng, request trả 503, không âm thầm quay về truy cập rộng. Sau đó transaction dùng `SET LOCAL ROLE auth_runtime` và đặt đủ các trường context, kể cả giá trị rỗng khi thiếu.
+`withAuth()` verifies that the role is not a superuser, does not have BYPASSRLS, does not own the tables, and that both account tables have ENABLE + FORCE RLS. Incomplete setup returns 503 instead of reverting to broader access. The transaction then uses `SET LOCAL ROLE auth_runtime` and sets every context field, including empty values for missing fields.
 
-| Thao tác | Quyền database của `auth_runtime` |
+| Operation | Database access for `auth_runtime` |
 |---|---|
-| Thiếu actor và không phải login/register | Không đọc được dòng tài khoản nào |
-| Đăng nhập khách | Chỉ dòng khớp phone/email đang được kiểm tra |
-| Đăng nhập nhân viên | Chỉ dòng khớp email đang được kiểm tra |
-| Đăng ký | Chỉ insert năm cột hồ sơ/credential, đúng phone context; điểm/tier/status dùng default và bị CHECK policy giới hạn |
-| Hồ sơ/mật khẩu | Chỉ tài khoản đúng type + ID; chỉ các cột hồ sơ/mật khẩu được cấp UPDATE |
-| Role/facility/status/điểm/ID | Không có quyền tự sửa hoặc tự gán khi insert |
-| Tạo/xóa nhân viên, xóa khách, TRUNCATE | Không được cấp |
+| No actor and not a login/register operation | No account rows are visible |
+| Customer login | Only the row matching the phone/email being checked |
+| Employee login | Only the row matching the email being checked |
+| Registration | Insert only five profile/credential columns with matching phone context; points/tier/status use defaults and are restricted by CHECK policies |
+| Profile/password | Only the matching account type + ID; UPDATE is granted only for profile/password columns |
+| Role/facility/status/points/ID | No permission to change these fields or assign them during insertion |
+| Create/delete employees, delete customers, TRUNCATE | Not granted |
 
-Không dùng `SECURITY DEFINER` hoặc hàm database trả credential. Credential được backend đọc qua truy vấn login có tham số và scope; response HTTP không chứa hash. Role auth có SELECT cơ sở để dựng profile nhân viên; đây chưa phải thiết kế phân quyền toàn bộ module facility.
+Auth does not use `SECURITY DEFINER` or database functions that return credentials. The backend reads credentials through parameterized, scoped login queries; HTTP responses do not contain hashes. The auth role can SELECT facility data to build employee profiles; this does not implement authorization for the entire facility module.
 
-Các custom settings là context do server tin cậy truyền xuống, không phải bằng chứng danh tính độc lập. Không để người dùng cuối có credential database hoặc quyền gửi SQL tùy ý.
+Custom settings are context supplied by the trusted server, not independent proof of identity. End users must not receive database credentials or permission to execute arbitrary SQL.
 
-### Kiểm thử trên database riêng
+### Testing on a separate database
 
-Các lệnh sau dùng PowerShell tại root dự án. Database test là container/volume tạm riêng; không thay tên thành database đang dùng.
+Run the following PowerShell commands from the repository root. The test database uses a separate temporary container/volume; do not substitute the application database name.
 
 ```powershell
 docker run --detach --name pharmatrace-auth-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=auth_test_owner_only -e APP_DB_PASSWORD=auth_test_app_only -e POSTGRES_DB=pharmatrace_auth_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
 docker logs pharmatrace-auth-rls-test
 ```
 
-Chờ thông báo `PostgreSQL init process complete; ready for start up.`. Chạy kiểm tra fixture trước khi các test tạo tài khoản:
+Wait for `PostgreSQL init process complete; ready for start up.`. Check the fixtures before the tests create accounts:
 
 ```powershell
 docker exec pharmatrace-auth-rls-test psql -X -v ON_ERROR_STOP=1 -U postgres -d pharmatrace_auth_rls_test -f /docker-entrypoint-initdb.d/tests/development_seed_test.sql
@@ -332,88 +334,88 @@ npm.cmd run test:e2e -- --runInBand --runTestsByPath test/auth-rls.e2e-spec.ts
 Pop-Location
 ```
 
-E2E yêu cầu hai URL test riêng, chỉ chấp nhận localhost với database tên `pharmatrace_auth_rls_test`, không dùng `.env` làm target. Test dùng HTTP, Prisma và PostgreSQL thật; tạo/xóa fixture riêng, kiểm tra lookup, quyền dòng/cột, ID trùng nhau, token cũ, password, đăng ký, context sau rollback và request đồng thời. Nếu không có biến test, suite này được skip; đó không phải kết quả pass integration.
+E2E requires two explicit test URLs and accepts only localhost with the database name `pharmatrace_auth_rls_test`; it does not use `.env` as the target. Tests use real HTTP, Prisma and PostgreSQL, create/delete their own fixtures, and check lookups, row/column access, matching account IDs, stale tokens, passwords, registration, rollback context and concurrent requests. Without test variables, the suite is skipped; this is not a passing integration result.
 
-Không chạy các integration suite khác đồng thời trên cùng database này: test có bước chủ động thay FORCE RLS rồi khôi phục để kiểm tra fail-closed.
+Do not run other integration suites concurrently against this database: the tests temporarily change FORCE RLS and restore it to verify fail-closed behavior.
 
-### Điều kiện trước khi kích hoạt trên database dùng chung
+### Prerequisites for shared-database activation
 
-- [ ] Chốt role và các quyền nghiệp vụ liên quan; thay đổi `ADMIN` không được xem là phân quyền xong mọi service.
-- [ ] Chuyển các truy vấn customers/employees của checkout, quản lý khách/nhân viên, review, facility, cron và các module còn lại sang đường truy cập được thiết kế.
-- [ ] Kiểm tra role runtime chung: nó vẫn có các grants nền rộng từ trước; script auth không tuyên bố thu hồi toàn bộ quyền đó. Không dùng role chung với actor tùy ý để thay thế phân quyền theo chức năng.
-- [ ] Kiểm kê ownership, grants và policy trên database đích. Script từ chối policy tài khoản không thuộc nó, RLS đã bật ngoài script và role auth có quyền rộng hơn dự kiến.
-- [ ] Với database hiện hữu, có quy trình cập nhật SQL được theo dõi. Docker init không tự nâng cấp volume cũ và script không tự ghi `_prisma_migrations`.
-- [ ] Backup và thử restore; lưu trạng thái RLS/policy trước thay đổi. Rollback script chỉ dành cho baseline trước auth có RLS tài khoản tắt.
-- [ ] Chạy toàn bộ regression và E2E của các module phụ thuộc trên bản sao database đích.
-- [ ] Cấu hình `JWT_SECRET` riêng, không dùng giá trị mẫu. Người dùng đăng nhập lại để có claim hợp lệ.
+- [ ] Finalize roles and business permissions; changing `ADMIN` does not complete authorization for every service.
+- [ ] Move customer/employee queries in checkout, customer/employee management, reviews, facilities, cron and remaining modules to their designed access paths.
+- [ ] Inspect the shared runtime role: it still has broad baseline grants. The auth script does not revoke all of them. A shared role with arbitrary actor context is not a replacement for operation-specific authorization.
+- [ ] Inventory ownership, grants and policies on the target database. The script rejects unmanaged account policies, RLS enabled outside the script, and unexpectedly broad auth-role privileges.
+- [ ] Establish a tracked SQL upgrade process for existing databases. Docker initialization does not upgrade existing volumes, and the script does not write `_prisma_migrations` records.
+- [ ] Back up and test restoration; record the RLS/policy baseline. The rollback script supports only the pre-auth baseline with account RLS disabled.
+- [ ] Run all regression and E2E suites for dependent modules on a copy of the target database.
+- [ ] Configure a dedicated `JWT_SECRET`, not a sample value. Users must log in again to receive valid claims.
 
-**Chỉ đổi `AUTH_RLS_ENABLED=true` không tự bật RLS trên bảng. Chỉ chạy SQL cũng không chuyển toàn bộ module sang role/context mới. Phải triển khai cả hai theo hướng dẫn đã được kiểm chứng.**
+**Setting `AUTH_RLS_ENABLED=true` does not enable table RLS by itself. Running SQL alone does not migrate every module to the new role/context. Deploy both using the verified procedure.**
 
-### Áp dụng và quay lui
+### Apply and roll back
 
-Script `security/03_auth_rls.sql` chạy bằng owner/DBA. Không có cờ kích hoạt thì chỉ chuẩn bị role không login, grants theo cột và policy. Có `-v auth_rls_activate=true` thì thêm bước ENABLE/FORCE RLS. Không có policy compatibility mở toàn bảng. Nếu chạy lại, nó kiểm tra và thay lại các policy do chính script quản lý; không thay policy lạ và không tự tắt RLS đang bật.
+Run `security/03_auth_rls.sql` as owner/DBA. Without the activation flag, it prepares only the NOLOGIN role, column grants and policies. With `-v auth_rls_activate=true`, it also enables/forces RLS. There is no unrestricted compatibility policy. On reapplication, it checks and replaces only its own policies; it does not replace unknown policies or disable existing enforcement.
 
-Chỉ thực hiện sau khi checklist trên hoàn tất, trong đợt triển khai có kiểm soát. Theo dõi cả lỗi lẫn dữ liệu rỗng bất thường, vì RLS có thể lọc dòng mà không phát sinh lỗi SQL.
+Proceed only after completing the checklist, during a controlled deployment. Monitor errors and unexpected empty results, since RLS can filter rows without producing SQL errors.
 
-Rollback script: `security/04_auth_rls_rollback.sql`, yêu cầu `-v auth_rls_rollback=true` và không được master gọi. Nó khôi phục baseline RLS tắt trên hai bảng, không xóa dữ liệu/tài khoản. **Quay lui làm mở lại phạm vi truy cập nền**, không dùng như fallback tự động và không chạy nếu database có thiết kế RLS khác. Script từ chối policy lạ và giữ role không login để không phá dependency.
+The rollback script is `security/04_auth_rls_rollback.sql`, requires `-v auth_rls_rollback=true`, and is never called by master. It restores disabled RLS on the two account tables without deleting data or accounts. **Rollback restores broader baseline access**; it is not an automatic fallback and must not be used on a database with a different RLS design. The script refuses unknown policies and retains the NOLOGIN role to preserve dependencies.
 
-Để quay lui: ngừng traffic/job liên quan, đặt `AUTH_RLS_ENABLED=false`, áp dụng rollback script theo baseline đã lưu, khởi động lại và smoke test. Chỉ đặt flag false không tắt RLS trong database; chỉ chạy rollback trong khi flag true sẽ làm auth trả 503.
+To roll back: stop relevant traffic/jobs, set `AUTH_RLS_ENABLED=false`, apply the rollback script against the saved baseline, restart, and smoke test. Setting the flag to false alone does not disable database RLS; running the rollback while the flag remains true makes auth return 503.
 
-Thử rollback/kích hoạt lại trên container test, không trên database local:
+Test rollback/reactivation on the test container, not the local application database:
 
 ```powershell
 docker exec pharmatrace-auth-rls-test psql -X -v ON_ERROR_STOP=1 -v auth_rls_rollback=true -U postgres -d pharmatrace_auth_rls_test -f /docker-entrypoint-initdb.d/security/04_auth_rls_rollback.sql
 docker exec pharmatrace-auth-rls-test psql -X -v ON_ERROR_STOP=1 -v auth_rls_activate=true -U postgres -d pharmatrace_auth_rls_test -f /docker-entrypoint-initdb.d/security/03_auth_rls.sql
 ```
 
-Sau kiểm thử:
+After testing:
 
 ```powershell
 docker rm --force pharmatrace-auth-rls-test
 Remove-Item Env:AUTH_RLS_TEST_DATABASE_URL, Env:AUTH_RLS_TEST_ADMIN_URL
 ```
 
-### Giới hạn và công việc nối tiếp
+### Limitations and follow-up work
 
-- Đây là nền auth/RBAC và policy tài khoản đã kiểm thử độc lập, chưa phải phân quyền end-to-end toàn ứng dụng.
-- Password change chưa thu hồi mọi JWT đã cấp; logout yêu cầu client bỏ token, không có blacklist/token-version trong đợt này. Khóa tài khoản và thay role/facility được kiểm tra mỗi request.
-- Thông tin nhân viên trong API facility public, scope quản lý khách hàng và context riêng của admin order vẫn cần được xử lý ở các nhánh tương ứng.
-- Quyền quản trị nhân viên không đi qua role auth chỉ sửa hồ sơ cá nhân; cần thiết kế principal/quyền riêng trong module employee.
-- Giữ `database/*.sh` ở LF theo `.gitattributes` để checkout Windows không làm hỏng bootstrap Linux.
+- This provides independently tested auth/RBAC foundations and account policies, not end-to-end authorization for the entire application.
+- Password changes do not revoke every issued JWT. Logout requires the client to discard its token; this rollout has no token blacklist or token versioning. Account locks and role/facility changes are checked on every request.
+- Employee details in public facility APIs, customer-management scope and dedicated admin-order context require work in their respective branches.
+- Employee administration must not use the auth role intended for personal profile updates; the employee module needs its own principal/permission design.
+- Keep `database/*.sh` files at LF through `.gitattributes` so Windows checkout does not break Linux initialization.
 
 ## Review RLS
 
-`security/07_review_rls.sql` bật ENABLE + FORCE RLS cho `reviews`, `moderation_reports`, `moderation_audit_logs`. Master tự gọi script này khi Docker khởi tạo volume mới. Backend tiếp tục kết nối bằng `app_user`; không thêm role membership và không dùng `SECURITY DEFINER`.
+`security/07_review_rls.sql` enables/forces RLS on `reviews`, `moderation_reports` and `moderation_audit_logs`. Master calls it automatically when Docker initializes a new volume. The backend continues using `app_user`, without new role memberships or `SECURITY DEFINER` functions.
 
-| Người dùng | Quyền |
+| User | Access |
 |---|---|
-| Public | Xem review APPROVED, thống kê và danh sách review trong chi tiết sản phẩm; helpful chỉ sửa bộ đếm của review APPROVED |
-| Customer | Xem lịch sử của mình; tạo review khi có đơn DELIVERED/COMPLETED tương ứng; sửa/xóa review của mình; gửi report và chỉ đọc report do mình gửi |
-| STORE_MANAGER / SALES_STAFF / PHARMACIST | Xem review mọi trạng thái và trả lời; không đổi trạng thái, xóa review, xem report hoặc audit; response danh sách không chứa email/điện thoại khách |
-| ADMIN / SUPER_ADMIN | Xem, trả lời, duyệt/ẩn/spam/xóa review; xem và xử lý report; xem audit |
-| Vai trò nhân viên khác | Không được vào API quản trị review hoặc dùng ID trùng khách để truy cập lịch sử khách |
+| Public | Read APPROVED reviews, statistics and product-detail reviews; helpful operations update only APPROVED review counters |
+| Customer | Read own history; create reviews for matching DELIVERED/COMPLETED purchases; edit/delete own reviews; submit reports and read only own reports |
+| STORE_MANAGER / PHARMACIST | Read all review statuses and reply; cannot change status, delete reviews, or view reports/audit; list responses omit customer email/phone |
+| ADMIN / SUPER_ADMIN | Read, reply, approve/hide/mark spam/delete reviews; view and resolve reports; read audit logs |
+| Other employee roles | Cannot access review administration or use matching customer IDs to access customer history |
 
-Quyền nhân viên ở đây áp dụng toàn hệ thống, giữ phạm vi đã khai báo trong controller; review chưa có mô hình phân công theo cơ sở. Public được đọc các review APPROVED dù thiếu context; mọi quyền ghi và đọc dữ liệu kiểm duyệt cần scope phù hợp. `withReview()` đặt context bằng `set_config(..., true)` trong transaction, kiểm tra runtime không phải superuser/BYPASSRLS/owner và cả ba bảng đã bật RLS. Thiếu cấu hình trả 503. Các custom settings vẫn là dữ liệu do backend tin cậy đặt, không bảo vệ trước người có credential `app_user` hoặc quyền thực thi SQL tùy ý.
+Staff permissions apply system-wide, preserving the scope declared in the controllers; reviews do not have facility assignments. Public access can read APPROVED reviews without context; all writes and moderation reads require the appropriate scope. `withReview()` sets transaction-local context with `set_config(..., true)`, verifies that runtime is not a superuser/BYPASSRLS/table owner, and checks RLS on all three tables. Incomplete setup returns 503. Custom settings remain trusted backend context and do not protect against someone with `app_user` credentials or arbitrary SQL access.
 
-Grant theo cột và trigger invoker chặn customer sửa phản hồi nhân viên, nhân viên thường sửa trạng thái, hoặc helpful sửa nội dung. Review chưa APPROVED sau khi khách sửa vẫn cần quản trị viên duyệt; review mới an toàn vẫn được bộ kiểm duyệt hiện có tự duyệt. Luồng thay đổi review/report và ghi audit dùng cùng transaction; audit lỗi thì thao tác bị rollback. App không có quyền sửa/xóa/TRUNCATE audit. Xóa review giữ audit với `review_id = NULL` và ID gốc trong `meta.reviewId`; audit cũ giữ metadata đã có, không tự khôi phục bản ghi từng bị cascade xóa trước đây.
+Column grants and an invoker trigger prevent customers from modifying staff replies, ordinary staff from changing review status, and helpful operations from modifying content. Customer edits to reviews that are not APPROVED still require administrator approval; safe new reviews can still be approved by the existing automated moderation pipeline. Review/report mutations and audit writes share one transaction; audit failure rolls back the mutation. The app cannot UPDATE/DELETE/TRUNCATE audit logs. Deleting a review preserves audit rows with `review_id = NULL` and the original ID in `meta.reviewId`; old audit metadata is retained, and previously cascade-deleted records are not recovered.
 
-### Database hiện có
+### Existing database
 
-Script review cũng chuyển `HoanThanh` (không phân biệt hoa/thường) thành `COMPLETED`, và chuẩn hóa `delivered`/`completed` về chữ hoa. Seed và điều kiện review chỉ dùng `DELIVERED`/`COMPLETED`; không đổi `DELIVERED` của đơn hàng hoặc shipment thành trạng thái khác.
+The seed and review eligibility checks use uppercase `DELIVERED`/`COMPLETED`. The review RLS script does not update order statuses; legacy data found in other environments must be reconciled and normalized separately before deployment.
 
-Không chạy lại master/seed và không xóa volume. Backup database, thử restore và thử script trên bản sao trước. Tạm dừng backend/job liên quan, áp dụng file dưới bằng owner/DBA, rồi khởi động backend với code cùng nhánh và smoke test các quyền ở bảng trên:
+Do not rerun master/seed or delete the volume. Back up the database, test restoration, and try the script on a copy first. Stop relevant backend/jobs, apply the following file as owner/DBA, then start the backend with code from the same branch and smoke test the access matrix above:
 
 ```powershell
 docker exec phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/07_review_rls.sql
 ```
 
-Tên container/database phải khớp môi trường của bạn. Script chạy trong transaction, có thể áp dụng lại và từ chối policy hoặc khóa ngoại audit lạ để kiểm tra thủ công. Thay FK audit sang SET NULL có thể chờ khóa bảng; cần khoảng bảo trì phù hợp. Không chỉ rollback code cũ vì code cũ chưa truyền context ghi review. Nếu cần quay lui, dừng traffic và khôi phục đồng bộ code/quyền/FK/policy theo baseline đã lưu; không tự động tắt RLS khi gặp lỗi.
+Use container/database names matching your environment. The script is transactional, can be reapplied, and rejects unknown policies or audit foreign keys for manual review. Changing the audit FK to SET NULL may wait for table locks; allow an appropriate maintenance window. Rolling back only the code is unsafe because old code does not supply review write context. If rollback is needed, stop traffic and restore matching code/grants/FKs/policies from the saved baseline; do not disable RLS automatically on errors.
 
-Giữ `AUTH_RLS_ENABLED=false` trên database dùng chung trong giai đoạn này. Các truy vấn tên khách/nhân viên trong review chưa tương thích với việc bật RLS toàn bộ bảng tài khoản; phần đó cần hoàn tất cùng rollout account và các module phụ thuộc.
+Keep `AUTH_RLS_ENABLED=false` on the shared database during this phase. Review queries for customer/employee names are not yet compatible with enforcing RLS on all account tables; complete that work with the account rollout and dependent modules.
 
-### Kiểm thử riêng cho review
+### Review-specific testing
 
-Chạy tại root dự án, chờ log `PostgreSQL init process complete` trước khi chạy test:
+Run from the repository root and wait for `PostgreSQL init process complete` before testing:
 
 ```powershell
 docker run --detach --name pharmatrace-review-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=review_test_owner_only -e APP_DB_PASSWORD=review_test_app_only -e POSTGRES_DB=pharmatrace_review_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
@@ -432,7 +434,65 @@ docker rm --force pharmatrace-review-rls-test
 Remove-Item Env:REVIEW_RLS_TEST_DATABASE_URL, Env:REVIEW_RLS_TEST_ADMIN_URL
 ```
 
-E2E chỉ chấp nhận database tạm localhost tên `pharmatrace_review_rls_test`; thiếu biến môi trường thì skip, không phải pass integration. Nó kiểm tra public, khách, nhân viên cùng ID, moderator, điều kiện đã mua hàng, report/APPROVE, helpful, audit giữ sau xóa, rollback khi audit lỗi, context trên connection pool và trả 503 khi thiếu FORCE RLS. Không chạy suite khác đồng thời trên database này vì có bước thử tắt FORCE rồi khôi phục. SQL test dùng transaction rồi ROLLBACK dữ liệu fixture.
+E2E accepts only the disposable localhost database named `pharmatrace_review_rls_test`; missing environment variables skip the suite rather than verify integration. It checks public/customer access, same-ID employees, moderators, purchase eligibility, reports/APPROVE, helpful votes, audit retention after deletion, rollback on audit failure, pooled connection context and 503 responses when FORCE RLS is missing. Do not run another suite concurrently against this database because the tests temporarily disable and restore FORCE. SQL tests use a transaction and ROLLBACK fixture data.
 
-Helpful và rate limit hiện vẫn lưu theo IP/bộ nhớ một tiến trình; chưa chống gian lận bỏ phiếu hay đồng bộ nhiều backend. Upload ảnh dùng Cloudinary được giữ nguyên và không được gọi trong integration suite này.
+Helpful votes and rate limits still use IP/process-local memory; they do not provide vote-fraud prevention or synchronization across backend instances. Cloudinary image upload remains unchanged and is not called by this integration suite.
 
+## Order / checkout RLS
+
+`security/08_order_rls.sql` enables/forces RLS on `orders`, `order_items`, `shipments`, `internal_transfers` and `loyalty_point_logs`. It adds no logins/memberships and uses neither `BYPASSRLS` nor `app.bypass_rls`. `withOrder()` checks the runtime role and protection on all five tables; incomplete setup returns 503. Each transaction sets operation, user ID/type/role and facility through local settings, which are cleared at commit/rollback.
+
+| Actor | Scope |
+|---|---|
+| Customer | Read own orders/items/shipments/transfers/points; checkout creates own orders; cancel only PENDING or WAITING_INTERNAL_TRANSFER orders |
+| STORE_MANAGER / PHARMACIST / WAREHOUSE_STAFF | Read orders assigned to their `export_facility_id` |
+| STORE_MANAGER / PHARMACIST | Change order status at the assigned facility according to the state machine; only pharmacists or SUPER_ADMIN can decide prescription reviews |
+| STORE_MANAGER / PHARMACIST / WAREHOUSE_STAFF | Pack at the fulfillment facility and confirm UIDs for serialized medicine packages |
+| STORE_MANAGER / WAREHOUSE_STAFF | Dispatch at the source; receive/reject damaged goods and create replacement transfers at the destination |
+| SUPER_ADMIN | Perform order administration across the system under existing guards |
+| Internal loyalty job | Read COMPLETED orders for eligibility and write the correct EARN amount; cannot modify orders or delete ledger rows |
+
+`ADMIN` is not listed in the current order guards; its name does not grant global access. Review moderator scope does not grant order administration rights.
+
+Source warehouses cannot read orders fulfilled by another facility or their prescriptions. Transfer list/dispatch responses omit nested `orders`. Two `SECURITY DEFINER` functions provide narrow projections: `transfer_order_state()` returns order/review statuses needed to dispatch the warehouse's own transfer; `product_has_order_history()` returns a boolean to prevent hard deletion of medicines with order history at other facilities. Both use a fixed search_path, check context, fully qualify table names, and revoke PUBLIC execution. Create them as a trusted DBA (the commands below use postgres); do not transfer ownership to app_user.
+
+Column grants and triggers block changes to customer/facility, prices, totals, payment status through cancellation, and prescription status through the order API. The app cannot DELETE/TRUNCATE order tables or UPDATE/DELETE ledger rows. Point redemption/refunds/awards share a transaction with their associated operation; order locks and a unique EARN index per order prevent duplicate cron awards. Conditional transfer receipt prevents duplicate stock movements, and packing locks the order to prevent duplicate shipments.
+
+The ledger constraint adds `EARN_REVERSAL`, which the backend already uses for returns. If the target contains multiple EARN/EARNED records for one order or unsupported transaction types, the script stops and rolls back. Reconcile those records first; do not delete ledger entries automatically.
+
+Dependent queries also carry identity: customer-management order history/statistics, prescription decisions and medicine-deletion history checks. GET order details no longer creates prescription review rows; legacy orders missing reviews require a verified DBA backfill before rollout. Checkout continues creating prescription reviews within its transaction.
+
+### Applying to an existing database
+
+Back up and test restoration, then run tests against a copy. Stop relevant backend/jobs, apply as owner/DBA, then start matching backend code and smoke test checkout, cancellation, packing, transfers, prescriptions and cron:
+
+```powershell
+docker exec phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/08_order_rls.sql
+```
+
+Use container/database names matching your environment. The script is transactional, refuses unknown policies and can be reapplied. It replaces the two earlier prescription order policies with shared order policies; do not rerun only `02_prescription_rls.sql` after this rollout. Do not rerun master/seed or delete the volume to upgrade. New volumes receive script 08 from master after the preceding scripts.
+
+Keep `AUTH_RLS_ENABLED=false` during this rollout. This script does not enable RLS for inventories/medicine boxes, vouchers or account/point balances; checkout still needs their existing baseline grants. Context is supplied by the trusted server and does not protect against someone holding app_user credentials or executing arbitrary SQL. This is not complete database-wide authorization. To roll back, stop traffic/jobs and restore matching code/policies/grants/constraints from the saved baseline; do not disable RLS automatically to bypass errors.
+
+### Testing on a separate database
+
+From the repository root, create a temporary container and wait for `PostgreSQL init process complete`:
+
+```powershell
+docker run --detach --name pharmatrace-order-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=order_test_owner_only -e APP_DB_PASSWORD=order_test_app_only -e POSTGRES_DB=pharmatrace_order_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
+docker logs pharmatrace-order-rls-test
+docker exec pharmatrace-order-rls-test psql -X -v ON_ERROR_STOP=1 -U postgres -d pharmatrace_order_rls_test -f /docker-entrypoint-initdb.d/tests/development_seed_test.sql -f /docker-entrypoint-initdb.d/tests/order_rls_test.sql
+
+$orderTestPort = (docker port pharmatrace-order-rls-test 5432).Split(':')[-1]
+$env:ORDER_RLS_TEST_DATABASE_URL = "postgresql://app_user:order_test_app_only@127.0.0.1:$orderTestPort/pharmatrace_order_rls_test"
+$env:ORDER_RLS_TEST_ADMIN_URL = "postgresql://postgres:order_test_owner_only@127.0.0.1:$orderTestPort/pharmatrace_order_rls_test"
+Push-Location pharmatrace-vn-backend
+npm.cmd test -- --runInBand
+npm.cmd run test:e2e -- --runInBand --runTestsByPath test/order-rls.e2e-spec.ts
+Pop-Location
+
+docker rm --force pharmatrace-order-rls-test
+Remove-Item Env:ORDER_RLS_TEST_DATABASE_URL, Env:ORDER_RLS_TEST_ADMIN_URL
+```
+
+The suite accepts only the localhost database named `pharmatrace_order_rls_test`; missing test variables skip the suite rather than verify integration. Do not run another suite concurrently on the same database: tests temporarily revoke ledger grants or disable FORCE to check rollback/fail-closed behavior, restoring them in finally blocks. Tests use GPS fixtures and do not call external geocoding/Cloudinary services. SQL tests roll back fixture data; HTTP tests clean up their own fixtures.

@@ -496,90 +496,97 @@ export class OrderService {
       return order;
     };
 
-    const newOrder = await this.prisma.withActor(
-      { id: customerId, role: 'CUSTOMER', type: 'customer' },
+    const newOrder = await this.prisma.withOrder(
+      'checkout',
       saveOrder,
+      { id: customerId, role: 'CUSTOMER', type: 'customer' },
     );
 
     return this.getMyOrderById(customerId, newOrder.id);
   }
 
   async getMyOrders(customerId: number, query: OrderQueryDto) {
-    const page = Math.max(1, Number(query?.page) || 1);
-    const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
-    const skip = (page - 1) * limit;
+    return this.prisma.withOrder('read', async (tx) => {
+      const page = Math.max(1, Number(query?.page) || 1);
+      const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
+      const skip = (page - 1) * limit;
 
-    const where: any = { customer_id: customerId };
-    if (query.status && query.status !== "ALL") {
-      const canonical = normalizeOrderStatus(query.status);
-      const list = STATUS_DB_MAPPINGS[canonical] || [query.status];
-      where.order_status = { in: list };
-    }
+      const where: any = { customer_id: customerId };
+      if (query.status && query.status !== "ALL") {
+        const canonical = normalizeOrderStatus(query.status);
+        const list = STATUS_DB_MAPPINGS[canonical] || [query.status];
+        where.order_status = { in: list };
+      }
 
-    const [total, orders] = await Promise.all([
-      this.prisma.orders.count({ where }),
-      this.prisma.orders.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { created_at: query.sort === "oldest" ? "asc" : "desc" },
-        include: ORDER_DETAILS_INCLUDE,
-      }),
-    ]);
+      const [total, orders] = await Promise.all([
+        tx.orders.count({ where }),
+        tx.orders.findMany({
+          where,
+          skip,
+          take: limit,
+          orderBy: { created_at: query.sort === "oldest" ? "asc" : "desc" },
+          include: ORDER_DETAILS_INCLUDE,
+        }),
+      ]);
 
-    return {
-      items: orders.map((o) => formatOrder(o)),
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit) || 1,
-      },
-    };
+      return {
+        items: orders.map((o) => formatOrder(o)),
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit) || 1,
+        },
+      };
+
+    }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
   }
 
   async getMyOrderById(customerId: number, orderId: number) {
-    const order = await this.prisma.orders.findUnique({
-      where: { id: orderId },
-      include: ORDER_DETAILS_INCLUDE,
-    });
+    return this.prisma.withOrder('read', async (tx) => {
+      const order = await tx.orders.findUnique({
+        where: { id: orderId },
+        include: ORDER_DETAILS_INCLUDE,
+      });
 
-    if (!order) {
-      throw new NotFoundException(`Order #${orderId} not found`);
-    }
+      if (!order) {
+        throw new NotFoundException(`Order #${orderId} not found`);
+      }
 
-    if (order.customer_id !== customerId) {
-      throw new ForbiddenException(
-        "You do not have permission to view this order",
-      );
-    }
+      if (order.customer_id !== customerId) {
+        throw new ForbiddenException(
+          "You do not have permission to view this order",
+        );
+      }
 
-    return formatOrder(order);
+      return formatOrder(order);
+
+    }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
   }
 
   async cancelMyOrder(customerId: number, orderId: number) {
-    const order = await this.prisma.orders.findUnique({
-      where: { id: orderId },
-    });
+    return this.prisma.withOrder('cancel', async (tx) => {
+      const order = await tx.orders.findUnique({
+        where: { id: orderId },
+      });
 
-    if (!order) {
-      throw new NotFoundException(`Order #${orderId} not found`);
-    }
+      if (!order) {
+        throw new NotFoundException(`Order #${orderId} not found`);
+      }
 
-    if (order.customer_id !== customerId) {
-      throw new ForbiddenException(
-        "You do not have permission to cancel this order",
-      );
-    }
+      if (order.customer_id !== customerId) {
+        throw new ForbiddenException(
+          "You do not have permission to cancel this order",
+        );
+      }
 
-    const normStatus = normalizeOrderStatus(order.order_status);
-    if (!["PENDING", "WAITING_INTERNAL_TRANSFER"].includes(normStatus)) {
-      throw new BadRequestException(
-        `Only orders with status PENDING or WAITING_INTERNAL_TRANSFER can be cancelled. Current status is ${order.order_status}.`,
-      );
-    }
+      const normStatus = normalizeOrderStatus(order.order_status);
+      if (!["PENDING", "WAITING_INTERNAL_TRANSFER"].includes(normStatus)) {
+        throw new BadRequestException(
+          `Only orders with status PENDING or WAITING_INTERNAL_TRANSFER can be cancelled. Current status is ${order.order_status}.`,
+        );
+      }
 
-    await this.prisma.$transaction(async (tx) => {
       const cancelled = await tx.orders.updateMany({
         where: { id: orderId, order_status: order.order_status },
         data: { order_status: "CANCELLED" },
@@ -607,8 +614,10 @@ export class OrderService {
           },
         });
       }
-    });
 
-    return this.getMyOrderById(customerId, orderId);
+
+      return formatOrder(await tx.orders.findUnique({ where: { id: orderId }, include: ORDER_DETAILS_INCLUDE }));
+
+    }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
   }
 }
