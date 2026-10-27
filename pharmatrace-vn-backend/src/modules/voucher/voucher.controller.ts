@@ -68,7 +68,7 @@ export class VoucherController {
   @Get('admin/vouchers')
   @ApiBearerAuth('bearerAuth')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'SALES_STAFF', 'SalesStaff')
+  @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'PHARMACIST', 'Pharmacist')
   @ApiOperation({
     summary: 'Get paginated vouchers list (Admin)',
     description: 'Retrieves all vouchers with code search and status filtering.',
@@ -87,7 +87,7 @@ export class VoucherController {
   @Get('admin/vouchers/:id')
   @ApiBearerAuth('bearerAuth')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'SALES_STAFF', 'SalesStaff')
+  @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'PHARMACIST', 'Pharmacist')
   @ApiOperation({ summary: 'Get voucher details by ID (Admin)' })
   @ApiResponse({ status: 200, description: 'Voucher retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Voucher not found' })

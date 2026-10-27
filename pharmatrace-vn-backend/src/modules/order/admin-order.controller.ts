@@ -50,8 +50,6 @@ export class AdminOrderController {
     "Pharmacist",
     "WAREHOUSE_STAFF",
     "WarehouseStaff",
-    "SALES_STAFF",
-    "SalesStaff",
   )
   @ApiOperation({
     summary: "List all orders with status, search and pagination (Admin)",
@@ -195,8 +193,6 @@ export class AdminOrderController {
     "Pharmacist",
     "WAREHOUSE_STAFF",
     "WarehouseStaff",
-    "SALES_STAFF",
-    "SalesStaff",
   )
   @ApiOperation({ summary: "Get full order details by ID (Admin)" })
   @ApiResponse({

@@ -30,8 +30,6 @@ import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current
   'Admin',
   'STORE_MANAGER',
   'StoreManager',
-  'SALES_STAFF',
-  'SalesStaff',
   'PHARMACIST',
   'Pharmacist',
 )

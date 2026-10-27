@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class OrderCronService {
@@ -33,6 +34,7 @@ export class OrderCronService {
       typeof returnDays === 'number'
         ? returnDays
         : Number(process.env.ORDER_RETURN_WINDOW_DAYS || 7);
+    if (!Number.isInteger(days) || days < 0 || days > 3650) throw new BadRequestException('Invalid return window');
 
     const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
@@ -41,7 +43,7 @@ export class OrderCronService {
     // 2. Have a customer associated
     // 3. Were delivered on or before cutoffDate (via shipment actual_delivery_at, or order created_at fallback)
     // 4. Have NOT yet had an 'EARNED' loyalty point log for this order
-    const eligibleOrders = await this.prisma.orders.findMany({
+    const eligibility: { where: Prisma.ordersWhereInput } = {
       where: {
         order_status: 'COMPLETED',
         customer_id: { not: null },
@@ -60,21 +62,8 @@ export class OrderCronService {
           none: { transaction_type: { in: ['EARN', 'EARNED'] } },
         },
       },
-      include: {
-        customers: {
-          select: {
-            id: true,
-            full_name: true,
-            email: true,
-          },
-        },
-        shipments: {
-          select: {
-            actual_delivery_at: true,
-          },
-        },
-      },
-    });
+    };
+    const eligibleOrders = await this.prisma.withOrder('loyalty', tx => tx.orders.findMany(eligibility));
 
     const awardedDetails: Array<{
       orderId: number;
@@ -93,7 +82,10 @@ export class OrderCronService {
       if (earnedPoints <= 0) continue;
 
       try {
-        await this.prisma.$transaction(async (tx) => {
+        const awarded = await this.prisma.withOrder('loyalty', async (tx) => {
+          await tx.$queryRaw`SELECT id FROM public.orders WHERE id = ${order.id} FOR UPDATE`;
+          const eligible = await tx.orders.findFirst({ where: { ...eligibility.where, id: order.id } });
+          if (!eligible) return false;
           // Increment customer reward points
           await tx.customers.update({
             where: { id: order.customer_id! },
@@ -110,7 +102,9 @@ export class OrderCronService {
               description: `Awarded ${earnedPoints} points for order #${order.order_code} after ${days}-day return window`,
             },
           });
+          return true;
         });
+        if (!awarded) continue;
 
         totalPointsAwarded += earnedPoints;
         awardedDetails.push({

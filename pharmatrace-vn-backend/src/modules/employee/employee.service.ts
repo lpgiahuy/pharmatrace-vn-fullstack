@@ -15,7 +15,7 @@ function formatEmployee(emp: any) {
     id: emp.id,
     fullName: emp.full_name || '',
     email: emp.email || '',
-    role: emp.role || 'SALES_STAFF',
+    role: emp.role || 'PHARMACIST',
     status: emp.status || 'ACTIVE',
     facilityId: emp.facility_id,
     facility: emp.facilities

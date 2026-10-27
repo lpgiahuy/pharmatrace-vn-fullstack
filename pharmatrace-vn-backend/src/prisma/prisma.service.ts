@@ -5,6 +5,7 @@ import { Pool } from 'pg';
 import { AuthActor, authActor } from '../common/auth-identity';
 
 export type ReviewScope = 'public' | 'customer' | 'staff' | 'moderator' | 'helpful';
+export type OrderOperation = 'read' | 'checkout' | 'cancel' | 'status' | 'pack' | 'transfer_read' | 'dispatch' | 'receive' | 'replace' | 'prescription' | 'loyalty';
 
 export interface AuthContext {
   actor?: AuthActor;
@@ -68,7 +69,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   async withReview<T>(scope: ReviewScope, operation: (tx: Prisma.TransactionClient) => Promise<T>, identity?: AuthActor): Promise<T> {
     const actor = identity ? authActor(identity) : undefined;
-    const staffRoles = ['SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'SALES_STAFF', 'PHARMACIST'];
+    const staffRoles = ['SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'PHARMACIST'];
     if (!['public', 'customer', 'staff', 'moderator', 'helpful'].includes(scope)
       || (scope === 'customer' && (actor?.type !== 'customer' || actor.role !== 'CUSTOMER'))
       || (scope === 'staff' && (actor?.type !== 'employee' || !staffRoles.includes(actor.role)))
@@ -93,6 +94,43 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${actor?.facilityId ? String(actor.facilityId) : ''}, true)`;
       return operation(tx);
     });
+  }
+
+  async withOrder<T>(operation: OrderOperation, run: (tx: Prisma.TransactionClient) => Promise<T>, identity?: AuthActor): Promise<T> {
+    const actor = identity ? authActor(identity) : undefined;
+    const roles: Record<OrderOperation, string[]> = {
+      read: ['CUSTOMER', 'SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
+      checkout: ['CUSTOMER'], cancel: ['CUSTOMER'],
+      status: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST'],
+      pack: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
+      transfer_read: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
+      dispatch: ['SUPER_ADMIN', 'STORE_MANAGER', 'WAREHOUSE_STAFF'],
+      receive: ['SUPER_ADMIN', 'STORE_MANAGER', 'WAREHOUSE_STAFF'],
+      replace: ['SUPER_ADMIN', 'STORE_MANAGER', 'WAREHOUSE_STAFF'],
+      prescription: ['SUPER_ADMIN', 'PHARMACIST'], loyalty: [],
+    };
+    if (!roles[operation] || (operation === 'loyalty' ? !!actor : !actor || !roles[operation].includes(actor.role))) {
+      throw new ForbiddenException('Invalid order access scope');
+    }
+    if (actor?.type === 'employee' && actor.role !== 'SUPER_ADMIN' && (!Number.isInteger(actor.facilityId) || Number(actor.facilityId) <= 0)) {
+      throw new ForbiddenException('Staff account is not assigned to a facility.');
+    }
+    return this.$transaction(async tx => {
+      const [state] = await tx.$queryRaw<{ ready: boolean }[]>`
+        SELECT NOT r.rolsuper AND NOT r.rolbypassrls AND
+          (SELECT count(*) = 5 AND bool_and(c.relrowsecurity AND c.relforcerowsecurity AND c.relowner <> r.oid)
+           FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
+           WHERE n.nspname = 'public' AND c.relname IN ('orders', 'order_items', 'shipments', 'internal_transfers', 'loyalty_point_logs')) AS ready
+        FROM pg_roles r WHERE r.rolname = current_user
+      `;
+      if (!state?.ready) throw new ServiceUnavailableException('Order RLS setup is not ready');
+      await tx.$queryRaw`SELECT set_config('app.order_operation', ${operation}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_id', ${actor ? String(actor.id) : ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_type', ${actor?.type || ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_role', ${actor?.role || ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${actor?.facilityId ? String(actor.facilityId) : ''}, true)`;
+      return run(tx);
+    }, { timeout: 15000 });
   }
 
   async withActor<T>(

@@ -48,11 +48,14 @@ BEGIN
     RAISE NOTICE 'PASS excluded tables and loyalty transaction types';
 
     IF EXISTS (SELECT FROM public.orders
-        WHERE upper(btrim(order_status)) = 'HOANTHANH'
-            OR (upper(btrim(order_status)) IN ('DELIVERED', 'COMPLETED') AND order_status <> upper(btrim(order_status)))) THEN
-        RAISE EXCEPTION 'Completed order statuses must use uppercase English values';
+        WHERE order_status NOT IN ('PENDING', 'WAITING_INTERNAL_TRANSFER', 'WAITING_TRANSFER',
+            'PROCESSING', 'SHIPPING', 'IN_TRANSIT', 'COMPLETED', 'DELIVERED',
+            'CANCELLED', 'CANCELED', 'RETURNED', 'PARTIALLY_RETURNED')
+            OR payment_status NOT IN ('UNPAID', 'PAID', 'REFUNDED')
+            OR payment_method NOT IN ('COD', 'BANK_TRANSFER', 'E_WALLET')) THEN
+        RAISE EXCEPTION 'Order and payment values must use uppercase English values';
     END IF;
-    RAISE NOTICE 'PASS English completed order statuses';
+    RAISE NOTICE 'PASS English order and payment values';
 
     FOR fixture IN
         SELECT table_name, column_name FROM information_schema.columns

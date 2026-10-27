@@ -35,3 +35,5 @@
 -- 9. Review/moderation ownership, write-column guards and retained audit history.
 \i /docker-entrypoint-initdb.d/security/07_review_rls.sql
 
+-- Order ownership, fulfillment facility scope, transfer projection and loyalty ledger.
+\i /docker-entrypoint-initdb.d/security/08_order_rls.sql

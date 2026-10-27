@@ -52,7 +52,10 @@ CREATE TABLE IF NOT EXISTS public.employees (
     full_name VARCHAR(100),
     email VARCHAR(100) UNIQUE,
     password_hash VARCHAR(255),
-    role VARCHAR(50),
+    role VARCHAR(50) CONSTRAINT employees_role_check CHECK (role IN (
+        'SUPER_ADMIN', 'ADMIN', 'STORE_MANAGER', 'PHARMACIST',
+        'WAREHOUSE_STAFF', 'WAREHOUSE_MANAGER', 'FACTORY_WAREHOUSE_STAFF'
+    )),
     status VARCHAR(20) DEFAULT 'ACTIVE',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -16,11 +16,12 @@ import { CustomerOrderQueryDto } from './dto/customer-order-query.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Admin - Customer Management')
 @ApiBearerAuth('bearerAuth')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'SALES_STAFF', 'SalesStaff')
+@Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'PHARMACIST', 'Pharmacist')
 @Controller('admin/customers')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
@@ -31,8 +32,8 @@ export class CustomerController {
     description: 'Retrieves customers with pagination, membership tier filter, status filter, and keyword search (name, email, phone).',
   })
   @ApiResponse({ status: 200, description: 'Customers retrieved successfully' })
-  async findAll(@Query() query: CustomerQueryDto) {
-    const result = await this.customerService.findAll(query);
+  async findAll(@Query() query: CustomerQueryDto, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.customerService.findAll(query, user);
     return {
       success: true,
       message: 'Customers retrieved successfully',
@@ -48,8 +49,8 @@ export class CustomerController {
   })
   @ApiResponse({ status: 200, description: 'Customer retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Customer not found' })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const data = await this.customerService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.customerService.findOne(id, user);
     return {
       success: true,
       message: 'Customer retrieved successfully',
@@ -86,8 +87,9 @@ export class CustomerController {
   async getCustomerOrders(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: CustomerOrderQueryDto,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const result = await this.customerService.getCustomerOrders(id, query);
+    const result = await this.customerService.getCustomerOrders(id, query, user);
     return {
       success: true,
       message: 'Customer order history retrieved successfully',
