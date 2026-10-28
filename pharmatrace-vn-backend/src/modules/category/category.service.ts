@@ -4,6 +4,8 @@ import {
   BadRequestException,
   ConflictException,
 } from '@nestjs/common';
+import { authActor } from '../../common/auth-identity';
+import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -122,14 +124,15 @@ export class CategoryService {
     return formatCategory(cat);
   }
 
-  async create(dto: CreateCategoryDto): Promise<FormattedCategory> {
-    const existing = await this.prisma.categories.findFirst({
-      where: {
-        category_name: {
-          equals: dto.categoryName.trim(),
-          mode: 'insensitive',
+  async create(dto: CreateCategoryDto, user: CurrentUserPayload): Promise<FormattedCategory> {
+    return this.prisma.withCatalogManagement(authActor(user), async tx => {
+      const existing = await tx.categories.findFirst({
+        where: {
+          category_name: {
+            equals: dto.categoryName.trim(),
+            mode: 'insensitive',
+          },
         },
-      },
     });
 
     if (existing) {
@@ -138,7 +141,7 @@ export class CategoryService {
 
     const slug = dto.slug?.trim() || generateCategorySlug(dto.categoryName);
 
-    const created = await this.prisma.categories.create({
+    const created = await tx.categories.create({
       data: {
         category_name: dto.categoryName.trim(),
         slug: slug || null,
@@ -156,11 +159,13 @@ export class CategoryService {
     });
 
     return formatCategory(created);
+    });
   }
 
-  async update(id: number, dto: UpdateCategoryDto): Promise<FormattedCategory> {
-    const existing = await this.prisma.categories.findUnique({
-      where: { id },
+  async update(id: number, dto: UpdateCategoryDto, user: CurrentUserPayload): Promise<FormattedCategory> {
+    return this.prisma.withCatalogManagement(authActor(user), async tx => {
+      const existing = await tx.categories.findUnique({
+        where: { id },
     });
 
     if (!existing) {
@@ -168,7 +173,7 @@ export class CategoryService {
     }
 
     if (dto.categoryName) {
-      const duplicate = await this.prisma.categories.findFirst({
+      const duplicate = await tx.categories.findFirst({
         where: {
           category_name: {
             equals: dto.categoryName.trim(),
@@ -187,7 +192,7 @@ export class CategoryService {
       ? (dto.slug?.trim() || generateCategorySlug(dto.categoryName || existing.category_name))
       : (dto.categoryName ? generateCategorySlug(dto.categoryName) : undefined);
 
-    const updated = await this.prisma.categories.update({
+    const updated = await tx.categories.update({
       where: { id },
       data: {
         ...(dto.categoryName ? { category_name: dto.categoryName.trim() } : {}),
@@ -206,16 +211,18 @@ export class CategoryService {
     });
 
     return formatCategory(updated);
+    });
   }
 
-  async delete(id: number): Promise<{ success: boolean; message: string }> {
-    const existing = await this.prisma.categories.findUnique({
-      where: { id },
-      include: {
-        _count: {
-          select: { medicine_categories: true, children: true },
+  async delete(id: number, user: CurrentUserPayload): Promise<{ success: boolean; message: string }> {
+    return this.prisma.withCatalogManagement(authActor(user), async tx => {
+      const existing = await tx.categories.findUnique({
+        where: { id },
+        include: {
+          _count: {
+            select: { medicine_categories: true, children: true },
+          },
         },
-      },
     });
 
     if (!existing) {
@@ -234,7 +241,7 @@ export class CategoryService {
       );
     }
 
-    await this.prisma.categories.delete({
+    await tx.categories.delete({
       where: { id },
     });
 
@@ -242,5 +249,6 @@ export class CategoryService {
       success: true,
       message: `Category "${existing.category_name}" deleted successfully`,
     };
+    });
   }
 }

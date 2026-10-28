@@ -16,6 +16,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Categories')
 @Controller()
@@ -82,8 +83,8 @@ export class CategoryController {
   })
   @ApiResponse({ status: 201, description: 'Category created successfully' })
   @ApiResponse({ status: 409, description: 'Category already exists' })
-  async create(@Body() dto: CreateCategoryDto) {
-    const data = await this.categoryService.create(dto);
+  async create(@Body() dto: CreateCategoryDto, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.categoryService.create(dto, user);
     return {
       success: true,
       message: 'Category created successfully',
@@ -105,8 +106,9 @@ export class CategoryController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCategoryDto,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const data = await this.categoryService.update(id, dto);
+    const data = await this.categoryService.update(id, dto, user);
     return {
       success: true,
       message: 'Category updated successfully',
@@ -125,8 +127,8 @@ export class CategoryController {
   @ApiResponse({ status: 200, description: 'Category deleted successfully' })
   @ApiResponse({ status: 400, description: 'Category has attached medicines' })
   @ApiResponse({ status: 404, description: 'Category not found' })
-  async delete(@Param('id', ParseIntPipe) id: number) {
-    const result = await this.categoryService.delete(id);
+  async delete(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.categoryService.delete(id, user);
     return {
       success: true,
       message: result.message,

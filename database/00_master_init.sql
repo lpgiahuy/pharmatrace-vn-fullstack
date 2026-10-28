@@ -49,3 +49,6 @@
 
 -- Customer ownership, facility administration and loyalty integration.
 \i /docker-entrypoint-initdb.d/security/12_customer_rls.sql
+
+-- Public catalog reads and authorized catalog management.
+\i /docker-entrypoint-initdb.d/security/13_catalog_rls.sql

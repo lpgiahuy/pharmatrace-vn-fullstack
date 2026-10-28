@@ -119,8 +119,8 @@ export class ProductController {
     description: 'Adds a new medicine product to the catalog.',
   })
   @ApiResponse({ status: 201, description: 'Product created successfully' })
-  async create(@Body() dto: CreateProductDto) {
-    const data = await this.productService.create(dto);
+  async create(@Body() dto: CreateProductDto, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.productService.create(dto, user);
     return {
       success: true,
       message: 'Product created successfully',
@@ -141,8 +141,9 @@ export class ProductController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateProductDto,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const data = await this.productService.update(id, dto);
+    const data = await this.productService.update(id, dto, user);
     return {
       success: true,
       message: 'Product updated successfully',
@@ -263,6 +264,7 @@ export class ProductController {
   async uploadImage(
     @Param('id', ParseIntPipe) id: number,
     @UploadedFile() file: any,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
     if (!file) {
       throw new BadRequestException('Please provide an image file to upload');
@@ -270,7 +272,7 @@ export class ProductController {
 
     const uploadResult = await this.cloudinaryService.uploadImage(file);
     const imageUrl = uploadResult.secure_url;
-    const data = await this.productService.updateImageUrl(id, imageUrl);
+    const data = await this.productService.updateImageUrl(id, imageUrl, user);
 
     return {
       success: true,
