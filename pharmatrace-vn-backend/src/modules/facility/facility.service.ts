@@ -4,6 +4,9 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+import { authActor } from '../../common/auth-identity';
+import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 import { CreateFacilityDto } from './dto/create-facility.dto';
 import { UpdateFacilityDto } from './dto/update-facility.dto';
 import { FacilityQueryDto } from './dto/facility-query.dto';
@@ -26,7 +29,7 @@ export function formatFacility(f: any) {
 
 @Injectable()
 export class FacilityService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findAll(query?: FacilityQueryDto) {
     const page = Math.max(1, Number(query?.page) || 1);
@@ -119,8 +122,8 @@ export class FacilityService {
     return list.map(formatFacility);
   }
 
-  async findOne(id: number) {
-    const facility = await this.prisma.facilities.findUnique({
+  async findOne(id: number, tx: Prisma.TransactionClient = this.prisma) {
+    const facility = await tx.facilities.findUnique({
       where: { id },
       include: {
         employees: {
@@ -160,62 +163,64 @@ export class FacilityService {
     };
   }
 
-  async create(dto: CreateFacilityDto) {
-    const created = await this.prisma.facilities.create({
-      data: {
-        facility_name: dto.name.trim(),
-        facility_type: dto.type.trim(),
-        address: dto.address?.trim() || null,
-        phone_number: dto.phoneNumber?.trim() || null,
-        email: dto.email?.trim() || null,
-        latitude: dto.latitude,
-        longitude: dto.longitude,
-      },
-    });
+  async create(dto: CreateFacilityDto, user: CurrentUserPayload) {
+    return this.prisma.withFacilityManagement(authActor(user), async tx => {
+      const created = await tx.facilities.create({
+        data: {
+          facility_name: dto.name.trim(),
+          facility_type: dto.type.trim(),
+          address: dto.address?.trim() || null,
+          phone_number: dto.phoneNumber?.trim() || null,
+          email: dto.email?.trim() || null,
+          latitude: dto.latitude,
+          longitude: dto.longitude,
+        },
+      });
 
-    return formatFacility(created);
+      return formatFacility(created);
+    });
   }
 
-  async update(id: number, dto: UpdateFacilityDto) {
-    await this.findOne(id);
+  async update(id: number, dto: UpdateFacilityDto, user: CurrentUserPayload) {
+    return this.prisma.withFacilityManagement(authActor(user), async tx => {
+      await this.findOne(id, tx);
 
-    const dataToUpdate: any = {};
-    if (dto.name !== undefined) dataToUpdate.facility_name = dto.name.trim();
-    if (dto.type !== undefined) dataToUpdate.facility_type = dto.type.trim();
-    if (dto.address !== undefined) dataToUpdate.address = dto.address?.trim() || null;
-    if (dto.phoneNumber !== undefined) dataToUpdate.phone_number = dto.phoneNumber?.trim() || null;
-    if (dto.email !== undefined) dataToUpdate.email = dto.email?.trim() || null;
-    if (dto.latitude !== undefined) dataToUpdate.latitude = dto.latitude;
-    if (dto.longitude !== undefined) dataToUpdate.longitude = dto.longitude;
+      const dataToUpdate: any = {};
+      if (dto.name !== undefined) dataToUpdate.facility_name = dto.name.trim();
+      if (dto.type !== undefined) dataToUpdate.facility_type = dto.type.trim();
+      if (dto.address !== undefined) dataToUpdate.address = dto.address?.trim() || null;
+      if (dto.phoneNumber !== undefined) dataToUpdate.phone_number = dto.phoneNumber?.trim() || null;
+      if (dto.email !== undefined) dataToUpdate.email = dto.email?.trim() || null;
+      if (dto.latitude !== undefined) dataToUpdate.latitude = dto.latitude;
+      if (dto.longitude !== undefined) dataToUpdate.longitude = dto.longitude;
 
-    const updated = await this.prisma.facilities.update({
-      where: { id },
-      data: dataToUpdate,
+      const updated = await tx.facilities.update({
+        where: { id },
+        data: dataToUpdate,
+      });
+
+      return formatFacility(updated);
     });
-
-    return formatFacility(updated);
   }
 
-  async remove(id: number) {
-    const facility = await this.findOne(id);
+  async remove(id: number, user: CurrentUserPayload) {
+    return this.prisma.withFacilityManagement(authActor(user), async tx => {
+      const facility = await this.findOne(id, tx);
 
-    if (facility.stats?.employees > 0) {
-      throw new BadRequestException(
-        `Cannot delete facility: ${facility.stats.employees} employee(s) are assigned to this facility. Reassign employees first.`,
-      );
-    }
+      if (facility.stats?.employees > 0) {
+        throw new BadRequestException(`Cannot delete facility: ${facility.stats.employees} employee(s) are assigned to this facility. Reassign employees first.`);
+      }
 
-    if (facility.stats?.inventories > 0) {
-      throw new BadRequestException(
-        `Cannot delete facility: inventory records exist at this location.`,
-      );
-    }
+      if (facility.stats?.inventories > 0) {
+        throw new BadRequestException(`Cannot delete facility: inventory records exist at this location.`);
+      }
 
-    await this.prisma.facilities.delete({ where: { id } });
+      await tx.facilities.delete({ where: { id } });
 
-    return {
-      success: true,
-      message: `Facility "${facility.name}" (#${id}) deleted successfully`,
-    };
+      return {
+        success: true,
+        message: `Facility "${facility.name}" (#${id}) deleted successfully`,
+      };
+    });
   }
 }
