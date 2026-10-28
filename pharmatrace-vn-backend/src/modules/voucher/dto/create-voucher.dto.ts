@@ -8,14 +8,17 @@ import {
   IsDateString,
   IsInt,
   ValidateIf,
+  MaxLength,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateVoucherDto {
   @ApiProperty({ example: 'SUMMER2026', description: 'Unique voucher code' })
   @IsNotEmpty({ message: 'Voucher code is required' })
   @IsString()
+  @MaxLength(50)
+  @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   voucherCode: string;
 
   @ApiPropertyOptional({ example: 'PERCENT', enum: ['PERCENT', 'FIXED'], default: 'PERCENT' })
@@ -38,7 +41,7 @@ export class CreateVoucherDto {
   @Min(0)
   minOrderValue?: number = 0;
 
-  @ApiPropertyOptional({ example: 50000, description: 'Maximum discount amount capped (for PERCENT type)' })
+  @ApiPropertyOptional({ example: 50000, description: 'Required positive maximum discount amount for PERCENT' })
   @IsOptional()
   @ValidateIf((_, val) => val !== null && val !== undefined)
   @Type(() => Number)
@@ -57,13 +60,13 @@ export class CreateVoucherDto {
   @IsOptional()
   @ValidateIf((_, val) => val !== null && val !== undefined && val !== '')
   @IsDateString()
-  startDate?: string;
+  startDate: string;
 
   @ApiPropertyOptional({ example: '2026-12-31T23:59:59Z', description: 'End validity timestamp' })
   @IsOptional()
   @ValidateIf((_, val) => val !== null && val !== undefined && val !== '')
   @IsDateString()
-  endDate?: string;
+  endDate: string;
 
   @ApiPropertyOptional({ example: 'ACTIVE', enum: ['ACTIVE', 'INACTIVE', 'EXPIRED'], default: 'ACTIVE' })
   @IsOptional()

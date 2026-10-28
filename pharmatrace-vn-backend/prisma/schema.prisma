@@ -213,10 +213,13 @@ model vouchers {
   start_date          DateTime? @db.Timestamptz(6)
   end_date            DateTime? @db.Timestamptz(6)
   status              String?   @default("ACTIVE") @db.VarChar(50)
+  orders              orders[]
 }
 
 model orders {
   id                  Int                   @id @default(autoincrement())
+  voucher_id          Int?
+  voucher             vouchers?             @relation(fields: [voucher_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
   order_code          String                @unique @db.VarChar(50)
   customer_id         Int?
   export_facility_id  Int?
@@ -249,6 +252,7 @@ model orders {
   @@index([customer_id], map: "idx_orders_customer_id")
   @@index([order_status], map: "idx_orders_status")
   @@index([created_at], map: "idx_orders_created_at")
+  @@index([voucher_id], map: "idx_orders_voucher_id")
 }
 
 model order_prescription_reviews {

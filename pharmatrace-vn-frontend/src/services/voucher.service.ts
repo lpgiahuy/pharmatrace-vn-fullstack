@@ -36,14 +36,6 @@ export const voucherService = {
     return apiClient.post('/vouchers/validate', { voucherCode, orderSubtotal });
   },
 
-  // Public/Customer: Apply voucher and record usage
-  applyVoucher: async (
-    voucherCode: string,
-    orderSubtotal: number,
-  ): Promise<{ success: boolean; data: ValidateVoucherResponse; message: string }> => {
-    return apiClient.post('/vouchers/apply', { voucherCode, orderSubtotal });
-  },
-
   // Admin: Get all vouchers
   adminGetVouchers: async (params?: {
     page?: number;

@@ -61,11 +61,12 @@ describe("OrderService inventory reservation", () => {
       },
       internal_transfers: { create: jest.fn() },
       $executeRaw: rawMock,
+      $queryRaw: jest.fn().mockResolvedValue([{ id: 1 }]),
     };
     const prisma = {
       customers: { findUnique: jest.fn().mockResolvedValue(customer) },
       vouchers: {
-        findUnique: jest.fn().mockResolvedValue({
+        findFirst: jest.fn().mockResolvedValue({
           id: 99,
           voucher_code: "DISCOUNT10",
           status: "ACTIVE",
@@ -89,6 +90,8 @@ describe("OrderService inventory reservation", () => {
           prescriptions: null,
         }),
       },
+      prepareVoucher: jest.fn().mockResolvedValue(undefined),
+      withVoucher: jest.fn((_scope, run) => run(prisma)),
       withOrder: jest.fn(
         async (operation: unknown, callback: (client: any) => Promise<unknown>) =>
           callback(operation === "read" ? prisma : tx),
@@ -209,7 +212,7 @@ describe("OrderService inventory reservation", () => {
 
   it("rejects the order when voucher has no valid usage limit configured", async () => {
     const { prisma } = createMocks(1);
-    prisma.vouchers.findUnique.mockResolvedValue({
+    prisma.vouchers.findFirst.mockResolvedValue({
       id: 99,
       voucher_code: "NOLIMIT",
       status: "ACTIVE",
@@ -231,7 +234,7 @@ describe("OrderService inventory reservation", () => {
 
   it("rejects the order when voucher total usage limit has already been reached", async () => {
     const { prisma } = createMocks(1);
-    prisma.vouchers.findUnique.mockResolvedValue({
+    prisma.vouchers.findFirst.mockResolvedValue({
       id: 99,
       voucher_code: "EXHAUSTED",
       status: "ACTIVE",

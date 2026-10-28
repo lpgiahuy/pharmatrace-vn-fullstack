@@ -20,7 +20,8 @@ database/
 │   ├── 05_wishlist_rls.sql         # Enforced customer wishlist ownership
 │   ├── 06_cart_rls.sql             # Enforced customer cart ownership
 │   ├── 07_review_rls.sql           # Review ownership, moderation, reports and audit
-│   └── 08_order_rls.sql            # Orders, fulfillment, transfers and loyalty ledger
+│   ├── 08_order_rls.sql            # Orders, fulfillment, transfers and loyalty ledger
+│   └── 09_voucher_rls.sql          # Voucher scopes and order-bound consumption
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -39,7 +40,8 @@ database/
     ├── wishlist_rls_test.sql       # Wishlist allow/deny checks, rolled back
     ├── cart_rls_test.sql           # Cart ownership and column-grant checks
     ├── review_rls_test.sql         # Review visibility and write restrictions
-    └── order_rls_test.sql          # Customer/facility ownership and transfer projection
+    ├── order_rls_test.sql          # Customer/facility ownership and transfer projection
+    └── voucher_rls_test.sql        # Exact-code previews, management and consumption
 ```
 
 `backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth role/policies are prepared automatically; account RLS enforcement stays off until dependent modules are ready. Read [Auth RLS rollout](#auth-rls-rollout) before activation. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
@@ -149,6 +151,9 @@ Docker runs only the top-level `.sh` and `.sql` entrypoints, in filename order. 
 7. `security/03_auth_rls.sql` prepares auth roles, column grants and policies. It does not enable account RLS unless explicitly invoked with `auth_rls_activate=true`. Master never runs the rollback script.
 8. `security/05_wishlist_rls.sql` restricts `app_user` to SELECT/INSERT/DELETE and enables/forces customer ownership policies on `customer_wishlists`.
 9. `security/06_cart_rls.sql` enables/forces customer cart ownership; UPDATE is limited to quantity/variant, and sequence reset/TRUNCATE are not granted.
+10. `security/07_review_rls.sql` enforces review/report/audit scopes.
+11. `security/08_order_rls.sql` enforces order ownership, fulfillment scope and loyalty ledger access.
+12. `security/09_voucher_rls.sql` adds order voucher references and enforces voucher scopes and consumption rules.
 
 All tables must exist before importing the seed. Review grants are explicitly restricted after import so blanket or default privileges cannot add DELETE/TRUNCATE access. The SQL files are intended to run as `postgres` through `psql`.
 
@@ -496,3 +501,61 @@ Remove-Item Env:ORDER_RLS_TEST_DATABASE_URL, Env:ORDER_RLS_TEST_ADMIN_URL
 ```
 
 The suite accepts only the localhost database named `pharmatrace_order_rls_test`; missing test variables skip the suite rather than verify integration. Do not run another suite concurrently on the same database: tests temporarily revoke ledger grants or disable FORCE to check rollback/fail-closed behavior, restoring them in finally blocks. Tests use GPS fixtures and do not call external geocoding/Cloudinary services. SQL tests roll back fixture data; HTTP tests clean up their own fixtures.
+
+## Voucher RLS
+
+`security/09_voucher_rls.sql` enables and forces RLS on `vouchers`, independently of `AUTH_RLS_ENABLED`. It uses the existing `app_user`, invoker functions and an update trigger; no additional login, role membership or `SECURITY DEFINER` function is introduced.
+
+| Actor / operation | Access |
+|---|---|
+| Public `POST /vouchers/validate` | Read only the exact supplied code, case-insensitively; the service checks status, dates, capacity and subtotal and returns the discount preview without consuming usage |
+| SUPER_ADMIN / STORE_MANAGER | List, create and edit global vouchers; delete only unused vouchers without order history; never directly edit the usage counter |
+| PHARMACIST | Read-only voucher administration |
+| Other employee roles, ADMIN, customers | No voucher administration under the current endpoint role lists |
+| Customer checkout | Lock the selected voucher, create an owned order, and increment only its usage counter within the same transaction |
+
+Vouchers have no facility ownership column, so management remains global. No facility or per-customer eligibility model is inferred from the employee role. `withVoucher()` validates the actor and scope, verifies ENABLE/FORCE and the restricted runtime role, and sets transaction-local code/scope/identity context. Missing protection returns 503. Public previews cannot list other codes or modify rows. Invalid or inactive codes keep the existing 404/400 responses.
+
+`POST /vouchers/apply` now returns **410 Gone**. The checkout page already uses `/vouchers/validate`; its unused standalone-consumption helper has been removed. Consumers outside this repository must preview through validate and place orders through `POST /orders`.
+
+`orders.voucher_id` records the voucher used by new orders, with a RESTRICT foreign key. Existing orders keep NULL because their original voucher cannot be inferred reliably from a discount amount. The trigger permits checkout to change only `used_quantity`, by exactly +1, for a matching owned PENDING/WAITING_INTERNAL_TRANSFER order with the correct subtotal and discount. Checkout rejects unavailable or changed voucher terms and rolls back stock, points, cart cleanup, the order and consumption together when any write fails. Concurrent checkouts cannot exceed the usage limit. Cancellation continues to retain the consumed use, as before; this change does not add per-customer limits or make order placement idempotent.
+
+Every voucher requires a start and end date in chronological order; percentage discounts also require a positive maximum discount. Fixed discounts do not require a cap. Before applying 09 to an existing database, reconcile vouchers missing dates or a positive percentage cap; the script fails without modifying data if any are invalid. Management validates percentage bounds, dates and capacity, cannot reduce the limit below existing usage, and cannot reset the counter. Deactivate used vouchers instead of deleting them. A normalized-code unique index prevents duplicate codes differing only in case or surrounding spaces. Existing duplicate codes or invalid terms stop the script for reconciliation rather than being silently rewritten. Runtime cannot TRUNCATE vouchers, change IDs, or reset their sequence.
+
+### Existing-database deployment
+
+Back up and test restoration, inspect existing policies/data, and run the suites on a copy first. Stop the backend/jobs, apply the SQL as owner/DBA, generate the Prisma client, then start the matching backend and smoke test preview, administration and checkout:
+
+```powershell
+docker exec phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/09_voucher_rls.sql
+Push-Location pharmatrace-vn-backend
+npx prisma generate
+Pop-Location
+```
+
+Use the correct container/database names. Deploy this script after 08: it also grants order insertion of `voucher_id`, which the earlier order grant list does not include. The script is transactional, can be reapplied, and refuses unknown voucher policies or an incompatible existing voucher FK. Do not rerun master/seed or reset the volume. New volumes receive 09 automatically from master. Old code performs unscoped voucher queries and must not serve traffic after enforcement; new code requires the new column and policies. Roll back code/schema/grants/policies together from a saved baseline rather than automatically disabling RLS. Keep `AUTH_RLS_ENABLED=false` during the current account-module rollout.
+
+### Isolated voucher tests
+
+Run from the repository root and wait for `PostgreSQL init process complete` before testing:
+
+```powershell
+docker run --detach --name pharmatrace-voucher-rls-test --publish 127.0.0.1::5432 --tmpfs /var/lib/postgresql/data -e POSTGRES_PASSWORD=voucher_test_owner_only -e APP_DB_PASSWORD=voucher_test_app_only -e POSTGRES_DB=pharmatrace_voucher_rls_test --mount "type=bind,source=$($PWD.Path)\database,target=/docker-entrypoint-initdb.d,readonly" postgres:15-alpine
+docker logs pharmatrace-voucher-rls-test
+docker exec pharmatrace-voucher-rls-test psql -X -v ON_ERROR_STOP=1 -U postgres -d pharmatrace_voucher_rls_test -f /docker-entrypoint-initdb.d/tests/development_seed_test.sql -f /docker-entrypoint-initdb.d/tests/voucher_rls_test.sql
+
+$voucherTestPort = (docker port pharmatrace-voucher-rls-test 5432).Split(':')[-1]
+$env:VOUCHER_RLS_TEST_DATABASE_URL = "postgresql://app_user:voucher_test_app_only@127.0.0.1:$voucherTestPort/pharmatrace_voucher_rls_test"
+$env:VOUCHER_RLS_TEST_ADMIN_URL = "postgresql://postgres:voucher_test_owner_only@127.0.0.1:$voucherTestPort/pharmatrace_voucher_rls_test"
+Push-Location pharmatrace-vn-backend
+npm.cmd test -- --runInBand
+npm.cmd run test:e2e -- --runInBand --runTestsByPath test/voucher-rls.e2e-spec.ts
+Pop-Location
+
+docker rm --force pharmatrace-voucher-rls-test
+Remove-Item Env:VOUCHER_RLS_TEST_DATABASE_URL, Env:VOUCHER_RLS_TEST_ADMIN_URL
+```
+
+The suite requires explicit localhost URLs and the exact database name `pharmatrace_voucher_rls_test`; it does not use `.env` as a target. Without test URLs it skips rather than verifies integration. It covers role boundaries, exact-code reads, standalone-consumption rejection, terms, duplicate codes, capped discounts, last-use concurrency, stale configuration, atomic rollback, order linkage, protected columns and fail-closed behavior. Do not run another suite on the same database concurrently: one test temporarily revokes ledger grants and another temporarily disables FORCE, restoring both in finally blocks.
+
+Securability notes: **Confidentiality** limits public reads to a supplied code; **Integrity** binds consumption to checkout and protects counters; **Testability** verifies both allowed and denied paths with the real runtime role. Context remains trusted server data, not independent authentication against someone with backend database credentials or arbitrary SQL access.

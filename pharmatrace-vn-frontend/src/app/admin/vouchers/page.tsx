@@ -791,14 +791,15 @@ export default function AdminVouchersPage() {
             <Form.Item
               name="maxDiscountAmount"
               label={<span className="text-xs font-medium text-slate-700">Max Discount Cap (For %)</span>}
-              tooltip="Only applicable for Percentage (%) discount. Caps the maximum discount in VND."
+              tooltip="Required for percentage discounts. Caps the maximum discount in VND."
+              rules={discountType === 'PERCENT' ? [{ required: true, message: 'Enter a maximum discount' }, { type: 'number', min: 0.01, message: 'Maximum discount must be greater than zero' }] : []}
             >
               <InputNumber
                 min={0}
                 step={10000}
                 style={{ width: '100%' }}
                 disabled={discountType === 'FIXED'}
-                placeholder={discountType === 'FIXED' ? 'Disabled for Cash' : 'Unlimited if empty'}
+                placeholder={discountType === 'FIXED' ? 'Disabled for Cash' : 'Enter maximum discount'}
               />
             </Form.Item>
           </div>
@@ -830,7 +831,8 @@ export default function AdminVouchersPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Form.Item
               name="startDate"
-              label={<span className="text-xs font-medium text-slate-700">Start Date (Optional)</span>}
+              label={<span className="text-xs font-medium text-slate-700">Start Date</span>}
+              rules={[{ required: true, message: 'Select a start date' }]}
             >
               <DatePicker
                 placeholder="Select start date"
@@ -842,7 +844,14 @@ export default function AdminVouchersPage() {
 
             <Form.Item
               name="endDate"
-              label={<span className="text-xs font-medium text-slate-700">End Date (Optional)</span>}
+              label={<span className="text-xs font-medium text-slate-700">End Date</span>}
+              dependencies={['startDate']}
+              rules={[{ required: true, message: 'Select an end date' }, ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const start = getFieldValue('startDate');
+                  return !value || !start || !value.isBefore(start) ? Promise.resolve() : Promise.reject(new Error('End date must not be before start date'));
+                },
+              })]}
             >
               <DatePicker
                 placeholder="Select end date"

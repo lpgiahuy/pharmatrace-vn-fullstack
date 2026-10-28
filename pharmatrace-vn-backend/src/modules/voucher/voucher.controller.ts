@@ -11,6 +11,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  GoneException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { VoucherService } from './voucher.service';
@@ -21,6 +22,7 @@ import { VoucherQueryDto } from './dto/voucher-query.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Vouchers & Promotions')
 @Controller()
@@ -46,22 +48,16 @@ export class VoucherController {
     };
   }
 
-  // Apply voucher during checkout / order placement 
+  // Consumption belongs to the order transaction, never a standalone request.
   @Post('vouchers/apply')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Apply and consume discount voucher',
-    description: 'Validates and records usage for the voucher.',
+    summary: 'Retired standalone voucher consumption endpoint',
+    description: 'Use vouchers/validate to preview a discount and POST /orders to consume it.',
   })
-  @ApiResponse({ status: 200, description: 'Voucher applied and usage recorded successfully' })
-  @ApiResponse({ status: 400, description: 'Voucher invalid or usage limit reached' })
-  async applyVoucher(@Body() dto: ValidateVoucherDto) {
-    const result = await this.voucherService.applyVoucher(dto);
-    return {
-      success: true,
-      message: result.message,
-      data: result,
-    };
+  @ApiResponse({ status: 410, description: 'Consume vouchers only through order placement' })
+  applyVoucher() {
+    throw new GoneException('Use POST /orders to consume a voucher; POST /vouchers/validate only previews the discount');
   }
 
   // Admin Management Endpoints
@@ -74,8 +70,8 @@ export class VoucherController {
     description: 'Retrieves all vouchers with code search and status filtering.',
   })
   @ApiResponse({ status: 200, description: 'Vouchers retrieved successfully' })
-  async findAll(@Query() query: VoucherQueryDto) {
-    const result = await this.voucherService.findAll(query);
+  async findAll(@Query() query: VoucherQueryDto, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.voucherService.findAll(query, user);
     return {
       success: true,
       message: 'Vouchers retrieved successfully',
@@ -91,8 +87,8 @@ export class VoucherController {
   @ApiOperation({ summary: 'Get voucher details by ID (Admin)' })
   @ApiResponse({ status: 200, description: 'Voucher retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Voucher not found' })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const data = await this.voucherService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.voucherService.findOne(id, user);
     return {
       success: true,
       data,
@@ -106,8 +102,8 @@ export class VoucherController {
   @ApiOperation({ summary: 'Create new voucher (Admin)' })
   @ApiResponse({ status: 201, description: 'Voucher created successfully' })
   @ApiResponse({ status: 409, description: 'Voucher code already exists' })
-  async create(@Body() dto: CreateVoucherDto) {
-    const data = await this.voucherService.create(dto);
+  async create(@Body() dto: CreateVoucherDto, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.voucherService.create(dto, user);
     return {
       success: true,
       message: 'Voucher created successfully',
@@ -125,8 +121,9 @@ export class VoucherController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateVoucherDto,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const data = await this.voucherService.update(id, dto);
+    const data = await this.voucherService.update(id, dto, user);
     return {
       success: true,
       message: 'Voucher updated successfully',
@@ -141,7 +138,7 @@ export class VoucherController {
   @ApiOperation({ summary: 'Delete voucher by ID (Admin)' })
   @ApiResponse({ status: 200, description: 'Voucher deleted successfully' })
   @ApiResponse({ status: 404, description: 'Voucher not found' })
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return this.voucherService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    return this.voucherService.remove(id, user);
   }
 }
