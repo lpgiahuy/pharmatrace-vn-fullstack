@@ -4,6 +4,9 @@ import {
   ConflictException,
   BadRequestException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { authActor } from '../../common/auth-identity';
+import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
@@ -34,7 +37,31 @@ function formatEmployee(emp: any) {
 export class EmployeeService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query?: EmployeeQueryDto) {
+  async findAll(query: EmployeeQueryDto | undefined, user: CurrentUserPayload) {
+    return this.prisma.withEmployeeManagement(authActor(user), tx => this.findAllInTransaction(tx, query));
+  }
+
+  async findOne(id: number, user: CurrentUserPayload) {
+    return this.prisma.withEmployeeManagement(authActor(user), tx => this.findOneInTransaction(tx, id));
+  }
+
+  async create(dto: CreateEmployeeDto, user: CurrentUserPayload) {
+    return this.prisma.withEmployeeManagement(authActor(user), tx => this.createInTransaction(tx, dto));
+  }
+
+  async update(id: number, dto: UpdateEmployeeDto, user: CurrentUserPayload) {
+    return this.prisma.withEmployeeManagement(authActor(user), tx => this.updateInTransaction(tx, id, dto));
+  }
+
+  async updateStatus(id: number, status: string, user: CurrentUserPayload) {
+    return this.prisma.withEmployeeManagement(authActor(user), tx => this.updateStatusInTransaction(tx, id, status));
+  }
+
+  async remove(id: number, user: CurrentUserPayload) {
+    return this.prisma.withEmployeeManagement(authActor(user), tx => this.removeInTransaction(tx, id));
+  }
+
+  private async findAllInTransaction(tx: Prisma.TransactionClient, query?: EmployeeQueryDto) {
     const page = Math.max(1, Number(query?.page) || 1);
     const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
     const skip = (page - 1) * limit;
@@ -62,8 +89,8 @@ export class EmployeeService {
     }
 
     const [total, items] = await Promise.all([
-      this.prisma.employees.count({ where }),
-      this.prisma.employees.findMany({
+      tx.employees.count({ where }),
+      tx.employees.findMany({
         where,
         skip,
         take: limit,
@@ -83,8 +110,8 @@ export class EmployeeService {
     };
   }
 
-  async findOne(id: number) {
-    const employee = await this.prisma.employees.findUnique({
+  private async findOneInTransaction(tx: Prisma.TransactionClient, id: number) {
+    const employee = await tx.employees.findUnique({
       where: { id },
       include: { facilities: true },
     });
@@ -94,17 +121,17 @@ export class EmployeeService {
     return formatEmployee(employee);
   }
 
-  async create(dto: CreateEmployeeDto) {
+  private async createInTransaction(tx: Prisma.TransactionClient, dto: CreateEmployeeDto) {
     const email = dto.email.trim().toLowerCase();
 
-    const existing = await this.prisma.employees.findFirst({
+    const existing = await tx.employees.findFirst({
       where: { email },
     });
     if (existing) {
       throw new ConflictException('Email is already registered');
     }
 
-    const facility = await this.prisma.facilities.findUnique({
+    const facility = await tx.facilities.findUnique({
       where: { id: dto.facilityId },
     });
     if (!facility) {
@@ -113,7 +140,7 @@ export class EmployeeService {
 
     const password_hash = await bcrypt.hash(dto.password, 10);
 
-    const newEmp = await this.prisma.employees.create({
+    const newEmp = await tx.employees.create({
       data: {
         email,
         password_hash,
@@ -128,8 +155,8 @@ export class EmployeeService {
     return formatEmployee(newEmp);
   }
 
-  async update(id: number, dto: UpdateEmployeeDto) {
-    const employee = await this.prisma.employees.findUnique({ where: { id } });
+  private async updateInTransaction(tx: Prisma.TransactionClient, id: number, dto: UpdateEmployeeDto) {
+    const employee = await tx.employees.findUnique({ where: { id } });
     if (!employee) {
       throw new NotFoundException(`Employee with ID ${id} not found`);
     }
@@ -138,7 +165,7 @@ export class EmployeeService {
 
     if (dto.email && dto.email.trim().toLowerCase() !== employee.email?.toLowerCase()) {
       const cleanEmail = dto.email.trim().toLowerCase();
-      const existing = await this.prisma.employees.findFirst({
+      const existing = await tx.employees.findFirst({
         where: { email: cleanEmail, id: { not: id } },
       });
       if (existing) {
@@ -160,7 +187,7 @@ export class EmployeeService {
     }
 
     if (dto.facilityId !== undefined) {
-      const facility = await this.prisma.facilities.findUnique({
+      const facility = await tx.facilities.findUnique({
         where: { id: dto.facilityId },
       });
       if (!facility) {
@@ -173,7 +200,7 @@ export class EmployeeService {
       dataToUpdate.status = dto.status;
     }
 
-    const updated = await this.prisma.employees.update({
+    const updated = await tx.employees.update({
       where: { id },
       data: dataToUpdate,
       include: { facilities: true },
@@ -182,11 +209,11 @@ export class EmployeeService {
     return formatEmployee(updated);
   }
 
-  async updateStatus(id: number, status: string) {
-    await this.findOne(id);
+  private async updateStatusInTransaction(tx: Prisma.TransactionClient, id: number, status: string) {
+    await this.findOneInTransaction(tx, id);
     const validStatus = status.toUpperCase() === 'INACTIVE' ? 'INACTIVE' : 'ACTIVE';
 
-    const updated = await this.prisma.employees.update({
+    const updated = await tx.employees.update({
       where: { id },
       data: { status: validStatus },
       include: { facilities: true },
@@ -195,9 +222,9 @@ export class EmployeeService {
     return formatEmployee(updated);
   }
 
-  async remove(id: number) {
-    await this.findOne(id);
-    await this.prisma.employees.delete({ where: { id } });
+  private async removeInTransaction(tx: Prisma.TransactionClient, id: number) {
+    await this.findOneInTransaction(tx, id);
+    await tx.employees.delete({ where: { id } });
     return { success: true, message: `Employee with ID ${id} deleted successfully` };
   }
 }
