@@ -46,3 +46,6 @@
 
 -- Employee management and private employee rows.
 \i /docker-entrypoint-initdb.d/security/11_employee_rls.sql
+
+-- Customer ownership, facility administration and loyalty integration.
+\i /docker-entrypoint-initdb.d/security/12_customer_rls.sql

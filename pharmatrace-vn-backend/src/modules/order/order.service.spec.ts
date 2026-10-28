@@ -90,6 +90,7 @@ describe("OrderService inventory reservation", () => {
           prescriptions: null,
         }),
       },
+      withAuth: jest.fn(run => run(prisma)),
       prepareVoucher: jest.fn().mockResolvedValue(undefined),
       withVoucher: jest.fn((_scope, run) => run(prisma)),
       withOrder: jest.fn(
