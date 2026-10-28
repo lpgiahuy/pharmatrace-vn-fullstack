@@ -168,7 +168,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     expect((await api('GET', `/admin/customers/${a}`, 200, tokens.manager)).data.orderStats.totalOrders).toBe(1);
     expect((await api('GET', `/admin/customers/${a}/orders`, 200, tokens.pharmacist)).data).toHaveLength(1);
     const outsideStaff = { ...managerActor(), facilityId: outside };
-    expect((await app.get(CustomerService).getCustomerOrders(a, {}, outsideStaff)).items).toHaveLength(0);
+    await expect(app.get(CustomerService).getCustomerOrders(a, {}, outsideStaff)).rejects.toThrow('Customer with ID');
   });
   it('packs and completes orders while rejecting wrong-facility writes', async () => {
     const order = await place();

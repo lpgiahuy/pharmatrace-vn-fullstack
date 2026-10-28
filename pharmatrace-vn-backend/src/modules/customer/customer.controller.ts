@@ -68,8 +68,9 @@ export class CustomerController {
   async updateStatus(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCustomerStatusDto,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const data = await this.customerService.updateStatus(id, dto);
+    const data = await this.customerService.updateStatus(id, dto, user);
     return {
       success: true,
       message: 'Customer status updated successfully',

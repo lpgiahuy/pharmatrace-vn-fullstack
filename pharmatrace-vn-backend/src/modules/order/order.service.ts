@@ -31,9 +31,9 @@ export class OrderService {
   constructor(private readonly prisma: PrismaService) { }
 
   async createOrder(customerId: number, dto: CreateOrderDto) {
-    const customer = await this.prisma.customers.findUnique({
+    const customer = await this.prisma.withAuth(tx => tx.customers.findUnique({
       where: { id: customerId },
-    });
+    }), { actor: { id: customerId, type: 'customer', role: 'CUSTOMER' } });
     if (!customer) {
       throw new NotFoundException("Customer account not found");
     }

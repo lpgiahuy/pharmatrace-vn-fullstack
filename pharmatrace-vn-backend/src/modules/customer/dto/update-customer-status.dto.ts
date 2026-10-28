@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsIn } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateCustomerStatusDto {
@@ -8,5 +8,6 @@ export class UpdateCustomerStatusDto {
   })
   @IsNotEmpty()
   @IsString()
+  @IsIn(['ACTIVE', 'INACTIVE', 'BANNED'])
   status: string;
 }

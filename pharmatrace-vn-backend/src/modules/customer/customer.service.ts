@@ -111,7 +111,7 @@ export class CustomerService {
   constructor(private readonly prisma: PrismaService) { }
 
   async findAll(query: CustomerQueryDto | undefined, user: CurrentUserPayload) {
-    return this.prisma.withOrder('read', async tx => {
+    return this.prisma.withCustomerManagement(authActor(user), async tx => {
       const page = Math.max(1, Number(query?.page) || 1);
       const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
       const skip = (page - 1) * limit;
@@ -160,11 +160,11 @@ export class CustomerService {
         },
       };
 
-    }, authActor(user));
+    });
   }
 
   async findOne(id: number, user: CurrentUserPayload) {
-    return this.prisma.withOrder('read', async tx => {
+    return this.prisma.withCustomerManagement(authActor(user), async tx => {
       const customer = await tx.customers.findUnique({
         where: { id },
       });
@@ -205,30 +205,32 @@ export class CustomerService {
 
       return formatCustomer(customer, orderStats);
 
-    }, authActor(user));
+    });
   }
 
-  async updateStatus(id: number, dto: UpdateCustomerStatusDto) {
-    const existing = await this.prisma.customers.findUnique({
-      where: { id },
+  async updateStatus(id: number, dto: UpdateCustomerStatusDto, user: CurrentUserPayload) {
+    return this.prisma.withCustomerManagement(authActor(user), async tx => {
+      const existing = await tx.customers.findUnique({
+        where: { id },
+      });
+
+      if (!existing) {
+        throw new NotFoundException(`Customer with ID ${id} not found`);
+      }
+
+      const resolvedStatus = (dto.status || 'ACTIVE').trim().toUpperCase();
+
+      const updated = await tx.customers.update({
+        where: { id },
+        data: { status: resolvedStatus },
+      });
+
+      return formatCustomer(updated);
     });
-
-    if (!existing) {
-      throw new NotFoundException(`Customer with ID ${id} not found`);
-    }
-
-    const resolvedStatus = (dto.status || 'ACTIVE').trim().toUpperCase();
-
-    const updated = await this.prisma.customers.update({
-      where: { id },
-      data: { status: resolvedStatus },
-    });
-
-    return formatCustomer(updated);
   }
 
   async getCustomerOrders(id: number, query: CustomerOrderQueryDto | undefined, user: CurrentUserPayload) {
-    return this.prisma.withOrder('read', async tx => {
+    return this.prisma.withCustomerManagement(authActor(user), async tx => {
       const customer = await tx.customers.findUnique({
         where: { id },
         select: { id: true, full_name: true },
@@ -284,6 +286,6 @@ export class CustomerService {
         },
       };
 
-    }, authActor(user));
+    });
   }
 }
