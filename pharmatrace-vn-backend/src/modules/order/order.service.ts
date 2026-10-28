@@ -5,7 +5,7 @@ import {
   ForbiddenException,
 } from "@nestjs/common";
 import { randomBytes } from "crypto";
-import { Prisma } from '@prisma/client';
+import { Prisma, vouchers } from '@prisma/client';
 import { PrismaService } from "../../prisma/prisma.service";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrderQueryDto } from "./dto/order-query.dto";
@@ -118,10 +118,11 @@ export class OrderService {
 
     let discountFromVoucher = 0;
     let appliedVoucherId: number | null = null;
+    let voucherSnapshot: vouchers | null = null;
     if (dto.voucherCode) {
-      const voucher = await this.prisma.vouchers.findUnique({
-        where: { voucher_code: dto.voucherCode.trim().toUpperCase() },
-      });
+      const voucher = await this.prisma.withVoucher('validate', tx => tx.vouchers.findFirst({
+        where: { voucher_code: { equals: dto.voucherCode!.trim().toUpperCase(), mode: 'insensitive' } },
+      }), { code: dto.voucherCode });
 
       if (!voucher || voucher.status !== "ACTIVE") {
         throw new BadRequestException("Promo voucher code is invalid or no longer active");
@@ -155,6 +156,7 @@ export class OrderService {
 
       discountFromVoucher = Math.min(discountFromVoucher, subtotal);
       appliedVoucherId = voucher.id;
+      voucherSnapshot = voucher;
     }
 
     let usedPoints = dto.usedPoints || 0;
@@ -321,10 +323,16 @@ export class OrderService {
     const orderCode = `ORD-${datePart}-${randomBytes(4).toString("hex").toUpperCase()}`;
 
     const saveOrder = async (tx: Prisma.TransactionClient) => {
+      if (appliedVoucherId) {
+        await this.prisma.prepareVoucher(tx, 'checkout', dto.voucherCode);
+        const locked = await tx.$queryRaw<{ id: number }[]>`SELECT id FROM public.vouchers WHERE id = ${appliedVoucherId} FOR UPDATE`;
+        if (!locked.length) throw new BadRequestException('Voucher is no longer available. Please try again.');
+      }
       const order = await tx.orders.create({
         data: {
           order_code: orderCode,
           customer_id: customerId,
+          ...(appliedVoucherId ? { voucher_id: appliedVoucherId } : {}),
           export_facility_id: exportFacilityId,
           prescription_id: dto.prescriptionId || null,
           prescription_review_status: hasPrescriptionDrug ? 'PENDING_APPROVAL' : null,
@@ -444,7 +452,8 @@ export class OrderService {
         });
       }
 
-      if (appliedVoucherId) {
+      if (appliedVoucherId && voucherSnapshot) {
+        await tx.$queryRaw`SELECT set_config('app.voucher_order_id', ${String(order.id)}, true)`;
         const updatedVoucherRows = await tx.$executeRaw`
           UPDATE "vouchers"
           SET "used_quantity" = COALESCE("used_quantity", 0) + 1
@@ -455,6 +464,10 @@ export class OrderService {
             AND "total_quantity" IS NOT NULL
             AND "total_quantity" > 0
             AND COALESCE("used_quantity", 0) < "total_quantity"
+            AND "discount_type" = ${voucherSnapshot.discount_type}
+            AND "discount_value" = ${Number(voucherSnapshot.discount_value)}
+            AND COALESCE("min_order_value", 0) = ${Number(voucherSnapshot.min_order_value || 0)}
+            AND "max_discount_amount" IS NOT DISTINCT FROM ${voucherSnapshot.max_discount_amount == null ? null : Number(voucherSnapshot.max_discount_amount)}::numeric
         `;
 
         if (updatedVoucherRows !== 1) {

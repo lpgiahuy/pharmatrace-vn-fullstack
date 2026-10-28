@@ -37,3 +37,6 @@
 
 -- Order ownership, fulfillment facility scope, transfer projection and loyalty ledger.
 \i /docker-entrypoint-initdb.d/security/08_order_rls.sql
+
+-- Voucher management, exact-code previews and order-bound consumption.
+\i /docker-entrypoint-initdb.d/security/09_voucher_rls.sql

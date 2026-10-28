@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS public.orders (
     id SERIAL PRIMARY KEY,
     order_code VARCHAR(50) NOT NULL UNIQUE,
     customer_id INTEGER REFERENCES public.customers(id) ON DELETE SET NULL,
+    voucher_id INTEGER REFERENCES public.vouchers(id) ON DELETE RESTRICT,
     export_facility_id INTEGER REFERENCES public.facilities(id) ON DELETE SET NULL,
     prescription_id INTEGER REFERENCES public.prescriptions(id) ON DELETE SET NULL,
     subtotal_amount NUMERIC(15, 2) NOT NULL DEFAULT 0,
@@ -142,6 +143,8 @@ CREATE TABLE IF NOT EXISTS public.articles (
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_orders_customer ON public.orders(customer_id);
 CREATE INDEX IF NOT EXISTS idx_orders_order_code ON public.orders(order_code);
+CREATE INDEX IF NOT EXISTS idx_orders_voucher_id ON public.orders(voucher_id);
+CREATE UNIQUE INDEX IF NOT EXISTS vouchers_code_normalized_unique ON public.vouchers(upper(btrim(voucher_code)));
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON public.order_items(order_id);
 CREATE INDEX IF NOT EXISTS idx_cart_customer ON public.cart_items(customer_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_medicine ON public.reviews(medicine_id);

@@ -7,14 +7,19 @@ import {
   IsDateString,
   IsInt,
   ValidateIf,
+  MaxLength,
+  IsNotEmpty,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateVoucherDto {
   @ApiPropertyOptional({ example: 'SUMMER2026', description: 'Updated voucher code' })
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   voucherCode?: string;
 
   @ApiPropertyOptional({ example: 'PERCENT', enum: ['PERCENT', 'FIXED'] })

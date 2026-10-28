@@ -1,11 +1,13 @@
-import { IsNotEmpty, IsString, IsNumber, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNotEmpty, IsString, IsNumber, Min, MaxLength } from 'class-validator';
+import { Type, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ValidateVoucherDto {
   @ApiProperty({ example: 'PHARMA10', description: 'Voucher code to validate' })
   @IsNotEmpty({ message: 'Voucher code is required' })
   @IsString()
+  @MaxLength(50)
+  @Transform(({ value }) => typeof value === 'string' ? value.trim().toUpperCase() : value)
   voucherCode: string;
 
   @ApiProperty({ example: 250000, description: 'Order subtotal amount before discount' })

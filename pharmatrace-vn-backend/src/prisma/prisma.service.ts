@@ -5,6 +5,7 @@ import { Pool } from 'pg';
 import { AuthActor, authActor } from '../common/auth-identity';
 
 export type ReviewScope = 'public' | 'customer' | 'staff' | 'moderator' | 'helpful';
+export type VoucherScope = 'validate' | 'read' | 'manage';
 export type OrderOperation = 'read' | 'checkout' | 'cancel' | 'status' | 'pack' | 'transfer_read' | 'dispatch' | 'receive' | 'replace' | 'prescription' | 'loyalty';
 
 export interface AuthContext {
@@ -93,6 +94,36 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
       await tx.$queryRaw`SELECT set_config('app.current_user_role', ${actor?.role || ''}, true)`;
       await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${actor?.facilityId ? String(actor.facilityId) : ''}, true)`;
       return operation(tx);
+    });
+  }
+
+  async prepareVoucher(tx: Prisma.TransactionClient, scope: VoucherScope | 'checkout', code = '', orderId?: number): Promise<void> {
+    const [state] = await tx.$queryRaw<{ ready: boolean }[]>`
+      SELECT NOT r.rolsuper AND NOT r.rolbypassrls AND c.relrowsecurity AND c.relforcerowsecurity
+        AND c.relowner <> r.oid AS ready
+      FROM pg_roles r JOIN pg_class c ON c.relname = 'vouchers'
+      JOIN pg_namespace n ON n.oid = c.relnamespace AND n.nspname = 'public' WHERE r.rolname = current_user
+    `;
+    if (!state?.ready) throw new ServiceUnavailableException('Voucher RLS setup is not ready');
+    await tx.$queryRaw`SELECT set_config('app.voucher_scope', ${scope}, true)`;
+    await tx.$queryRaw`SELECT set_config('app.voucher_code', ${code.trim().toUpperCase()}, true)`;
+    await tx.$queryRaw`SELECT set_config('app.voucher_order_id', ${orderId ? String(orderId) : ''}, true)`;
+  }
+
+  async withVoucher<T>(scope: VoucherScope, run: (tx: Prisma.TransactionClient) => Promise<T>, context: { actor?: AuthActor; code?: string } = {}): Promise<T> {
+    const actor = context.actor ? authActor(context.actor) : undefined;
+    const roles = scope === 'read' ? ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST'] : ['SUPER_ADMIN', 'STORE_MANAGER'];
+    if (!['validate', 'read', 'manage'].includes(scope)
+      || (scope === 'validate' ? !!actor || !context.code?.trim() : actor?.type !== 'employee' || !roles.includes(actor.role))) {
+      throw new ForbiddenException('Invalid voucher access scope');
+    }
+    return this.$transaction(async tx => {
+      await this.prepareVoucher(tx, scope, context.code);
+      await tx.$queryRaw`SELECT set_config('app.current_user_id', ${actor ? String(actor.id) : ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_type', ${actor?.type || ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_role', ${actor?.role || ''}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_unit_id', ${actor?.facilityId ? String(actor.facilityId) : ''}, true)`;
+      return run(tx);
     });
   }
 

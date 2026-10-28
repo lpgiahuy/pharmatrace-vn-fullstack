@@ -82,8 +82,8 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
       VALUES ($1, 'Unit', 10000, true) RETURNING id`, [medicine])).rows[0].id;
     for (const unit of [primary, secondary]) await owner.query(`INSERT INTO inventories (facility_id, medicine_id, variant_id, stock_quantity, reserved_quantity)
       VALUES ($1, $2, $3, 50, 0)`, [unit, medicine, variant]);
-    voucher = (await owner.query(`INSERT INTO vouchers (voucher_code, discount_type, discount_value, total_quantity, used_quantity, status)
-      VALUES ('DEMO-ORDER-RLS', 'FIXED', 1000, 20, 0, 'ACTIVE') RETURNING id`)).rows[0].id;
+    voucher = (await owner.query(`INSERT INTO vouchers (voucher_code, discount_type, discount_value, total_quantity, used_quantity, status, start_date, end_date)
+      VALUES ('DEMO-ORDER-RLS', 'FIXED', 1000, 20, 0, 'ACTIVE', now() - interval '30 days', now() + interval '30 days') RETURNING id`)).rows[0].id;
     const module = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true }), AuthModule, OrderModule],
       controllers: [PrescriptionController, CustomerController],
