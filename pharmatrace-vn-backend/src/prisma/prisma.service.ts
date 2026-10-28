@@ -110,6 +110,25 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     await tx.$queryRaw`SELECT set_config('app.voucher_order_id', ${orderId ? String(orderId) : ''}, true)`;
   }
 
+  async withEmployeeManagement<T>(identity: AuthActor, run: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {
+    const actor = authActor(identity);
+    if (actor.type !== 'employee' || actor.role !== 'SUPER_ADMIN') throw new ForbiddenException('Invalid employee management scope');
+    return this.$transaction(async tx => {
+      const [state] = await tx.$queryRaw<{ ready: boolean }[]>`
+        SELECT NOT r.rolsuper AND NOT r.rolbypassrls AND c.relrowsecurity AND c.relforcerowsecurity
+          AND c.relowner <> r.oid AS ready
+        FROM pg_roles r JOIN pg_class c ON c.relname = 'employees'
+        JOIN pg_namespace n ON n.oid = c.relnamespace AND n.nspname = 'public' WHERE r.rolname = current_user
+      `;
+      if (!state?.ready) throw new ServiceUnavailableException('Employee RLS setup is not ready');
+      await tx.$queryRaw`SELECT set_config('app.employee_operation', ${'manage'}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_id', ${String(actor.id)}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_type', ${actor.type}, true)`;
+      await tx.$queryRaw`SELECT set_config('app.current_user_role', ${actor.role}, true)`;
+      return run(tx);
+    });
+  }
+
   async withFacilityManagement<T>(identity: AuthActor, run: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {
     const actor = authActor(identity);
     if (actor.type !== 'employee' || actor.role !== 'SUPER_ADMIN') throw new ForbiddenException('Invalid facility management scope');

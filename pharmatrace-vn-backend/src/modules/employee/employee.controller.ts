@@ -21,7 +21,7 @@ import { EmployeeQueryDto } from './dto/employee-query.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Admin - Employee Management')
 @ApiBearerAuth('bearerAuth')
@@ -37,8 +37,8 @@ export class EmployeeController {
     description: 'Retrieves employees with pagination, role filter, facility filter, and search by name/email/title.',
   })
   @ApiResponse({ status: 200, description: 'Employees retrieved successfully' })
-  async findAll(@Query() query: EmployeeQueryDto) {
-    const result = await this.employeeService.findAll(query);
+  async findAll(@Query() query: EmployeeQueryDto, @CurrentUser() user: CurrentUserPayload) {
+    const result = await this.employeeService.findAll(query, user);
     return {
       success: true,
       message: 'Employees retrieved successfully',
@@ -51,8 +51,8 @@ export class EmployeeController {
   @ApiOperation({ summary: 'Get employee details by ID' })
   @ApiResponse({ status: 200, description: 'Employee retrieved successfully' })
   @ApiResponse({ status: 404, description: 'Employee not found' })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const data = await this.employeeService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.employeeService.findOne(id, user);
     return {
       success: true,
       message: 'Employee retrieved successfully',
@@ -66,8 +66,8 @@ export class EmployeeController {
   @ApiResponse({ status: 201, description: 'Employee created successfully' })
   @ApiResponse({ status: 400, description: 'Invalid payload or non-existent facility' })
   @ApiResponse({ status: 409, description: 'Email already registered' })
-  async create(@Body() dto: CreateEmployeeDto) {
-    const data = await this.employeeService.create(dto);
+  async create(@Body() dto: CreateEmployeeDto, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.employeeService.create(dto, user);
     return {
       success: true,
       message: 'Employee created successfully',
@@ -88,7 +88,7 @@ export class EmployeeController {
     if (currentUserId === id && dto.status === 'INACTIVE') {
       throw new BadRequestException('You cannot disable your own account');
     }
-    const data = await this.employeeService.update(id, dto);
+    const data = await this.employeeService.update(id, dto, currentUser);
     return {
       success: true,
       message: 'Employee updated successfully',
@@ -112,7 +112,7 @@ export class EmployeeController {
       throw new BadRequestException('You cannot disable your own account');
     }
 
-    const data = await this.employeeService.updateStatus(id, resolvedStatus);
+    const data = await this.employeeService.updateStatus(id, resolvedStatus, currentUser);
     return {
       success: true,
       message: 'Employee status updated successfully',
@@ -132,7 +132,7 @@ export class EmployeeController {
     if (currentUserId === id) {
       throw new BadRequestException('You cannot delete your own account');
     }
-    const data = await this.employeeService.remove(id);
+    const data = await this.employeeService.remove(id, currentUser);
     return data;
   }
 }

@@ -43,3 +43,6 @@
 
 -- Facility public reads and administrator-only management.
 \i /docker-entrypoint-initdb.d/security/10_facility_rls.sql
+
+-- Employee management and private employee rows.
+\i /docker-entrypoint-initdb.d/security/11_employee_rls.sql
