@@ -20,6 +20,7 @@ import { FacilityQueryDto } from './dto/facility-query.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
+import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 
 @ApiTags('Facilities')
 @Controller('facilities')
@@ -86,8 +87,8 @@ export class FacilityController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a new facility (Admin only)' })
   @ApiResponse({ status: 201, description: 'Facility created successfully' })
-  async create(@Body() dto: CreateFacilityDto) {
-    const data = await this.facilityService.create(dto);
+  async create(@Body() dto: CreateFacilityDto, @CurrentUser() user: CurrentUserPayload) {
+    const data = await this.facilityService.create(dto, user);
     return {
       success: true,
       message: 'Facility created successfully',
@@ -104,8 +105,9 @@ export class FacilityController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateFacilityDto,
+    @CurrentUser() user: CurrentUserPayload,
   ) {
-    const data = await this.facilityService.update(id, dto);
+    const data = await this.facilityService.update(id, dto, user);
     return {
       success: true,
       message: 'Facility updated successfully',
@@ -119,7 +121,7 @@ export class FacilityController {
   @Roles('SUPER_ADMIN', 'SuperAdmin')
   @ApiOperation({ summary: 'Delete facility by ID (Admin only)' })
   @ApiResponse({ status: 200, description: 'Facility deleted successfully' })
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return this.facilityService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    return this.facilityService.remove(id, user);
   }
 }

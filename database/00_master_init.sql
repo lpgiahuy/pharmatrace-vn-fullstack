@@ -40,3 +40,6 @@
 
 -- Voucher management, exact-code previews and order-bound consumption.
 \i /docker-entrypoint-initdb.d/security/09_voucher_rls.sql
+
+-- Facility public reads and administrator-only management.
+\i /docker-entrypoint-initdb.d/security/10_facility_rls.sql
