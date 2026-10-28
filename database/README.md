@@ -585,3 +585,11 @@ SQL checks: `tests/employee_rls_test.sql`. HTTP tests require explicit localhost
 Apply 12 on a tested backup with an owner connection, while backend traffic is stopped, before starting matching code. New Docker volumes apply it through master initialization; existing volumes do not automatically rerun it. Do not rerun base grants after security scripts. Keep AUTH_RLS_ENABLED=false until the complete authentication rollout is verified. Context relies on the trusted backend and does not protect against arbitrary SQL executed with app_user credentials. Back up policies, grants and code together for rollback. The auth setup script's preflight rejects later policies if rerun.
 
 `tests/customer_rls_test.sql` and `test/customer-rls.e2e-spec.ts` use disposable databases. The integration test requires explicit localhost CUSTOMER_RLS_TEST_DATABASE_URL and CUSTOMER_RLS_TEST_ADMIN_URL for a database named exactly pharmatrace_customer_rls_test.
+
+## Catalog RLS
+
+`security/13_catalog_rls.sql` enables and forces RLS on medicines, categories, packaging_variants and medicine_categories. Existing app_user catalog reads remain public; SUPER_ADMIN and STORE_MANAGER can manage catalog rows through transaction-local context. Runtime cannot truncate tables, update IDs or reset sequences. Product and category writes run in transactions so related writes roll back together on failure. Inventory tables are outside this policy. Existing public read behavior, including status filtering in the API, is not changed by this script.
+
+Test a backup first and stop application traffic before applying 13 with an owner connection and deploying matching backend code. New Docker volumes apply it through master init; existing volumes do not rerun initialization. Do not reapply base broad grants after restricted scripts. Database context is supplied by a trusted backend; arbitrary SQL using app_user credentials can forge it. Restore policies, grants and code together from a saved baseline for rollback.
+
+Run `tests/catalog_rls_test.sql` and `test/catalog-rls.e2e-spec.ts` against disposable databases. The HTTP test requires explicit localhost CATALOG_RLS_TEST_DATABASE_URL and CATALOG_RLS_TEST_ADMIN_URL targeting exactly pharmatrace_catalog_rls_test.

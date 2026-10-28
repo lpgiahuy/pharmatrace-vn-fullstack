@@ -440,100 +440,14 @@ export class ProductService {
     };
   }
 
-  async create(dto: CreateProductDto) {
-    const primaryId = dto.primaryCategoryId || dto.categoryId;
-    const rawCatIds = Array.isArray(dto.categoryIds) ? dto.categoryIds : [];
-    const allCatIds = Array.from(new Set([...rawCatIds, ...(primaryId ? [primaryId] : [])]));
-
-    if (allCatIds.length > 0) {
-      const existingCats = await this.prisma.categories.findMany({
-        where: { id: { in: allCatIds } },
-        select: { id: true },
-      });
-      if (existingCats.length !== allCatIds.length) {
-        const foundIds = new Set(existingCats.map((c) => c.id));
-        const missing = allCatIds.filter((cid) => !foundIds.has(cid));
-        throw new BadRequestException(`Category IDs [${missing.join(', ')}] do not exist`);
-      }
-    }
-
-    const generatedSlug = dto.medicineName
-      ? dto.medicineName
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-      : null;
-
-    const created = await this.prisma.medicines.create({
-      data: {
-        medicine_name: dto.medicineName.trim(),
-        slug: generatedSlug,
-        registration_number: dto.registrationNumber?.trim() || null,
-        active_ingredients: dto.activeIngredients?.trim() || null,
-        dosage: dto.dosage?.trim() || null,
-        manufacturer: dto.manufacturer?.trim() || null,
-        country_of_origin: dto.countryOfOrigin?.trim() || null,
-        unit_price: new Prisma.Decimal(dto.unitPrice),
-        promotional_price:
-          dto.promotionalPrice !== undefined && dto.promotionalPrice !== null
-            ? new Prisma.Decimal(dto.promotionalPrice)
-            : null,
-        image_url: dto.imageUrl?.trim() || null,
-        short_description: dto.shortDescription?.trim() || null,
-        details: dto.details || {},
-        is_prescription: dto.isPrescription ?? false,
-        status: dto.status || 'ACTIVE',
-        ...(allCatIds.length > 0 && {
-          medicine_categories: {
-            create: allCatIds.map((catId) => ({
-              category_id: catId,
-              is_primary: primaryId ? catId === primaryId : catId === allCatIds[0],
-            })),
-          },
-        }),
-        ...(dto.packagingVariants && dto.packagingVariants.length > 0 && {
-          packaging_variants: {
-            create: dto.packagingVariants.map((pv) => ({
-              unit_name: pv.unitName.trim(),
-              price: new Prisma.Decimal(pv.price),
-              original_price: pv.originalPrice ? new Prisma.Decimal(pv.originalPrice) : null,
-              discount_percent: pv.discountPercent ?? 0,
-              is_base_unit: pv.isBaseUnit ?? false,
-              sale_start_date: pv.saleStartDate ? new Date(pv.saleStartDate) : null,
-              sale_end_date: pv.saleEndDate ? new Date(pv.saleEndDate) : null,
-            })),
-          },
-        }),
-      },
-      include: {
-        medicine_categories: {
-          include: {
-            category: true,
-          },
-        },
-        packaging_variants: true,
-      },
-    });
-
-    return formatProduct(created);
-  }
-
-  async update(id: number, dto: UpdateProductDto) {
-    await this.findOne(id);
-
-    const primaryId = dto.primaryCategoryId || dto.categoryId;
-    let allCatIds: number[] | null = null;
-
-    if (dto.categoryIds !== undefined) {
+  async create(dto: CreateProductDto, user: CurrentUserPayload) {
+    return this.prisma.withCatalogManagement(authActor(user), async tx => {
+      const primaryId = dto.primaryCategoryId || dto.categoryId;
       const rawCatIds = Array.isArray(dto.categoryIds) ? dto.categoryIds : [];
-      allCatIds = Array.from(new Set([...rawCatIds, ...(primaryId ? [primaryId] : [])]));
-    }
+      const allCatIds = Array.from(new Set([...rawCatIds, ...(primaryId ? [primaryId] : [])]));
 
-    if (allCatIds !== null) {
       if (allCatIds.length > 0) {
-        const existingCats = await this.prisma.categories.findMany({
+        const existingCats = await tx.categories.findMany({
           where: { id: { in: allCatIds } },
           select: { id: true },
         });
@@ -544,149 +458,243 @@ export class ProductService {
         }
       }
 
-      // Replace relations atomically
-      await this.prisma.medicine_categories.deleteMany({
-        where: { medicine_id: id },
-      });
+      const generatedSlug = dto.medicineName
+        ? dto.medicineName
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+        : null;
 
-      if (allCatIds.length > 0) {
-        await this.prisma.medicine_categories.createMany({
-          data: allCatIds.map((catId) => ({
-            medicine_id: id,
-            category_id: catId,
-            is_primary: primaryId ? catId === primaryId : catId === allCatIds[0],
-          })),
-        });
-      }
-    } else if (primaryId) {
-      const catExists = await this.prisma.categories.findUnique({
-        where: { id: primaryId },
-      });
-      if (!catExists) {
-        throw new BadRequestException(`Category with ID ${primaryId} does not exist`);
-      }
-
-      await this.prisma.medicine_categories.updateMany({
-        where: { medicine_id: id },
-        data: { is_primary: false },
-      });
-
-      await this.prisma.medicine_categories.upsert({
-        where: {
-          medicine_id_category_id: {
-            medicine_id: id,
-            category_id: primaryId,
+      const created = await tx.medicines.create({
+        data: {
+          medicine_name: dto.medicineName.trim(),
+          slug: generatedSlug,
+          registration_number: dto.registrationNumber?.trim() || null,
+          active_ingredients: dto.activeIngredients?.trim() || null,
+          dosage: dto.dosage?.trim() || null,
+          manufacturer: dto.manufacturer?.trim() || null,
+          country_of_origin: dto.countryOfOrigin?.trim() || null,
+          unit_price: new Prisma.Decimal(dto.unitPrice),
+          promotional_price:
+            dto.promotionalPrice !== undefined && dto.promotionalPrice !== null
+              ? new Prisma.Decimal(dto.promotionalPrice)
+              : null,
+          image_url: dto.imageUrl?.trim() || null,
+          short_description: dto.shortDescription?.trim() || null,
+          details: dto.details || {},
+          is_prescription: dto.isPrescription ?? false,
+          status: dto.status || 'ACTIVE',
+          ...(allCatIds.length > 0 && {
+            medicine_categories: {
+              create: allCatIds.map((catId) => ({
+                category_id: catId,
+                is_primary: primaryId ? catId === primaryId : catId === allCatIds[0],
+              })),
+            },
+          }),
+          ...(dto.packagingVariants && dto.packagingVariants.length > 0 && {
+            packaging_variants: {
+              create: dto.packagingVariants.map((pv) => ({
+                unit_name: pv.unitName.trim(),
+                price: new Prisma.Decimal(pv.price),
+                original_price: pv.originalPrice ? new Prisma.Decimal(pv.originalPrice) : null,
+                discount_percent: pv.discountPercent ?? 0,
+                is_base_unit: pv.isBaseUnit ?? false,
+                sale_start_date: pv.saleStartDate ? new Date(pv.saleStartDate) : null,
+                sale_end_date: pv.saleEndDate ? new Date(pv.saleEndDate) : null,
+              })),
+            },
+          }),
+        },
+        include: {
+          medicine_categories: {
+            include: {
+              category: true,
+            },
           },
+          packaging_variants: true,
         },
-        update: { is_primary: true },
-        create: {
-          medicine_id: id,
-          category_id: primaryId,
-          is_primary: true,
-        },
-      });
-    }
-
-    if (dto.packagingVariants !== undefined) {
-      await this.prisma.packaging_variants.deleteMany({
-        where: { medicine_id: id },
-      });
-      if (dto.packagingVariants && dto.packagingVariants.length > 0) {
-        await this.prisma.packaging_variants.createMany({
-          data: dto.packagingVariants.map((pv) => ({
-            medicine_id: id,
-            unit_name: pv.unitName.trim(),
-            price: new Prisma.Decimal(pv.price),
-            original_price: pv.originalPrice ? new Prisma.Decimal(pv.originalPrice) : null,
-            discount_percent: pv.discountPercent ?? 0,
-            is_base_unit: pv.isBaseUnit ?? false,
-            sale_start_date: pv.saleStartDate ? new Date(pv.saleStartDate) : null,
-            sale_end_date: pv.saleEndDate ? new Date(pv.saleEndDate) : null,
-          })),
-        });
-      }
-    }
-
-    const updated = await this.prisma.medicines.update({
-      where: { id },
-      data: {
-        ...(dto.medicineName && { medicine_name: dto.medicineName.trim() }),
-        ...(dto.registrationNumber !== undefined && { registration_number: dto.registrationNumber?.trim() || null }),
-        ...(dto.activeIngredients !== undefined && { active_ingredients: dto.activeIngredients?.trim() || null }),
-        ...(dto.dosage !== undefined && { dosage: dto.dosage?.trim() || null }),
-        ...(dto.manufacturer !== undefined && { manufacturer: dto.manufacturer?.trim() || null }),
-        ...(dto.countryOfOrigin !== undefined && { country_of_origin: dto.countryOfOrigin?.trim() || null }),
-        ...(dto.unitPrice !== undefined && { unit_price: new Prisma.Decimal(dto.unitPrice) }),
-        ...(dto.promotionalPrice !== undefined && {
-          promotional_price: dto.promotionalPrice !== null ? new Prisma.Decimal(dto.promotionalPrice) : null,
-        }),
-        ...(dto.imageUrl !== undefined && { image_url: dto.imageUrl?.trim() || null }),
-        ...(dto.shortDescription !== undefined && { short_description: dto.shortDescription?.trim() || null }),
-        ...(dto.details !== undefined && { details: dto.details }),
-        ...(dto.isPrescription !== undefined && { is_prescription: dto.isPrescription }),
-        ...(dto.status !== undefined && { status: dto.status }),
-      },
-      include: {
-        medicine_categories: {
-          include: {
-            category: true,
-          },
-        },
-        packaging_variants: true,
-      },
     });
 
-    return formatProduct(updated);
+    return formatProduct(created);
+    });
   }
 
-  async updateImageUrl(id: number, imageUrl: string) {
-    await this.findOne(id);
-    const updated = await this.prisma.medicines.update({
-      where: { id },
-      data: { image_url: imageUrl },
-      include: {
-        medicine_categories: {
-          include: {
-            category: true,
+  async update(id: number, dto: UpdateProductDto, user: CurrentUserPayload) {
+    return this.prisma.withCatalogManagement(authActor(user), async tx => {
+      await this.findOne(id);
+
+      const primaryId = dto.primaryCategoryId || dto.categoryId;
+      let allCatIds: number[] | null = null;
+
+      if (dto.categoryIds !== undefined) {
+        const rawCatIds = Array.isArray(dto.categoryIds) ? dto.categoryIds : [];
+        allCatIds = Array.from(new Set([...rawCatIds, ...(primaryId ? [primaryId] : [])]));
+      }
+
+      if (allCatIds !== null) {
+        if (allCatIds.length > 0) {
+          const existingCats = await tx.categories.findMany({
+            where: { id: { in: allCatIds } },
+            select: { id: true },
+          });
+          if (existingCats.length !== allCatIds.length) {
+            const foundIds = new Set(existingCats.map((c) => c.id));
+            const missing = allCatIds.filter((cid) => !foundIds.has(cid));
+            throw new BadRequestException(`Category IDs [${missing.join(', ')}] do not exist`);
+          }
+        }
+
+        // Replace relations atomically
+        await tx.medicine_categories.deleteMany({
+          where: { medicine_id: id },
+        });
+
+        if (allCatIds.length > 0) {
+          await tx.medicine_categories.createMany({
+            data: allCatIds.map((catId) => ({
+              medicine_id: id,
+              category_id: catId,
+              is_primary: primaryId ? catId === primaryId : catId === allCatIds[0],
+            })),
+          });
+        }
+      } else if (primaryId) {
+        const catExists = await tx.categories.findUnique({
+          where: { id: primaryId },
+        });
+        if (!catExists) {
+          throw new BadRequestException(`Category with ID ${primaryId} does not exist`);
+        }
+
+        await tx.medicine_categories.updateMany({
+          where: { medicine_id: id },
+          data: { is_primary: false },
+        });
+
+        await tx.medicine_categories.upsert({
+          where: {
+            medicine_id_category_id: {
+              medicine_id: id,
+              category_id: primaryId,
+            },
           },
+          update: { is_primary: true },
+          create: {
+            medicine_id: id,
+            category_id: primaryId,
+            is_primary: true,
+          },
+        });
+      }
+
+      if (dto.packagingVariants !== undefined) {
+        await tx.packaging_variants.deleteMany({
+          where: { medicine_id: id },
+        });
+        if (dto.packagingVariants && dto.packagingVariants.length > 0) {
+          await tx.packaging_variants.createMany({
+            data: dto.packagingVariants.map((pv) => ({
+              medicine_id: id,
+              unit_name: pv.unitName.trim(),
+              price: new Prisma.Decimal(pv.price),
+              original_price: pv.originalPrice ? new Prisma.Decimal(pv.originalPrice) : null,
+              discount_percent: pv.discountPercent ?? 0,
+              is_base_unit: pv.isBaseUnit ?? false,
+              sale_start_date: pv.saleStartDate ? new Date(pv.saleStartDate) : null,
+              sale_end_date: pv.saleEndDate ? new Date(pv.saleEndDate) : null,
+            })),
+          });
+        }
+      }
+
+      const updated = await tx.medicines.update({
+        where: { id },
+        data: {
+          ...(dto.medicineName && { medicine_name: dto.medicineName.trim() }),
+          ...(dto.registrationNumber !== undefined && { registration_number: dto.registrationNumber?.trim() || null }),
+          ...(dto.activeIngredients !== undefined && { active_ingredients: dto.activeIngredients?.trim() || null }),
+          ...(dto.dosage !== undefined && { dosage: dto.dosage?.trim() || null }),
+          ...(dto.manufacturer !== undefined && { manufacturer: dto.manufacturer?.trim() || null }),
+          ...(dto.countryOfOrigin !== undefined && { country_of_origin: dto.countryOfOrigin?.trim() || null }),
+          ...(dto.unitPrice !== undefined && { unit_price: new Prisma.Decimal(dto.unitPrice) }),
+          ...(dto.promotionalPrice !== undefined && {
+            promotional_price: dto.promotionalPrice !== null ? new Prisma.Decimal(dto.promotionalPrice) : null,
+          }),
+          ...(dto.imageUrl !== undefined && { image_url: dto.imageUrl?.trim() || null }),
+          ...(dto.shortDescription !== undefined && { short_description: dto.shortDescription?.trim() || null }),
+          ...(dto.details !== undefined && { details: dto.details }),
+          ...(dto.isPrescription !== undefined && { is_prescription: dto.isPrescription }),
+          ...(dto.status !== undefined && { status: dto.status }),
         },
-        packaging_variants: true,
-      },
+        include: {
+          medicine_categories: {
+            include: {
+              category: true,
+            },
+          },
+          packaging_variants: true,
+        },
+    });
+
+    return formatProduct(updated);
+    });
+  }
+
+  async updateImageUrl(id: number, imageUrl: string, user: CurrentUserPayload) {
+    return this.prisma.withCatalogManagement(authActor(user), async tx => {
+      await this.findOne(id);
+      const updated = await tx.medicines.update({
+        where: { id },
+        data: { image_url: imageUrl },
+        include: {
+          medicine_categories: {
+            include: {
+              category: true,
+            },
+          },
+          packaging_variants: true,
+        },
     });
     return formatProduct(updated);
+    });
   }
 
   async delete(id: number, user: CurrentUserPayload) {
-    const item = await this.findOne(id);
+    return this.prisma.withCatalogManagement(authActor(user), async tx => {
+      const item = await this.findOne(id);
 
-    const [orderItemCount, batchCount] = await Promise.all([
-      this.prisma.withOrder('read', async tx => {
-        const [history] = await tx.$queryRaw<{ present: boolean }[]>`SELECT public.product_has_order_history(${id}) AS present`;
-        return history.present ? 1 : 0;
-      }, authActor(user)),
-      this.prisma.batches.count({ where: { medicine_id: id } }),
-    ]);
+      const [orderItemCount, batchCount] = await Promise.all([
+        this.prisma.withOrder('read', async tx => {
+          const [history] = await tx.$queryRaw<{ present: boolean }[]>`SELECT public.product_has_order_history(${id}) AS present`;
+          return history.present ? 1 : 0;
+        }, authActor(user)),
+        tx.batches.count({ where: { medicine_id: id } }),
+      ]);
 
-    if (orderItemCount > 0 || batchCount > 0) {
-      // Soft-delete to preserve transaction history
-      await this.prisma.medicines.update({
+      if (orderItemCount > 0 || batchCount > 0) {
+        // Soft-delete to preserve transaction history
+        await tx.medicines.update({
+          where: { id },
+          data: { status: 'INACTIVE' },
+        });
+        return {
+          message: `Medicine "${item.medicineName}" has active orders or warehouse batches and was set to INACTIVE status to preserve historical integrity.`,
+          isSoftDeleted: true,
+        };
+      }
+
+      await tx.medicines.delete({
         where: { id },
-        data: { status: 'INACTIVE' },
-      });
-      return {
-        message: `Medicine "${item.medicineName}" has active orders or warehouse batches and was set to INACTIVE status to preserve historical integrity.`,
-        isSoftDeleted: true,
-      };
-    }
-
-    await this.prisma.medicines.delete({
-      where: { id },
     });
 
     return {
       message: `Medicine "${item.medicineName}" has been permanently deleted.`,
       isSoftDeleted: false,
     };
+    });
   }
 
   async getPackagings() {
