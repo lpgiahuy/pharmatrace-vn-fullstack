@@ -48,6 +48,7 @@ const ROLES_OPTIONS = [
   { value: 'SUPER_ADMIN', label: 'Super Admin', color: 'red' },
   { value: 'STORE_MANAGER', label: 'Store Manager', color: 'orange' },
   { value: 'WAREHOUSE_MANAGER', label: 'Warehouse Manager', color: 'purple' },
+  { value: 'WAREHOUSE_STAFF', label: 'Warehouse Staff', color: 'blue' },
   { value: 'PHARMACIST', label: 'Pharmacist', color: 'cyan' },
 ];
 
@@ -171,6 +172,7 @@ export default function StaffManagementPage() {
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const currentUser = mounted ? getUser() : null;
+  const isStoreManager = currentUser?.role === 'STORE_MANAGER';
 
   useEffect(() => {
     if (mounted && !isAuthenticated) {
@@ -261,6 +263,7 @@ export default function StaffManagementPage() {
       form.resetFields();
       form.setFieldsValue({
         role: 'WAREHOUSE_STAFF',
+        facilityId: isStoreManager ? currentUser?.facilityId : undefined,
         status: true,
       });
     }
@@ -463,7 +466,7 @@ export default function StaffManagementPage() {
                 onChange={(val) => setRoleFilter(val)}
                 allowClear
                 className="text-xs sm:text-sm h-9 sm:h-10 w-full"
-                options={ROLES_OPTIONS.map((r) => ({ value: r.value, label: r.label }))}
+                options={ROLES_OPTIONS.filter((r) => !isStoreManager || ['PHARMACIST', 'WAREHOUSE_STAFF'].includes(r.value)).map((r) => ({ value: r.value, label: r.label }))}
               />
             </div>
 
@@ -789,7 +792,7 @@ export default function StaffManagementPage() {
               name="role"
               rules={[{ required: true, message: 'Please select system role' }]}
             >
-              <Select options={ROLES_OPTIONS.map((r) => ({ value: r.value, label: r.label }))} className="text-xs" />
+              <Select options={ROLES_OPTIONS.filter((r) => !isStoreManager || ['PHARMACIST', 'WAREHOUSE_STAFF'].includes(r.value)).map((r) => ({ value: r.value, label: r.label }))} className="text-xs" />
             </Form.Item>
 
             <Form.Item
@@ -799,6 +802,7 @@ export default function StaffManagementPage() {
             >
               <Select
                 options={facilityOptions}
+                disabled={isStoreManager}
                 placeholder="Search or select facility by name..."
                 showSearch
                 filterOption={(input, option) =>

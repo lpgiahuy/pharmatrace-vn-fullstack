@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -20,13 +20,28 @@ export default function CustomerLoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
       identifier: 'customer@pharmatrace.vn',
-      password: '0123456789',
+      password: '',
     },
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search) {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const idParam = params.get('identifier') || params.get('email');
+        if (idParam) {
+          setValue('identifier', idParam);
+        }
+        window.history.replaceState({}, '', window.location.pathname);
+      } catch {
+      }
+    }
+  }, [setValue]);
 
   const onSubmit = async (data: any) => {
     try {
@@ -73,7 +88,15 @@ export default function CustomerLoginPage() {
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          method="POST"
+          action="#"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(onSubmit)(e);
+          }}
+          className="space-y-4"
+        >
           <Input
             label="Mobile Number or Email"
             type="text"
@@ -131,7 +154,7 @@ export default function CustomerLoginPage() {
         <p className="mt-6 text-center text-sm text-slate-500">
           Don&apos;t have an account?{' '}
           <Link href="/register" style={{ color: '#1e4287' }} className="font-semibold hover:underline">
-            Sign up now
+            Sign up
           </Link>
         </p>
       </div>

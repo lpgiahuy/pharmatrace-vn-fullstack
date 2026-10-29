@@ -26,7 +26,7 @@ import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current
 @ApiTags('Admin - Employee Management')
 @ApiBearerAuth('bearerAuth')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('SUPER_ADMIN', 'SuperAdmin')
+@Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager')
 @Controller('admin/employees')
 export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) { }

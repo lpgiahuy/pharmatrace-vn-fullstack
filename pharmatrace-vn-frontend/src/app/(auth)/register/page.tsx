@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Eye, EyeOff, UserPlus } from 'lucide-react';
-import { message } from 'antd';
+import { App } from 'antd';
 import { AuthLayoutWrapper } from '@/components/layout/AuthLayoutWrapper';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { authService } from '@/services/auth.service';
 
 export default function RegisterPage() {
+  const { message } = App.useApp();
   const router = useRouter();
   const [showPw, setShowPw] = useState(false);
 
@@ -36,11 +37,11 @@ export default function RegisterPage() {
   const onSubmit = async (data: any) => {
     try {
       await authService.register({
-        name: data.name,
-        phone: data.phone,
-        email: data.email || undefined,
+        name: data.name.trim(),
+        phone: data.phone.trim(),
+        email: data.email.trim().toLowerCase(),
         password: data.password,
-        address: data.address || undefined,
+        address: data.address?.trim() || undefined,
       });
 
       message.success('Account created! Please sign in.');
@@ -62,7 +63,15 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          method="POST"
+          action="#"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(onSubmit)(e);
+          }}
+          className="space-y-4"
+        >
           <Input
             label="Full Name"
             type="text"
@@ -89,7 +98,14 @@ export default function RegisterPage() {
             type="email"
             placeholder="customer@pharmatrace.vn"
             error={errors.email?.message as string}
-            {...register('email')}
+            required
+            {...register('email', {
+              required: 'Email address is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Please enter a valid email address',
+              },
+            })}
           />
 
           <Input
@@ -165,7 +181,7 @@ export default function RegisterPage() {
         <p className="mt-6 text-center text-sm text-slate-500">
           Already have an account?{' '}
           <Link href="/login" className="font-semibold text-[#1e4287] hover:underline">
-            Sign in here
+            Sign In
           </Link>
         </p>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -19,13 +19,28 @@ export default function WarehouseLoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
       email: 'warehouse@pharmatrace.vn',
-      password: 'password123',
+      password: '',
     },
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search) {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const emailParam = params.get('email');
+        if (emailParam) {
+          setValue('email', emailParam);
+        }
+        window.history.replaceState({}, '', window.location.pathname);
+      } catch {
+      }
+    }
+  }, [setValue]);
 
   const onSubmit = async (data: any) => {
     try {
@@ -77,7 +92,15 @@ export default function WarehouseLoginPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          method="POST"
+          action="#"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(onSubmit)(e);
+          }}
+          className="space-y-4"
+        >
           <Input
             label="Warehouse Account Email"
             type="email"

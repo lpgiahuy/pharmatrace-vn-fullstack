@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card, Tag, Button, Descriptions } from 'antd';
 import { Warehouse, LogOut, PackageCheck } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { formatRole } from '@/utils';
 
 export default function WarehouseDashboardPage() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function WarehouseDashboardPage() {
           onClick={handleLogout}
           className="text-white hover:text-white/80"
         >
-          Sign Out
+          Logout
         </Button>
       </header>
 
@@ -59,7 +60,7 @@ export default function WarehouseDashboardPage() {
             <Descriptions.Item label="Full Name">{user.fullName || user.full_name || 'Warehouse Staff'}</Descriptions.Item>
             <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
             <Descriptions.Item label="Role">
-              <Tag color="blue" className="font-semibold">{user.role || 'WAREHOUSE_STAFF'}</Tag>
+              <Tag color="blue" className="font-semibold">{formatRole(user.role || 'WAREHOUSE_STAFF')}</Tag>
             </Descriptions.Item>
             <Descriptions.Item label="Job Title">{user.jobTitle || user.job_title || 'Warehouse Staff'}</Descriptions.Item>
             <Descriptions.Item label="Assigned Facility">{user.facility?.name || 'PharmaTrace Distribution Hub'}</Descriptions.Item>

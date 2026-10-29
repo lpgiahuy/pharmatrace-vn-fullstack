@@ -59,6 +59,7 @@ export class CustomerController {
   }
 
   @Patch(':id/status')
+  @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager')
   @ApiOperation({
     summary: 'Lock or unlock customer account',
     description: 'Updates customer account status to ACTIVE, INACTIVE, or BANNED (also supports action: "lock" | "unlock").',

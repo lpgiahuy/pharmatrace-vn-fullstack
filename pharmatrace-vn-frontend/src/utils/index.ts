@@ -47,5 +47,27 @@ export function cleanText(str: string | null | undefined): string {
     .replace(/\uFFFD/g, '°');
 }
 
+export const ROLE_LABELS: Record<string, string> = {
+  SUPER_ADMIN: 'Super Admin',
+  SUPERADMIN: 'Super Admin',
+  ADMIN: 'Administrator',
+  STORE_MANAGER: 'Store Manager',
+  STOREMANAGER: 'Store Manager',
+  PHARMACIST: 'Pharmacist',
+  WAREHOUSE_MANAGER: 'Warehouse Manager',
+  WAREHOUSEMANAGER: 'Warehouse Manager',
+  WAREHOUSE_STAFF: 'Warehouse Staff',
+  WAREHOUSESTAFF: 'Warehouse Staff',
+  FACTORY_WAREHOUSE_STAFF: 'Factory Staff',
+  FACTORYWAREHOUSESTAFF: 'Factory Staff',
+  CUSTOMER: 'Customer',
+};
+
+export function formatRole(role?: string | null): string {
+  if (!role) return 'Staff';
+  const normalized = role.trim().toUpperCase().replace(/[\s_-]/g, '');
+  return ROLE_LABELS[normalized] || ROLE_LABELS[role.trim().toUpperCase()] || role;
+}
+
 export * from './image';
 

@@ -49,7 +49,7 @@ integration('Review HTTP + Prisma + PostgreSQL RLS', () => {
       }
     }
     process.env.DATABASE_URL = runtimeUrl;
-    process.env.AUTH_RLS_ENABLED = 'false';
+    process.env.AUTH_RLS_ENABLED = process.env.REVIEW_RLS_TEST_AUTH_ENABLED === 'true' ? 'true' : 'false';
     process.env.JWT_SECRET = 'isolated-review-test-secret-not-for-deployment';
     owner = new Pool({ connectionString: ownerUrl });
     const hash = await bcrypt.hash('ReviewTestOnly2026!', 10);

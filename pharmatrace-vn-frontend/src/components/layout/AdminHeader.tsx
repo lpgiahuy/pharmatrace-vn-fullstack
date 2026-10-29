@@ -4,15 +4,14 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Layout, Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
+import { LogOut, User } from 'lucide-react';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   MenuOutlined,
-  LogoutOutlined,
-  UserOutlined,
-  DashboardOutlined,
 } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
+import { formatRole } from '@/utils';
 
 const { Header } = Layout;
 
@@ -23,16 +22,16 @@ interface AdminHeaderProps {
 }
 
 const GOOGLE_AVATAR_COLORS = [
-  '#1a73e8', // Google Blue
-  '#ea4335', // Google Red
-  '#34a853', // Google Green
-  '#f29900', // Google Amber
-  '#9334e6', // Google Purple
-  '#12b5cb', // Google Teal
-  '#e52592', // Google Pink
-  '#00897b', // Dark Teal
-  '#5c6bc0', // Indigo
-  '#8e24aa', // Deep Purple
+  '#1a73e8',
+  '#ea4335',
+  '#34a853',
+  '#f29900',
+  '#9334e6',
+  '#12b5cb',
+  '#e52592',
+  '#00897b',
+  '#5c6bc0',
+  '#8e24aa',
 ];
 
 function getAvatarColor(str?: string): string {
@@ -65,18 +64,19 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
 
   const menuItems: MenuProps['items'] = [
     {
-      key: 'dashboard',
-      icon: <DashboardOutlined />,
-      label: 'Admin Dashboard',
-      onClick: () => router.push('/admin'),
+      key: 'profile',
+      icon: <User className="w-4 h-4 text-slate-600 shrink-0 stroke-[1.8]" />,
+      label: 'My Profile',
+      onClick: () => router.push('/admin/profile'),
     },
     {
       type: 'divider',
     },
     {
       key: 'logout',
-      icon: <LogoutOutlined className="text-rose-500" />,
-      label: <span className="text-rose-500 font-semibold">Sign Out</span>,
+      icon: <LogOut className="w-4 h-4 text-red-600 shrink-0 stroke-[1.8]" />,
+      label: <span className="text-red-600 font-semibold">Logout</span>,
+      className: '!text-red-600 hover:!bg-red-50',
       onClick: handleLogout,
     },
   ];
@@ -126,8 +126,8 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({
             </div>
             <div className="text-left hidden sm:flex flex-col justify-center">
               <p className="text-sm font-semibold text-slate-800 leading-none m-0">{userName}</p>
-              <p className="text-xs text-slate-400 font-mono mt-1 leading-none m-0 uppercase font-medium">
-                {userRole}
+              <p className="text-xs text-slate-500 font-medium mt-1 leading-none m-0">
+                {formatRole(userRole)}
               </p>
             </div>
           </button>

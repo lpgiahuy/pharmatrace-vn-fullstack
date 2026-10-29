@@ -51,7 +51,7 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
       }
     }
     process.env.DATABASE_URL = runtimeUrl;
-    process.env.AUTH_RLS_ENABLED = 'false';
+    process.env.AUTH_RLS_ENABLED = process.env.VOUCHER_RLS_TEST_AUTH_ENABLED === 'true' ? 'true' : 'false';
     process.env.JWT_SECRET = 'isolated-voucher-test-secret-not-for-deployment';
     owner = new Pool({ connectionString: ownerUrl });
     const hash = await bcrypt.hash('VoucherTestOnly2026!', 10);

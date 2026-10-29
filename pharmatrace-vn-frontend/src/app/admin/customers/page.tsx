@@ -230,6 +230,7 @@ export default function CustomersManagementPage() {
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const currentUser = mounted ? getUser() : null;
+  const canManageCustomerStatus = ['SUPER_ADMIN', 'STORE_MANAGER'].includes(currentUser?.role);
 
   useEffect(() => {
     if (mounted && !isAuthenticated) {
@@ -823,7 +824,7 @@ export default function CustomersManagementPage() {
               <div className="flex items-center gap-2.5 self-end sm:self-center flex-wrap">
                 <StatusBadge status={customerDetail.status} />
 
-                {(customerDetail.status || 'ACTIVE').toUpperCase() !== 'BANNED' && (
+                {canManageCustomerStatus && (customerDetail.status || 'ACTIVE').toUpperCase() !== 'BANNED' && (
                   <Popconfirm
                     title={(customerDetail.status || 'ACTIVE').toUpperCase() === 'ACTIVE' ? 'Lock this account?' : 'Unlock this account?'}
                     description="Status change takes effect immediately."
@@ -847,7 +848,7 @@ export default function CustomersManagementPage() {
                   </Popconfirm>
                 )}
 
-                {(customerDetail.status || 'ACTIVE').toUpperCase() === 'BANNED' ? (
+                {canManageCustomerStatus && ((customerDetail.status || 'ACTIVE').toUpperCase() === 'BANNED' ? (
                   <Popconfirm
                     title="Unban this customer account?"
                     description="Account will be restored to ACTIVE status."
@@ -881,7 +882,7 @@ export default function CustomersManagementPage() {
                       Ban
                     </button>
                   </Popconfirm>
-                )}
+                ))}
               </div>
             </div>
 

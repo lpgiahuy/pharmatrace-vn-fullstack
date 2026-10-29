@@ -31,7 +31,7 @@ integration('Employee HTTP and PostgreSQL RLS', () => {
       if (url.pathname !== '/pharmatrace_catalog_rls_test' || !['localhost', '127.0.0.1'].includes(url.hostname)) throw new Error('Tests require the disposable employee test database');
     }
     process.env.DATABASE_URL = runtime;
-    process.env.AUTH_RLS_ENABLED = 'false';
+    process.env.AUTH_RLS_ENABLED = process.env.CATALOG_RLS_TEST_AUTH_ENABLED === 'true' ? 'true' : 'false';
     process.env.JWT_SECRET = 'employee-test-secret-only';
     owner = new Pool({ connectionString: ownerUrl });
     facilityId = (await owner.query("INSERT INTO facilities (facility_name, facility_type) VALUES ('Employee RLS fixture', 'PHARMACY') RETURNING id")).rows[0].id;

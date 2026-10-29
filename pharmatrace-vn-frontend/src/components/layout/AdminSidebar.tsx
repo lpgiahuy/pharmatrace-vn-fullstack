@@ -39,6 +39,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     setMounted(true);
   }, []);
 
+  const normalizedRole = (role || '').toUpperCase().replace(/[\s_-]/g, '');
+  const canManageStaff = normalizedRole === 'SUPERADMIN' || normalizedRole === 'STOREMANAGER';
+
   const menuItems = [
     {
       key: '/admin',
@@ -70,11 +73,15 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       icon: <PercentageOutlined style={{ fontSize: 16 }} />,
       label: 'Vouchers & Promos',
     },
-    {
-      key: '/admin/staff',
-      icon: <TeamOutlined style={{ fontSize: 16 }} />,
-      label: 'Staff & RBAC',
-    },
+    ...(canManageStaff
+      ? [
+          {
+            key: '/admin/staff',
+            icon: <TeamOutlined style={{ fontSize: 16 }} />,
+            label: 'Staff & RBAC',
+          },
+        ]
+      : []),
     {
       key: '/admin/customers',
       icon: <UserOutlined style={{ fontSize: 16 }} />,

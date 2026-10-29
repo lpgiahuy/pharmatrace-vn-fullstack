@@ -52,3 +52,6 @@
 
 -- Public catalog reads and authorized catalog management.
 \i /docker-entrypoint-initdb.d/security/13_catalog_rls.sql
+
+-- Facility-scoped staff administration.
+\i /docker-entrypoint-initdb.d/security/14_employee_facility_rls.sql

@@ -28,7 +28,7 @@ integration('Employee HTTP and PostgreSQL RLS', () => {
       if (url.pathname !== '/pharmatrace_employee_rls_test' || !['localhost', '127.0.0.1'].includes(url.hostname)) throw new Error('Tests require the disposable employee test database');
     }
     process.env.DATABASE_URL = runtime;
-    process.env.AUTH_RLS_ENABLED = 'false';
+    process.env.AUTH_RLS_ENABLED = process.env.EMPLOYEE_RLS_TEST_AUTH_ENABLED === 'true' ? 'true' : 'false';
     process.env.JWT_SECRET = 'employee-test-secret-only';
     owner = new Pool({ connectionString: ownerUrl });
     facilityId = (await owner.query("INSERT INTO facilities (facility_name, facility_type) VALUES ('Employee RLS fixture', 'PHARMACY') RETURNING id")).rows[0].id;
@@ -37,6 +37,7 @@ integration('Employee HTTP and PostgreSQL RLS', () => {
     for (const [id, role, email] of [[ids[0], 'SUPER_ADMIN', 'employee-admin@example.test'], [ids[1], 'STORE_MANAGER', 'employee-manager@example.test']] as const) {
       await owner.query("INSERT INTO employees (id, full_name, email, password_hash, role, status) VALUES ($1, 'Employee Test', $2, $3, $4, 'ACTIVE')", [id, email, hash, role]);
     }
+    await owner.query('UPDATE employees SET facility_id=$1 WHERE id=$2', [facilityId, ids[1]]);
     const module = await Test.createTestingModule({ imports: [ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true }), PrismaModule, AuthModule, EmployeeModule] }).compile();
     app = module.createNestApplication({ logger: false });
     app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
@@ -59,7 +60,9 @@ integration('Employee HTTP and PostgreSQL RLS', () => {
     }
   });
   it('restricts management, preserves login and hides public employee rows', async () => {
-    expect((await request('GET', '/admin/employees', manager)).status).toBe(403);
+    expect((await request('GET', '/admin/employees', manager)).status).toBe(200);
+    expect((await request('POST', '/admin/employees', manager, { ...payload, role: 'SUPER_ADMIN' })).status).toBe(403);
+    expect((await request('POST', '/admin/employees', manager, { ...payload, facilityId: facilityId + 100000 })).status).toBe(403);
     const created = await request('POST', '/admin/employees', admin, payload);
     expect(created.status).toBe(201);
     const id = created.data.data.id;
@@ -69,7 +72,9 @@ integration('Employee HTTP and PostgreSQL RLS', () => {
     expect((await request('GET', '/auth/me', manager)).status).toBe(200);
     expect((await request('PATCH', '/auth/me', manager, { fullName: 'Updated profile' })).status).toBe(200);
     await expect(prisma.withAuth(tx => tx.employees.update({ where: { id: ids[1] }, data: { role: 'SUPER_ADMIN' } }), { actor: { id: ids[1], type: 'employee', role: 'STORE_MANAGER' } })).rejects.toThrow();
-    expect((await request('PATCH', '/admin/employees/'+id, admin, { fullName: 'Updated' })).status).toBe(200);
+    expect((await request('PATCH', '/admin/employees/'+id, manager, { fullName: 'Updated' })).status).toBe(200);
+    expect((await request('PATCH', '/admin/employees/'+id, manager, { role: 'SUPER_ADMIN' })).status).toBe(403);
+    expect((await request('PATCH', '/admin/employees/'+id, manager, { facilityId: facilityId + 100000 })).status).toBe(403);
     expect((await request('DELETE', '/admin/employees/'+id, admin)).status).toBe(200);
   });
   it('fails closed if employee FORCE is disabled', async () => {

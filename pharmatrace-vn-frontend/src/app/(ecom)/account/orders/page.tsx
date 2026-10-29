@@ -413,10 +413,6 @@ function CustomerOrdersContent() {
             Home
           </Link>
           <ChevronRight className="w-3.5 h-3.5 mx-2 text-slate-400" />
-          <Link href="/account" className="hover:text-slate-900 transition-colors font-medium">
-            Account
-          </Link>
-          <ChevronRight className="w-3.5 h-3.5 mx-2 text-slate-400" />
           <span className="text-slate-900 font-semibold">My Orders</span>
         </div>
       </nav>
@@ -515,12 +511,12 @@ function CustomerOrdersContent() {
           <p className="text-slate-400 text-xs mt-3 font-medium">Loading your orders...</p>
         </div>
       ) : orders.length === 0 ? (
-        <div className="bg-white rounded-[6px] border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-xs">
+        <div className="w-full bg-white rounded-[6px] border border-slate-200 p-12 sm:p-16 text-center shadow-xs">
           <div className="w-12 h-12 rounded-[6px] bg-slate-50 text-slate-400 border border-slate-200 flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="w-6 h-6" />
           </div>
           <h3 className="text-base font-bold text-slate-900 mb-1">No Orders Found</h3>
-          <p className="text-slate-500 text-xs sm:text-sm mb-6 leading-relaxed max-w-sm mx-auto">
+          <p className="text-slate-500 text-xs sm:text-sm mb-6 leading-relaxed max-w-md mx-auto">
             {activeTab === 'ALL'
               ? 'You have not placed any orders yet. Discover our genuine verified healthcare products.'
               : `You currently have no orders matching the "${STATUS_TABS.find((t) => t.key === activeTab)?.label}" status.`}
@@ -534,7 +530,7 @@ function CustomerOrdersContent() {
           </Link>
         </div>
       ) : displayedOrders.length === 0 ? (
-        <div className="bg-white rounded-[6px] border border-slate-200 p-10 text-center max-w-md mx-auto shadow-xs">
+        <div className="w-full bg-white rounded-[6px] border border-slate-200 p-10 sm:p-14 text-center shadow-xs">
           <h3 className="text-sm font-bold text-slate-900 mb-1">No Matching Orders</h3>
           <p className="text-slate-500 text-xs mb-4">
             No orders match your search &ldquo;{searchQuery}&rdquo;.

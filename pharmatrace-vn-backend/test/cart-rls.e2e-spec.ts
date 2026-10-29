@@ -217,8 +217,7 @@ integration('Cart HTTP + Prisma + PostgreSQL RLS', () => {
     expect((await api('GET', '/customer/cart', 200, tokens.a)).data.totalItems).toBe(2);
   });
 
-  // Full order/account RLS is a later module rollout; this regression covers normal checkout now.
-  (accountRls ? it.skip : it)('clears only the purchased customer cart after non-prescription checkout', async () => {
+  it('clears only the purchased customer cart after non-prescription checkout', async () => {
     await add(tokens.a, 0, 1); await add(tokens.b, 0, 7);
     await app.get(OrderService).createOrder(a, {
       items: [{ variantId: variants[0], quantity: 1 }], shippingAddress: 'Demo delivery address',
