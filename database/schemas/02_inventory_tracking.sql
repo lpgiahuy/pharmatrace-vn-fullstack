@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS public.inventories (
     stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
     reserved_quantity INTEGER DEFAULT 0 CHECK (reserved_quantity >= 0),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_facility_medicine_variant UNIQUE(facility_id, medicine_id, variant_id)
+    CONSTRAINT uq_facility_inventory UNIQUE(facility_id, variant_id)
 );
 
 -- 5. Inventory Transaction Logs (Audit movements: Inbound, Outbound, Transfer, Adjustment)
