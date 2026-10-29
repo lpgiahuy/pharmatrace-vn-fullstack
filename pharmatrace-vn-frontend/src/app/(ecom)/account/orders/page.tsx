@@ -17,6 +17,7 @@ import {
   User,
   Calendar,
   RotateCcw,
+  RotateCw,
   CheckCircle2,
   Clock,
   XCircle,
@@ -252,9 +253,6 @@ function CustomerOrdersContent() {
     }, 2000);
   };
 
-  const isSuccess = searchParams.get('success') === 'true';
-  const successOrderCode = searchParams.get('orderCode');
-
   const reloadOrders = useCallback(async () => {
     if (!isAuthenticated) return;
     try {
@@ -416,29 +414,6 @@ function CustomerOrdersContent() {
           <span className="text-slate-900 font-semibold">My Orders</span>
         </div>
       </nav>
-
-      {isSuccess && (
-        <div className="mb-6 p-4 rounded-[6px] bg-emerald-50/90 border border-emerald-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 rounded-[4px] bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5">
-              <CheckCircle2 className="w-4 h-4" />
-            </div>
-            <div>
-              <h2 className="text-sm font-bold text-emerald-950">Order Placed Successfully</h2>
-              <p className="text-xs text-emerald-800 mt-0.5 leading-relaxed">
-                Order code <strong className="font-mono font-bold text-emerald-950">{successOrderCode || 'Confirmed'}</strong> has been registered and is being fulfilled.
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/products"
-            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#004996] hover:bg-[#003875] text-white text-xs font-semibold rounded-[4px] transition-colors shrink-0"
-          >
-            Continue Shopping
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-      )}
 
       <header className="mb-4 flex items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
@@ -607,11 +582,11 @@ function CustomerOrdersContent() {
                 )}
 
                 {formatOrderStatus(order.orderStatus) === 'WAITING_INTERNAL_TRANSFER' && (
-                  <div className="bg-cyan-50/90 border-b border-cyan-100 px-4 py-2.5 flex items-center gap-2.5 text-xs text-cyan-950">
-                    <RotateCcw className="w-4 h-4 text-cyan-700 shrink-0 animate-spin" />
+                  <div className="bg-slate-50 border-b border-slate-200 px-4 py-2.5 flex items-center gap-2.5 text-xs text-slate-700">
+                    <RotateCw className="w-4 h-4 text-[#004996] shrink-0 animate-spin" />
                     <div className="flex-1 leading-relaxed">
-                      <strong className="text-cyan-950 font-semibold">Warehouse Consolidation in Progress:</strong>{' '}
-                      Medications are transferring to <strong className="text-cyan-950">{order.exportFacility?.facilityName || 'Primary Hub'}</strong> to combine your items into a single dispatch.
+                      <strong className="text-slate-900 font-semibold">Warehouse Consolidation in Progress:</strong>{' '}
+                      Medications are transferring to <strong className="text-slate-900">{order.exportFacility?.facilityName || 'Primary Hub'}</strong> to combine your items into a single dispatch.
                     </div>
                   </div>
                 )}
@@ -867,53 +842,90 @@ function CustomerOrdersContent() {
 
             {((selectedOrder.internalTransfers && selectedOrder.internalTransfers.length > 0) ||
               formatOrderStatus(selectedOrder.orderStatus) === 'WAITING_INTERNAL_TRANSFER') && (
-                <div className="border border-cyan-200 bg-cyan-50/60 rounded-[6px] p-4 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-bold text-cyan-950 uppercase tracking-wider">
-                      <Building2 className="w-4 h-4 text-cyan-700" />
-                      <span>Internal Warehouse Transfers</span>
+                <div className="space-y-2.5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-[#004996]" />
+                        <span>Internal Warehouse Transfers</span>
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                        Your order is being consolidated from partner facilities before shipping to ensure safe delivery in one package.
+                      </p>
                     </div>
-                    <span className="text-xs font-semibold text-cyan-800 bg-cyan-100/80 px-2 py-0.5 rounded-[4px]">
-                      Target Hub: {selectedOrder.exportFacility?.facilityName || 'Central Hub'}
-                    </span>
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 shrink-0 self-start sm:self-center">
+                      <span className="text-slate-400">Target Hub:</span>
+                      <span className="font-semibold text-slate-800">
+                        {selectedOrder.exportFacility?.facilityName || 'Central Hub'}
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs text-cyan-900 leading-relaxed">
-                    Your order is being consolidated from partner facilities before shipping to ensure safe delivery in one package.
-                  </p>
-                  {selectedOrder.internalTransfers && selectedOrder.internalTransfers.length > 0 && (
-                    <div className="space-y-2">
-                      {selectedOrder.internalTransfers.map((tf) => (
+
+                  <div className="border border-slate-200 rounded-[6px] overflow-hidden divide-y divide-slate-100 bg-white shadow-xs">
+                    {selectedOrder.internalTransfers && selectedOrder.internalTransfers.length > 0 ? (
+                      selectedOrder.internalTransfers.map((tf) => (
                         <div
                           key={tf.id}
-                          className="bg-white border border-cyan-200 rounded-[4px] p-3 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs"
+                          className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                         >
-                          <div>
-                            <div className="font-mono font-bold text-slate-900">{tf.transferCode}</div>
-                            <div className="text-slate-600 mt-1">
-                              From: <strong className="text-slate-800">{tf.fromFacilityName || `Facility #${tf.fromFacilityId}`}</strong>
-                              {' ➔ '}
-                              To: <strong className="text-slate-800">{tf.toFacilityName || `Facility #${tf.toFacilityId}`}</strong>
+                          <div className="space-y-1.5 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-mono font-semibold text-slate-900 bg-slate-100 px-1.5 py-0.5 rounded text-[11px] border border-slate-200/80">
+                                {tf.transferCode}
+                              </span>
+                              <div className="flex items-center gap-1.5 text-xs text-slate-700">
+                                <span className="text-slate-400">From</span>
+                                <strong className="font-semibold text-slate-900">
+                                  {tf.fromFacilityName || `Facility #${tf.fromFacilityId}`}
+                                </strong>
+                                <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                <span className="text-slate-400">To</span>
+                                <strong className="font-semibold text-slate-900">
+                                  {tf.toFacilityName || `Facility #${tf.toFacilityId}`}
+                                </strong>
+                              </div>
                             </div>
-                            <div className="text-[11px] text-slate-400 mt-0.5">
-                              Distance: {tf.distanceKm} km • Est. transit: ~{tf.estimatedHours}h
+                            <div className="flex items-center gap-3 text-[11px] text-slate-400">
+                              <span>Distance: <span className="text-slate-600 font-medium">{tf.distanceKm} km</span></span>
+                              <span>•</span>
+                              <span>Est. transit: <span className="text-slate-600 font-medium">~{tf.estimatedHours}h</span></span>
                             </div>
                           </div>
-                          <div>
+
+                          <div className="shrink-0 self-start sm:self-center">
                             <span
-                              className={`inline-block px-2.5 py-1 rounded-[4px] text-[11px] font-semibold ${tf.status === 'RECEIVED'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : tf.status === 'DISPATCHED'
-                                  ? 'bg-blue-100 text-blue-800'
-                                  : 'bg-amber-100 text-amber-800'
-                                }`}
+                              className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
+                                tf.status === 'RECEIVED'
+                                  ? 'text-emerald-700'
+                                  : tf.status === 'DISPATCHED'
+                                    ? 'text-blue-700'
+                                    : 'text-amber-800'
+                              }`}
                             >
-                              {tf.status === 'RECEIVED' ? 'Consolidated at Hub' : tf.status === 'DISPATCHED' ? 'In Transfer' : 'Transfer Pending'}
+                              <span
+                                className={`w-1.5 h-1.5 rounded-full ${
+                                  tf.status === 'RECEIVED'
+                                    ? 'bg-emerald-500'
+                                    : tf.status === 'DISPATCHED'
+                                      ? 'bg-blue-500'
+                                      : 'bg-amber-500'
+                                }`}
+                              />
+                              {tf.status === 'RECEIVED'
+                                ? 'Consolidated at Hub'
+                                : tf.status === 'DISPATCHED'
+                                  ? 'In Transfer'
+                                  : 'Transfer Pending'}
                             </span>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      ))
+                    ) : (
+                      <div className="p-3.5 text-xs text-slate-500 bg-slate-50/50">
+                        Consolidation dispatch schedules are being prepared.
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
 
