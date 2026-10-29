@@ -580,7 +580,7 @@ export default function AdminModerationPage() {
                       {Math.min(reportsPage * reportsPageSize, reportsTotal)} of {reportsTotal} reports
                     </span>
                     <Pagination
-                      className="custom-pagination"
+                      className="custom-pagination ml-auto"
                       current={reportsPage}
                       pageSize={reportsPageSize}
                       total={Math.max(reportsTotal, 1)}
@@ -682,13 +682,13 @@ export default function AdminModerationPage() {
 
                   {/* Mobile Pagination */}
                   {reportsTotal > 0 && (
-                    <div className="p-4 flex flex-col items-center justify-between gap-3 border-t border-gray-100">
-                      <span className="text-xs text-gray-500">
+                    <div className="p-4 flex flex-col sm:flex-row items-end sm:items-center justify-between gap-3 border-t border-gray-100">
+                      <span className="text-xs text-gray-500 self-start sm:self-auto">
                         Showing {(reportsPage - 1) * reportsPageSize + 1} -{' '}
                         {Math.min(reportsPage * reportsPageSize, reportsTotal)} of {reportsTotal} reports
                       </span>
                       <Pagination
-                        className="custom-pagination"
+                        className="custom-pagination ml-auto"
                         current={reportsPage}
                         pageSize={reportsPageSize}
                         total={Math.max(reportsTotal, 1)}
@@ -775,7 +775,7 @@ export default function AdminModerationPage() {
                       {Math.min(auditPage * auditPageSize, auditTotal)} of {auditTotal} audit entries
                     </span>
                     <Pagination
-                      className="custom-pagination"
+                      className="custom-pagination ml-auto"
                       current={auditPage}
                       pageSize={auditPageSize}
                       total={Math.max(auditTotal, 1)}
@@ -848,13 +848,13 @@ export default function AdminModerationPage() {
 
                   {/* Mobile Pagination */}
                   {auditTotal > 0 && (
-                    <div className="p-4 flex flex-col items-center justify-between gap-3 border-t border-gray-100">
-                      <span className="text-xs text-gray-500">
+                    <div className="p-4 flex flex-col sm:flex-row items-end sm:items-center justify-between gap-3 border-t border-gray-100">
+                      <span className="text-xs text-gray-500 self-start sm:self-auto">
                         Showing {(auditPage - 1) * auditPageSize + 1} -{' '}
                         {Math.min(auditPage * auditPageSize, auditTotal)} of {auditTotal} audit entries
                       </span>
                       <Pagination
-                        className="custom-pagination"
+                        className="custom-pagination ml-auto"
                         current={auditPage}
                         pageSize={auditPageSize}
                         total={Math.max(auditTotal, 1)}

@@ -120,7 +120,7 @@ export default function AdminOrdersPage() {
       title: '',
       key: 'action',
       width: '10%',
-      align: 'right' as const,
+      align: 'center' as const,
       render: (_: any, row: Order) => (
         <a
           onClick={() => router.push(`/admin/orders/${row.id}`)}
@@ -166,6 +166,7 @@ export default function AdminOrdersPage() {
           rowKey="id"
           loading={loading}
           pagination={{
+            placement: ['bottomEnd'],
             current: page,
             total,
             pageSize: 20,

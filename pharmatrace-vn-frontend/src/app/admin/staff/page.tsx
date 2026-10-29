@@ -578,8 +578,9 @@ export default function StaffManagementPage() {
           )}
 
           {/* Mobile Pagination */}
-          <div className="flex justify-center pt-2">
+          <div className="flex justify-end pt-2">
             <Pagination
+              className="ml-auto"
               current={pagination.current}
               pageSize={pagination.pageSize}
               total={pagination.total}
@@ -606,6 +607,7 @@ export default function StaffManagementPage() {
             rowKey="id"
             loading={loading}
             pagination={{
+              placement: ['bottomEnd'],
               current: pagination.current,
               pageSize: pagination.pageSize,
               total: pagination.total,
@@ -642,7 +644,7 @@ export default function StaffManagementPage() {
                 <Tooltip title="Cannot delete your own account">
                   <span>
                     <AButton size="small" danger icon={<DeleteOutlined />} disabled className="rounded-[6px] text-xs shadow-none">
-                      Delete Member
+                      Delete
                     </AButton>
                   </span>
                 </Tooltip>
@@ -656,7 +658,7 @@ export default function StaffManagementPage() {
                   okButtonProps={{ danger: true, size: 'small' }}
                 >
                   <AButton size="small" danger icon={<DeleteOutlined />} className="rounded-[6px] text-xs shadow-none">
-                    Delete Member
+                    Delete
                   </AButton>
                 </Popconfirm>
               )}

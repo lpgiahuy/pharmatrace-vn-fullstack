@@ -412,6 +412,7 @@ export default function AdminProductsPage() {
               {Math.min(page * 20, total)} of {total} products
             </span>
             <Pagination
+              className="ml-auto"
               current={page}
               pageSize={20}
               total={total}
@@ -479,7 +480,7 @@ export default function AdminProductsPage() {
                     okButtonProps={{ danger: true }}
                   >
                     <AButton danger icon={<DeleteOutlined />} className="rounded-[6px] font-medium text-xs">
-                      Delete Product
+                      Delete
                     </AButton>
                   </Popconfirm>
                 </div>

@@ -23,7 +23,7 @@ LANGUAGE sql STABLE SET search_path = pg_catalog AS $$
     SELECT current_setting('app.current_user_type', true) = 'employee'
       AND NULLIF(current_setting('app.current_user_id', true), '') IS NOT NULL
       AND CASE WHEN write_access THEN current_setting('app.voucher_scope', true) = 'manage'
-            AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'STORE_MANAGER')
+            AND current_setting('app.current_user_role', true) = 'SUPER_ADMIN'
         ELSE current_setting('app.voucher_scope', true) IN ('read', 'manage')
             AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST') END
 $$;

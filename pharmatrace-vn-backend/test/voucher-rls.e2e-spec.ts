@@ -17,6 +17,7 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
   let facility: number, medicine: number, variant: number, voucher: number;
   let tokens: Record<string, string>;
   const managerActor = () => ({ id: manager, type: 'employee' as const, role: 'STORE_MANAGER', facilityId: facility });
+  const superActor = () => ({ id: superAdmin, type: 'employee' as const, role: 'SUPER_ADMIN' });
   const customer = { id: a, type: 'customer' as const, role: 'CUSTOMER' };
   const previous = { DATABASE_URL: process.env.DATABASE_URL, AUTH_RLS_ENABLED: process.env.AUTH_RLS_ENABLED, JWT_SECRET: process.env.JWT_SECRET };
   async function request(method: string, path: string, token?: string, body?: unknown) {
@@ -130,6 +131,12 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
     await api('GET', '/admin/vouchers', 401);
     for (const token of [tokens.a, tokens.admin, tokens['same-id']]) await api('GET', '/admin/vouchers', 403, token);
     await api('GET', `/admin/vouchers/${voucher}`, 200, tokens.pharmacist);
+    await api('GET', '/admin/vouchers', 200, tokens.manager);
+    await api('GET', `/admin/vouchers/${voucher}`, 200, tokens.manager);
+    await api('POST', '/admin/vouchers', 403, tokens.manager, {});
+    await api('PATCH', `/admin/vouchers/${voucher}`, 403, tokens.manager, { status: 'INACTIVE' });
+    await api('DELETE', `/admin/vouchers/${voucher}`, 403, tokens.manager);
+    await expect(prisma.withVoucher('manage', async () => true, { actor: managerActor() })).rejects.toThrow();
     await api('GET', '/admin/vouchers?search=TEST-VOUCHER&limit=1', 200, tokens.super);
     await api('PATCH', `/admin/vouchers/${voucher}`, 403, tokens.pharmacist, { status: 'INACTIVE' });
     await api('DELETE', `/admin/vouchers/${voucher}`, 403, tokens.pharmacist);
@@ -138,24 +145,24 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
   });
   it('supports management while protecting counters and normalized code uniqueness', async () => {
     const body = { voucherCode: ' test-voucher-created ', discountType: 'PERCENT', discountValue: 10, totalQuantity: 5, maxDiscountAmount: 5000, startDate: '2020-01-01T00:00:00Z', endDate: '2099-01-01T00:00:00Z' };
-    const created = (await api('POST', '/admin/vouchers', 201, tokens.manager, body)).data;
+    const created = (await api('POST', '/admin/vouchers', 201, tokens.super, body)).data;
     expect(created).toMatchObject({ voucherCode: 'TEST-VOUCHER-CREATED', usedQuantity: 0 });
     await api('POST', '/admin/vouchers', 409, tokens.super, body);
-    await api('PATCH', `/admin/vouchers/${created.id}`, 200, tokens.manager, { status: 'INACTIVE' });
-    await api('PATCH', `/admin/vouchers/${created.id}`, 400, tokens.manager, { usedQuantity: 0 });
-    await expect(prisma.withVoucher('manage', tx => tx.vouchers.update({ where: { id: voucher }, data: { used_quantity: 1 } }), { actor: managerActor() })).rejects.toThrow();
-    await api('DELETE', `/admin/vouchers/${created.id}`, 200, tokens.manager);
+    await api('PATCH', `/admin/vouchers/${created.id}`, 200, tokens.super, { status: 'INACTIVE' });
+    await api('PATCH', `/admin/vouchers/${created.id}`, 400, tokens.super, { usedQuantity: 0 });
+    await expect(prisma.withVoucher('manage', tx => tx.vouchers.update({ where: { id: voucher }, data: { used_quantity: 1 } }), { actor: superActor() })).rejects.toThrow();
+    await api('DELETE', `/admin/vouchers/${created.id}`, 200, tokens.super);
   });
   it('rejects invalid terms and malformed public requests', async () => {
     const body = { voucherCode: 'TEST-VOUCHER-INVALID', discountType: 'PERCENT', discountValue: 101, totalQuantity: 5, maxDiscountAmount: 5000, startDate: '2020-01-01T00:00:00Z', endDate: '2099-01-01T00:00:00Z' };
-    await api('POST', '/admin/vouchers', 400, tokens.manager, body);
-    await api('POST', '/admin/vouchers', 400, tokens.manager, { ...body, discountValue: 10, startDate: '2027-01-02T00:00:00Z', endDate: '2027-01-01T00:00:00Z' });
-    await api('POST', '/admin/vouchers', 400, tokens.manager, { ...body, voucherCode: '   ' });
+    await api('POST', '/admin/vouchers', 400, tokens.super, body);
+    await api('POST', '/admin/vouchers', 400, tokens.super, { ...body, discountValue: 10, startDate: '2027-01-02T00:00:00Z', endDate: '2027-01-01T00:00:00Z' });
+    await api('POST', '/admin/vouchers', 400, tokens.super, { ...body, voucherCode: '   ' });
     for (const invalid of [{ startDate: null }, { endDate: null }, { maxDiscountAmount: null }, { maxDiscountAmount: 0 }]) {
-      await api('POST', '/admin/vouchers', 400, tokens.manager, { ...body, discountValue: 10, ...invalid });
+      await api('POST', '/admin/vouchers', 400, tokens.super, { ...body, discountValue: 10, ...invalid });
     }
-    await api('PATCH', `/admin/vouchers/${voucher}`, 400, tokens.manager, { startDate: null });
-    await api('PATCH', `/admin/vouchers/${voucher}`, 400, tokens.manager, { discountType: 'PERCENT', discountValue: 10 });
+    await api('PATCH', `/admin/vouchers/${voucher}`, 400, tokens.super, { startDate: null });
+    await api('PATCH', `/admin/vouchers/${voucher}`, 400, tokens.super, { discountType: 'PERCENT', discountValue: 10 });
     await expect(owner.query('UPDATE vouchers SET end_date = NULL WHERE id = $1', [voucher])).rejects.toThrow();
     await expect(owner.query("UPDATE vouchers SET discount_type = 'PERCENT', max_discount_amount = NULL WHERE id = $1", [voucher])).rejects.toThrow();
     await api('POST', '/vouchers/validate', 400, undefined, { voucherCode: code, orderSubtotal: -1 });
@@ -163,7 +170,7 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
   });
   it('handles simultaneous creation of the same normalized code as a conflict', async () => {
     const body = { voucherCode: 'test-voucher-duplicate', discountType: 'FIXED', discountValue: 1000, totalQuantity: 5, startDate: '2020-01-01T00:00:00Z', endDate: '2099-01-01T00:00:00Z' };
-    const responses = await Promise.all([request('POST', '/admin/vouchers', tokens.manager, body), request('POST', '/admin/vouchers', tokens.super, body)]);
+    const responses = await Promise.all([request('POST', '/admin/vouchers', tokens.super, body), request('POST', '/admin/vouchers', tokens.super, body)]);
     expect(responses.map(r => r.status).sort()).toEqual([201, 409]);
   });
   it('preserves expiry, future-date, inactive, capacity and minimum-subtotal checks', async () => {
@@ -180,13 +187,13 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
     expect(await used()).toBe(1);
     await api('POST', '/vouchers/validate', 200, undefined, { voucherCode: code, orderSubtotal: 20000 });
     expect(await used()).toBe(1);
-    await api('DELETE', `/admin/vouchers/${voucher}`, 409, tokens.manager);
+    await api('DELETE', `/admin/vouchers/${voucher}`, 409, tokens.super);
     await api('POST', '/orders', 201, tokens.a, orderBody());
-    await api('PATCH', `/admin/vouchers/${voucher}`, 400, tokens.manager, { totalQuantity: 1 });
-    await api('PATCH', `/admin/vouchers/${voucher}`, 200, tokens.manager, { status: 'INACTIVE' });
+    await api('PATCH', `/admin/vouchers/${voucher}`, 400, tokens.super, { totalQuantity: 1 });
+    await api('PATCH', `/admin/vouchers/${voucher}`, 200, tokens.super, { status: 'INACTIVE' });
   });
   it('keeps percentage previews and checkout discounts consistent with the cap', async () => {
-    await api('PATCH', `/admin/vouchers/${voucher}`, 200, tokens.manager, { discountType: 'PERCENT', discountValue: 20, maxDiscountAmount: 1500, minOrderValue: 10000 });
+    await api('PATCH', `/admin/vouchers/${voucher}`, 200, tokens.super, { discountType: 'PERCENT', discountValue: 20, maxDiscountAmount: 1500, minOrderValue: 10000 });
     expect((await api('POST', '/vouchers/validate', 200, undefined, { voucherCode: code, orderSubtotal: 20000 })).data.discountAmount).toBe(1500);
     expect((await api('POST', '/orders', 201, tokens.a, orderBody())).data.voucherDiscount).toBe(1500);
     expect(await used()).toBe(1);
@@ -224,7 +231,7 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
       await tx.vouchers.update({ where: { id: voucher }, data: { used_quantity: { increment: 1 } } });
     }, customer)).rejects.toThrow();
     for (const sql of ['TRUNCATE vouchers CASCADE', 'UPDATE vouchers SET id = 123', "SELECT setval('vouchers_id_seq', 1)"]) {
-      await expect(prisma.withVoucher('manage', tx => tx.$executeRawUnsafe(sql), { actor: managerActor() })).rejects.toThrow();
+      await expect(prisma.withVoucher('manage', tx => tx.$executeRawUnsafe(sql), { actor: superActor() })).rejects.toThrow();
     }
     expect(await used()).toBe(0);
   });
@@ -235,7 +242,7 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
     await expect(prisma.withVoucher('manage', async tx => {
       await tx.vouchers.update({ where: { id: voucher }, data: { status: 'INACTIVE' } });
       throw new Error('rollback voucher');
-    }, { actor: managerActor() })).rejects.toThrow('rollback voucher');
+    }, { actor: superActor() })).rejects.toThrow('rollback voucher');
     expect(await prisma.vouchers.count()).toBe(0);
     await api('POST', '/vouchers/validate', 200, undefined, { voucherCode: code, orderSubtotal: 20000 });
   });

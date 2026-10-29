@@ -465,6 +465,17 @@ footer span.text-white\/70 {
   gap: 0.375rem !important;
 }
 
+/* Ant Design Table Pagination - Always align to the right corner */
+.ant-table-wrapper .ant-table-pagination.ant-pagination,
+.ant-table-wrapper .ant-table-pagination-right,
+.ant-table-wrapper .ant-table-pagination {
+  display: flex !important;
+  width: 100% !important;
+  justify-content: flex-end !important;
+  padding: 0 16px !important;
+  margin: 16px 0 !important;
+}
+
 .custom-pagination .ant-pagination-item,
 .ant-pagination .ant-pagination-item {
   border: 1.5px solid transparent !important;

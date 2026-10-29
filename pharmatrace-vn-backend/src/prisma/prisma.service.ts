@@ -193,7 +193,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
 
   async withVoucher<T>(scope: VoucherScope, run: (tx: Prisma.TransactionClient) => Promise<T>, context: { actor?: AuthActor; code?: string } = {}): Promise<T> {
     const actor = context.actor ? authActor(context.actor) : undefined;
-    const roles = scope === 'read' ? ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST'] : ['SUPER_ADMIN', 'STORE_MANAGER'];
+    const roles = scope === 'read' ? ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST'] : ['SUPER_ADMIN'];
     if (!['validate', 'read', 'manage'].includes(scope)
       || (scope === 'validate' ? !!actor || !context.code?.trim() : actor?.type !== 'employee' || !roles.includes(actor.role))) {
       throw new ForbiddenException('Invalid voucher access scope');
