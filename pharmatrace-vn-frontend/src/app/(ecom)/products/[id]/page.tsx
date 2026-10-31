@@ -1253,7 +1253,7 @@ export default function ProductDetailPage({
               Registration No: <span className="font-mono text-slate-700 font-semibold">{product.registrationNumber || 'VD-28491-17'}</span>
             </p>
             <p className="m-0">
-              Origin: <span className="text-slate-700 font-semibold">{product.countryOfOrigin || ct.thong_tin_san_xuat?.xuat_xu || 'Vietnam'}</span>
+              Origin: <span className="text-slate-700 font-semibold">{product.countryOfOrigin || ct.thong_tin_san_xuat?.xuat_xu || 'Not specified'}</span>
             </p>
           </div>
         </div>
@@ -1808,27 +1808,27 @@ export default function ProductDetailPage({
               {[
                 {
                   label: 'Brand / Trademark',
-                  value: product.manufacturer || ct.manufacturingInfo?.brand,
+                  value: ct.manufacturingInfo?.brand || 'Not specified',
                   icon: <Award className="w-6 h-6 text-slate-700" />,
                 },
                 {
                   label: 'Manufacturer',
-                  value: product.manufacturer || ct.manufacturingInfo?.manufacturer,
+                  value: product.manufacturer || ct.manufacturingInfo?.manufacturer || 'Not specified',
                   icon: <Building2 className="w-6 h-6 text-slate-700" />,
                 },
                 {
                   label: 'Country of Origin',
-                  value: product.countryOfOrigin || ct.manufacturingInfo?.origin || 'Vietnam',
+                  value: product.countryOfOrigin || ct.manufacturingInfo?.origin || 'Not specified',
                   icon: <Globe className="w-6 h-6 text-slate-700" />,
                 },
                 {
                   label: 'Packaging Specification',
-                  value: ct.manufacturingInfo?.packaging || `${product.packaging?.unitName || 'Box'} standard unit`,
+                  value: ct.manufacturingInfo?.packaging || product.packaging?.unitName || 'Not specified',
                   icon: <Package className="w-6 h-6 text-slate-700" />,
                 },
                 {
                   label: 'Storage Instructions',
-                  value: ct.manufacturingInfo?.storage || 'Store below 30°C in dry conditions protected from light.',
+                  value: ct.manufacturingInfo?.storage || 'Not specified',
                   icon: <Thermometer className="w-6 h-6 text-slate-700" />,
                 },
               ]

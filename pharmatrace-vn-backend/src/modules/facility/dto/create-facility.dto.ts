@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional, IsEmail, IsNumber, Min, Max } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsEmail, IsNumber, Min, Max, IsIn } from 'class-validator';
 
 export enum FacilityTypeEnum {
-  MANUFACTURER = 'MANUFACTURER',
+  FACTORY = 'FACTORY',
   CENTRAL_WAREHOUSE = 'CENTRAL_WAREHOUSE',
   BRANCH_WAREHOUSE = 'BRANCH_WAREHOUSE',
   PHARMACY = 'PHARMACY',
@@ -17,9 +17,10 @@ export class CreateFacilityDto {
   @ApiProperty({
     description: 'Facility type classification',
     enum: FacilityTypeEnum,
-    example: FacilityTypeEnum.MANUFACTURER,
+    example: FacilityTypeEnum.PHARMACY,
   })
   @IsString()
+  @IsIn(Object.values(FacilityTypeEnum))
   @IsNotEmpty({ message: 'Facility type is required' })
   type: string;
 

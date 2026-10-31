@@ -55,3 +55,6 @@
 
 -- Facility-scoped staff administration.
 \i /docker-entrypoint-initdb.d/security/14_employee_facility_rls.sql
+
+-- Manufacturer access control.
+\i /docker-entrypoint-initdb.d/security/15_manufacturer_rls.sql

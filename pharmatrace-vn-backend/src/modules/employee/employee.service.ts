@@ -148,6 +148,9 @@ export class EmployeeService {
     if (!facility) {
       throw new BadRequestException(`Facility with ID ${dto.facilityId} does not exist`);
     }
+    if (['MANUFACTURER', 'LEGACY_EXTERNAL'].includes(facility.facility_type)) {
+      throw new BadRequestException('Employees cannot be assigned to external manufacturers');
+    }
 
     const password_hash = await bcrypt.hash(dto.password, 10);
 
@@ -203,6 +206,9 @@ export class EmployeeService {
       });
       if (!facility) {
         throw new BadRequestException(`Facility with ID ${dto.facilityId} does not exist`);
+      }
+      if (dto.facilityId !== employee.facility_id && ['MANUFACTURER', 'LEGACY_EXTERNAL'].includes(facility.facility_type)) {
+        throw new BadRequestException('Employees cannot be assigned to external manufacturers');
       }
       dataToUpdate.facility_id = dto.facilityId;
     }
