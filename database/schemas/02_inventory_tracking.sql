@@ -6,7 +6,10 @@ CREATE TABLE IF NOT EXISTS public.batches (
     id SERIAL PRIMARY KEY,
     batch_number VARCHAR(100) NOT NULL UNIQUE,
     medicine_id INTEGER REFERENCES public.medicines(id) ON DELETE CASCADE,
-    manufacturer_id INTEGER REFERENCES public.facilities(id) ON DELETE SET NULL,
+    manufacturer_id INTEGER REFERENCES public.manufacturers(id) ON DELETE SET NULL,
+    legacy_manufacturer_facility_id INTEGER REFERENCES public.facilities(id) ON DELETE SET NULL,
+    manufacturer_source_facility_name VARCHAR(150),
+    manufacturer_source_facility_id INTEGER,
     production_date DATE NOT NULL,
     expiry_date DATE NOT NULL,
     initial_quantity INTEGER NOT NULL DEFAULT 0,
@@ -49,7 +52,7 @@ CREATE TABLE IF NOT EXISTS public.inventories (
     stock_quantity INTEGER NOT NULL DEFAULT 0 CHECK (stock_quantity >= 0),
     reserved_quantity INTEGER DEFAULT 0 CHECK (reserved_quantity >= 0),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uq_facility_medicine_variant UNIQUE(facility_id, medicine_id, variant_id)
+    CONSTRAINT uq_facility_inventory UNIQUE(facility_id, variant_id)
 );
 
 -- 5. Inventory Transaction Logs (Audit movements: Inbound, Outbound, Transfer, Adjustment)

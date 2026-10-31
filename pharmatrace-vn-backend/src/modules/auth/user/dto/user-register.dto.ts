@@ -18,13 +18,13 @@ export class UserRegisterDto {
   @IsString()
   phone!: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: "customer@example.com",
-    description: "Customer email address (optional)",
+    description: "Customer email address (required)",
   })
-  @IsOptional()
-  @IsEmail()
-  email?: string;
+  @IsNotEmpty({ message: "Email address is required" })
+  @IsEmail({}, { message: "Invalid email format" })
+  email!: string;
 
   @ApiProperty({
     example: "password123",

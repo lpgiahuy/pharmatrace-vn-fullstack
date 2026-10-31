@@ -567,6 +567,10 @@ export default function MapAddressPickerModal({
         attributionControl: true,
       });
 
+      if (map.attributionControl) {
+        map.attributionControl.setPrefix(false);
+      }
+
       // Google Maps standard roadmap tiles (Clean, road network, Vietnamese labels, NO Carto watermark)
       leaflet
         .tileLayer("https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=vi", {
@@ -1143,17 +1147,6 @@ export default function MapAddressPickerModal({
             <div className="absolute bottom-3 left-3 right-3 z-[1000] bg-rose-50 border border-rose-200 text-rose-700 text-xs px-3 py-2 rounded-[6px] shadow-lg flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
               <span>{geoError}</span>
-            </div>
-          )}
-
-          {/* Informational banner when Google API key is not yet configured */}
-          {!hasGoogleApiKey && !isGoogleReady && (
-            <div className="hidden sm:flex absolute bottom-3 left-3 z-[900] bg-white/90 backdrop-blur-xs border border-gray-200/80 text-gray-500 text-[11px] px-2.5 py-1.5 rounded-[6px] shadow-sm items-center gap-1.5 pointer-events-none">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-              <span>
-                Add NEXT_PUBLIC_GOOGLE_MAPS_API_KEY to .env.local to enable
-                Google Places
-              </span>
             </div>
           )}
 

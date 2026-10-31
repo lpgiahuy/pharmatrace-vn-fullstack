@@ -1,7 +1,7 @@
 \set ON_ERROR_STOP on
 BEGIN;
 DO $$ BEGIN
- IF EXISTS (SELECT FROM pg_policies WHERE schemaname='public' AND tablename='employees' AND policyname NOT IN ('auth_employee_select','auth_employee_update','employee_management','employee_facility_read')) THEN
+ IF EXISTS (SELECT FROM pg_policies WHERE schemaname='public' AND tablename='employees' AND policyname NOT IN ('auth_employee_select','auth_employee_update','employee_management','employee_facility_read','employee_facility_management')) THEN
  RAISE EXCEPTION 'Review existing employee policies before applying employee RLS'; END IF;
 END $$;
 REVOKE ALL ON public.employees FROM PUBLIC, app_user;

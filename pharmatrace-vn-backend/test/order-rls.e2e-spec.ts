@@ -57,7 +57,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
       }
     }
     process.env.DATABASE_URL = runtimeUrl;
-    process.env.AUTH_RLS_ENABLED = 'false';
+    process.env.AUTH_RLS_ENABLED = process.env.ORDER_RLS_TEST_AUTH_ENABLED === 'true' ? 'true' : 'false';
     process.env.JWT_SECRET = 'isolated-order-test-secret-not-for-deployment';
     owner = new Pool({ connectionString: ownerUrl });
     const hash = await bcrypt.hash('OrderTestOnly2026!', 10);

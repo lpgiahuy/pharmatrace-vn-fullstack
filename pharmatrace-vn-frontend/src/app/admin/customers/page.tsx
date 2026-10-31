@@ -230,6 +230,7 @@ export default function CustomersManagementPage() {
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const currentUser = mounted ? getUser() : null;
+  const canManageCustomerStatus = ['SUPER_ADMIN', 'STORE_MANAGER'].includes(currentUser?.role);
 
   useEffect(() => {
     if (mounted && !isAuthenticated) {
@@ -712,8 +713,9 @@ export default function CustomersManagementPage() {
           )}
 
           {/* Mobile Pagination */}
-          <div className="p-3 bg-white rounded-[6px] flex items-center justify-center text-xs">
+          <div className="p-3 bg-white rounded-[6px] flex items-center justify-end text-xs">
             <Pagination
+              className="ml-auto"
               current={pagination.current}
               pageSize={pagination.pageSize}
               total={pagination.total}
@@ -758,10 +760,11 @@ export default function CustomersManagementPage() {
           {/* Pagination Footer */}
           <div className="p-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="text-sm text-slate-500">
-              Showing {(pagination.current - 1) * pagination.pageSize + 1} -{' '}
+              Showing {pagination.total > 0 ? (pagination.current - 1) * pagination.pageSize + 1 : 0} -{' '}
               {Math.min(pagination.current * pagination.pageSize, pagination.total)} of {pagination.total} customers
             </span>
             <Pagination
+              className="ml-auto"
               current={pagination.current}
               pageSize={pagination.pageSize}
               total={pagination.total}
@@ -823,7 +826,7 @@ export default function CustomersManagementPage() {
               <div className="flex items-center gap-2.5 self-end sm:self-center flex-wrap">
                 <StatusBadge status={customerDetail.status} />
 
-                {(customerDetail.status || 'ACTIVE').toUpperCase() !== 'BANNED' && (
+                {canManageCustomerStatus && (customerDetail.status || 'ACTIVE').toUpperCase() !== 'BANNED' && (
                   <Popconfirm
                     title={(customerDetail.status || 'ACTIVE').toUpperCase() === 'ACTIVE' ? 'Lock this account?' : 'Unlock this account?'}
                     description="Status change takes effect immediately."
@@ -847,7 +850,7 @@ export default function CustomersManagementPage() {
                   </Popconfirm>
                 )}
 
-                {(customerDetail.status || 'ACTIVE').toUpperCase() === 'BANNED' ? (
+                {canManageCustomerStatus && ((customerDetail.status || 'ACTIVE').toUpperCase() === 'BANNED' ? (
                   <Popconfirm
                     title="Unban this customer account?"
                     description="Account will be restored to ACTIVE status."
@@ -881,7 +884,7 @@ export default function CustomersManagementPage() {
                       Ban
                     </button>
                   </Popconfirm>
-                )}
+                ))}
               </div>
             </div>
 

@@ -58,9 +58,9 @@ export const Navbar: React.FC = () => {
       : []),
     {
       key: 'logout',
-      icon: <LogoutOutlined />,
+      icon: <LogoutOutlined className="text-red-500" />,
       danger: true,
-      label: 'Sign Out',
+      label: <span className="text-red-500 font-semibold">Log Out</span>,
       onClick: handleLogout,
     },
   ];

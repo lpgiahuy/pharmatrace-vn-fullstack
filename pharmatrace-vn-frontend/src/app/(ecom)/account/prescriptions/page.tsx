@@ -130,10 +130,6 @@ export default function PrescriptionsPage() {
             Home
           </Link>
           <ChevronRight className="w-3.5 h-3.5 mx-2 text-slate-400" />
-          <Link href="/account" className="hover:text-slate-900 transition-colors font-medium">
-            Account
-          </Link>
-          <ChevronRight className="w-3.5 h-3.5 mx-2 text-slate-400" />
           <span className="text-slate-900 font-semibold">Your Prescriptions</span>
         </div>
       </nav>

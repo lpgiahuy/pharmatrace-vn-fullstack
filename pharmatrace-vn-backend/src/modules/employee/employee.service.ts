@@ -3,6 +3,7 @@ import {
   NotFoundException,
   ConflictException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { authActor } from '../../common/auth-identity';
@@ -46,10 +47,12 @@ export class EmployeeService {
   }
 
   async create(dto: CreateEmployeeDto, user: CurrentUserPayload) {
+    this.validateManagerScope(user, dto.facilityId, dto.role);
     return this.prisma.withEmployeeManagement(authActor(user), tx => this.createInTransaction(tx, dto));
   }
 
   async update(id: number, dto: UpdateEmployeeDto, user: CurrentUserPayload) {
+    this.validateManagerScope(user, dto.facilityId, dto.role);
     return this.prisma.withEmployeeManagement(authActor(user), tx => this.updateInTransaction(tx, id, dto));
   }
 
@@ -59,6 +62,14 @@ export class EmployeeService {
 
   async remove(id: number, user: CurrentUserPayload) {
     return this.prisma.withEmployeeManagement(authActor(user), tx => this.removeInTransaction(tx, id));
+  }
+
+  private validateManagerScope(user: CurrentUserPayload, facilityId?: number, role?: string) {
+    const actor = authActor(user);
+    if (actor.role === 'STORE_MANAGER' && ((facilityId !== undefined && facilityId !== actor.facilityId)
+      || (role !== undefined && !['PHARMACIST', 'WAREHOUSE_STAFF'].includes(role)))) {
+      throw new ForbiddenException('Managers can assign only permitted staff roles at their own facility');
+    }
   }
 
   private async findAllInTransaction(tx: Prisma.TransactionClient, query?: EmployeeQueryDto) {
@@ -137,6 +148,9 @@ export class EmployeeService {
     if (!facility) {
       throw new BadRequestException(`Facility with ID ${dto.facilityId} does not exist`);
     }
+    if (['MANUFACTURER', 'LEGACY_EXTERNAL'].includes(facility.facility_type)) {
+      throw new BadRequestException('Employees cannot be assigned to external manufacturers');
+    }
 
     const password_hash = await bcrypt.hash(dto.password, 10);
 
@@ -192,6 +206,9 @@ export class EmployeeService {
       });
       if (!facility) {
         throw new BadRequestException(`Facility with ID ${dto.facilityId} does not exist`);
+      }
+      if (dto.facilityId !== employee.facility_id && ['MANUFACTURER', 'LEGACY_EXTERNAL'].includes(facility.facility_type)) {
+        throw new BadRequestException('Employees cannot be assigned to external manufacturers');
       }
       dataToUpdate.facility_id = dto.facilityId;
     }

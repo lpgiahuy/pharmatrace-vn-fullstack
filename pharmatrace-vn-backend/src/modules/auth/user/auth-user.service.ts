@@ -36,7 +36,10 @@ export class AuthUserService {
 
   async registerCustomer(dto: UserRegisterDto) {
     const phone = dto.phone.trim();
-    const email = dto.email ? dto.email.trim().toLowerCase() : null;
+    const email = (dto.email || '').trim().toLowerCase();
+    if (!email) {
+      throw new BadRequestException('Email address is required');
+    }
 
     const password_hash = await bcrypt.hash(dto.password, 10);
 
@@ -47,9 +50,21 @@ export class AuthUserService {
       VALUES (${dto.name.trim()}, ${phone}, ${email}, ${password_hash}, ${dto.address?.trim() ?? null})
       RETURNING *
     `, { operation: 'register', identifier: phone }).catch((error) => {
-      if (error instanceof Prisma.PrismaClientKnownRequestError && (error.code === 'P2002'
-        || error.meta?.code === '23505'
-        || (error.meta?.driverAdapterError as { cause?: { originalCode?: string } } | undefined)?.cause?.originalCode === '23505')) {
+      const isUnique = error?.code === '23505'
+        || (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002')
+        || error?.meta?.code === '23505'
+        || (error?.meta?.driverAdapterError as { cause?: { originalCode?: string } } | undefined)?.cause?.originalCode === '23505'
+        || (error as any)?.originalCode === '23505'
+        || (typeof error?.message === 'string' && error.message.includes('23505'));
+
+      if (isUnique) {
+        const errorMsg = String(error?.message || '');
+        if (errorMsg.includes('customers_email_key') || errorMsg.includes('email')) {
+          throw new ConflictException('Email is already registered');
+        }
+        if (errorMsg.includes('customers_phone_number_key') || errorMsg.includes('phone')) {
+          throw new ConflictException('Phone number is already registered');
+        }
         throw new ConflictException('Phone number or email is already registered');
       }
       throw error;
@@ -149,7 +164,7 @@ export class AuthUserService {
       data: {
         ...(dto.fullName && { full_name: dto.fullName.trim() }),
         ...(dto.email && { email: dto.email.trim().toLowerCase() }),
-        ...(dto.defaultAddress && { default_address: dto.defaultAddress }),
+        ...(dto.defaultAddress !== undefined && { default_address: dto.defaultAddress.trim() || null }),
       },
     }), { actor });
 

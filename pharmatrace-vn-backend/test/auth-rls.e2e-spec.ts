@@ -186,7 +186,7 @@ integration('Auth HTTP + Prisma + PostgreSQL RLS', () => {
   it('rejects stale employee claims and permits warehouse login with a canonical role', async () => {
     const token = await staffToken();
     try {
-      await owner.query("UPDATE public.employees SET role = 'WarehouseManager', facility_id = 2 WHERE id = $1", [id]);
+      await owner.query("UPDATE public.employees SET role = 'WAREHOUSE_MANAGER', facility_id = 2 WHERE id = $1", [id]);
       await request(app.getHttpServer()).get('/auth/me').auth(token, { type: 'bearer' }).expect(401);
       const login = await request(app.getHttpServer()).post('/warehouse/auth/login')
         .send({ email: 'auth-staff@example.test', password }).expect(200);
@@ -201,6 +201,13 @@ integration('Auth HTTP + Prisma + PostgreSQL RLS', () => {
     await request(app.getHttpServer()).get('/auth/me').auth(token, { type: 'bearer' }).expect(401);
     await request(app.getHttpServer()).post('/admin/auth/setup')
       .send({ fullName: 'Demo Intruder', email: 'intruder@example.test', password, facilityId: 1 }).expect(410);
+  });
+
+  it('updates and clears the customer delivery address in the profile', async () => {
+    const token = await customerToken();
+    await request(app.getHttpServer()).patch('/auth/me').auth(token, { type: 'bearer' }).send({ defaultAddress: 'Test delivery address' }).expect(200);
+    const updated = await request(app.getHttpServer()).patch('/auth/me').auth(token, { type: 'bearer' }).send({ defaultAddress: '' }).expect(200);
+    expect(updated.body.data.defaultAddress).toBeNull();
   });
 
   it('enforces row and column restrictions against direct Prisma queries', async () => {

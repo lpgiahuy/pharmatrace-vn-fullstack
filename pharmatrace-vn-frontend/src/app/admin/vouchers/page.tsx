@@ -29,6 +29,7 @@ import {
 import dayjs from 'dayjs';
 import { voucherService, VoucherItem } from '@/services/voucher.service';
 import { formatCurrency } from '@/utils';
+import { useAuthStore } from '@/store/useAuthStore';
 
 const getErrorMessage = (err: any): string => {
   if (typeof err === 'string') return err;
@@ -74,6 +75,8 @@ const StatusBadge: React.FC<{ status?: string; endDate?: string | null }> = ({ s
 
 export default function AdminVouchersPage() {
   const { message } = App.useApp();
+  const getUser = useAuthStore((state) => state.getUser);
+  const canManageVouchers = getUser()?.role === 'SUPER_ADMIN';
   const [loading, setLoading] = useState(false);
   const [vouchers, setVouchers] = useState<VoucherItem[]>([]);
   const [pagination, setPagination] = useState({
@@ -350,7 +353,7 @@ export default function AdminVouchersPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        {canManageVouchers && <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={handleOpenCreate}
@@ -359,7 +362,7 @@ export default function AdminVouchersPage() {
             <PlusOutlined />
             <span>Create Voucher</span>
           </button>
-        </div>
+        </div>}
       </div>
 
       {/* Filter Controls Bar */}
@@ -532,9 +535,10 @@ export default function AdminVouchersPage() {
         )}
 
         {/* Mobile Pagination */}
-        <div className="p-3 bg-white rounded-[6px] flex items-center justify-center text-xs">
+        <div className="p-3 bg-white rounded-[6px] flex items-center justify-end text-xs">
           {/* <span className="text-slate-500">Total {pagination.total} vouchers</span> */}
           <Pagination
+            className="ml-auto"
             current={pagination.page}
             pageSize={pagination.limit}
             total={pagination.total}
@@ -563,6 +567,7 @@ export default function AdminVouchersPage() {
           loading={loading}
           size="middle"
           pagination={{
+            placement: ['bottomEnd'],
             current: pagination.page,
             pageSize: pagination.limit,
             total: pagination.total,
@@ -594,7 +599,7 @@ export default function AdminVouchersPage() {
           onCancel={() => setDetailModalOpen(false)}
           footer={
             <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
-              <Popconfirm
+              {canManageVouchers && <Popconfirm
                 title="Delete Voucher"
                 description="Are you sure you want to delete this voucher?"
                 onConfirm={() => handleDelete(viewingVoucher.id)}
@@ -605,10 +610,10 @@ export default function AdminVouchersPage() {
                 <Button size="small" danger icon={<DeleteOutlined />} className="rounded-[6px] text-xs">
                   Delete
                 </Button>
-              </Popconfirm>
+              </Popconfirm>}
 
               <div className="flex items-center gap-2">
-                <Button
+                {canManageVouchers && <Button
                   type="primary"
                   size="small"
                   icon={<EditOutlined />}
@@ -620,7 +625,7 @@ export default function AdminVouchersPage() {
                   className="rounded-[6px] text-xs font-medium"
                 >
                   Edit
-                </Button>
+                </Button>}
                 <Button
                   size="small"
                   onClick={() => setDetailModalOpen(false)}

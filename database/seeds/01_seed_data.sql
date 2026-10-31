@@ -6,7 +6,6 @@ BEGIN;
 SET LOCAL search_path = public, pg_catalog;
 
 COPY public.facilities (id, facility_name, facility_type, address, phone_number, email, latitude, longitude, created_at) FROM stdin;
-1392	Thanh Tam Pharmaceutical Co., Ltd	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
 1800	Pharma-Chain Pharmacy Branch 1	PHARMACY	Demo facility address 1800	\N	\N	\N	\N	2026-08-25 12:37:46.575195
 1801	Long Chau Pharmacy - Ly Tu Trong	PHARMACY	Demo facility address 1801	\N	\N	10.7765000	106.7010000	2026-08-25 12:37:46.575195
 1802	Pharmacity - Nguyen Hue	PHARMACY	Demo facility address 1802	\N	\N	10.7745000	106.7025000	2026-08-25 12:37:46.575195
@@ -19,243 +18,9 @@ COPY public.facilities (id, facility_name, facility_type, address, phone_number,
 1809	Pharmacity - Cong Hoa	PHARMACY	Demo facility address 1809	\N	\N	10.8005000	106.6550000	2026-08-25 12:37:46.575195
 1810	Long Chau Pharmacy - Vo Van Ngan	PHARMACY	Demo facility address 1810	\N	\N	10.8520000	106.7580000	2026-08-25 12:37:46.575195
 2001	Southern Central Warehouse	CENTRAL_WAREHOUSE	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1279	Apimed	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1278	Ha Tinh Pharmaceutical JSC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1280	Duc Thinh Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1286	Dong Nai Pharmaceutical JSC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1386	Farmaprim Ltd - Moldova	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1387	Vietnam Chemical & Pharmaceutical JSC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1430	Me Di Sun Pharmaceutical JSC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1490	Phuong Dong Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1541	VCP Pharmaceutical JSC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-2000	Hanoi Pharmaceutical Factory	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-2	Vidipha	MANUFACTURER	\N	\N	\N	10.7769000	106.7009000	2026-08-25 12:37:46.575195
-40	AXE (CAY BUA)	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-15	Abbott	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1224	EA Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-91	GSK ETC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1225	Teva Pharmaceutial Work Company Pvt	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1228	Cadila Healthcare- India	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1035	Santen	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1022	Gedeon Richter	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1731	Emcure	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1733	Recordati	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1309	Usarichpharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1592	Viet Phuc	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1262	Nam Duoc	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1253	Nadyphar	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-162	Servier International	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1333	RPG Lifesciences Ltd.	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1335	Meyer-BPC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-79	Glenmark	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1364	Ajinomoto	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1377	Actavis	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1390	Lupin	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1391	COPHAVINA-XNDP150	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-74	Boehringer Ingelheim	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1402	SHINPOONG	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1401	Senju	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1027	Korea United Pharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1271	Cadila Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-45	Ha Tay	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1306	Nhat Nhat	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1483	Tatanol	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-6	STELLA	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1245	TIPHARCO	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1240	Pymepharco	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1497	Suheung	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1487	Merck Export GMBH	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1524	Octapharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1538	Allomed	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-140	Duoc VTYT Hai Duong	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1543	FARMAPRIM	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1555	Hydrosol	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1565	The Acme Laboratories	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1572	MINH AN-CND	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1354	Italfarmaco S.A	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1588	Vinphaco	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1595	RELIV HEALTHCARE	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1294	Excl. Enlie	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
 1	Enervon Pharmacy Store #1	PHARMACY	\N	\N	\N	10.8458000	106.7945000	2026-08-25 12:37:46.575195
 2046	PharmaTrace Distribution Hub - HCMC	CENTRAL_WAREHOUSE	Demo facility address 2046	\N	\N	10.7306000	106.7126000	2026-08-25 12:37:46.575195
-1617	Efferalgan	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1608	Ipsen Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1624	Ceelin	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1633	Arcoxia	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-44	Domesco	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-7	DHG Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-54	Mekophar	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1024	Bridge Healthcare	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1187	Ba Giang	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-194	Daewoong Pharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1236	Hyphens Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1241	Deltapharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1295	NIC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-138	Sao Thai Duong	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1273	Ampharco U.S.A	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1374	S.C. Arena Group S.A	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1413	Santa	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1418	Ckolin	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1428	Vrohto	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1433	Vasoclean	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1435	NEW CHOICE	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1438	DP Trung uong CPC1	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1444	An Trieu	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1217	AGIPHARM	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1466	Excl. Imexpharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1472	Sun Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1477	Sanofi GEM (ETC)	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1495	Korea Prime Pharm. Co., Ltd.	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1471	MICRO LABS	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1529	THEON PHARMA	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1282	Hataphar	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1546	BIOFARM	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1549	Artesan Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1481	INCEPTA PHARMACEUTICALS LTD	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1560	Reddy	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1561	BV Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1455	Agio	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1522	Fresenius Kabi	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1583	Dae Hwa Pharm Co.,LTD	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1586	HANOI PHARMA	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1587	Herabiopharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1618	Ameflu	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1627	Bioflora	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-38	Strepsils	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1405	Boganic	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1039	Egis Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1420	Yen Bai	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1669	Kotra Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1474	Janssen	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1706	Duoc pham Ha Noi	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1030	Obimin	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1311	Merap Group	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-141	Davipharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-144	Imexpharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-113	Alcon Pharmaceuticals	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-61	Dongkwang	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1460	Minh Hai	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-36	Bayer WHC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-84	Bayer HealthCare	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-159	Betadine	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-37	Novartis	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-101	Rosa-Phytopharma Laboratoires	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-148	Bausch & Lomb	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1459	US Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-149	Engelhard	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-184	Duoc Phuc Vinh	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-11	Tiger balm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-13	Mayolyspindler	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-106	OPC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-105	Pierre-Fabre	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-107	HaiKhau	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-146	Torrent Pharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-110	Siang Pure	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-48	United Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1457	Pharmaceutical Works Jelfa S.A, Ba Lan	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-18	Thien Duoc	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-72	QM.Mediphar	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-136	Novo Nordisk A/S	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1600	GENUONE SCIENCES INC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-119	Eli Lilly	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1230	Hadiphar	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1406	Savi	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1276	Medochemie	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-130	Pfizer PBG	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-51	Biocodex	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1254	Ferring Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-76	Mega Lifesciences	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-3	AstraZeneca	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1482	Aurobindo Pharma Ltd	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-160	GLOMED-ABBOTT	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-131	Besins International	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1517	Samchundang	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-150	Eagle	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1503	Am Vi	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-68	Shin Poong Daewoo VN	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1025	Astellas Ireland	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-52	Duoc pham 3/2	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-4	Merck Sharp & Dohme	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-193	Biotech VN	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1553	Pharimexco	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-43	Menarini	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1397	DO HA Pharmaceutical Co., Ltd	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1450	Ha Nam Medical Equipment & Pharma JSC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-157	Thai Nakorn Patana	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-167	Danapha	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1267	Daewoo	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-5	Phil Inter Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1237	OPV	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1031	Other	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1532	Gracure Pharmaceuticals, India	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1380	Agimexpharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-73	Johnson & Johnson	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-172	Yuhan	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1277	Troikka	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1510	Pharmathen S.A	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1330	Codupha (TW2)	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-198	Foripharm (TW3)	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1407	Opella VMS	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1602	Reliv	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1475	Denk Pharma GmbH & Co.KG	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1427	Sutagran	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1629	Leo Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1566	G.D. Laboratories (India) Pvt. Limited	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1725	Satyam	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-70	STADA	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1218	An Thien	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1337	Medisun	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-186	Boston	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-176	Singulair	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-104	Dexa Medica	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-90	Opodis Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-100	Crestor	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1591	Edol	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1540	Ba Dinh Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-33	Sanofi CHC Local	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-135	Biopharco	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-59	Dopharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-179	Adamed Pharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1383	Sandoz	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1479	BRV Healthcare	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1636	Konimex	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-145	InnotheraChouzy	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1281	Catalent	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1290	Excl. Agimexpharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-46	Getz Pharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-126	Bayer (Others)	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1649	Medinova	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-177	BIDIPHAR	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-17	Pharmedic	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1421	LEVIVINA	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-71	Traphaco	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1199	Medipharco- Tenamyd	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1423	Grimberg	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-171	TVPharma	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-49	Hasan- Demarpharm	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-116	Allergan	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1489	Gia Nguyen	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1556	Pro Med	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-115	Medana Pharma - Ba Lan	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-151	Mebiphar	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1573	Armephaco	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-200	Alphachymotrypsin	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1674	Bao Thanh	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-57	Sanofi Others	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-178	SPM	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-10	Nam Ha	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1597	TW2	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-78	Bouchara	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-85	Salonpas	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1615	Truong Son	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-82	Viatris (Pfizer UpJohn)	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-9	GSK OTC	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-19	Sanofi GEM	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-2045	PharmaTrace Factory - Binh Duong	MANUFACTURER	Demo facility address 2045	\N	\N	10.9728000	106.6849000	2026-08-25 12:37:46.575195
-35	Unique Pharmaceutical Labs	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-175	J.Uriach & Cia	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1361	Merz Pharm GmbH & Co KGAA - Germany	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
-1545	AhnGook Pharmaceutical Co., Ltd. - Korea	MANUFACTURER	\N	\N	\N	\N	\N	2026-08-25 12:37:46.575195
+2045	PharmaTrace Factory - Binh Duong	FACTORY	Demo facility address 2045	\N	\N	10.9728000	106.6849000	2026-08-25 12:37:46.575195
 \.
 
 COPY public.employees (id, facility_id, job_title, joined_date, full_name, email, password_hash, role, status, created_at) FROM stdin;
@@ -718,6 +483,57 @@ COPY public.manufacturers (id, name, slug, country, logo_url, website, status, c
 389	Balkanpharma Dupnitsa Ad (bulgaria)	balkanpharma-dupnitsa-ad-bulgaria	Bulgaria	\N	\N	ACTIVE	2026-09-03 13:46:01.150446+00
 390	Postinor	postinor	Hungary	\N	\N	ACTIVE	2026-09-03 13:46:01.175344+00
 391	Shinpoong Daewoo Pharma Co., Ltd.	shinpoong-daewoo-pharma-co-ltd	South Korea	\N	\N	ACTIVE	2026-09-03 13:46:01.185125+00
+392	Merck Sharp & Dohme	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+393	STELLA	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+394	GSK OTC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+395	Nam Ha	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+396	Mayolyspindler	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+397	Sanofi GEM	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+398	Sanofi CHC Local	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+399	Bayer WHC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+400	Hasan- Demarpharm	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+401	Duoc pham 3/2	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+402	Sanofi Others	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+403	STADA	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+404	Viatris (Pfizer UpJohn)	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+405	Bayer HealthCare	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+406	GSK ETC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+407	OPC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+408	Alcon Pharmaceuticals	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+409	Bayer (Others)	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+410	Pfizer PBG	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+411	GLOMED-ABBOTT	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+412	Servier International	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+413	TVPharma	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+414	J.Uriach & Cia	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+415	Boston	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+416	Astellas Ireland	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+417	An Thien	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+418	Cadila Healthcare- India	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+419	Nadyphar	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+420	Cadila Pharma	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+421	Ha Tinh Pharmaceutical JSC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+422	Duc Thinh Pharma	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+423	Dong Nai Pharmaceutical JSC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+424	Excl. Agimexpharm	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+425	Merz Pharm GmbH & Co KGAA - Germany	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+426	Farmaprim Ltd - Moldova	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+427	Vietnam Chemical & Pharmaceutical JSC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+428	Thanh Tam Pharmaceutical Co., Ltd	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+429	DO HA Pharmaceutical Co., Ltd	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+430	Vrohto	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+431	Me Di Sun Pharmaceutical JSC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+432	DP Trung uong CPC1	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+433	Ha Nam Medical Equipment & Pharma JSC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+434	Agio	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+435	Excl. Imexpharm	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+436	Sanofi GEM (ETC)	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+437	Merck Export GMBH	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+438	Phuong Dong Pharma	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+439	VCP Pharmaceutical JSC	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+440	AhnGook Pharmaceutical Co., Ltd. - Korea	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+441	Dae Hwa Pharm Co.,LTD	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
+442	Hanoi Pharmaceutical Factory	\N	\N	\N	\N	ACTIVE	2026-08-25 12:37:46.575195
 \.
 
 COPY public.medicines (id, medicine_name, registration_number, active_ingredients, dosage, manufacturer, country_of_origin, unit_price, promotional_price, image_url, short_description, details, is_prescription, status, created_at, slug, manufacturer_id) FROM stdin;
@@ -1266,31 +1082,31 @@ COPY public.medicines (id, medicine_name, registration_number, active_ingredient
 1763	Andol S Tablets for Common Cold and Flu Symptoms (Paracetamol 500mg/Phenylephrine HCl 10mg/Chlorpheniramine Maleate 4mg) - 25 Blisters x 20 Tablets	P11224	\N	\N	\N	Vietnam	20750.00	16600.00	https://prod-cdn.pharmacity.io/e-com/images/ecommerce/20241107084420-0-P11224.png?versionId=OGq2gJ0nqGHEjzPRRo.HZ1x9B91qlqgR	Andol S is a combination tablet indicated for the symptomatic relief of common cold and flu symptoms, including fever, headache, body aches, rhinorrhea, nasal congestion, rhinitis, sinusitis, and weather-related allergies.	{"indications": ["Indicated for the treatment of cold and flu symptoms such as fever, headache, myalgia accompanied by rhinorrhea, nasal congestion, rhinitis, and sinusitis due to influenza, common cold, or weather-induced allergies."], "sideEffects": ["Drowsiness, dry mouth, dizziness, nausea.", "Allergic reactions: rash, urticaria, drug-induced fever, mucosal lesions.", "Rare: neutropenia, thrombocytopenia, pancytopenia.", "Phenylephrine: mild abdominal discomfort, nausea, dizziness, headache, nervousness, insomnia, tremors, tachycardia, rash, pruritus, facial/tongue/throat swelling, dyspnea."], "drugInteractions": [{"drug": "Coumarin and indandione derivatives", "effect": "Slightly increases the anticoagulant effect."}, {"drug": "Alcohol", "effect": "Increases hepatotoxicity and enhances central nervous system depression."}, {"drug": "Anticonvulsants (phenytoin, barbiturates, carbamazepine)", "effect": "Increases metabolic conversion of paracetamol into hepatotoxic metabolites."}, {"drug": "Isoniazid", "effect": "Increases hepatotoxicity."}, {"drug": "Tricyclic antidepressants (imipramine), guanethidine", "effect": "Potentiates the hypertensive effect of phenylephrine and causes mydriasis."}, {"drug": "Monoamine oxidase inhibitors (MAOIs)", "effect": "Enhances cardiac stimulation and hypertensive effects of phenylephrine, and increases anticholinergic effects of antihistamines."}, {"drug": "Bromocriptine", "effect": "Risk of vasoconstriction or hypertensive crisis."}, {"drug": "Sedatives and hypnotics", "effect": "Potentiates central nervous system depression."}, {"drug": "Phenytoin", "effect": "Chlorpheniramine inhibits metabolism, leading to phenytoin toxicity."}], "effectsOnDriving": "The medication affects the ability to drive and operate machinery; usage should be avoided.", "contraindications": ["Hypersensitivity to any component of the medication or cross-sensitivity to pseudoephedrine.", "Cardiovascular disease, pulmonary disease, hepatic impairment, renal impairment.", "Severe hypertension, myocardial infarction, coronary artery disease, arteriosclerosis, atrioventricular block, ventricular tachycardia.", "Patients with glucose-6-phosphate dehydrogenase (G6PD) deficiency.", "Severe hyperthyroidism or angle-closure glaucoma.", "Patients experiencing an acute asthma attack.", "Prostatic hyperplasia, bladder neck obstruction.", "Concurrent use of MAOIs or use within the preceding 2 weeks.", "Peptic ulcer disease, pyloroduodenal obstruction.", "Children under 11 years of age.", "Pregnant or breastfeeding women."], "manufacturingInfo": {"packaging": "25 blisters x 20 tablets."}, "usageInstructions": {"dosage": "Adults and children over 11 years: 1 tablet 1°3 times daily. Specific dosage depends on physical condition and the severity of the disease progression.", "missedDose": "Take as soon as possible. If it is almost time for the next dose, skip the missed dose and resume the regular dosing schedule. Do not double the dose.", "administration": "Administer orally. Take the medication after meals with a small amount of water.", "overdoseManagement": "Paracetamol overdose: Gastric lavage within 4 hours, administer N-acetylcysteine. Chlorpheniramine maleate overdose: Symptomatic and supportive treatment of vital functions. Phenylephrine hydrochloride administration: Administer alpha-adrenergic blocking agents such as phentolamine 5°10 mg intravenously."}, "generalDescription": "Andol S Tablets are indicated for the treatment of cold and flu symptoms such as fever, headache, myalgia accompanied by rhinorrhea, nasal congestion, rhinitis, sinusitis due to cold and flu relief, or weather allergies. The tablets are round, yellow, embossed with 'Andol S' on one side and a score line on the reverse.", "detailedIngredients": {"activeIngredients": "Paracetamol 500mg, Phenylephrine 10mg, Chlorpheniramine 4mg"}, "specialPatientGroups": {"geriatric": "Use with caution (over 60 years of age).", "lactation": "Do not use the medication.", "pediatric": "Contraindicated in children under 11 years of age.", "pregnancy": "Do not use the medication."}, "warningsAndPrecautions": ["The medication causes drowsiness and dizziness.", "Do not use in patients with anemia or increased intraocular pressure.", "Avoid alcohol consumption while taking the medication.", "Exercise caution in patients with myasthenia gravis, chronic pulmonary disease, shortness of breath, or respiratory difficulty.", "Elderly patients (over 60 years old), patients with impaired hepatic or renal function, or type 1 diabetes mellitus.", "Caution in patients with vascular disease (Raynaud's syndrome, low cerebral/peripheral blood flow) and hypertension.", "Do not use in patients with mood disorders (anxiety, insomnia) or those taking central nervous system stimulants.", "Use with caution in patients with urinary retention/difficulty.", "Discontinue medication if symptoms persist for more than 7 days or are accompanied by fever, nervousness, dizziness, or prolonged insomnia.", "Warning regarding severe cutaneous adverse reactions (SJS, TEN, Lyell's syndrome, AGEP).", "The medication contains quinoline yellow excipient; exercise caution in patients with an allergic predisposition."], "adverseReactionManagement": "Discontinue use, notify a physician, or report to the nearest medical facility for prompt medical management."}	f	ACTIVE	2026-04-08 21:52:33.761	andol-s-tablets-for-common-cold-and-flu-symptoms-paracetamol-500mg-phenylephrine-hcl-10mg	\N
 \.
 
-COPY public.batches (id, batch_number, medicine_id, manufacturer_id, production_date, expiry_date, initial_quantity, remaining_quantity, status, certificate_co_cq, created_at) FROM stdin;
-1	BATCH-2026-VIP	1	1	2026-03-01	2030-03-01	5000	4850	HopLe	\N	2026-08-25 07:01:41.304095
-2	BATCH-2026-VIP-2	2	1	2026-03-01	2030-03-01	3000	2900	HopLe	\N	2026-08-25 07:01:41.304095
-3	BATCH-2026-VIP-15	15	1	2026-03-15	2030-03-15	2000	2000	HopLe	\N	2026-08-25 07:01:41.304095
-4	BATCH-2026-VIP-3	3	\N	2026-03-03	2030-03-03	0	0	HopLe	\N	2026-08-25 12:00:58.275445
-5	BATCH-2026-VIP-TEST	1	\N	2026-03-01	2030-03-01	0	0	HopLe	\N	2026-08-25 12:00:58.279866
-8	PANA_2026A	9	\N	2026-05-01	2029-05-01	0	0	ThuHoi	\N	2026-08-25 12:00:58.283818
-9	LOHO-2026	1	\N	2026-01-01	2028-01-01	0	0	ThuHoi	\N	2026-08-25 12:00:58.288783
-10	LOHO-2026-10	1	\N	2026-01-01	2028-01-01	0	0	ThuHoi	\N	2026-08-25 12:31:52.642985
-11	LO-TEST-SAPHETHAN	1	\N	2024-01-01	2026-06-13	0	0	HopLe	\N	2026-08-25 12:00:58.305215
-1000	BATCH-TEST-1000	1	\N	2026-05-09	2028-05-09	0	0	HopLe	\N	2026-08-25 12:00:58.319985
-8801	ENERVON-001	2	\N	2026-01-01	2029-01-01	0	0	HopLe	\N	2026-08-25 12:00:58.324948
-9901	LO-PANA-TEST	991	\N	2026-01-01	2029-01-01	0	0	HopLe	\N	2026-08-25 12:00:58.33034
-9902	LO-SIRO-TEST	992	\N	2026-01-01	2029-01-01	0	0	HopLe	\N	2026-08-25 12:00:58.337134
-9951	TEST-1	1	\N	2026-05-26	2029-05-26	0	0	HopLe	\N	2026-08-25 12:00:58.342461
-9952	TEST-111	1	\N	2026-05-26	2029-05-26	0	0	HopLe	\N	2026-08-25 12:00:58.347183
-9953	TEST-11111	1	\N	2026-05-26	2029-05-26	0	0	HopLe	\N	2026-08-25 12:00:58.35218
-15	BATCH-Sucralfate-001	1	\N	2026-05-01	2029-05-01	0	0	HopLe	\N	2026-08-25 12:00:58.310204
-999	BATCH-TEST-001	1	\N	2026-04-25	2028-04-25	0	0	HopLe	\N	2026-08-25 12:00:58.315072
-9958	LOT-COMI-2026-V1	1797	2	2026-02-15	2028-10-31	50	50	ACTIVE	\N	2026-10-11 11:53:06.043
-9959	LOT-PANA-2026-V2	9	2	2026-01-05	2028-05-30	50	50	ACTIVE	\N	2026-10-11 11:53:06.084
-9954	LOT-ANDOL-2026-V1	1763	2	2026-01-15	2028-06-30	50	49	ACTIVE	\N	2026-10-11 11:53:05.776
-9955	LOT-TICO-2026-V1	1762	2	2026-02-10	2028-08-31	50	49	ACTIVE	\N	2026-10-11 11:53:05.885
-9956	LOT-HAPA-2026-V1	1756	2	2026-03-01	2028-09-30	50	49	ACTIVE	\N	2026-10-11 11:53:05.949
-9957	LOT-HTHO-2026-V1	1798	2	2026-01-20	2028-07-31	50	33	ACTIVE	\N	2026-10-11 11:53:06
+COPY public.batches (id, batch_number, medicine_id, legacy_manufacturer_facility_id, production_date, expiry_date, initial_quantity, remaining_quantity, status, certificate_co_cq, created_at, manufacturer_id, manufacturer_source_facility_name, manufacturer_source_facility_id) FROM stdin;
+1	BATCH-2026-VIP	1	1	2026-03-01	2030-03-01	5000	4850	HopLe	\N	2026-08-25 07:01:41.304095	1	\N	\N
+2	BATCH-2026-VIP-2	2	1	2026-03-01	2030-03-01	3000	2900	HopLe	\N	2026-08-25 07:01:41.304095	242	\N	\N
+3	BATCH-2026-VIP-15	15	1	2026-03-15	2030-03-15	2000	2000	HopLe	\N	2026-08-25 07:01:41.304095	\N	\N	\N
+4	BATCH-2026-VIP-3	3	\N	2026-03-03	2030-03-03	0	0	HopLe	\N	2026-08-25 12:00:58.275445	\N	\N	\N
+5	BATCH-2026-VIP-TEST	1	\N	2026-03-01	2030-03-01	0	0	HopLe	\N	2026-08-25 12:00:58.279866	\N	\N	\N
+8	PANA_2026A	9	\N	2026-05-01	2029-05-01	0	0	ThuHoi	\N	2026-08-25 12:00:58.283818	\N	\N	\N
+9	LOHO-2026	1	\N	2026-01-01	2028-01-01	0	0	ThuHoi	\N	2026-08-25 12:00:58.288783	\N	\N	\N
+10	LOHO-2026-10	1	\N	2026-01-01	2028-01-01	0	0	ThuHoi	\N	2026-08-25 12:31:52.642985	\N	\N	\N
+11	LO-TEST-SAPHETHAN	1	\N	2024-01-01	2026-06-13	0	0	HopLe	\N	2026-08-25 12:00:58.305215	\N	\N	\N
+1000	BATCH-TEST-1000	1	\N	2026-05-09	2028-05-09	0	0	HopLe	\N	2026-08-25 12:00:58.319985	\N	\N	\N
+8801	ENERVON-001	2	\N	2026-01-01	2029-01-01	0	0	HopLe	\N	2026-08-25 12:00:58.324948	\N	\N	\N
+9901	LO-PANA-TEST	991	\N	2026-01-01	2029-01-01	0	0	HopLe	\N	2026-08-25 12:00:58.33034	\N	\N	\N
+9902	LO-SIRO-TEST	992	\N	2026-01-01	2029-01-01	0	0	HopLe	\N	2026-08-25 12:00:58.337134	\N	\N	\N
+9951	TEST-1	1	\N	2026-05-26	2029-05-26	0	0	HopLe	\N	2026-08-25 12:00:58.342461	\N	\N	\N
+9952	TEST-111	1	\N	2026-05-26	2029-05-26	0	0	HopLe	\N	2026-08-25 12:00:58.347183	\N	\N	\N
+9953	TEST-11111	1	\N	2026-05-26	2029-05-26	0	0	HopLe	\N	2026-08-25 12:00:58.35218	\N	\N	\N
+15	BATCH-Sucralfate-001	1	\N	2026-05-01	2029-05-01	0	0	HopLe	\N	2026-08-25 12:00:58.310204	\N	\N	\N
+999	BATCH-TEST-001	1	\N	2026-04-25	2028-04-25	0	0	HopLe	\N	2026-08-25 12:00:58.315072	\N	\N	\N
+9958	LOT-COMI-2026-V1	1797	\N	2026-02-15	2028-10-31	50	50	ACTIVE	\N	2026-10-11 11:53:06.043	217	Vidipha	2
+9959	LOT-PANA-2026-V2	9	\N	2026-01-05	2028-05-30	50	50	ACTIVE	\N	2026-10-11 11:53:06.084	5	Vidipha	2
+9954	LOT-ANDOL-2026-V1	1763	\N	2026-01-15	2028-06-30	50	49	ACTIVE	\N	2026-10-11 11:53:05.776	\N	Vidipha	2
+9955	LOT-TICO-2026-V1	1762	\N	2026-02-10	2028-08-31	50	49	ACTIVE	\N	2026-10-11 11:53:05.885	165	Vidipha	2
+9956	LOT-HAPA-2026-V1	1756	\N	2026-03-01	2028-09-30	50	49	ACTIVE	\N	2026-10-11 11:53:05.949	\N	Vidipha	2
+9957	LOT-HTHO-2026-V1	1798	\N	2026-01-20	2028-07-31	50	33	ACTIVE	\N	2026-10-11 11:53:06	61	Vidipha	2
 \.
 
 COPY public.packaging_variants (id, medicine_id, unit_name, price, original_price, discount_percent, is_base_unit, sale_start_date, sale_end_date, created_at) FROM stdin;
@@ -1996,8 +1812,6 @@ COPY public.sscc_cartons (id, sscc_code, batch_id, current_facility_id, status, 
 \.
 
 COPY public.medicine_boxes (uid, batch_id, carton_id, current_facility_id, status, signature, public_key, created_at) FROM stdin;
-001eedb4-8a7f-406f-ba42-c802888419db	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.425914
-b1029cf3-0246-4e38-8159-7c2422b0a003	2	\N	3	IN_STOCK	\N	\N	2026-08-25 07:01:41.304095
 0181d9ec-a68c-480e-a062-fee1b678e64f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:58.713028
 001adf8d-da91-47ea-9b28-e84a4b25b2de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.417446
 001cf3fa-8937-470f-9b30-0f25d4230ea1	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:43.806764
@@ -2010,10 +1824,8 @@ b1029cf3-0246-4e38-8159-7c2422b0a003	2	\N	3	IN_STOCK	\N	\N	2026-08-25 07:01:41.3
 00449264-3ce1-4c3e-9a6e-82c84b276cc4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.463905
 005ab078-d8b1-43af-be8a-8843f5cefd73	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.469188
 005f38a8-3903-4e0c-8f44-6e5cca43db8c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.479304
-005f682a-a9a0-4974-a537-0f15a649bef4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.485027
 00642dcd-c424-45e5-aa49-efb95d3fa5f5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.490322
 00719b20-71c8-4d89-9169-df5efe2836ba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.494968
-007a1dcf-df4d-4f71-952e-8f2aadc58265	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.500899
 00877140-8776-4bd7-a5a4-7c109345b9e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.506308
 008aceb1-7b24-4da6-baf4-4c17e89c209e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.512022
 008eb04d-5fd4-4ee0-b25f-38cf7742da40	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.516678
@@ -2032,11 +1844,9 @@ b1029cf3-0246-4e38-8159-7c2422b0a003	2	\N	3	IN_STOCK	\N	\N	2026-08-25 07:01:41.3
 00e3242e-02b5-402a-94b4-4ed6f39b1c2b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.590474
 00e9047c-98fd-4a01-8fd4-22cd4c708437	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.598247
 00edc2a7-f878-4905-b33e-5ebb0faf0e11	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.602954
-00f08749-d235-4d35-bb55-6ab5f936043f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.608712
 00febb3c-84da-49d3-8639-54bbaa06e848	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:58.614276
 010e82f4-5970-49a1-9d2c-224180200928	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.619463
 01115733-c03b-40c6-b9c7-8e5d26c10c4a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.624663
-0113f54e-47b4-4c5c-96d3-a4d76507585a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.628996
 0117a428-735b-4c3a-806e-2f57b6d41ef6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.634516
 011bbfc1-dc75-44da-9efa-34a880f0eeba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.639271
 0120b251-abb5-46ed-b520-71c2f28cef03	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.646663
@@ -2049,12 +1859,10 @@ b1029cf3-0246-4e38-8159-7c2422b0a003	2	\N	3	IN_STOCK	\N	\N	2026-08-25 07:01:41.3
 015e212c-1b3c-473f-8e52-bd73bdf613dd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:58.690826
 01625f60-c889-41f9-8f07-f57ede8ba41b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.69636
 016d9d40-4be2-4f28-afb5-22a78eaedc13	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.701942
-016f43fc-4b9f-44e6-8cef-05515e32e357	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:43.92031
 0184e4a2-98d1-45ae-abe2-a6487a3989c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.717981
 018532ef-ef65-40d1-a75c-c6278de0660e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.724319
 0187dc44-4b2f-4d49-8288-6ef1f3fd0b76	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.728942
 0194c1a1-5ff2-4599-b9e5-02236271cb9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.734966
-0197b765-b8fa-4f64-ad94-2a4c6c742051	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.740024
 01abda3a-aa98-4c29-ab8d-5a655d7acda1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.745389
 01b6a51a-1530-4f08-8f97-8a281149a612	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.749872
 01b963ad-935f-49a9-8fec-0b79b1f05af6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:58.754995
@@ -2067,25 +1875,20 @@ b1029cf3-0246-4e38-8159-7c2422b0a003	2	\N	3	IN_STOCK	\N	\N	2026-08-25 07:01:41.3
 01eb6f68-bf3f-45e1-b5dd-5f72af2c3aa5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.789696
 0205f7e4-655c-4df7-ac49-b02b4a567fd3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.79398
 021396e5-2bd2-4027-9f94-3bff40d103a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.799717
-02166556-e89f-4cdc-88e7-10ed35955a26	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.804839
 0226b3d8-333c-4363-ad73-9c4dfa2aeb67	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.80919
 022bf369-d437-46b6-84fe-73c0a4b71228	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.81385
 0230ce03-c018-464a-9f7b-aa266269a415	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.819062
 023b042a-04eb-4f5f-b78a-ceb8e9541d63	1000	\N	1	XuatXuong	\N	\N	2026-08-25 12:00:58.825452
 02432f0e-2a75-42d0-96bd-a8eb3ce505e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.831142
 024778b5-0d41-4e7e-803d-301ba10fcdf9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.836431
-0248a652-e36a-4421-bbba-ef3466981d54	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.842279
 024d5016-60ee-4c6e-8fef-f89ee3ad23d5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.847831
 024f79b6-fa2d-4d86-a3fa-4c304815a854	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.853006
 0258169a-846e-413d-a150-3b892f008dc1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.858242
 02602d46-7575-4749-a352-5d3cbcab2393	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:58.862989
 0264b441-b4c4-4452-be9c-905ba47a8a0c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.868026
 026d24a2-02ae-4f3d-83f2-e2423be673c0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.872825
-027ccbb4-4012-4810-9ee5-662eb625e803	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.883881
 0282ffdb-7eed-4f23-af8d-2256795b692c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:58.889026
-0284fdbc-0e27-404d-918d-4f4f9b4a22be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.893996
 029550e6-033c-446a-aa6b-cca2d68b70d1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.899056
-029af894-42bc-4229-9b89-adf7915b808b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.903996
 02a5427e-3cea-47fa-a59b-745fc1ab68f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.90959
 02b2980c-3810-4279-82b2-f5e500e831f5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.91386
 02b2b6c9-cd6b-41a1-b35f-9b91634d5a57	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.9192
@@ -2099,7 +1902,6 @@ d437de24-a03f-49e2-8793-2ddaba9e4284	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b1029cf3-0246-4e38-8159-7c2422b0a001	1	\N	2046	RESERVED	\N	\N	2026-08-25 07:01:41.304095
 03434297-892a-42b3-a962-3c70d336f82f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.070666
 038ab512-2ee0-4d65-9416-00dc0988740c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.133787
-03aa1bb2-cf1d-4825-b5b4-464fd2d8c50b	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.14101
 03b11260-676c-4346-8cf6-15280362dc65	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.165085
 02c3d78f-5803-4860-a5cc-ea83f975ad7f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.953949
 02c8e777-06cd-45d2-bc6e-acb6049c720e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.959612
@@ -2112,7 +1914,6 @@ b1029cf3-0246-4e38-8159-7c2422b0a001	1	\N	2046	RESERVED	\N	\N	2026-08-25 07:01:4
 02e2905c-1d0a-4603-b816-f5c66d6d46ba	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:58.996674
 02e37c9f-c37c-4613-882d-e667f9c58c7e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.001996
 02e798f7-626d-4c18-b9dd-6ef24bec2476	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.007298
-02e7d725-1485-49d5-a73d-9e447c60311e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.011831
 02eec3b0-5e7c-474d-a5b6-fd3bf2b35444	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.015849
 02f5dfcd-6631-45b1-8574-5fd8081cabce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.019563
 0308ca21-18d8-42c6-95ae-7801c64b393e	4	\N	1	RESERVED	\N	\N	2026-08-25 12:00:59.032657
@@ -2123,9 +1924,7 @@ b1029cf3-0246-4e38-8159-7c2422b0a001	1	\N	2046	RESERVED	\N	\N	2026-08-25 07:01:4
 0320fb11-bcf2-4307-9749-df8070c0506a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.054454
 032b042a-7eb7-44de-aa9d-f925f37ba1de	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.059028
 0335629d-9593-4704-a995-6d17eab39381	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.062598
-03382b1c-264a-4e16-a12a-71a3643e05b4	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.087422
 034b1662-3c71-4529-87d4-1272772a5855	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.074791
-035a83cc-fbf2-4b69-aa62-6264f8d61d7b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.082735
 035c6a0c-8bee-4bb7-b812-fa57c5f6daf9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.086678
 035f3aa9-579f-4d44-ab3d-821a79e1ea8c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.090505
 036857ad-7e44-4fd3-bd7d-e53d88afdbad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.094622
@@ -2139,21 +1938,17 @@ b1029cf3-0246-4e38-8159-7c2422b0a001	1	\N	2046	RESERVED	\N	\N	2026-08-25 07:01:4
 038df712-f120-4aa9-8879-b1d71d773991	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.137936
 03a0310b-0dc8-4f80-aab2-bee1de0550e5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.1431
 03a358cd-6af3-4a59-81e2-b1f569028375	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.149083
-03a58fa6-3a0e-4638-951f-abad1b4891db	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.134615
 03b386ef-e20b-4b5e-a863-67bdbca4861f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.170618
 03b38d52-68d9-4026-931a-fe1ad8399bcf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.175208
-03b9f5f4-fedc-49c2-9850-2d421fe76b06	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.179915
 03ed3dbb-4d43-4754-8718-7805b299f5f2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.18984
 0403ee96-a2ce-473b-9060-7d9f1c41c1e1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.195911
 0405be8b-79f2-4933-908a-a97244850c5b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.203633
 040d11a9-6295-42ce-973f-b4399f68ec4b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.21075
-0411dc95-d853-4b05-95d1-92a9d6a46aaf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.217438
 041d12be-1310-4e2a-bf38-75ba0d607f56	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.223831
 041fe426-799f-4976-9cda-06b47cf56232	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.229642
 04265e0d-760d-4d8c-9d9c-5451e0134a69	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.235223
 0432095f-fb46-4b78-b193-fd59e5e06dc5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.239857
 043cde94-4711-46dc-9322-d83b0055af3b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.244008
-043ebd09-c606-4e35-aad2-c2cdb678962d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.249921
 044c4942-4c6b-4a7f-80c5-ab3919f49749	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.255317
 045238b7-1acc-400f-9f42-3d02b137e066	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.261162
 0458d6d1-046f-474f-92f9-6c6d4219fb4a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.267446
@@ -2169,26 +1964,21 @@ b1029cf3-0246-4e38-8159-7c2422b0a001	1	\N	2046	RESERVED	\N	\N	2026-08-25 07:01:4
 048af6d8-ecd3-4cc9-a646-450e98dd39b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.328059
 04909cc5-e2a3-445f-b106-3dcde652f52e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.332816
 04922146-49d7-481c-accd-ce9257c5859e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.337319
-04a0e9fb-f98c-4753-902a-551dd094ab62	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.342935
 04b1ff2b-be4f-4dcf-9ea9-9b70ca28a33e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.349097
 04b70bf6-a341-448d-8a0f-a4d191fac7ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.354339
 04bcb3f4-97af-44da-ad9d-6b76fd6bd039	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.359261
 04bdd6df-9b22-4c9a-8d05-dc8758905207	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.364323
 04ca1eb4-c436-44b6-b7eb-6c3d944c3b8f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.369204
-04d5ee1f-274a-4ac7-8674-e38fedd55ea2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.375304
 04d69750-a88b-4bc7-aa51-4606e9c5a99e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.382798
 04d9d784-bf49-46f9-baaa-dec0f21ad882	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.388252
 04daff19-477d-45d1-8db3-50405e6c2dc7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.393263
 04e89efc-32e2-4036-b300-501f0f0fc147	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.403978
 04ef8d1c-5759-4137-a641-182eba329f28	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.40996
 04f79cde-d193-4e15-80d8-bc94b4f41087	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.415568
-04f91488-ddbd-46e1-b03f-cd75d967ae1d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.420904
-04faa1e3-f658-49a7-bc94-2040d56775c4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.426271
 0501848f-849d-4a69-bb18-2f17e9d3fa36	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.431687
 05036c60-6bf6-4c27-8426-9cb7aa7f1621	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.437077
 051187e1-8035-4b49-aa70-1f92a86a0fb1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.442574
 05137996-9130-46d6-883c-628b30023f32	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.450438
-05287080-d173-4e73-9bee-d5bb20002430	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.457099
 052a3ae9-e8b4-42ac-9665-3c88a582dc20	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.463416
 052a3ba4-bbfb-4dce-b78a-438f49ec86e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.469026
 0537e64c-dcb3-422e-8c4b-1e1c21569dfe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.474787
@@ -2196,7 +1986,6 @@ b1029cf3-0246-4e38-8159-7c2422b0a001	1	\N	2046	RESERVED	\N	\N	2026-08-25 07:01:4
 d443fb99-b25f-4969-a5c8-1587e9587c31	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.236474
 d444849a-55e0-4ed1-87a9-667be8acd33f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.241049
 d450eff2-0c43-4525-9378-5418b80eb1a4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.246317
-d450f874-ec88-460a-b1b3-1d00c86b34be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.253583
 05a0a273-7f18-401a-bd06-0a990a4948de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.554874
 065c8397-1a23-490c-bb73-ff580998cedf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.697792
 06f83a3b-efdb-4e1e-904e-d4b8bb39a69f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.802538
@@ -2208,13 +1997,10 @@ d450f874-ec88-460a-b1b3-1d00c86b34be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.253
 055874dc-5f57-4f34-80b0-e4a7da50ccdc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.516075
 055e4b0c-594e-40ff-8a7c-e69799402488	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.521523
 05771873-abbe-4a85-9e2d-80098958fc25	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.527211
-058295a6-b8fa-4bdd-bf3c-5b88b04f35fa	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.53337
 05914d29-7ee2-44db-b55c-19bae2dad7c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.540281
 0599d729-4e36-40b7-a3e5-abf416cad5d8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.545403
-059f929c-25c0-4c4e-ba32-44a093637519	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.264548
 05a3fc44-8c5a-4592-9d1a-7252f6b768db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.55908
 05afc2f6-dfec-4e18-89e5-fccb32de6a63	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.569904
-05b6d88a-da78-454c-8182-9eb77355a52a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.573776
 05b799a1-beaf-4928-ab25-706c556da9c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.578003
 05bc01ca-52a9-4cf2-a392-011bae78709c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.581755
 05be6a50-e6a3-431c-b2fd-f25d3d660b3e	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:00:59.585856
@@ -2222,29 +2008,24 @@ d450f874-ec88-460a-b1b3-1d00c86b34be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.253
 05bfa94f-c595-4191-8723-7acbd0ec90b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.595469
 05c1850b-8a57-4047-91a0-22a87e777a86	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.599903
 05e021cd-3fff-4889-b586-5bc623a0d2cc	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.603726
-05eaf12d-6766-4fcb-a495-48e58796a070	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.607935
 05f3ba88-9a24-4ab9-9b6b-ea987af62875	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.611818
 05f94b4a-1905-4dbc-8e7d-48918fdcb99e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.615797
 05fa41ee-2552-47a6-a3b4-cacf68f55659	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.619671
 06016cd1-13a1-46ae-b3a5-8b8b27c38dd7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.623686
-06034f59-7abe-49a2-9e91-74c3a754dccc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.627699
 0605c393-fb79-4155-b8d4-b8dbe31fc7d4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.631799
 060d889c-e5fd-42f8-81f1-0f785a0b836e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.635663
 0613de09-6737-46d1-a691-a949ec8bbc3c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.63977
 062ba618-33bd-4c6e-994b-f7e1f549ae7e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.647698
 062d222d-355e-4105-a7cb-98afa24c8850	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.653259
-0630762c-eefa-404c-b2a4-9d753145886c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.658424
 0637f0a3-f502-4363-9a04-6e68ec298c7e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.663179
 063f72e9-6c2f-4031-a734-1b56e8b885bd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.668095
 064187e2-c8c1-4a21-8dfa-baa271599490	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.673555
 06476f07-c5e4-45f2-8294-1ab31b6cdf10	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.677968
 064820de-ba49-4867-a2a0-fa5c802a42d1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.683135
 0650a030-65a7-4e63-a62a-fc3321f4d388	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.688227
-0656d951-df6c-41c2-9496-772007e563a2	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:44.330555
 06739902-19c3-4ae6-aeff-717489ccb250	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.702808
 067fe3e0-44cc-4c49-9096-223a76572c75	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.707572
 068ac154-975b-4806-aabf-ded66ed40374	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.713012
-0691382f-95f4-4069-b4aa-1e46d79a4c90	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.717723
 06917497-350c-4592-a621-3ff4fd438c41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.722697
 0693da6b-86e9-4876-91c1-482f7f55dfb1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.728074
 06941186-8853-4098-837a-18ffd1a9d5da	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.73169
@@ -2252,14 +2033,11 @@ d450f874-ec88-460a-b1b3-1d00c86b34be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.253
 06977778-5b43-49af-a243-2ecc8ea8ed06	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.746201
 06a6ed1f-a142-4147-9f40-dff1dd91c340	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.750933
 06b07073-bd44-446f-a66d-9fa84e85fe4e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.755032
-06c31b4f-905b-4789-b83f-e663286009b5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.759884
 06cbcafb-9a11-45e7-96a9-40b8ba6a34f1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.763731
 06d105f5-7314-4946-9358-8d9b8c5c501c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.769329
 06d2755f-9f73-4bbe-af7b-2306e0a3d489	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.77392
 06d789cd-67ba-4ffe-992c-63ed5c132fbc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.778861
 06e12a3b-e618-4dad-a258-199c1152f18b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.783702
-06e5cec2-d1b6-4a7c-8d52-079960c107c1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.788796
-06ecab9c-214d-4ec8-adfa-dd4997e58a67	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.792807
 06f78782-f7c5-44bb-97c8-4b165eee0b5b	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:44.373435
 06fefaa6-1042-4f4e-a449-af4a6bb5be87	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.806626
 0708df05-e5ca-4ad3-9acc-ca9802d7538a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.811917
@@ -2267,16 +2045,13 @@ d450f874-ec88-460a-b1b3-1d00c86b34be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.253
 07114ddb-2995-4a8e-9255-a8f7e8e2c75f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.820856
 071cc4ee-15ba-4989-bc00-91385fbd8740	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.825532
 072acd0d-22e4-4fdb-a591-8f24e67422e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.829826
-073d8000-404f-4ed5-b676-d8239c0d4b3e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.834086
 07474dc8-942f-44c5-b8d4-5bd3756a3a5c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.842719
 074fff5e-23c2-47e0-ac57-d1aa2b1c87e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.848215
 0754d25b-8b2e-4ba5-b330-69c01032b272	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.852988
 0759684d-b816-4f9e-b22c-6d453f004c6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.856908
 076c1afd-80cd-44fe-9960-8827a49ca865	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.861933
-0772763a-3873-44d2-80c3-3a1a98e79a80	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.866893
 07743a7c-f958-44b0-82c5-633d28965928	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.872073
 0785b26d-059b-43e7-96c3-c5d8cc7793f3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.876808
-078cf214-9206-48d4-9877-930a9fd4b11b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.881689
 07ab6586-6049-493f-af4a-2f07d764591d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.885728
 07addc59-b2be-4175-9c2b-0945c44db4d8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.891517
 07af31fb-2a7f-4411-9b0e-495f78e0e89a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.89582
@@ -2289,7 +2064,6 @@ d450f874-ec88-460a-b1b3-1d00c86b34be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.253
 07d4d33c-c128-463a-aedc-b096016fdaee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.939273
 07d663f5-f470-4e00-b3cd-afa713be3bdd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.944978
 07d6960f-7160-4278-922f-1cee8fa405af	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:59.95022
-07d74c14-120e-46a9-a3c8-8d8855bbeba6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:59.954952
 07dd282b-b4be-4e27-a440-4385413512a4	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:44.431808
 07dedbbf-988d-435d-8284-765d9752ac86	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.973768
 07e13501-d5ee-4e5d-a65d-b51501f30470	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.97792
@@ -2299,7 +2073,6 @@ d450f874-ec88-460a-b1b3-1d00c86b34be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.253
 07f6c8d8-c017-4d59-ad8a-1ed1a40276d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.994725
 07f910ea-7cf3-4846-b93d-ac5f97873dec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:59.999674
 d4613cb9-e62f-4aeb-8861-21d31494cd39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.260664
-09f764e2-08b4-4ee1-abed-12b79a64e3eb	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.583784
 0a0472e0-5f3a-4372-aa3e-d212df32671d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.336823
 0aecb1d6-c6a5-4021-8809-b8abd3435967	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.538776
 081641bd-2f6c-46f9-80f2-df38d66349ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.009717
@@ -2307,7 +2080,6 @@ d4613cb9-e62f-4aeb-8861-21d31494cd39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0818ba97-d9f2-4b54-8681-962116c51e9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.028259
 081db243-b8bc-4aee-bf66-5a74a3040741	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.033213
 081ecd0a-f386-4173-8278-60473d1e47e2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.039342
-082105b0-c68d-4e35-9813-ca5460f378ab	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.044391
 08323646-38e1-40cd-908a-5579895f3451	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.049088
 083a3508-6a78-4234-9d81-54dbce2a68ad	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.05392
 08408227-a0c5-4b0c-b489-aa345c7fbf89	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.058952
@@ -2317,20 +2089,16 @@ d4613cb9-e62f-4aeb-8861-21d31494cd39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0860861a-3963-4e49-8e19-a214918936c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.075884
 0860ffc7-8b79-40e4-8f6d-40ae2e203d63	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.080279
 086a4513-46a0-44e9-ae28-0392fe0697da	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:00.085634
-087c86d9-1d60-41a5-8517-402cc89d9630	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.089546
 087ee32b-4440-44aa-87d3-2a3fc8bf4af9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.097725
 08814ee8-167f-4879-a7f9-accb35335d0e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.101785
 088317a9-26de-4555-b6a0-5cfac414eb04	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.105719
 08884a67-942e-452c-9ec0-b5dc3fab262f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.109607
-0891a665-160e-4078-9085-7c8fcb75d590	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.113484
 089a4797-016d-42e2-951c-8ee63771c350	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.117487
 089e41af-29bb-49d1-bc26-7d225351743e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.121462
 08b4822b-9a88-4fc0-980f-ce6fc50e28a0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.126684
-08c0aa36-4e7f-4fc5-bb94-7e04eed58734	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.130877
 08c2f6de-95da-42bc-807e-171276627598	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.135798
 08c47f35-0dbb-4f2d-a81e-f16253458c51	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.13982
 08c48a78-1aa9-413e-a00a-fd29855a63ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.144196
-08c4c29d-5757-49aa-926b-23f8d0ecfc5b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.148788
 08c4ff80-35ae-4de9-baa1-4efd0c77ca4a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.152669
 08d47743-ef48-43d9-86e5-e61f9a5e8369	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.156518
 08d54076-8d5d-44a8-8502-80b491cfd582	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.160879
@@ -2338,16 +2106,13 @@ d4613cb9-e62f-4aeb-8861-21d31494cd39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 08e7338b-6ee8-414a-b301-3d7c74b1b6e2	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:00.176008
 08e8ba9f-45af-4082-891c-42287dbd9e01	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.180775
 08f07d74-c808-4fd8-bbf7-23dc8a654675	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.185476
-08f10555-fcd8-40c7-bfe0-1d13a57f2f28	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.189961
 090f1fbe-7cde-49b2-8ab2-0b00c67ebc27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.195252
 0916f710-8744-4bdd-81e8-60d6ee1d5c2b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.199959
-092612ab-952a-4b69-99b6-5cdf06fce951	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.203818
 093e627e-cd1c-4696-898e-90f9fd4c44a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.210207
 0941aa95-3565-43ba-9a85-3e77eb6ba233	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.214969
 094e7485-2174-4b22-9c4a-8114bea7273f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.218818
 094fdfe5-05ca-4d78-bf86-c13b4d084336	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.223109
 095e2fa9-755d-4df8-9079-3de62556a5f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.230765
-095e5d50-7df3-4c0d-8bb6-bcaee67d0aca	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.236971
 0964bb31-864f-4415-86ef-f2aa2df41ba9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.242246
 09703b71-f92c-4070-b431-10fc1090c392	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.247629
 0975f96d-f9ac-43e1-81a8-332764785202	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.251921
@@ -2358,11 +2123,9 @@ d4613cb9-e62f-4aeb-8861-21d31494cd39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 09a8dbb4-4cc4-4ce2-bad6-aed2a13f18eb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.288435
 09b3c00b-7b09-4580-9c35-77504a445646	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:00.293168
 09c95b97-37de-497e-8e8f-5966f0169bd8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.298176
-09d9ac11-2004-40d7-9e0e-5baaf9c6f8a3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.303868
 09e01f45-0c0c-437c-8a40-a8ec31904db6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.309275
 09e81956-19cb-4778-8141-827d52131ffb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:00.315275
 09ea9710-4c09-4642-abf0-62b2eae2d782	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.320716
-09ee9e92-ddd6-48c7-b376-8aa1622c2fae	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.57707
 0a09b063-bf68-43fd-b740-d779c5a9d8d1	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:00.341133
 0a175a30-98bf-45af-a6fb-4f9908685867	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.346184
 0a19a6d5-6f4f-4eb8-93c4-a8a86b1f85da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.351885
@@ -2372,7 +2135,6 @@ d4613cb9-e62f-4aeb-8861-21d31494cd39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0a3bc46a-2a53-4758-9b1c-05613ddb575d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.370388
 0a405123-5c24-4a6e-b3d8-217632ec3521	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.376959
 0a4a3aa4-2482-4dee-9a68-d4e256292d22	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.387685
-0a5199e1-372a-455e-b618-af267b60c84b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.393073
 0a55eb39-fae6-40ca-a010-d7c9482d5683	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.397987
 0a75053a-fe68-4e72-a0f5-9b1f3c54c774	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.404288
 0a81c57c-e14c-4a73-88f2-e81cea86337b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.409144
@@ -2385,18 +2147,13 @@ d4613cb9-e62f-4aeb-8861-21d31494cd39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0aa90b92-3295-45e2-964f-db1e6d2f75be	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.450315
 0aae0501-58c4-4261-b4b2-c6645d533b8a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.45508
 0ab36add-1f87-4e24-b3eb-57930fa0ed7c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.461733
-0ab4997a-2ef0-4e2f-a899-6d77ea88a000	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.468754
-0aba79f7-c848-48e8-be04-b377622aeb82	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.474399
 0abc7e2e-8f78-4d3e-b999-94751aced425	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.480087
 0abc9261-81b3-47f9-a027-53255fa348fa	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.486401
 0ac55623-365d-4d2c-b963-5ce363bd0e4e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.49744
 0ace3aa5-325c-407c-b032-584021cc2492	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.502588
-0ad26bd0-d077-4eaa-b261-780eadb2454b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.508243
 0ad2a531-5b53-48f2-adb0-6ebde3339fe6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.513915
 0ad931ff-3561-4617-aa86-02967eee5fb6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.520236
-0ae565a8-8b5e-49d1-b58b-c50534bcc9ae	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.525087
 0ae7ad8d-5def-4352-ac74-a627eb6880e5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.529955
-0aec3036-0baa-4589-bc55-fd1d2184b6c1	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.658779
 0af91e32-4a0e-4050-938e-95870ad9238d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.542799
 0afb2ef9-e105-4196-ae68-8ca4d32918e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.546875
 0afc9245-7f41-4e07-8027-d9adf53de1cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.550764
@@ -2404,7 +2161,6 @@ d46d7421-0529-4654-8372-0c3a2cd95bc6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 0b6e32f2-55af-4a13-a8ab-e95ef3cf0d54	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.615475
 0c540ac9-7f3c-4425-9a45-4e360e1a4411	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.779909
 0c76d271-5f6f-479c-aa9b-c601128ae4dc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.791027
-0cfc00ee-07d1-4d95-b8fb-cde2d512b775	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.921812
 0dd35814-4093-404e-99fe-6e5d0a505466	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.058243
 0b043c8f-bf81-4d50-a588-6048da56787f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.55879
 0b0c686d-0da5-4bd9-a3e7-cec6f8f966f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.562783
@@ -2415,7 +2171,6 @@ d46d7421-0529-4654-8372-0c3a2cd95bc6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 0b3e6940-206e-4e61-8026-ea490d9338b8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:00.587049
 0b4287de-11a3-4e96-ac30-bae297fe5a91	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.591777
 0b4fee15-83dc-4a6d-9eb6-34f3e03d5ae7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:00.595656
-0b628a1d-8cd0-4087-981d-8bdfc0360457	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.603803
 0b673525-72af-4529-8265-e440c1fe9686	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:44.695185
 0b78ffd9-4ba5-4f9c-bfb0-806571ee1a34	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.619577
 0b7f0e64-d922-4ff0-b1d5-a5b2d40b9fec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.623602
@@ -2433,7 +2188,6 @@ d46d7421-0529-4654-8372-0c3a2cd95bc6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 0bfc2696-428b-40eb-a8e4-afb12bba2a8e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.675794
 0c0f1e81-873e-41b6-bd31-7d1df3af54d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.68016
 0c11c416-7622-4619-bfdd-0650b89d4054	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.68374
-0c1f4543-24e9-42fb-a123-ee62ad5d2d78	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.693803
 0c32f04b-78f8-40b2-8cd4-6a9b7ec72f98	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:00.697895
 0c34e408-f3fc-4c0b-993b-9726133a5f85	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.702307
 0c376a74-ba03-4358-87c7-c5837d50fdf0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.707104
@@ -2443,17 +2197,12 @@ d46d7421-0529-4654-8372-0c3a2cd95bc6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 0c4552ec-d24e-4285-8995-22f224ea3503	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.728265
 0c461993-8db2-45e6-b45d-34c980283382	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.733047
 0c471bcb-d00e-4542-9df6-c4c18b242de5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.739503
-0c472a9d-a095-4cc4-9a96-ed888346472b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.744156
 0c49071a-703f-4007-b787-55a617613b88	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.749231
 0c49d8dc-9cf8-4594-b2b7-95926b36101b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.755185
 0c51332d-bdab-4c05-a81b-2143c0985295	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.761923
 0c52ff5a-d830-45a5-8be5-6f4ffa828740	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.768452
-0c53c8c3-1eff-4bc5-837a-9fb7455614ab	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:44.765722
-0c728020-119c-4d25-833d-338c428e79e0	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:44.773992
-0c86b4c4-95fa-41a2-a2a7-115a8bc9a8df	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.796113
 0c909683-a9ad-4e82-9858-364330ed5134	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.807426
 0c9a7161-2fc5-4040-a2d7-825e85ad4b4e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.812559
-0cabad20-05c2-45cd-b8e6-ffdfac900ae0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.818196
 0cb3f7c9-1d89-4b9c-9b52-443dd92312ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.823917
 0cb51e28-f08d-42bd-8bbd-0f6037753598	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.829302
 0cb9926d-c75c-4394-8277-e87badc2863b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.834388
@@ -2466,10 +2215,7 @@ d46d7421-0529-4654-8372-0c3a2cd95bc6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 0cd3baa6-390f-46ba-8f1a-45ba73cda0f0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.87251
 0cd48ef9-023d-43d4-b47b-3ab6ecf21c05	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.877348
 0cd79cb0-37da-45c9-86fc-0a441e592e10	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.882943
-0cdb9bb6-3451-4146-8c1f-e8287954fd8b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.889041
-0cdcfbf4-d049-4fa6-85e4-01d6660ef912	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.895002
 0cdd48d8-710e-4cdb-a87f-d472a3b5bf70	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.902845
-0cf3c0ef-bf9c-4b50-bc40-883544c481cd	3	\N	15	DangGiao	\N	\N	2026-08-25 11:57:44.824428
 0d0113bf-596b-42c8-88cc-7638a0b06e4f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.927271
 0d565570-fce1-45ef-a2b0-d8df1f180ef3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.93249
 0d5d14c5-4b71-41c0-8872-fcf057c88b85	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.938268
@@ -2477,16 +2223,12 @@ d46d7421-0529-4654-8372-0c3a2cd95bc6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 0d6aed68-91e9-4224-8e60-04cf737ae469	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.94873
 0d6bf018-7987-4911-95dd-d23f12978b2f	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:00.954321
 0d6d837d-139e-492d-ab79-3abcfb0708da	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:00.959758
-0d6fefed-967f-400e-8261-6b0019ac329d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.967477
 0d73921d-cf2d-4d7b-b2b6-8838285f1f9d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:00.972477
-0d7b6824-2b48-4759-ba6e-d23cc9f4d1de	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:00.978216
 0d7eec42-4d88-499b-9ba4-de68db7a8d28	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.984532
 0d806056-c9a8-46bb-970c-84b1d1ede8d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.991338
 0d874d74-7095-4bf7-a8ff-dd259d58dabf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:00.998497
-0d88def3-dd0f-4634-a741-e83e933947d2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.004056
 0d928267-0dc4-4170-ae85-970fcbfcff1e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.00947
 0da06dc1-6c66-4ee1-bbc4-70c023833a1b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.015284
-0da27dbe-d286-4427-b8e0-9ac3891beefe	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.020286
 0daa7d80-ba01-4de9-b854-70ee49546e27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.028899
 0db20ff3-97bb-4c09-879e-41276873839c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.033093
 0dc46cbd-387c-4cc4-9d30-1fd4983b7391	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.038209
@@ -2503,7 +2245,6 @@ d46d7421-0529-4654-8372-0c3a2cd95bc6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 0dffeed5-7c3c-4f9f-a79d-2e0c53d82746	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.095684
 0e07d47f-2d2c-4061-b18d-8a070e838641	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.099855
 d470cd6b-27cc-4d2b-abd6-7acc526c6e53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.273468
-0f24ce6a-6101-4b4a-9990-773ce5bebb6a	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:45.001409
 0f2d8956-faf2-42b6-91ea-828b23bd98a1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.375483
 0f514eec-ca20-4eaa-a22b-71905812ada4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.407844
 0e143b49-2e5a-47b3-ae84-61a2dfb82f63	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.109282
@@ -2525,7 +2266,6 @@ d470cd6b-27cc-4d2b-abd6-7acc526c6e53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0e7b45a9-35e2-4dd3-ac1f-4802add96bd2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.194282
 0e7bf1ca-b9a5-4e70-8fa0-9bfaf2b52e9c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.200198
 0e819fa9-4faf-40b5-82df-87a4986acaef	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.206798
-0e84a1dc-30d5-4539-b7bf-12ef5193393d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.212268
 0e84cc5e-6b6e-4917-a77f-5b90b48f5e48	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.217041
 0e8778ab-1a12-434d-8c9f-da248f7b884e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.222541
 0e886d1f-878e-4ca1-b61b-d660da47e401	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.227348
@@ -2537,7 +2277,6 @@ d470cd6b-27cc-4d2b-abd6-7acc526c6e53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0e977d01-a5da-4c1e-979c-276b4f8d2bb5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.251614
 0e9e386b-9da1-4c25-9c7a-d8d6329fdc2a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.256503
 0ea0ed48-189e-4e23-8663-eda8b09f97dd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.261026
-0eabbd3d-4eb3-4555-b823-741352cbf179	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.266179
 0ebb75b3-a58d-431c-99b3-fc7b4a964787	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.276001
 0ebbff49-add6-4676-b94a-2411ea328b98	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.280783
 0ebc3116-0130-4efa-bf76-fc43cd7b1561	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.286217
@@ -2547,17 +2286,11 @@ d470cd6b-27cc-4d2b-abd6-7acc526c6e53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0ecbe4d1-c7a0-451b-b59f-e12a4d86507b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.305018
 0ed2eb44-4a04-4f31-8bd2-6ecb3cf827cb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.310616
 0ed7c8a3-6643-4c72-821e-794b975397fa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.316245
-0edc4fe1-be0f-4103-a54c-9d3ccd098f90	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.321463
 0edcfe0b-1013-4194-b6b9-f345dcdb76c1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.327157
 0ee0837d-2e31-4e89-85c8-33a6d5cfac83	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.332022
 0ee748ee-9eae-4e3c-8515-355990eaca0e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.335708
 0ef14fbe-a1e7-493b-9960-8514e59587f0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.339958
-0efa06ff-b6fb-4d01-b197-7bc91a5d5208	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.343691
 0f0507f6-6246-416e-8d27-8ebcfd7abfeb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.348278
-0f0f4620-b76c-44cc-87aa-cac57088f67d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.353182
-0f15c670-fece-4ffa-b6fd-441b9c89890d	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:44.997399
-0f33eb9d-244c-407d-a300-781230b72efc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.380937
-0f36c721-bb55-4a8e-ad09-75a7e1ff4b0b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.385903
 0f3b4ffa-5e89-4546-82f6-c3ebbd27ac2b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.391261
 0f3ecac7-5f0b-411c-acae-a759c3082608	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.396602
 0f47daf9-9276-4701-b0ff-495e1a27872d	1	\N	1	TrongKho	\N	\N	2026-08-25 11:57:45.01412
@@ -2570,18 +2303,15 @@ d470cd6b-27cc-4d2b-abd6-7acc526c6e53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 0f93d720-be48-4891-a8ca-44a61ecccc92	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.436896
 0f9468a5-177f-423b-99ff-f0a087861248	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.442097
 0fa8e584-d046-4327-a122-32b02c89e0ef	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.447741
-0fa9df58-ee0c-4809-8feb-6eab50626451	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.451948
 0fab844d-ae6c-4d4f-93d4-0eac12b3bcb6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.456925
 0fc4102e-864f-48b1-b429-062b053b8466	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.462543
 0fd1c350-83ea-4aaa-aec0-b2fdf255046d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.472483
 0fd1f5b3-f9f3-4781-978d-f9c88c4f19c2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.47827
-0fd206be-485f-48d7-afb4-aeddcb1226a8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.486238
 0fde97bb-d063-47dc-a747-1ba29a8c78de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.491593
 0fe1620d-2ba2-45c5-bf52-a21ee8bc2d56	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.495856
 0fe37add-996f-454c-9591-71f44011f505	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.50023
 0fea4167-765c-473e-8768-0e85b27fa532	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.506856
 0fecdba6-93eb-4111-8463-19b0d940a505	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.511006
-0fee019c-c688-4652-8fe7-9d77e8317a96	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.514889
 0ff22971-5bb0-48de-afcb-6675ece55e20	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.518843
 10076777-ed96-4931-81ce-3999d045806d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.52318
 100be273-0205-49e9-a795-bac52ae8ebd6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.527827
@@ -2589,13 +2319,11 @@ d470cd6b-27cc-4d2b-abd6-7acc526c6e53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 1011eab3-e3b9-466a-b71c-f47489eb1d3f	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:01.535836
 10120a6b-10a5-4867-a172-38cfe873abb3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.540136
 10130f48-dd52-4922-ba93-0b00a278b00b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.54506
-101866a0-c560-4b25-a0fe-1eaf9cc3ff56	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.54898
 10210a36-5dd3-46c0-aa25-b3e7cf76d6d8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.553453
 10489c06-d3dd-4368-b792-4f8eeee24131	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.561773
 1049ea46-c2ac-485d-87af-ae42e7e400e4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.5659
 104c7394-37a6-4dce-ad83-9210ed0835b3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.569885
 1056daa9-1dfc-4b18-b6ec-84334076bf98	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.573957
-106a525d-0ef6-425a-877c-42b9300aa608	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.578612
 106e621b-126d-425f-a87d-a0654c9fa954	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.583209
 1074fedb-0512-44eb-8962-1b9cfe19e01a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.588639
 107523e7-e570-45d4-be93-1e73cb49170b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.593197
@@ -2604,7 +2332,6 @@ d470cd6b-27cc-4d2b-abd6-7acc526c6e53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 10a1f3a1-ec21-4014-bd51-0665b583dc90	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.609743
 d474b5f9-e4db-4bf2-a195-f05d84d948e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.278348
 d47ed0a2-5e99-4fb9-9e1f-52c35689218a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.282935
-d48942b7-d1df-479d-9278-8a1e8b91b5f4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.288688
 11114969-51f3-450d-879e-444e4ca277f5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.69525
 11aadf47-b9f6-43f5-ae1e-7984f45f7275	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.839451
 13bebb78-552a-4116-9b58-48aab8aa04a2	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:45.32538
@@ -2616,7 +2343,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 10cd3721-fa04-4816-9afc-013afdfbec53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.638079
 10cee7f9-3ba4-4b3c-b8a4-bd95df2b6dfe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.643368
 10deca47-e28f-41d7-bceb-5bffe4ce122d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.648227
-10e544c1-caee-467d-b0a3-be7418a0b467	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.652865
 10e6330b-07e8-451e-a386-7e33f8db957e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.656885
 10e83cc8-bb24-4fe5-9f9e-b3d0407e5d08	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.661572
 10f48f0a-77db-451b-977e-bff8b842e083	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.666112
@@ -2634,8 +2360,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 11291df9-5311-43aa-a088-5201e5f5813e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.740619
 112c2ce8-496b-4897-9a56-85d6bbc1850f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.745663
 1132b8cb-942f-492c-9006-5e6a75c880e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.756185
-1143a37f-59ce-47ac-b671-7a9444d00b34	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.762274
-114a68ce-dfe1-4193-9500-28d421190209	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.769515
 114ad49a-c22a-4b31-8198-d8f64114a9be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.776036
 116220c7-b442-4f61-b606-7bc8c298c7c6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.781268
 11633ac9-32f8-46ef-9f69-c779ded28a6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.787004
@@ -2646,7 +2370,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 1187a407-3864-42c0-afdb-7a66f7ebd174	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.818063
 119513d3-b823-4db2-b763-8018763e3bdf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.823622
 1197ea00-3ac1-4380-80f3-d6f32f201aac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.829748
-11a42cd7-9735-4dc4-8f86-cd8d7c3be7e9	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:45.185489
 11ba637f-7372-46a7-a57b-f34b857a855d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:01.844526
 11c56b96-7f13-424c-9e23-3661203bb1b5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.850574
 11c9b8e7-dccf-465b-82cc-0207175109d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.855107
@@ -2656,7 +2379,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 11ff1ab4-cfde-481a-9bee-ce49c43fc766	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.873397
 120cebdf-b30b-4724-b6c0-2376ee8249fd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:01.876746
 120d151b-54ed-436d-aa71-b3d1ff591cf3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.879707
-120da4d2-bba4-4bd6-b978-2fc8097a0e46	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:01.882686
 1233c897-995e-4843-a36f-5569d07576d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.887002
 12400188-c86b-4ffb-ad39-4c311e220bb5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.889943
 124b1529-de99-4775-8c1b-db6cb4111d3f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:01.893101
@@ -2682,7 +2404,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 12cc8689-683f-4f1e-8801-d3e4cfc8e2a4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.016661
 12ccb221-8eb2-4b11-8445-bc4e37271965	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.022386
 12d6819e-9b13-4418-8a4c-3db7a31f53ec	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.027907
-12e10098-078e-4c2c-abda-f56da9beb7b5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.035424
 12e2d5c6-7e90-4116-8c91-3414ad4cbccb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.041526
 12e36ae3-a50b-49e4-853a-6780cc60ed1d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.048126
 12e5550f-af55-4fb1-827a-a5058e8c85cf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.054247
@@ -2707,7 +2428,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 13ae2463-d03d-4da0-945b-efb236b2bdb3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.138927
 13b86c33-b56b-440a-830e-77449e6ca1c8	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:45.319378
 1525fbac-283c-4a62-91f0-0f1fb98d7365	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.379054
-00137ac4-2911-4644-afca-013fb55246b5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.410202
 13b80256-3219-44d6-9f6f-2151a1f2e5ca	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.147094
 13bef99a-f2f3-4da1-a566-1fe2e87977bf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.15979
 13c6e3fb-d05b-4319-8cbb-c4f377304dd5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.16848
@@ -2717,23 +2437,16 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 13f94a11-5886-4732-8782-e936bf761b67	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.18596
 13fa550c-9c6b-4ec0-903b-825f3ea89296	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.189704
 14036455-6b02-44f6-9d8c-aea64d0ae9cc	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.194222
-140d7d72-050b-47b2-b510-9f9f9b7f05bb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.198956
 1419de88-482a-453e-af75-ee522e542cdb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.202934
 1424d4e9-c95c-4787-a3a7-542ede431d07	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.207051
-1426c1ff-b44f-4f1d-943a-f9abc23bf9ab	5	\N	2	DangGiao	\N	\N	2026-08-25 12:01:02.210877
-142a0ca8-9744-4945-8970-33c17c06b55a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.2151
 142b465f-b896-4c47-ad4d-a87d1d1a873a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:02.218799
 142c694f-f12b-440c-9d0b-4fb04ea6a2a9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.223165
 1436a3b3-fb2c-4dbe-9f2f-683c3a19db06	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:02.227204
 1439b41d-e1b6-4475-9337-3c964d96e588	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.233214
 1449db0e-fb65-43cd-865d-8ce50c59221d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.237826
-144cf7cd-648e-4e6f-8bec-888afbb2e428	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.242585
 14608822-3a2e-4197-a8fa-760c74a9a650	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:02.250857
-1462ccc1-f80e-45b8-8832-2e7b4084f657	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.255299
 146cb10b-9824-4b08-a19f-c281bda125a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.259848
 1473eb45-f8f9-459f-bc85-1e22b1464138	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.263735
-147886e8-41a6-463c-adbe-b11a385f4b60	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.268062
-1489c99d-f755-427e-9783-3cb6a1302279	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.273011
 149220f6-2afc-4047-bbfb-bc6cc6282c3e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.276869
 14965bde-44c9-496b-a93c-3fe47ec35c2e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.281072
 149aa611-f717-4f2a-a76f-e28be7da0bc7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.285985
@@ -2746,7 +2459,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 14c0e8bf-c4ac-42e5-99ce-4aeab23af02c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.31734
 14cb6ab1-1781-4181-a3dd-6476271a5cee	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.321721
 14cbf788-6878-4940-b634-cf45875ccfe5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.325959
-14f74bcc-b930-43cd-8200-719519995768	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.334942
 14fd6665-5ac2-48e1-990b-8d42e0e503ba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.339525
 150343db-cde8-4c52-a466-c64c2d8f5752	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.344008
 1504ff19-fad4-4e3c-9ced-bd9b94e907a5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.347975
@@ -2762,7 +2474,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 154ca2ca-d30d-4dfb-a646-80e957f3fb06	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.39695
 154f71d9-c207-495c-a5f8-d76fa7bfad19	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.401346
 155a4bdd-e8ad-4aec-8fb8-83fb4115d983	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.406065
-155a9cd7-b26f-44c4-995e-8f71a7019ef0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.410794
 1562b8df-ae81-4fea-a1aa-0d6c5f0558e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.415123
 156f1ec4-28ea-4b9e-8da9-f53af7d49ef6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.425097
 157002de-c56d-4552-80aa-1b505b5fb3e8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.430213
@@ -2775,7 +2486,6 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 15ab5c54-c6a4-4ffd-b8f7-94f2ed822dd9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.463956
 15e4a295-d374-4d4d-a538-3f754ee41567	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.468182
 15ec2a86-e0d2-4d21-b311-32effe11e653	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.473995
-15f3a3bf-9568-4e6c-8ef1-bc8370a34200	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.478999
 15f3ed4e-1123-4cab-929a-165227067b49	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.484333
 15ffe398-b7eb-4b05-83ec-6591e4762f95	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.48897
 1604760c-314c-45cf-9fdd-5489b71326d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.493063
@@ -2792,23 +2502,16 @@ d49484c4-e06a-4d28-8da9-19f205ebe7e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 163c373d-be1d-4969-9a7b-42bad7d6e8c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.551912
 16466217-0a78-44de-9ce7-0283df913b08	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.555792
 16479021-d6c0-4177-a956-c455259f0c0b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.559662
-16550670-80c6-430d-9519-a87a5562ac1d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.563787
 1656482e-5eec-4f4d-81f5-3245f35f19cb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:02.567894
 166657be-6221-43c1-8c87-1afad78e56f6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.572471
 166b12b0-42b2-40bd-95a8-9506590018bc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.579284
 1672dc01-0530-4cb1-b0f3-a644618fb2e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.583836
 1677600d-3ed5-4989-9d96-81c4a694889f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.588
-16795f48-fe4d-4947-a3cd-ab9bba8ead0d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.591827
 16899af4-a351-40aa-bbd6-eac3b277d714	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.595787
-1693dfc6-2652-427d-912f-52d591e38e9d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.603884
 169837c0-914a-4d50-9e7d-2c182ea5c925	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:02.610778
-169865f4-f690-4718-9956-e6c4f1628034	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.615107
 16a15d33-9183-4753-8c4a-51f2716684fe	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.619097
 16a8904e-e0d2-4e53-a290-c85b89b3b3de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.622954
-16acba04-9d1c-492c-b5f7-173f2193edde	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.62687
-16b74196-0c9d-41ae-af4c-0cf03c5e586f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.632995
 16c9c666-9706-4fda-84a4-a28036efa385	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.638298
-17fb16b2-c38a-41bd-9269-51c9b6fa7a23	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.870942
 186cbf98-ef53-4cab-8905-6eca01e6b50f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.937177
 19568616-ff94-4e00-94f7-9baf9e3379f3	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:03.071947
 19cabf25-64b7-4d81-b41d-a3dbd9f32a69	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.128905
@@ -2819,11 +2522,9 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 16ea6589-dc83-4c95-b34e-3c877cd9099b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:02.661892
 16fc9e5f-a731-459b-af38-7d0470cbe4a5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.666068
 16fcea9b-d9b0-4a48-a1ff-207f14c720fe	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.671725
-16ffaaa6-d3e9-42a1-bf5f-9d31c5387e0f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.676176
 170ce607-2dde-4690-a303-695fb2de76b2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.682075
 170dc1d4-a71d-4c4a-a950-e16592992029	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.687291
 170ec7db-b732-4eae-b647-98d1c406c323	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.692397
-17274f8a-8ab4-45c9-88ba-bf3370d65acc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.698456
 174094b4-e0be-436c-bfd2-055f75aca862	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.703116
 174368c2-d03a-40d0-aa59-d589f47abcab	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:02.707281
 1745e05c-5992-4b86-a1ae-36dd460bce98	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:02.712546
@@ -2853,14 +2554,12 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 180a5b51-1d3e-4cd3-8f23-f82b726f230f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.881362
 18166d88-713f-48fd-98d4-8e5c1773e17b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.886894
 1831c96c-58ed-49e9-8616-9ff8a3ce81dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.893168
-183c696a-6235-4ffd-ae96-9c0c393b4636	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.897928
 18431c05-37cc-4f61-ae4d-406d24a6e0cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.902008
 1862196b-d7e1-435c-a011-b3ec6474a485	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.907202
 1864d832-5185-4ce6-a635-6a4eb0946667	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.911314
 186794f7-eaca-4e00-8e18-c8d82efdf207	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.916309
 1869439e-acad-451f-a8ed-b714281d3346	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.920772
 186aa05e-a359-4d1b-9717-7453088c148a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.925539
-186c86a6-d4fb-4b26-9f42-013d9dd6855b	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:45.636323
 187388ce-3613-4715-b625-4bd575b94661	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.941677
 1873f713-351e-49a5-bff4-6941f1df652c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.947404
 18779cae-f4c4-4b70-9903-bfbb405c387d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.952975
@@ -2870,8 +2569,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 189c61a0-1aa0-4362-91ba-2f1d8cc474c0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:02.978394
 189cba42-4fe9-4d19-80de-4de8734ec5c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.982945
 18a28eba-17d2-4699-ae07-19343b051857	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.987182
-18afbf48-6e15-4782-b149-557d90586dd3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.990996
-18b21ced-07f4-471d-b0e0-02289baae09e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:02.995044
 18b8f33d-faea-4b44-b44f-b57874e7f9c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.998805
 18bee624-7ce8-4619-82fa-c822b6e7624d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.00286
 18c8058b-c897-4cc6-9aa8-e971fb777ebb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.007005
@@ -2886,7 +2583,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1918d1da-d629-4c0e-a91c-804f6ef3388c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.049209
 19211381-fab2-40ca-9823-51324ffd7ed1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.053347
 192a0c93-6a1b-4d4a-b25a-98f609e4c755	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.062576
-19547462-53ed-4f19-a0cd-b1f291144de9	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:45.699998
 19576ae7-161e-44d6-af9a-3efbfd2db0ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.075818
 1962444e-b0f3-468f-958d-33b75d845cc5	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:03.080054
 196372eb-5bf8-4be8-b54a-071a86bf8c87	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.083866
@@ -2896,9 +2592,7 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1992b05c-ca06-4f79-9664-95f63fdbc721	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.100927
 199e33da-f932-419d-8a69-d5dfd18c06be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.106427
 19a198ba-2700-4476-955d-45010914944c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.11126
-19ab4550-2de0-4d35-ad33-0879e45f8d09	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.115066
 19b13d3a-e1fe-4b20-805b-c5865942d978	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.119532
-19c89fd1-f5d3-463c-b739-53156c85a8a0	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:45.731613
 19d498eb-4b0d-4093-9fd9-ebfd67bb0250	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.133429
 19e240c3-f0cc-4f96-8886-14ae3a6da3ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.139485
 19e4f090-d7ea-428d-a1ae-40a5969af311	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.14506
@@ -2911,8 +2605,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1a378f16-fad0-47e0-9af2-a2b31242c4cb	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:45.765072
 1b96e97a-5ee6-40c2-b87c-9783205ebd6f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.420196
 1c06197f-935c-4daf-9375-f87c89c71aa8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.495263
-1cb91bbf-c914-4d25-a8b7-a48c101dd119	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.652867
-1a348ac0-80a8-4abe-919b-019fdeeea7c4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.184296
 1a36ac2c-46a9-44c5-bea8-43302166d12b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.18896
 1a378855-3411-40a7-86ce-39237d3371ed	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:03.192835
 1a444070-4a52-4723-a2aa-bd5989e861c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.204858
@@ -2921,22 +2613,17 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1a5b04b7-8983-40b9-83d8-7fe591ef22e9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.217913
 1a5fb788-9271-4cbf-a921-aeef161a9e40	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:45.783981
 1a6c35a8-937a-4ebd-92f5-47f92c04f786	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.230206
-1a722570-a630-4985-9825-cd0018e84f59	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.2375
 1a79634e-2578-4744-9b53-29373522c8a1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.241962
 1a9444d5-eb75-4995-bf46-368aa4d87adf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.246161
 1a94c9d1-f1eb-47c7-9ddb-5bc583416731	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.250086
 1aa2bf23-19e1-4f7d-a503-63cc9c78c59c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.25396
-1aa429d1-caec-4a34-807b-8bbb8b3793d5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.258117
 1aa995d2-da2d-47d5-90e4-ad75b00c6cbf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.262022
 1aac6f03-4646-4c0b-93a6-b0c299e792ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.265855
 1aace433-04d4-4e7f-b85c-b6188b90d733	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.270117
-1abcea99-aff7-4d20-886a-e7b0bdeb468c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.273953
 1ac987e8-525a-44ec-9136-652b21a97e2b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.277773
 1acf1b6b-5494-4ec3-8103-1822ab881f7f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.282957
 1ad498a2-57b7-41b0-bf35-ce427c1af891	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.292027
-1ad4ead4-f449-41ac-bf04-eeb816ecd0f5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.295876
 1ad6472c-dc0d-484f-9f9f-9e5d0b7f3477	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.299972
-1ad8467c-fae2-4a93-a8cd-4c88f471e00c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.303895
 1adb0763-db70-45dd-aab2-b94ca9386937	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.307674
 1ae97f98-9ae3-4512-a1f8-56e53cec52b4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.311671
 1aeaf6b6-b040-468b-94e9-0b757246c758	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.315857
@@ -2946,7 +2633,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1b08aee1-5739-4d94-ae13-7ae3083eeb3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.336628
 1b146338-0d59-4b39-ab22-dd4337572a84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.340795
 1b2ec229-b154-4b92-8f49-502a17c83e39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.345049
-1b2fafd6-b7ee-4e07-92d8-841671269b79	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.349968
 1b33fe2c-ec87-4653-b6e3-2ae32ced0411	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.365598
 1b402cb5-7472-411a-bed4-77fd61842777	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.369938
 1b4081cd-d502-4e5e-8fd2-a4e1223d8c10	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.37377
@@ -2958,22 +2644,17 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1b7d9380-5391-4466-b42a-00b3a0ebd1c9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.401961
 1b7e5fb6-d96e-4115-b92e-5b7afa35b9bf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.4066
 1b7f0845-584e-4d3d-9183-048f2a010830	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.411088
-1b8a0bdf-32ef-42a5-9c19-f5858b5b6164	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:45.884769
 1ba1ed6c-3757-4b06-9bc9-658a1ce3c80a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.423789
 1bb48cb8-85fe-4b04-b2d2-68bf3c2ea5d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.427679
 1bb48d33-bd6e-4f72-83f6-761b485aeff7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.431833
-1bb4e99b-47f8-4d82-8ff0-8a055b4fd14d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.436853
 1bc12b1e-27a8-4ffa-b13c-dfaf3626cace	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.4408
 1bc25a59-ccbf-441d-88e9-af508231c5c0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.445285
-1bc48d9c-6346-435f-8678-c5f032f1cebe	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.451275
 1bd3666a-8234-4460-a208-ab44ed085e83	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.455372
 1bd7d21a-1c87-4418-aadf-7aec0e66f3e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.460102
 1bde5235-44a3-4050-95b9-803e71a162fe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.463932
-1bde88da-6a40-465a-990b-88999007a0ff	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.468773
 1beb70b9-70e3-4039-b2d4-828add5de17b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.477261
 1bf23fea-89d4-4d15-9733-38dd40c56dc9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.481991
 1c0484f1-588d-440c-a32f-d27183dd4560	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.486203
-1c05a2ea-4155-4461-a286-536f15117527	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:45.925773
 1c0c408d-d75f-4b76-8563-48ee5bd3b59a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.501899
 1c10bce4-8353-4d0b-8e78-d1666a734e69	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.515403
 1c147ecc-fa7b-46e4-8392-90259a53ca30	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.520249
@@ -2982,12 +2663,10 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1c204c11-5d8c-4949-a2aa-671b7c48a5fa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.534591
 1c2a6515-d836-4502-8687-41f87bcec11b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.539204
 1c2cee0c-e0f7-44b5-9a0d-20991e5191f0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.544179
-1c2cf36b-cce0-4994-9c22-97ad8ee699e8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.548238
 1c2e5718-9e83-4db1-9ce2-86a2b9e846aa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.553196
 1c3abf7f-daec-4bfd-bc2b-423a940d3110	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.558203
 1c3cff20-f9b4-403a-a73c-4db2596c1c80	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.563295
 1c408b21-b0fd-48b0-ac30-e99ac7c3cc03	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.56801
-1c4866a6-2086-4379-919e-28ee14b65644	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.577231
 1c50bbe6-f505-41b9-9d96-19fc0658a6dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.581208
 1c5337ec-7ea0-452c-96d9-822facbddf0a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.587359
 1c554203-2d31-4b86-8860-39674db56e39	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.593543
@@ -2995,21 +2674,16 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1c60c686-7d90-4aeb-b719-b3a1f62922ef	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.604198
 1c6d2115-1526-4af8-9c3a-9e1df8a0ca6e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.609846
 1c6ece8d-d146-4f3b-9f9c-b703bf9f0805	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.615591
-1c7dddd8-1df6-4f3b-8aec-167b77960f6e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.620116
-1c8452b4-ab97-45fd-944e-16b1a305f5be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.624496
 1c8d2ba1-816f-41e9-ae0c-4c5d795dd990	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.629057
 1c9d311c-fbc6-41fd-8673-68c7ea9b6fba	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.632844
 1c9e319e-e6c2-4cc6-973b-08fccae7c159	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.636798
 1ca6d761-9367-4d56-8d94-d41ae34f2679	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.64088
 1cb2be73-c862-4abc-88b2-64538c899336	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.644974
-1cb4b78a-fd9e-4b33-9ed7-709a20acbadf	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:45.989434
-1cbb672c-601c-4a91-bc57-c473a36c72de	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.656671
 1cd28ec3-8691-46c8-85be-0c6e3d369b77	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.660707
 1cdf2c4e-1966-4448-853b-ac90fbcdc4c6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.670209
 1cdf9a81-3c24-4989-b88c-f8d67da28e30	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.675178
 1cf9442c-b5e3-4fea-bc50-c2cd06607641	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.679029
 1d0ee3c0-c631-4153-82c6-ebe7aff8c421	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.682852
-1d138b9d-47c0-4cb9-9a5a-9f6f8e3e54cb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.686948
 1d158138-1c1a-44e7-8b85-dde3227302b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.690787
 201946bc-897e-42e7-a1d4-302f4f60959e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.297798
 1d18f2fb-7426-4b4f-904b-604c61f5485e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.694692
@@ -3021,7 +2695,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1d57ebf2-e601-4938-8b1a-a00a1e046854	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.722747
 1d5cd531-36c7-421c-ab56-64dc11ed8e01	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.727603
 1d5f5616-fa4b-4442-9f25-a3ee6c4ccdd1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.732001
-1d6a6b45-40e6-4cd0-b944-39be113d7c2b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.735885
 1d6e7976-e1f4-4371-aff9-56d155c922ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.739652
 1d772c11-c2fa-4ef2-80a1-b9530fca2222	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.744183
 1d837608-ffc9-41d6-adeb-baf996557730	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.749151
@@ -3039,7 +2712,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1dc14b9b-f3b7-43a2-9f5c-6ddc488bbb82	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.803747
 1dc6197b-7374-48b4-a605-ae378d095b79	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.808562
 1dcd6e13-0d09-4a1c-afb3-a54e445ecfdd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.813176
-1dd0303d-882f-44fe-b385-515cefdf1143	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.816847
 1dd07ce5-e377-486d-b4b3-e8fcef1eaa0b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.822764
 1dd17f0d-c069-4daf-a190-e86bf1864104	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:03.834042
 1dd30b13-0c43-4ceb-84e4-d9f4ba40044e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.846097
@@ -3049,7 +2721,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1e11a9db-7178-4bdb-9cf0-9815a6728876	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.882622
 1e16dba1-c6ad-4a12-9821-bcba1affb082	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.888949
 1e19616a-08a7-4220-9247-93045fe5cc57	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.894521
-1e2069dc-a00b-4f51-9962-401581b8e0b6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:03.900464
 1e3a7900-7ad5-4a14-a2cd-b8ff3a42ccec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.911344
 1e453959-dbae-4fa3-8c3c-80e6f2c4ccf4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.916779
 1e4a11bb-0094-4a28-8197-417701bdcf29	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:03.922378
@@ -3078,7 +2749,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1ed91d1c-00af-4a21-ae99-15be018baa83	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.052257
 1edbafca-fed5-4af9-8ac0-91622a9d421b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.057344
 1ee9a6d0-c6fc-42e0-a4ba-73cd6a95d0a6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.062451
-1ee9cc87-ef28-4b50-99c4-49a2b9fb3085	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.072564
 1eea8518-de75-4365-b401-90ee9199497e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.077238
 1eedde4d-34b1-4176-ad77-45a843803c66	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.082448
 1efc3c94-f77d-4784-b1aa-f1ae2df473d8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.088727
@@ -3086,11 +2756,9 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 1f0c7b4a-a471-48f8-b1f5-758c7c5e6db1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.098427
 1f179812-1ab9-4424-813d-50350b2a3a6e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.111025
 1f238d45-7d3b-4237-9821-d3b465b1a6b3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.115389
-1f23c7e0-2f59-4c7b-9ecc-4558c8cb3bea	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.120141
 1f3b90fd-531b-4ee0-9696-ddf6ff0f5e32	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.128097
 1f3eb449-bf23-416a-820d-828e2d486b5d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.132109
 1f409dca-2fad-4171-8416-8c338ebe9eb3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.181185
-1f446e3c-4293-4349-818e-9a7c4b0bd8f3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.186365
 1f4f8cd7-9cd0-47c8-bd43-90e0fc191011	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.195062
 1f51a0e0-4ce0-40eb-8da7-767afd0274b6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.200962
 1f639412-1fe7-49be-980c-031c1b5a4c12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.206752
@@ -3115,7 +2783,6 @@ d49dafcf-66b0-432e-bf8a-d2117c474058	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 20b2bc1b-9260-4458-ac18-8aa3bcaf4bce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.381909
 2116371e-ec84-404c-b937-6a73e7bd6130	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.455126
 21d923cd-a31f-409e-9374-02829cddf3bf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.584192
-22232e52-7446-4bb2-af67-e664be2ba681	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:46.377308
 2226ed0e-fc31-4a9d-932f-0a6758bbe3d5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.650442
 d4a70b18-5abd-42d5-9f38-32e1fff7f836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.311303
 202f0e41-7117-4362-a8ba-6872ecc38e80	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.306497
@@ -3124,9 +2791,7 @@ d4a70b18-5abd-42d5-9f38-32e1fff7f836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 204ae24c-53c5-4a7b-bae9-c643c7b62c91	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.320611
 204f0739-d461-4131-a981-9da91200b16a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.328255
 204f502b-094c-405b-aa95-6fcf824d08ad	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.333348
-2050e0a9-ccff-4032-bcd6-92176ec46e66	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.339618
 205ddbb3-66c0-4a32-ac95-f27544e926be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.344051
-205e4af0-bc6e-42e4-bae1-239c15ce4193	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.348117
 206047f9-5b2e-42d5-a350-f0296556f86d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.352514
 20653a64-c0d5-42dc-9d18-dbce0d394391	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.357095
 20678391-9721-4aac-a0f7-f9a78b25904a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.360846
@@ -3140,15 +2805,12 @@ d4a70b18-5abd-42d5-9f38-32e1fff7f836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 20c0a36d-7e5b-4285-87d8-38f39696e07c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.399225
 20c1799c-c52c-4037-b540-22dcf83e933c	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:04.402928
 20d8d023-c212-4da8-b209-95cc238c48a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.406938
-20e69737-e61b-4cbf-899c-674f37b6fba4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.411407
 20f9fd66-7b67-4c49-94b9-cf0777915160	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.420946
 2101ffe6-aee7-4c73-858f-f5710a76c35c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.42479
 21021598-cc6b-4c73-888e-90a76ea70adb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.429049
 2103fab9-3c84-4082-9154-e4fcda6501ec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.43372
 210ed786-7695-47b0-8454-fd315a99ca33	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.438007
-210f2aa6-08b4-45c7-a592-5db2e10004dc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.442034
 2110f52e-2ad1-4ada-ab4e-20b6b79e5dba	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.44596
-211578fa-6f48-4105-97ba-2a00a94b6afd	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:46.285401
 211c4cd3-f207-44b0-8b27-c4dbec954365	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.459355
 2120e0ae-3521-483c-b391-f225a5f1d492	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.463811
 2141ebd8-6a43-414f-ab11-3c1f37640084	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.471568
@@ -3156,14 +2818,12 @@ d4a70b18-5abd-42d5-9f38-32e1fff7f836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 21505c96-ce98-47df-8c89-aa60d12a232c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.481569
 21622fc8-84d1-4ad8-9e1a-92d63aa1e9b9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.486354
 21659ac9-9266-4282-9dd4-4a4cc98addd5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.489938
-2169799d-b382-4d8f-bbd1-63ed20dbe940	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.494051
 216d8319-26d3-4530-a3a6-d92325b61090	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.497964
 21700c5b-d3bd-45a9-817f-efc90b4bded6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.505847
 21785907-8ac8-4e8d-8121-a7cac5fd8919	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.510246
 217e85dc-d7a6-4d4b-a9d5-2f73487af434	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.51444
 2180ffb9-f46e-469f-b3ca-ebc08bd025e0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.519163
 21845494-eea5-4131-bc3a-5168294daec2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.523045
-218783e7-5242-4f91-81c3-4ff493343c3d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.527206
 2198d538-de71-4092-819a-2696aa2dca64	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.531131
 21a0abe4-5df3-47da-85fa-7f964eef8907	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.534971
 21a4c683-210d-424d-a31f-a5432b391317	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.539072
@@ -3175,8 +2835,6 @@ d4a70b18-5abd-42d5-9f38-32e1fff7f836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 21c90b8f-3ab4-43f9-9fed-3eee0c89cb81	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.564057
 21ca65fd-1959-4310-b2e3-66387dc151ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.567878
 21cef92e-4fd0-44c6-ad8d-b1116c89c0b7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.572005
-21d62554-c927-4a15-96b0-44ae6a21cebb	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:46.34285
-21dd0b51-468f-4ba9-acaf-a109eb757440	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.588017
 21e0156b-bb96-44fc-a0d3-7bd6914d87ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.592546
 21e86823-5340-434d-bdc0-e39a67d2eaa1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.597229
 21ebde29-4720-47c6-b26c-4ced7e051a6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.603035
@@ -3184,7 +2842,6 @@ d4a70b18-5abd-42d5-9f38-32e1fff7f836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 21f3bdc5-e449-4a1b-a2f9-3eff319626c6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.610939
 220c9f59-d459-4563-8b49-08cf63070fa0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.615142
 220d1dcd-61e1-47a9-811a-cab750478a4f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.619461
-22112663-eea4-4d1b-932a-5fecbf924364	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.625305
 2214608e-2f16-4d97-ae60-e38f5ac344ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.629163
 221e3f69-9195-4044-a801-4010188c16c7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.634017
 22222222-2222-2222-2222-222222222222	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:46.370601
@@ -3196,24 +2853,20 @@ d4a70b18-5abd-42d5-9f38-32e1fff7f836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 2253b5a2-ec7f-46f9-b2c0-87be1be186fc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.682453
 225b773c-ea6f-4c61-8462-0f14d9ef4002	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.693083
 225d094b-e71b-4c37-b64c-ca3fd6189f55	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.697958
-225d118e-1c57-42f2-9b06-8a36361d3c30	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.70232
 2265ff38-b270-432b-a73b-9e9a838b7044	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.707417
 2269efea-425b-4627-8450-b241eef46fc5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.712765
 22719416-430c-4497-8ee8-630e2c71872b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.717604
 22782eaa-bc9d-496f-94e4-ded9126a79a3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.723447
 2279e73b-b423-4df4-aa24-abc4d200ba35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.729427
-227b7ca3-b76d-4e03-ab01-f0570c1ff237	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.734335
 227d23bf-d0d1-4d7a-a744-be0c242ae4b8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.739272
 227f6e00-13ff-483d-a6e3-52b4b7b12e7d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.743079
 228d221d-fa93-47ff-afa4-47963a4be4dc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.7479
 2296339e-822b-4398-a98d-7be9da131526	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.752185
 2299832b-212c-44ad-a23b-a5938426c169	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:04.756423
 229b2d33-c3a2-463c-89ae-587eee6a88ed	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.761438
-22d3ce3e-44d4-4a7f-934a-15e2f4fc739f	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:46.439436
 d4aaffaa-8f0e-42d2-8afe-b4b4c1248fa5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.316306
 d4b0b321-93f7-42b1-8fcb-1e50309b8fe2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.321589
 d4b90ec0-dbd6-4663-ba7f-26e0086b90d6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.331025
-2329eac9-e636-43ee-9d88-dfe3591e4e4a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.8872
 237324fb-2529-4864-ab94-ce4e3710fa2a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.934304
 26131461-3a47-4c86-a7c5-1ed656dbac35	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:46.67917
 d4ba3841-e055-49c9-b0d8-c8c712efaac6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.336822
@@ -3229,7 +2882,6 @@ d4ba3841-e055-49c9-b0d8-c8c712efaac6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 22e35041-5476-472b-9925-e9e1fe82cf5f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.822184
 22e9ac94-c7c7-47c3-882e-4094f11aed6c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.827024
 22f4da9b-9e16-4bb4-8e0a-b7493613b857	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.832464
-22f773f6-127e-4701-aeaf-3b882d9f6a57	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.843298
 22f92754-4d3e-42aa-a080-cf426bd1b6a8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.848224
 22f9afff-9705-494c-bc77-51c380eff218	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.853426
 22fd6e9a-0739-46af-8774-8af16edcf520	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:04.858648
@@ -3237,11 +2889,8 @@ d4ba3841-e055-49c9-b0d8-c8c712efaac6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 230d5b33-19b0-4687-8906-3cc19fc807ff	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.869424
 23253bf8-4171-4bea-85bd-69c8f24f0269	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.875049
 23275c4f-6bff-4424-ac5b-8cface89e05a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.879178
-2328296e-92eb-440c-8aa6-595209577ba3	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:46.471352
 232ccdac-d84f-4462-82b7-f61565902783	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.89241
 232d4e65-f97e-4409-84b9-1afd2679f807	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.897429
-23415e62-521c-475a-88f0-f06c0734c8e4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.902373
-2346ce77-d83b-4a87-99d6-c3887cb1f0b0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:04.908697
 235bc994-9baf-42f0-bc06-5ff8feaadc53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.913159
 235ca1ba-fff8-4b65-aebb-daaefb8e1abe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.918565
 23627adf-48ca-4702-bd2f-09d5e0f46718	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:04.924082
@@ -3259,14 +2908,11 @@ d4ba3841-e055-49c9-b0d8-c8c712efaac6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 23cc3da5-6971-4295-b053-a3b436475a82	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:04.997358
 23cdc058-a4d8-432f-8249-cf6e600ffce9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.002321
 23d3671c-bef6-4c50-8290-555c450bd63b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.007563
-23db1b59-1b93-4a5a-88c5-8fcdf615ff99	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.012439
 23dec16f-ab43-4f34-9573-a2aae60290f9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.017783
 23e60e79-b6c0-4440-b5c7-38022601c04d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.02262
 23f903e1-ec24-4188-805c-8dc582df48b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.028518
-2402b5e8-1d50-4efb-b9a0-410da020b576	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.033334
 2403984a-52c7-46f8-85e1-ebbd297605f5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.037052
 241ae7f3-7b61-41f5-8e9b-8f421da00fcf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.044947
-241bd1c5-682b-465e-81cf-ab828c83800f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.049112
 24211e5b-302d-4fad-8e04-a5084da88555	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.052912
 242698c0-e93d-4f37-acd6-690b9c3b7717	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.057015
 242ac3b4-444c-458a-9605-e229744b4610	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.061226
@@ -3281,10 +2927,8 @@ d4ba3841-e055-49c9-b0d8-c8c712efaac6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 2462ad51-f3c2-49c9-9b84-bf446f49f915	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.10095
 24639ea3-43a3-4915-96f1-62f6afb7aaf7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.104922
 246f3fdb-47b0-4999-a2de-e353c2aa5ff9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.108964
-2470185a-161b-4c95-842c-ef9f0af044ac	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.113764
 247a7dca-dc38-4372-a4bb-2bcd95b8e687	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.123795
 248ab961-82de-4003-b1f4-deccf0dc750f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.134826
-248f0164-1551-479f-bf3b-52c37f751221	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.13919
 24928c60-b692-44d0-aa64-f633cb24c782	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.143044
 2495fbaf-fdc2-4696-a98e-dcf443944b56	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.147574
 249dc21b-95b4-43fb-ab91-b6ca1c087831	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.152638
@@ -3293,12 +2937,9 @@ d4ba3841-e055-49c9-b0d8-c8c712efaac6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 24b2c8cf-cf3e-42f2-b3bf-7f76c11d6119	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.168351
 24bef6df-134a-4e4c-9357-ad1a60826345	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.17278
 24c32bab-c63c-4ea8-af46-28f10e854351	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.17895
-24d25028-9520-4eca-a526-13a1ac72ebb7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.183496
-24db8b6a-7c26-40ae-85f0-0a80e306756a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.188436
 24ea50c6-6293-4865-bf29-206bc219f411	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.193202
 24f74036-bfec-4027-b9b1-04c643e0bdaa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.197295
 24fdcded-fd04-4cc7-8d8c-0a37575e7fda	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.202462
-2504d47b-694e-4b97-bea4-a54b652fc122	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.207415
 250fec53-1901-439e-9ef8-0b881558c639	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.212452
 25123b1b-6a2e-48ae-8c26-3ee59bff6399	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:05.217146
 2519ab7f-b011-4c1e-a806-75f7fd602f79	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.225612
@@ -3309,25 +2950,20 @@ d4ba3841-e055-49c9-b0d8-c8c712efaac6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 25594c79-1793-45d0-b870-3fe1cb9ad6ec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.251926
 25692eb0-e7df-41c4-8dc2-e3f92ec2b076	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.257476
 2574d9e3-c53d-469f-a054-58715b6afca8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.262674
-25852be7-da94-4fda-9798-8d4ad292aa5d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.267654
 2589bcca-0def-4516-b614-f6e4562e7b0b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.273235
 25a5b182-04ee-42a5-a4fa-aab7b8de2ce0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.278109
 25adfb3f-82d1-4d0a-9e14-893169070424	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.283549
-25c87b4c-521e-4b8e-b006-b53dde8e146c	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:46.652887
 d4bddc5b-0c45-4fda-b1fc-ad59d69888da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.341962
 266631b8-9c72-46ad-b8c1-937adfabf034	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.464379
 284ffc0a-5362-4647-aeec-30676a84adb5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.759304
 2865cee2-a3d4-4591-b526-e36c84641ccd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.7809
-d4c00d07-da05-4a56-82e8-bfaed7627ce0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.352049
 25c1bec3-a97f-499e-a84b-2ab219b5bf16	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.293258
 25c202f2-bf9c-4724-9e7b-77ab44ce27f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.298744
 25c4f78b-6628-4e41-ab23-486ed1ac4aa4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.303581
 25c97bfa-d886-472c-ba83-ee1be2c801bb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.317332
 25c9e7e7-1579-4ed8-9748-a494ecb4e454	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.322718
 25d9a825-c78e-44a3-a68c-5cb8c6e257dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.328137
-25f2c797-c29a-4fed-b2dc-a0a4bd070c19	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.339983
 25facb81-3244-4981-8d81-9d9ee5fca06c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.34484
-25fb2da5-b511-4e7a-b0a2-e4bcb10edefd	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.350485
 25fde003-810c-489f-bb7f-db310d129439	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.355452
 25fe8af7-89eb-4c72-a96e-1c79d27eecca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.361432
 2610dc4a-2519-4768-b18e-845c6ffd3ea4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.366715
@@ -3343,10 +2979,8 @@ d4c00d07-da05-4a56-82e8-bfaed7627ce0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.352
 263b53d8-5ee0-4599-9d21-1d97758f9162	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.427192
 264e2c1e-6e09-4347-96b7-2bbe62eca49d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.432866
 2650073b-7f8d-4e62-a9d9-5d778546fcaa	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.43858
-265834c0-d4e2-4347-a4eb-fc3388e7563e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.443939
 26601e82-c85a-47b5-908c-8c6852fb39be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.453308
 26605d43-e30d-4f06-818f-232955223e52	1	\N	1	TrongKho	\N	\N	2026-08-25 11:57:46.714459
-2668299a-2bcf-484b-9244-04858ceb1a50	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.46961
 266c64db-9e18-415d-91ef-cb71aa14a0fb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.47557
 266ef437-13d7-4877-b5e5-894dd8924820	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.482013
 267ebf5a-9f7c-452b-a742-1650c2cc3e8d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.488611
@@ -3361,7 +2995,6 @@ d4c00d07-da05-4a56-82e8-bfaed7627ce0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.352
 26a5aa45-ece1-4cda-976e-fdd737fa5df2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.533101
 26adf3b9-2b4e-4a72-8fb9-de3ec8e9fdae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.537002
 26b9977a-25f0-429d-a176-352b298a5c2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.541239
-26b9a532-ae97-4e14-be63-8aa2302544ba	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.545102
 26bd9cea-3a47-4b0c-82c7-de240da55277	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.554196
 26ca2f90-c758-48b1-b7cd-e707bba14e94	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.557984
 26dc7b4d-2617-45d4-81f9-1e0a39229dde	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.562582
@@ -3388,8 +3021,6 @@ d4c00d07-da05-4a56-82e8-bfaed7627ce0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.352
 27b514d8-6073-4de5-b1da-7f9bc10c40de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.666331
 27c4c55c-f2a9-4be1-992e-0461037467c4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.670117
 27cba5f8-0077-4358-80e7-04c4de787462	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.676363
-27cf315c-aa1f-4358-b023-699a5860ea64	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.68135
-27d311c6-aad8-4b0d-80e7-07bd9da4caf0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.687788
 27e5e8ab-330d-4ea1-aeab-56a32bfd52ab	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.692354
 27f5affd-2ea2-476d-8c76-bccc5a304319	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.696626
 2807e16b-a7e3-406e-a181-0ae6bdc26421	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.702771
@@ -3397,15 +3028,11 @@ d4c00d07-da05-4a56-82e8-bfaed7627ce0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.352
 2827f897-ab2b-408c-9146-82c6addf9d4f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.713744
 2828f48d-6bee-4828-9743-f608c9d38cc6	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:05.720137
 2829d603-1d17-4a49-875d-d1df18aaf23d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.726411
-2830b54b-f0a9-4308-83c0-08fd8d3bbf65	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.73157
 2848966a-58e1-4ca1-abac-45f568f3700c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.742907
 284b8809-bebe-4b4d-96a4-fe3792ecdbe5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.747902
-284f1b0e-47f5-4644-8359-848a0cbf5ff3	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:46.833552
 2853c355-05d1-430c-859f-c5ea8ac1f222	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.765955
 28649fa3-544d-4b28-bb38-8c499acd2977	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.771976
-28651870-3a64-4825-a374-bbedf3a32f11	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:46.85007
 287951ec-06fb-4f92-82ed-b8d3d9776211	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.786558
-28843eb5-5120-46b8-adc6-76089a5cd43b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.79264
 28955af6-02f7-4fa4-954d-d2c1d87c417d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.797483
 289d30db-5bbf-400a-91a3-eccd66732136	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.803019
 28ae9c56-51b9-45fb-bce5-51f9b49c9f20	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.8074
@@ -3419,7 +3046,6 @@ d4c63127-31ad-42cc-b5a7-bf72d9735333	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 29ef4981-465a-46f7-ae3a-28bd478191b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.097411
 2b1cbee4-590d-49e0-8c9c-ac94181d3c47	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.328586
 2b7d3737-8fd7-4ed0-95f8-d3b3be6781ca	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:47.104235
-d4c6b633-4a97-4918-b2e8-59198fd811f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.362296
 28e9c1b2-aaa1-4b10-9273-5a1f6c710685	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.846581
 28ea0fee-dc59-4bac-a012-2903398aeb5f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.851741
 28efa464-1fa0-470b-aef2-d0eb0f41f0a7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:05.856253
@@ -3427,7 +3053,6 @@ d4c6b633-4a97-4918-b2e8-59198fd811f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.362
 28fe8507-e716-4abf-865e-a34ba5dc73b5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.87161
 29021751-41e7-4e27-8685-492c4afdb20f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.877912
 29148ee7-e3ba-4042-b5ea-bf1eb0d0df61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.883967
-291b6634-0817-4215-9204-bad27ee576db	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:05.888507
 291bd814-0b76-49d1-8dce-ae43b4f7715a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.893918
 29205446-cec9-4a29-b964-ab757b2d1d4f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:05.902465
 2921dd04-7aa0-4e79-8b73-9128e72cbb71	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:05.907561
@@ -3452,8 +3077,6 @@ d4c6b633-4a97-4918-b2e8-59198fd811f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.362
 299d83f8-cae7-4f89-b1a1-348f650881c7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.01664
 29af20f2-9dee-413c-a9ff-87e2e8d0c3f8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.021845
 29b26934-0917-465c-98d6-4aaedfe8b3a4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.026731
-29b381f1-03b7-4c88-a6b7-17f31f43aa7d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.031777
-29b4afe2-2229-43db-9cbc-93b4ab9cb4ab	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.037447
 29b95afd-6f73-4ece-8365-fdf7fc2e6bbd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.042379
 29c37476-8c28-4e02-93a2-cb84941cc44a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.047406
 29c8ea91-b8ce-469a-a783-add6c6a75e7c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.052284
@@ -3463,20 +3086,17 @@ d4c6b633-4a97-4918-b2e8-59198fd811f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.362
 29e194cc-60f3-43a6-b80a-1dae3d34873f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.075472
 29e33d96-4951-498f-b0aa-5089c1dc5a2b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.080394
 29e56dc0-633f-4e3a-b07e-0891e2f59738	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.087229
-29eccb3d-bac2-4fbc-b548-7d5b0b0f5878	3	\N	15	DangGiao	\N	\N	2026-08-25 11:57:46.968456
 29efc0c0-bebc-4d22-9125-538c83286475	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.100999
 29f377e1-edc4-494a-9676-bcfbc8febc62	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.105171
 29f3ee7e-de1c-440c-86f5-59c55c15557b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.109294
 29f8514d-3c9c-4df2-9013-a4cf300fcb05	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.113089
 29fe283b-7a7c-4131-9b05-44c0a3f94684	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.116951
 2a04106b-af0c-4743-8b64-3b37e755578e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.121043
-2a05e75b-c750-420b-a383-edc01fe19535	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.125475
 2a085ac6-4373-4d41-9a25-1ab03993ed87	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.131984
 2a0889ca-a14f-4b82-b011-becd94b3544d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.136305
 2a0ae67f-452c-49ae-98c8-35542fd42115	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.140336
 2a23a9ed-6c31-4cb7-b076-41f3b4e7133f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.147255
 2a261ee9-05aa-4a05-a836-13480dead930	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.152281
-2a2ed208-70d8-4f3f-9ddd-696f92a4e774	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.156262
 2a31fdc5-2ec6-4563-8b48-c82dd9943a77	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.160501
 2a415ad7-1c7b-4678-baf2-a4bbf2f013ad	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.170638
 2a50a100-c566-44ba-a89f-e036b1228e8a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.175761
@@ -3496,8 +3116,6 @@ d4c6b633-4a97-4918-b2e8-59198fd811f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.362
 2ab63bb0-4bf5-46f2-890b-89926f1f5fcc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.242481
 2ab84252-f5c2-4ccc-8632-9a87dc24f227	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.247668
 2abacfe0-7054-4a1f-ab2e-fb8297f5f68a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.252642
-2ac0237b-3b49-42c3-b846-ac05e977f3a7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.257648
-2aceaff0-e49a-4c94-aa5c-152e80144da2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.263484
 2ade89da-1cba-486e-81bf-bf2393ea315c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.272507
 2ae3d817-6d07-494f-b58a-a0dca138c700	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.277609
 2af7801b-7a72-4368-b1ce-5d902cf16816	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.282429
@@ -3506,9 +3124,7 @@ d4c6b633-4a97-4918-b2e8-59198fd811f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.362
 2b0260b5-d907-4387-97b3-f6c14da3f577	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.297085
 2b0a5c98-6bc7-4555-a5c9-ebfbba3ec060	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.302613
 2b0e7d2b-8f3b-4b7c-83d1-9e7d7efcb20e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.308015
-2b12f271-f879-4582-a1c5-1705ff8116b5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.312498
 2b13c979-96e4-4e39-a28c-c10f746c67b5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.317279
-2b1719f4-e738-4fce-85fc-43657fc95c41	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:47.055955
 2b218ad6-948a-4ee3-a5f3-e08c388b09da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.3342
 2b2bc1fa-d7f0-4730-86c3-469ee1418614	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.338744
 2b35f25b-ff7b-4842-a0ee-128874681dc5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.345087
@@ -3516,14 +3132,12 @@ d4c6b633-4a97-4918-b2e8-59198fd811f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.362
 2b372b8f-acbc-4893-b9d6-7efeffbe19e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.355701
 2b3b2ee5-5829-4e85-9d0f-b25221b4fad2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.369685
 2b3b4db9-62b9-4868-8bcf-5061f6b184b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.374601
-2b3e8f05-780f-4bec-8072-87a341b218e6	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:47.082233
 2c1ed870-0b67-475c-912f-e7729f2f961c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.552103
 2c5a7c37-f40e-46c7-a898-e2677be4be4a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.594409
 2c5ddaff-c8d1-4021-928d-c8cc7a974600	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.602181
 2c9c6441-eca5-44b8-a384-58749565899d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.646784
 d4c77b16-500b-4ed5-b929-f129b8324136	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.367121
 2b3d6ffb-4de2-444d-94c1-4221c553e02f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.385159
-2b3d8e0d-3b6a-4083-a355-6d8c90653db7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.390817
 2b4c947a-c1ad-4fae-a125-9706f39985f2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.401588
 2b53c3cc-4956-4859-ad01-9126c4adf2f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.406937
 2b69b699-4aa7-4836-b7b9-8d4602744b2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.413695
@@ -3533,23 +3147,17 @@ d4c77b16-500b-4ed5-b929-f129b8324136	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 2b770ee7-0fea-40e6-a1ac-2c07d6e5116a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.434403
 2b77e51c-4b48-4e69-9f0d-665d6deb532f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.43883
 2b818eaa-d7f5-4387-a166-be96b5715ccf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.449972
-2b85f5f2-ca18-411d-a03d-f01ed9dac1e5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.459465
-2ba218f0-5bc1-48e0-a619-2c67a1425147	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.463783
 2bb91895-d642-461e-969b-3cf5caccc836	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.469037
 2bc6cf26-d42e-4889-a28c-2e607323e0b4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.47457
 2bcf4d3f-2844-4d69-8307-8a1cdfd6d195	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.479291
 2bcfaf9e-b67e-492e-8258-948ae30e5772	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.484923
 2bd3a27f-8d28-44ed-b192-47a5d512d516	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.490312
-2bd42b55-039b-4c3e-aa22-3a8e9cf789ab	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.495814
-2bd4803f-1b81-4e31-9080-0cc57ee06e77	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.500537
 2be05891-7387-4aa4-ace0-5fd4d81bb541	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.505502
 2be73b2f-567c-4db2-b8c2-08f837ed100a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.510808
 2be82a50-fc91-461d-8a1e-157eb9ab8c1f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.516721
 2becdb48-5c91-4bb1-9487-14dd41b16ce4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.521381
-2bed7d6f-e236-44df-8626-b5a439bcdb79	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.525315
 2bf7dbbf-8e05-4377-9cfb-25bccda10d6d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.529777
 2c0e0993-9384-404b-a891-fdee22025642	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.535293
-2c13a104-5a3a-475c-9411-4fc6db29644f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.539373
 2c197ce9-8edf-4a6c-9786-326acccb6ee0	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:47.144023
 2c1f2389-e1e0-40f9-b2ea-5dca4bdb1be7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.556198
 2c22f447-3051-47a1-9720-01777ae60cf0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.561634
@@ -3566,32 +3174,26 @@ d4c77b16-500b-4ed5-b929-f129b8324136	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 2c6e2448-7ea8-4066-b901-1ff3cc742830	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.614007
 2c80759b-e4ab-44a2-bbf4-263652ff0640	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.619704
 2c814230-2c92-46cd-af06-d85d8f80a5cc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.624212
-2c917e8c-5934-47a2-9981-811ca9b640cf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.628421
 2c9592c1-4b95-4aff-8c11-cd8b29541f27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.633587
 2c96eda0-b3c3-4c59-8705-ef71979df6ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.63829
 2cb017a5-980e-4a69-969d-1bab65b17bc7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.651354
 2cb4b1ed-1344-482c-b026-f5c73479997a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.655271
 2cb62e14-bdf1-431c-8365-8094d7becb13	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.659789
 2cd43e28-ea4a-4f6d-ab34-66f96e44f9c6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.664265
-2cd56081-f551-46d6-bdf2-15067291682a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.6701
 2cfc3a9d-3c33-43bd-bce1-dd81cf9b7536	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.674518
 2cfd141a-cfa9-439f-99f2-4500a50250e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.680163
 2d07b07e-f322-4800-8a00-92b482eb8321	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.685503
-2d07eea1-fd8a-4e14-ae96-38e0c53fb9b7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.69125
-2d0fcc66-bdfc-464b-9e70-7e1e56c31c99	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.695665
 2d109895-c504-44b9-ab67-eda5db1cc5d6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.701324
 2d1659b7-b910-4ca2-b09b-804b3d5a1bef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.707639
 2d16f848-0e90-451a-8e99-ddb62fe0526c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.712537
 2d1db541-5701-4df8-9445-f34f49a1b43e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.718514
 2d210a5d-ae9f-450b-a3f9-47425ea2a5c5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.724406
 2d2c0982-3b72-47c6-a7ff-65426100317c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.729731
-2d340188-32bf-4bd6-98cc-a4b90792c4af	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.734664
 2d3c7542-0a93-4d4c-8ef7-6d054a45e4b4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.739632
 2d3ef07f-da4b-47c5-8414-4973f2305263	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.747168
 2d47c0be-7b3d-4aea-8847-5556d7b1f8da	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.752484
 2d4e9dde-180d-4fc0-aac5-a634ac7da496	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.757693
 2d5cf37c-bb15-4b96-a10f-99b2c32a2d97	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.763582
-2d5e8b9e-f5e5-417b-b4b0-8c16487695bf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.76975
 2d617881-8a5f-4ccb-a03c-14719f25d57f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.775519
 2d632ac1-d0cd-41a8-a4aa-a2b003006908	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.780217
 2d691e52-31e7-46fc-8e69-a6b51246627d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.784561
@@ -3615,14 +3217,11 @@ d4c77b16-500b-4ed5-b929-f129b8324136	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 2df72cce-23b7-4d86-88aa-19c6a39bfb56	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.884345
 2dfec75f-0117-48c4-9764-238d06ad17f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.889446
 2e10ea0a-f38a-489f-9a8a-2a1a58d644bf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.89363
-2e4c0e98-51bc-44df-b3f9-aa7ed48dce9d	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:47.318141
 d4cf227a-d34e-486b-81ee-b1d3c8ca578f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.373135
 d4d2efa7-72c8-464b-8dfc-03f7d411eb81	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.378612
 d4d3a7b4-0490-483b-9c93-3e8dedf94ecb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.382934
 2f314f7a-4436-4a27-8cc5-78c788dd184b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.104525
-2ff0c9f1-f964-4732-97ab-35ce533443d6	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:47.43101
 2ff21924-4f1a-4d0d-b0bb-f490a7b0cc81	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.218628
-30416e1b-8b1f-47cd-85cb-e3da775401a9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.272424
 30bb4b4c-c83b-4ed4-b748-2418411a2dbc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.369658
 d4d6fc83-ccdd-45b5-934c-185eb206e727	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:37.388315
 2e19172f-7221-470f-8b66-b1ef46288b08	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.903914
@@ -3642,45 +3241,35 @@ d4d6fc83-ccdd-45b5-934c-185eb206e727	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:37.
 2e8d5b08-e669-432e-bdcb-9970163566cc	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.983009
 2e8faca9-c917-4f56-a41f-d71dff1d73d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.98888
 2e990885-7efd-4427-a762-3661718edaa6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.993903
-2e9f7c6f-1a6d-4be4-a0bd-2b20f2c31a65	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:06.998446
 2ea11eb4-ecfb-4010-8c17-8e1b9f3e439b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.003975
 2ebcc56c-4562-44e3-b07c-1ad0bd729de2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.008766
-2ec0f67d-8902-4a20-a05f-35dbc45bf912	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.015341
 2ec69700-5c8f-4971-a3cf-8f34783873f6	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.020936
 2ecb7202-7366-49b0-a9aa-995b9b177e07	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.026355
 2ecbd024-ed0a-411b-8065-e60aa7243a6f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.031723
 2ecc343d-fc34-40c9-8742-b2e482d0bcc3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.037798
-2ecdc25b-d29e-42a5-b585-9a0c5c758eee	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.043046
 2eda09b1-3131-4d1c-a728-a2bbb1cc7b5a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.048763
 2edf3d36-969d-4538-bc4f-8758cfd400b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.05371
 2ef93b7e-6c98-433e-afd0-363f05b8499e	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.063665
 2efe16d2-16b7-41d7-8c06-d255b897525e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.06831
-2f049b30-aed5-4826-9e3c-13adc0afdcf4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.072801
 2f04c966-36af-45b2-a10b-9960dcaf0c8a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.077431
-2f059abb-8c19-4f55-8baa-70f15485c0ac	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.082534
 2f1b4cf9-67de-4342-899c-df4cfa1f1199	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.08726
 2f1b6e29-4f4b-4f9b-83db-2725b0ac58c0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.091482
 2f25848e-eea2-40a1-8737-a6265e7e7618	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.095375
 2f2bc7ad-74c2-4b41-97be-d5df08ebcadc	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:47.381017
 2f38adea-5fbb-4616-bc2c-c1bb3c0a0463	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.108789
 2f470a6a-0895-4780-b373-7040af9fab95	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.11362
-2f53d9d2-72b1-4268-92e6-f34891c74388	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.11827
 2f54e284-64ce-4c40-a993-f3544ae2cf3f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.122369
-2f5764b8-3e99-42c8-ae75-c88a587abaac	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.129058
 2f5b4fb8-1986-46a6-821b-6000d76df964	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.13321
 2f622e65-c9e7-43a5-abb6-5722788c8ce5	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.137182
 2f7b4fa4-8378-42de-bcba-d089384dd6b3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.142254
 2f80782d-9536-464a-aa42-66b18c0b4715	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.148128
 2fb4a46f-9c46-4474-bdfe-589cc15ba4fc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.160996
-2fb4be1e-794e-48f6-8a43-fc2d10911ef2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.165589
-2fbef517-20a5-480b-bfb4-98732ac7d414	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.170347
 2fc15b9c-ca30-4b6b-9a18-bd1cbbbd3a02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.174671
 2fcd0f79-3e86-47a8-a167-8c8a42278356	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.179381
 2fd012bc-011d-4913-a7d0-e5dcb477a86a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.183769
 2fd09cd9-a2b6-4d0d-9910-f56fc858a0d7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.189377
 2fd0ee4e-41ba-43a4-88ee-c3fadd52c671	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.193744
 2fd3a24c-c128-4a4e-8c80-780c06bac13f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.201454
-2fe3b694-4e95-4efd-8e52-4bc26d6c0d89	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:47.426739
 2ff83cae-8b3e-4207-9df2-618aeb802068	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.223792
 300984d3-b717-46ab-b280-a8d56346ade9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.229891
 30150f0f-1c94-46d0-ab7a-7bb03c0a78fb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.235038
@@ -3688,10 +3277,8 @@ d4d6fc83-ccdd-45b5-934c-185eb206e727	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:37.
 30250bdf-b3e8-4f5d-8e7b-0fb201fa4098	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.245734
 3025d3d7-41ca-4420-8002-484557497032	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.250733
 302db99b-66a5-4fdd-8c5c-31d2e0fd22d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.255488
-303cacde-b26d-45ae-ad82-b0bf567d6c84	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:47.44981
 30429015-c3ad-49b8-938b-985e06121d57	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.278013
 3042bfb4-3cab-442b-b63c-65c52b460536	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.283928
-3049c1c2-1276-4cfc-9977-ee2871faa847	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.288899
 306188b8-73f1-401a-a9fe-1d06b6682f41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.29476
 306a7824-1837-4c9b-8fd2-06d9f4d6f7ba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.300388
 308185d0-a8d2-4f74-b2ba-36a848225215	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.305801
@@ -3704,8 +3291,6 @@ d4d6fc83-ccdd-45b5-934c-185eb206e727	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:37.
 30a62a7b-9e1b-417a-ace0-01c357b46252	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.346789
 30ad83a2-3f35-43e4-99e0-bb1b906260f7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.354406
 30b78c27-028a-4185-92fd-5bc6fd946736	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.358828
-30bad61a-2ab8-4c41-bf5e-0959809bb4f3	3	\N	15	DangGiao	\N	\N	2026-08-25 11:57:47.48377
-30bfeda1-81d7-4cac-bf39-d2146329f3e4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.375209
 30c01009-0508-4b8b-b896-644189828f6a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.380542
 30c61a1e-b5b7-442a-87c5-d8f0a9fb8e8d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.390545
 30ddc7ec-0ebf-4ec2-88f4-120793db7da7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.395627
@@ -3715,19 +3300,16 @@ d4d6fc83-ccdd-45b5-934c-185eb206e727	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:37.
 310f205d-fde7-474a-b650-1b0c246b7cf5	1000	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.412143
 311abd4c-256d-43c2-a22a-9965d472a023	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.416309
 311d3a58-8e05-44b3-8cfe-a29d3cf32189	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.420315
-311d4a68-3fef-4381-8acf-05ea7c603fc1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.424676
 31d7ebe2-c6b9-4ba4-9834-c74b08b818e0	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:47.549272
 d4dc7040-8560-4f61-8bb4-588b9f627031	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.392901
 d4e3fcaf-226f-4f1b-b682-c6b0ae053e31	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.397895
 d4f498a4-6333-4ef8-ae88-33060d76a2d6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.403423
 d4f79537-9f37-44b9-86ee-9429462661d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.407884
-32cbc2df-d955-4592-978e-916f367292fb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.693516
 32db8233-c400-4b0d-bab1-3298a7e51241	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.703736
 33215bed-ac2c-4520-87e7-61a4f096e852	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.759072
 3335047c-2793-42b5-b9b4-67fbfc89e990	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.77233
 3120f49a-4121-430e-9630-a85c0802c7bd	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.43581
 3125dccc-f7a3-4388-b376-af877ac89740	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.44055
-312a53a1-9402-456b-8df9-2f362eb124ba	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.445104
 312ee306-0173-45a7-924c-238b1adbab6c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.449713
 313ce641-57dc-4933-9bce-b20a170f8e33	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.455133
 3141edf1-8d09-45eb-afe1-1a1e4cf2360f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.46157
@@ -3742,13 +3324,10 @@ d4f79537-9f37-44b9-86ee-9429462661d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 31889081-ac25-4b61-92af-ed5164e57214	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.512769
 318cb7ee-be5a-4c38-b7ad-c065e9a57be5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.517714
 319444a4-13b8-4770-86fe-9dc770e294ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.522285
-31a8fa88-730d-4027-a354-da5ba210b425	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.526988
-31c505a5-712e-4caf-857b-f33ac5ebd06d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.532056
 31cbe7a9-378f-4bc1-863e-9a67304059a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.538251
 31d9f023-a6bb-4921-b0e8-3f3a4d41ea93	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.549111
 31e97e9e-66ae-4bb3-8247-d82de5473b29	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.554884
 31edfa1a-c15a-49b7-88a6-3f8d026f9980	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.559488
-31f9ae1c-c458-4b2a-bc88-fcfe4de2c466	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.563244
 3213132a-92a0-4cfe-be28-e467701744b9	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:07.572598
 323110c1-a97e-436a-a87d-bc2680aab47a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.577432
 323138cd-a393-4f78-b115-44f658f35ed2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.582343
@@ -3765,16 +3344,12 @@ d4f79537-9f37-44b9-86ee-9429462661d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 327d7bd3-621c-4211-a688-6c5c55861ba4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.634367
 3290a8b3-ef58-4287-be16-dcd07cc33ff2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.638351
 329664d6-a7d3-4844-b4aa-4b028ff87506	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.642114
-3298c95e-59ca-435a-a6ca-4fade9de52f9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.646102
 32a630c8-3cd5-47cf-9d57-b6e67e199aa8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.650123
 32b547ce-4799-4702-bbce-6dabb6edb134	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.658104
 32b78f5b-daec-419d-a554-8a34b2bc298a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.66221
-32b82c2d-a6da-44d8-bea0-0c075e4bb9c9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.666908
 32b8bbd6-32d7-4c47-b6bb-c3c77fcc9529	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.671322
-32bc8d13-52da-4c8e-b9ac-c7583fb97018	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.67513
 32c823ca-1078-44de-a15e-869e5a11e587	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:07.679235
 32c8a261-e4d4-4b4b-b072-b17cc5b36b1e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.683936
-32c9a86e-3c4e-4430-a314-64cecbb8b699	3	\N	15	DangGiao	\N	\N	2026-08-25 11:57:47.607477
 32cd6920-3074-4251-afac-d9211bc5b3f2	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:47.616293
 32dc8545-29d2-42b1-9fe3-3552fa494632	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.708342
 32e11e2d-e21b-4d2e-ad98-b364528ba44c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.712384
@@ -3798,7 +3373,6 @@ d4f79537-9f37-44b9-86ee-9429462661d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 33566d9b-e5e2-4cef-b982-a420b744b7c6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.816761
 335c41c3-d9f6-4df5-8780-b563e37f6672	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.821901
 335df6cb-ee4a-4e7e-9aa7-f222754d4dd4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.827644
-3367f947-6b58-4213-a9fc-e6f9ac16ad1e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.832667
 336ab6b9-8128-4198-bfd5-4784bff3e0c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.837897
 336cb40e-6822-4478-96e9-3f1929b67ee6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.843576
 3380e988-16a6-418f-ad32-5c2f772b1c63	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.848766
@@ -3818,7 +3392,6 @@ d4f79537-9f37-44b9-86ee-9429462661d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 33aada4e-9467-417c-b69f-4e79d4ba7783	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.926252
 33c13bc9-0c53-4a5d-adbf-9a15ea822dda	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.93157
 33ca0e5a-c123-4b7b-b7c7-5acc1a53d1b1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.936564
-33cd3dc2-a74d-4acc-bd8f-9bf4ef23342c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.942065
 d4fbb110-5e66-4624-a980-bae37501d4dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.412802
 d523757b-c80b-4bf4-bf9f-b39bcd665ef3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.416973
 d5266dec-466d-4b5f-8d0e-2728c0c5fb5f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.427085
@@ -3831,7 +3404,6 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 33e849ad-c5a7-463f-9d7b-1af26ee5b46e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.962631
 33f027db-e88f-4b71-a5df-4bd57fd093d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.967961
 33f6b739-dc61-4f28-b106-4d71c53358c7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.9729
-33f76eae-45f6-4d6c-8284-a55af28dc1a7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.978645
 33f7999d-f4dd-46cb-b9ce-0c7f0c2310eb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.983803
 34028e02-f6bb-4540-b693-cc5ce92ca54e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.989602
 3408ab76-ff18-4c58-afa8-1c8b503c0139	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.994309
@@ -3839,32 +3411,25 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 340fb891-2022-4038-806c-bb059e9d8b8e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.002567
 3411b260-09ec-48f4-9484-dd54a55f4040	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.007889
 34141947-4671-49fa-9ace-ee2ef753cec9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.012352
-3426d961-3e37-4c82-9166-c16a95d87352	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.01738
 3440617b-e477-4100-a90a-09e67ca448b0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.028849
 3441ac53-e8a5-4391-bf87-9c1b540d049a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.0341
 3447e9d3-b902-43e7-948c-0239c5da77fb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.038354
 34481536-336b-4dfd-9f70-f9978b71fccf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.042471
 345e4d76-90a1-45b2-9cc9-3467d91e92a8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.04645
 3464d4de-fab4-42eb-9d8d-e0afab53c0fc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.050362
-346d5d75-f319-45ef-aa07-a002df8d05db	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.054227
 348653c9-1747-45df-a594-518cf0feba76	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.058307
 348838b5-782b-46c9-8eeb-ffa64f9c5daf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.062262
 348b6494-05a7-4cd6-b1a6-11b9ed3f4475	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.067237
 34906c1a-24b0-4497-a29b-da58280e6935	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.071369
-349d59f5-320b-481b-a30d-0e2a0c3de93f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.075668
 34a94e7a-db86-4e9d-9907-64e41c5f79be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.08051
 34b24fa0-850c-43c2-89e3-c3f857608f51	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.08419
 34b3549d-a115-442c-a1f9-4e43f0219d64	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.088203
-34c5250a-ae8b-4e74-a96f-7c5515816d48	5	\N	2	DangGiao	\N	\N	2026-08-25 12:01:08.09259
-34df427f-bcde-4c09-900c-d9d64886bd66	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.09616
 34e05ca7-6825-4ac5-99c0-d0914aaaef61	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.100126
 34e3a035-9a95-41b9-a7e5-e7dba64c4f25	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.108251
 34e44c91-0a44-498b-a29c-dcc6a8db2120	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.112316
 34e63d8d-bf97-470a-8e28-8615f52ba25c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.116179
-350d0f24-631b-4006-bfe0-e78ac1bdca56	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.120236
 3518bf4f-ef5b-4f60-a60e-adbb53ab59cb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.124386
 351fe20e-fe31-40f5-97d1-975c4c62c9d0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.128456
-3526e2d4-007d-459a-9a19-acfae44cc293	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:47.793374
 3530f380-321b-4ed8-90d2-c5794e8d7066	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.142141
 35356e2a-e81d-4e98-983e-3cbb6b3518f1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.146791
 353a4d94-53e7-4a58-bc69-dc3d47fc5281	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.151479
@@ -3883,24 +3448,19 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 357cc1a2-ae75-4c42-af7e-ac107499818c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.214851
 3589512e-bf2b-4c0e-b3ea-575936cec022	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.219473
 35899560-103e-477c-860f-d6a71acdd7a9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.223433
-358a0c94-4e24-4260-9695-6b33f2dc114c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.22738
 358d9ee9-96e3-4ccd-b364-ce2af6de2eb2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.231788
 359b600c-899a-4a40-ae9e-089ace660036	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.237819
-35a9f285-6f0c-4af3-9d72-ef909dfeb7ea	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:47.843294
 35dd7b2e-6a4e-4437-87d9-a0d08bd7f95c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.251717
 35e35e50-5808-4e07-a60b-08e4b82637cf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.256379
 35e7d6b5-a4cb-47ec-aba6-68aa67ec6dad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.261219
 35e8695a-12be-42f4-90ca-9bad89b153e5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.265303
-35ea30ae-71cc-42b7-9f8d-0e8e1a95991f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.269913
 35f24ed0-bc8c-41ac-a2a8-d8fdc28e59f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.275837
 35f41e4b-7c25-40de-93a6-dcbec4787b53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.280565
 35fb7db8-335d-41d7-805c-04d0c5f40b24	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.290122
 36003aa2-2899-47d2-bccc-0436d2cfe793	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.295558
 36049834-446b-4d9d-bf7f-da1e8f54e012	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.300149
-3609596d-5bf1-44de-842d-39a6e2257234	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.304593
 361087c1-4ea4-4839-9f99-0bbebc30e310	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:08.309182
 3621126b-ec48-4838-bebe-5fc763f2d2b0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.313539
-3621bdf8-02d2-441f-836e-ca4e80c22eac	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.318765
 36258374-3711-4c8d-83ce-aed9de7612b0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.323689
 362d185b-07cb-40a6-b20f-202b7d511081	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.328722
 363348c4-fdf9-434a-aa93-7b20cd540e33	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.334056
@@ -3911,19 +3471,14 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 365ee1f7-8f00-417e-adb4-9b2a8b99efed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.361523
 366bd71e-6d57-438a-8089-918c9cd981f6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.365831
 366e3b32-df97-4fa5-8cc0-108b48446dea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.371855
-367cf78b-5262-4ff8-be90-73c6fb8b37a5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.377156
-368f2f9b-f630-4628-aa7f-fef64f217a4b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.387563
 36974d5d-12d9-42c8-92c7-bd15dfe5e918	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.39222
 369d78f5-065f-4f0b-9a6a-e6e67bdde708	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.396466
 36a7d470-8313-4a62-a3a2-89736f89e8c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.40106
-36ba113d-d711-4477-a5d7-efa582f95f99	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.405314
-36bb18c0-2113-41d8-ae67-73c6135e4113	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.409955
 36bb8bf3-4f2c-4125-84ab-cc180f66c0e8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.414394
 36c3cea8-93f9-46c3-aa48-7d0dfc16eef8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.419429
 36d2c50c-deb8-49c2-bf49-140199c4a856	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.423787
 36d5939f-a78e-45e0-9d24-8d5bd83f3524	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.428576
 36ea5187-2be5-44b9-a30f-6efc58ae46c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.432527
-373329c5-71ff-41f1-90e6-c57512f4a0f3	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:47.93022
 39ddda86-8fd3-49d6-b1e9-6b0c087486ba	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:08.943644
 3701da61-f0f5-4a7f-8c66-94c3bdf30d8b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.445226
 3713dd4e-24ea-4903-9707-d77b87fa776d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.450894
@@ -3939,12 +3494,10 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 374825a3-4306-4cd6-92f0-79c2e6d69d15	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.513786
 375b0199-3ecb-43f1-b275-1b912491df28	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.51838
 3763786b-acda-4ead-9be2-f0556310f675	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.522608
-376d5bd2-b100-4fbe-a6e1-34606f9df4df	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.526482
 377273fe-f549-48e9-b347-51b3046a08c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.530314
 37893616-03dd-4780-a15d-9aac9dcbd33f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.534791
 379190e7-d42b-4dc5-9912-0bf8110d07e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.543335
 3794e7d4-0846-497b-9c3f-fff986c764a6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.547575
-379d15cd-86c5-41fb-9d7f-e0d1b1012103	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.552384
 379fe939-aabf-49e8-84fc-efcef55ab7a0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.560244
 37a0be60-2d86-4d10-a424-a02c2939776a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.564385
 37a3a343-fb69-4d85-9c83-4e04d26896a2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.568401
@@ -3958,14 +3511,11 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 37d742a7-7bd4-4714-9adc-106cd5fac899	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.612781
 37e8f5db-798d-4102-b175-0c01c4c7eb33	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.617415
 37f4fe1e-e9d9-470f-b14d-00bdcea013da	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.621468
-37f954c1-d0b2-4ab9-aa05-388a8d322523	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.626413
-3807dc8d-6cd1-4f08-9531-67682142242c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.630661
 380c26c1-3278-4d70-9c95-59467b4a7e6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.634606
 380e3488-99a8-435b-be8f-38e33d155d9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.638239
 381257ff-2e8b-4a59-917d-3768dd14a192	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.642366
 381a1393-f7ef-443f-b45b-b83430f685d4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.64722
 381b4ca1-4b6f-42c9-9a34-0038ecf08885	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.651463
-381c358f-d884-47da-bc49-10e1acd7d0f4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.655294
 381c784d-462c-4a64-83e2-b23a26a5a0c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.65963
 381cf683-523f-4505-83aa-091798753bd5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.663466
 381d824a-5922-4d80-9ff3-83a9453493c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.668153
@@ -3980,15 +3530,12 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3881b5d2-edcc-46da-b7f4-e11ea82dbeb6	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:08.725914
 38841c1a-1cbb-4868-b799-4d8fefa372cb	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:08.731501
 388f3d07-4d77-4fb8-9de6-15811aa97bec	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.735711
-38917ff5-51a6-440d-b006-fa1c61ddbab2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.739453
 389579d9-1f6d-4dff-9861-371c386d99ad	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.743552
 3896bb86-7ac3-4ee1-936d-c1cb14d1be6c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.747368
-38a41e2b-be54-44b9-8885-87d8c2ea314d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.75135
 38b2bf92-927a-4d6b-bad3-5ac9d72835e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.755342
 38b6857d-6a62-49bd-ac6c-ace2772e1dab	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.759617
 38b80480-16e8-4f25-b09b-e989873b4da5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.763303
 38b939c8-792d-4f66-8fab-91c007777a4d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.76774
-38ba4dff-2490-46dd-a574-982e5ce942c2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.773617
 38bfb062-8de8-4a2f-a48c-a18a038660f4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.786118
 38c6e746-2875-4334-821e-40a9c2b828f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.790512
 38c7be4b-d0ee-4918-af9c-55cd7b5f74ba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.794266
@@ -3997,7 +3544,6 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 38e1c53b-f576-4413-be26-dea5f23983cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.806292
 38e38394-af92-47b5-8115-895e2cb264e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.810304
 38e9d215-9ab9-4e0d-85df-d0c54041e0b1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.815644
-38fc60f7-089a-4d5f-ad48-a4052d30cfc8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.820633
 38fdd00a-750b-4ac7-a806-8591a724f5c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.824278
 39047404-eae6-4142-b396-18a3c44d8db9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.829507
 390a659d-ccab-4dd9-86e2-af69b31642f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.833699
@@ -4008,7 +3554,6 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 393323f1-f287-497a-968c-ea5b50919916	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.853132
 39494032-e55b-4b73-8257-2064c3509e38	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.857307
 3951ba68-2e24-4cc8-b079-32412dfa924b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.865297
-395733af-400b-49b2-aa22-74849966279d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.86924
 395f6a55-8432-4474-91ff-ebcfb3128e2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.873691
 3961147a-dc5a-4685-9ddd-4399cfd818b4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.878811
 396c6579-6ad6-4e91-98c6-4c1ab8e196b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.883666
@@ -4017,19 +3562,12 @@ d527857c-9d50-481f-a5c7-959d9a102ede	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3996d070-3609-4dcd-b1e6-a2a208c2ad2b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.895624
 39a3ffe7-c308-4d01-bd83-e8a97aa44e02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.902403
 39a9a269-269c-444f-a514-437a27b3872a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.908164
-39ac3014-880a-46c1-a3ef-5b72edf02088	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.913631
 39b86354-2dd7-44d2-8440-f9b13ddfde8a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.919031
 39bf23f6-2103-46a0-ba5f-1f9dd8d5410e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.924038
 39c176ac-41d1-471e-b4e9-d2458e69a3ca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.92887
 39c6bcf1-63c4-4ea1-9e98-706b3aa4ebc3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.934095
-39d166b2-8779-4249-b3f9-7ab24104dcda	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:48.125569
 39e06750-8e5d-4795-a43b-2f0042ea6921	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.947382
 d53631fe-f942-4273-9696-0a11be36d012	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.437824
-39e71ad4-a705-4be5-aa46-b0afa5ed3baf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:08.955897
-3c6f3371-c2ff-47c5-9063-2f4403424b5c	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:48.349764
-3cb55ec7-63ca-4e99-8153-b06060fa2d00	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:48.385468
-3cc7756a-5a3e-472f-b759-0baa99558a2d	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:48.398523
-3d4e70da-8b3f-4d6d-909d-f5bfdb69bfaa	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:48.438905
 d542fb65-de82-456f-8039-5d1ee38be245	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.446963
 39e81a80-7b6c-4ae2-acd0-5836884f0e45	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.960989
 39ed4377-6128-4f22-aabc-4199a6f6d6fb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.966517
@@ -4053,32 +3591,24 @@ d542fb65-de82-456f-8039-5d1ee38be245	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3a65561d-2652-47c7-b2d7-385ce55b8d8b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.049256
 3a6a2e5c-aca8-4e06-8e10-2f75a50886a3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.053735
 3a6a9fc0-fdb6-4d73-bc91-854775a7b720	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.059097
-3a74d23a-5897-4483-8fd1-8b99b4324d23	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.064093
 3a76dd86-2083-4a52-9c65-be7a54c86796	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.068974
-3a79cff7-851a-43fa-8034-5ddc5d73787b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.0741
 3a86a36a-fdac-42a9-b535-47d5f25781fc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.078597
-3a90ad25-f17f-4d88-be53-614316e7df2a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.082442
 3a936ece-1e70-41c3-9239-80a910aab14c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.086347
 3a95956f-cc95-422b-b05e-d9ac1c76f19b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.090368
 3a99ffd9-35e4-48e6-b19e-aff6342952d3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.094441
 3a9d9903-02f1-46a9-9750-81de76be7283	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.098406
 3a9def3a-41c9-4a99-8cd0-9ce33529dab6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.102433
-3aa83d30-9a78-4157-8dc4-c6f862b51838	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.106304
 3aac41bf-f0f4-43e8-807c-0c6414ad2a61	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.111425
-3ab51497-dd12-4584-9962-4638791d6144	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.120494
-3ab71071-3996-41ec-b262-439a80d5e9d5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.124311
 3ab765e3-4f2f-4091-9ff0-24d30fcaadce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.128457
 3ac07a06-611f-403d-8077-e1638824303c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.137563
 3ac5c820-7228-4a5c-a73e-29c0507e962c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.142515
 3ac86c76-42a8-4461-b332-8c54c7837bb7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.146297
 3ac9b530-e34f-45d6-ac07-d3f742e3055e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.150179
 3acaf982-3a62-40d0-83d4-0944b3272f7b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.154356
-3acc534d-cf3f-40dc-b8ea-3c721284d1c6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.158304
 3ad1c0c2-95e5-4c2e-b492-64326e2ec07e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.213778
 3ad9257b-37ab-420f-bd70-3304f34e7997	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.220367
 3ad92c26-d973-46b0-bf1c-acd1405c3937	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.225381
 3ae5e254-69d5-44f9-94de-be40263eb204	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.232194
-3aee084e-b838-4f6d-87c7-a5740acd76ff	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.237566
 3b0b02bd-0c99-4789-bf89-c747bfa2b96a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.243393
 3b191cbb-edb0-4d23-af64-d267fc1e492e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.249722
 3b1be9fe-8c0a-436b-84f8-eecb79c40bc0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.254822
@@ -4089,7 +3619,6 @@ d542fb65-de82-456f-8039-5d1ee38be245	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3b445172-9fea-4f81-81ec-160cb5afe9bc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.282573
 3b4612a5-5142-4eb1-8a55-b64bed51ae65	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.286255
 3b50e9bc-e082-48a7-aa93-9cf1d7f00bc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.290488
-3b553efd-7f50-4d9e-a36f-0a0e3f91dad0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.295237
 3b5dc942-25a7-498c-abc7-be6e5ea447bc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.299364
 3b5f0be9-93e0-4f49-9d90-027cf396814e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.304519
 3b66dce4-8c9b-49d7-abe2-d60db1247819	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.308404
@@ -4105,18 +3634,13 @@ d542fb65-de82-456f-8039-5d1ee38be245	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3bc3a082-3875-4b36-bbb9-39cc59e9edee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.358389
 3bc5cc21-0ed3-4725-b1b5-34048583acf7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.363437
 3bc98d69-17ee-44f2-8028-5e204c8aef15	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.367695
-3bce31bb-7d39-4041-a2d1-d08533e8b5c9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.372657
 3bd08d92-61fd-496f-a1b6-2ffd0410a3ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.376723
 3bd21a71-7f21-421c-a04c-56005593ef0d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.38184
-3be72bcf-a90b-40e5-b4a1-8fad22e5100a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.387595
 3bee9ac4-f1e1-4491-8a09-2115333991cc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.392582
 3bf1fd85-aace-4ec0-9513-a895cea08cb5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.396985
 3bf2ba07-73db-4155-a51b-db78cb1c9603	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.401994
 3bf79c7b-7ba6-4b28-bf69-b141d718c671	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.406686
-3bfb34e8-fa0e-4e93-ab34-2fb94c711614	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.41227
-3bfb9a76-e8fe-418b-a5c3-82ab5197a0bd	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.416546
 3c003b4b-190b-4d48-a658-e34a98f6ba9c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.42132
-3c146667-648a-4d03-82b7-e8ffae0b0a5a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.425444
 3c18bb20-18c7-4dec-b957-aaf919892884	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.430693
 3c1b54c3-f8b1-4bfb-8ab5-9b8bb1e69857	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.434381
 3c2cdf48-533c-4964-95d0-980dfd31ccfd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.444
@@ -4126,7 +3650,6 @@ d542fb65-de82-456f-8039-5d1ee38be245	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3c400171-0cda-4d94-a76e-80c0c3dd852f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.46388
 3c4a6a7b-21d0-460e-9d27-e4a31c7c59fe	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.468739
 3c4ec9c8-3321-4c74-b5f5-3ca9ea72c690	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.473859
-3c58a70b-3f1a-4907-bd8b-a27ee78d0348	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:48.33981
 3e0cf27e-3ff4-4ddc-ac45-d65e3d0873da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.838664
 3e73a2fd-3a26-4f3a-a1eb-0eb22149e9d6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.896095
 3facf162-fbbc-452c-8f19-53c3cdd0be75	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:48.643923
@@ -4141,24 +3664,19 @@ d549f031-d3cd-4588-bbc4-7873e08b226e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 3c8d7ebc-db69-4fca-8785-7f72a377c7de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.525696
 3c961cad-6ca1-4a92-9ec8-18441ac15562	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.535555
 3c9e2b04-7a51-41cb-9b26-2f459aa5fa09	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.540775
-3c9ea1c0-90df-4f12-b311-fd9a83cb9e4a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.545937
 3ca1f47e-530a-4489-a5c7-c1e24b04c9a1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.552365
 3ca402e3-2d3c-4592-b2ff-cdfddac9231a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.557661
 3ca6954d-a1b1-419b-b520-5a7e6ae5242d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.56364
 3cb2bac3-f6aa-4ff3-962e-635febc7d01e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.569049
-3cb55d88-921e-4ece-b44e-f3d2556ee59f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.574661
 3cbd0e67-37e1-469b-9f58-be5a646da74e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.582557
-3cc00464-c648-45c5-ac6f-6c962bf48966	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:48.394206
 3cd220dc-7ce2-4d28-abe9-2ab4ce3e2c83	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.594685
 3cd5fc56-9e1f-4075-8420-72f40e36637d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.599263
 3cd5fd61-27c2-4f12-88fe-5c8d8e7b12a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.603665
 3ce37724-77ab-48bd-928a-dd61fc9c836a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.608999
 3ce3c404-d213-40e1-82ac-925bf21dbc27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.613767
-3cf1026c-d9fa-426a-80c8-b93a84867f52	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.618794
 3cf14c60-965b-4c01-9de4-908775d536e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.624095
 3d030b36-f272-4dc0-9ece-84778a2ec774	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.629921
 3d079759-5a5c-4278-a1ee-0e8c2106c3e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.640714
-3d1ffcce-f8e9-404b-add4-14bb3b51d1db	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.64487
 3d28054e-3fd0-47de-869f-f9660b1d60e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.651041
 3d2f962c-de9a-43bf-a99c-e7636d643574	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.656453
 3d397f7c-c1c0-4341-8f31-f9f048738114	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.662077
@@ -4166,10 +3684,8 @@ d549f031-d3cd-4588-bbc4-7873e08b226e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 3d3cb6e5-ff59-4099-921a-3400c500bbbf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.675417
 3d3e436b-22e2-4442-aa57-945208ea6d63	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.681149
 3d451395-641e-4530-9da0-11e31f63f1ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.686772
-3d4cbe5c-c7ca-4a2c-b041-90d5d396765b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.692843
 3d51acef-4111-4eac-8bdf-4c5d83863af1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.705199
 3d5746e2-3870-4bb4-b421-6119f3358883	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.709554
-3d58cd0c-c493-4548-94ee-ab62829cf497	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.71444
 3d597811-11d8-43d9-906a-3a16c0a659e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.719071
 3d6bad21-53a3-4a5f-beb2-f3f1270e73ab	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.724969
 3d716cef-807c-4ab6-822e-aa5cfd31e62e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.730111
@@ -4185,16 +3701,12 @@ d549f031-d3cd-4588-bbc4-7873e08b226e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 3daf3126-5d2d-460a-8c50-8c193d94a1f9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.787853
 3daf6037-a56d-4daa-a8fa-df343d97732f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.793022
 3daf6a8d-7649-4e2b-baa8-ccbde9749fa8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.797991
-3dc39b0a-f552-4b84-ab47-5767dbcfd66d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.804359
 3dc83b2a-018c-4172-903e-07f40e9a635e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.810542
 3dd44985-662f-406a-94e5-a2bf76158cd0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.814548
 3dd87655-1269-4bb5-820b-d70f4fc0fc14	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.8196
-3dde6aae-27dd-4bfd-b136-4af082496752	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.823664
 3e0ba8d3-2292-41a5-920f-9fe3b60b49f7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.828874
 3e0c1063-450d-46b1-8875-afe5a7309131	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:48.500238
 3e0ed6b3-2ee2-493e-b62b-553a330d2195	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.844927
-3e1468f2-fb4e-46d9-b656-c280de9bf2e9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.849966
-3e1cd48c-96f4-436d-9fb2-b5fd2e51b9a9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.854599
 3e380bfd-d18d-489e-9d89-7caca6119f01	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.86291
 3e38f870-21c1-4ccf-8587-de935ef0d83c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.867527
 3e39863b-ff65-46dc-b63e-92eb88383be0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.872176
@@ -4202,7 +3714,6 @@ d549f031-d3cd-4588-bbc4-7873e08b226e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 3e600c8d-eeff-4328-a39c-75eba435e484	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.881556
 3e667c1b-0443-4671-9490-6dc58f9bf522	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.886862
 3e6930b8-0502-4b86-9769-17d7c242a13c	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:48.533466
-3e819320-a231-473c-988e-d49f0c75e386	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:09.901433
 3e858c03-4f2f-40e4-8745-24c04ac97160	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:09.906051
 3e87b018-1676-469e-99aa-bd3ffc5c18f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.911852
 3e8a7b9f-9e2a-45c3-a279-bc7ffb8f7da4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.916923
@@ -4227,12 +3738,10 @@ d549f031-d3cd-4588-bbc4-7873e08b226e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 3f10a875-f64f-4ee1-8a41-0a6315226947	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.01121
 3f1c3ae4-63a6-4e38-8839-5d09340b17b4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.015566
 3f2102d6-4e47-4add-b8eb-e897b40a3bda	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.019989
-3f8ea1aa-c0e3-4c74-9a60-1379bd1b9948	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:48.628917
 d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.455592
 3f2a0d54-2909-406c-b51e-f34cb95adaaf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.029581
 3f2c6fb3-36d8-4c3d-8af1-e935ef850624	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.033474
 3f2e8276-aecc-45e4-9c62-ee63095cf357	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.038384
-3f414c89-620e-4c86-981a-d4fd7f1dfbd6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.043013
 3f43311e-8ed2-4420-985b-b29b360056d2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.047565
 3f47311d-2014-40bb-ad2f-bcf6d31ae8ba	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.051773
 3f49d517-8d85-478b-a4df-8ef6ca5ab518	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.056751
@@ -4245,7 +3754,6 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3f6f957d-e6da-45bf-975d-0e4ee2132415	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.088479
 3f7af67f-0868-4d54-9404-7fd7eff61e21	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.092671
 3f929c08-67fc-437c-be3f-d1bce528dc08	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.101931
-3f961985-b07a-4705-9285-cc761f2f4a8e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.111962
 3f9b4e18-828b-4b87-a8dc-7cc947bf2fee	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.116656
 3f9f2d09-ac6d-48fc-8693-fb738d9c85f1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.120483
 3fa6ea86-c362-4d24-9702-811c8d6a3abf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.124515
@@ -4254,7 +3762,6 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 3fcdc3fe-9d37-4ce7-9404-09dcd471bec4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.140306
 3fde8b3f-2fdf-494d-810c-fe346fb4a69c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.144493
 3fe479da-52be-438f-956b-fd337868c4b9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.148473
-3fea75f3-9bde-4b32-b056-c3989a82a2b5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.158656
 3fefb5fa-d8f0-4c0a-8ea5-72ed61e56f3a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.162552
 3ff1a29c-8b2c-4727-bbcb-69d2b1322c3c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.166276
 3ff53170-92af-4ac7-8c83-118ab39ff41f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.170308
@@ -4264,9 +3771,7 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 401ba74f-eb1e-4cdc-82a1-470ac2d9b2e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.186431
 401f0b04-7ac3-43d7-ac68-adc22b0fe760	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.190444
 40261517-938f-42a1-88f2-9d1db863f748	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.198302
-403d7425-af99-4838-a6c4-095808eb9b00	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.202261
 403f9003-1297-4d73-baec-cb02770bf476	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.207313
-40413040-e6ec-4009-b1a5-ec7b9cb9acd8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.211488
 40436040-71af-49c1-86db-852ff90fd485	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.2154
 404e3160-b085-4fbc-82c9-95162e8070df	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.218049
 4090ce28-213b-4e48-954c-8cb2a3a66121	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.222527
@@ -4279,11 +3784,9 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 40b55ac1-6a74-4329-8fc1-35d60895f585	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.251588
 40b79400-df3c-420c-a540-0b38c313efe1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.256226
 40b88198-0026-46a0-87ae-6518890bbdd4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.261117
-40bbb770-3876-45c8-bfa6-e49601474c3d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.265536
 40c0343c-6428-4c2e-aaae-1da7fe909da5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.269469
 40dd9741-f32d-4a12-a1f9-8cdfa0d21b10	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.278511
 40dff01e-de27-425b-bf58-ea76f4cf8c9a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.282538
-40fc284c-5ec5-4abc-bdd2-4e1970b010f6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.286657
 40fe08bb-40d0-4e48-8edb-2eaad4581f2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.29175
 410b0c20-5f19-4a88-b477-885992aef402	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.296618
 41105605-f798-4f39-814d-b6eec0b431e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.301021
@@ -4294,13 +3797,10 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4125eb37-5f9e-47cc-abfa-3e26998fac97	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.324716
 412d04b2-0dea-43d7-b27b-0b62b5c45d30	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.33029
 412d6e4e-3769-4c2b-b42c-bff71c66ec73	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.334524
-412d9921-7b86-42fc-820c-b877cbcc9f40	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.338525
 41325904-4d75-43f3-a732-bd32e7ec94a4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.343226
 41340304-fd8d-4ced-b881-02945ecc327e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.347381
 414f5f28-9f1c-4602-b80e-0cb4342db154	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:10.352802
 41546a88-aaa1-4250-96c8-1072ea4d636f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.358642
-4157684b-c1c8-4084-a5b9-022cd1b66399	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.362833
-4167adb6-fdad-4675-9323-64be068d1ad6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.368054
 4175d9f3-e435-4b84-ae5a-773a5772ebaa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.377208
 41810a85-c2da-4a6e-bd8a-67cbbbc74256	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.383437
 4183b2ef-c3c3-4d9a-9e29-95ab9677ad45	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.389168
@@ -4314,7 +3814,6 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 41b3bb78-12b8-4fe5-90d7-3abbaaae8bbd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.423524
 41be827c-be52-4ccf-ae8a-295afa75cfd0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.427523
 41bf9a7e-0378-4b53-ab9d-36af21defc46	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.431519
-41c02e00-79fa-4ba3-a512-41267c92bdb0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.435664
 41c777c7-f081-40e2-a796-13cae286e694	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.440859
 41c9d444-c64c-4f14-84cc-e0ced4d420bc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.446202
 41d5f2fb-a2a1-48c4-aa6e-150b045ae333	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.454561
@@ -4326,10 +3825,8 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 420028bf-29a3-45ad-8b65-e728a52ae08b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.482095
 42007336-faab-457b-9fc0-d6abf04b3988	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.486596
 4200d7b3-d14a-445e-89ae-82295a42343a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.490713
-4201875d-4145-4abd-ab1c-d372385947dc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.49587
 420e8533-046f-406a-b567-d98c24b5f818	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.500524
 4215473d-14f5-4ad8-aafe-baaa3e2db444	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.505302
-421a6e12-2d16-4f66-a94c-0a35e9719914	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.509447
 4220a96c-3a66-4876-953e-29aed79bba88	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.513767
 43cd575f-5929-4d12-8e5f-57fecb99b9b0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.79887
 422484ab-bb8a-4c1c-baa1-f81e47d4dda5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.519038
@@ -4343,22 +3840,16 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 426e24c0-4d68-4e63-8151-20d99620595f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.56274
 426ead28-e215-4841-bfd9-3aa70dfd56b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.566792
 426f583a-31b7-467c-a6a2-b9d70e9fbbb8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.571689
-42768526-3f9a-4a1e-8948-897326f5e2f3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.57583
 4278beab-c7e9-4cef-953a-dbb67c235343	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.580758
 427f6fa2-eb51-4fac-a5d9-843a273e6973	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.584582
 4280a385-91a7-4ea3-97cd-4b22e87ccc4c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.588351
-42845ee0-b4da-4424-a2e0-139325e5319a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.592569
-42875233-9125-47cb-b1d8-a6a0e5514293	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.597143
 4287e69b-5f07-4e35-9010-5c0657f33d8c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.601656
 42974dff-ddd2-49b3-9ac6-dc49d6c56557	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.605392
 4297bb2d-da43-4173-aef9-bd1311a49e09	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.609719
-429c2cb5-59de-40db-b891-9e7b0561ae0e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.613498
-42a1d1b3-9f97-4986-91f6-5d9fc1cb3151	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.621474
 42a22723-8242-45b1-a9d7-7660a19d4f72	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.625463
 42a416b1-db70-4d70-bcf6-101d0e13d677	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.629378
 42b52a62-6e90-41de-871e-9ac744143c33	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.633332
 42bb437a-5041-49f3-89c0-efcb4d75554b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.637559
-42bf2e35-5fd6-4472-80fe-2ed9919a61d1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.641967
 42c12699-c570-4593-bd73-c815a3ec5b93	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.646626
 42ce921a-2d68-4c1e-989a-29ea0edbc343	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.650479
 42d74564-c734-4de1-9a50-a91a99ce862b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.654398
@@ -4381,7 +3872,6 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4354e30c-8012-45ba-9f8d-49a6d67f862d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.73381
 435573df-45af-4f5a-8dac-6cb430622ae0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.738746
 43649c23-4c76-4da8-8da7-56b2e69ff509	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.742601
-43710f18-c101-406b-9795-77cc9cd12c04	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.747834
 437ff996-21df-4e64-9b94-9595f66d219a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.752588
 4383de29-0853-4df1-a46c-32e94d287aae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.75655
 4398603d-1e79-48b0-89e0-12176bfdff3a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.7613
@@ -4390,12 +3880,8 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 43a8ef15-81f3-4fb8-b24a-9097339ac764	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.774654
 43ae719c-8530-4a5f-a198-5b7a8044ccdc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.783275
 43bab69e-9b63-4623-b223-e90d44db396a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.787799
-43c87132-f99a-4183-bc4b-6c4d7b3067ec	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:48.960072
-43d1e95f-086a-4bd7-a003-1770663199b2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.804688
 43d93dd4-81b5-41ad-b9f0-953b572a4979	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.809663
-43db736f-f30b-43d9-8737-8ea765fa62ed	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.814364
 43e159be-0e0c-4d5f-8264-2b9b6bf9d108	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:10.818691
-43e38fb0-1db8-4303-9b10-b42709a740a6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.82318
 43e62eb8-6058-40d3-a700-a76f30089970	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.827747
 43e8734e-40a1-4ac0-8b1c-3b772cd035a1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.833482
 43f27352-ffb0-4099-a4f5-579a2be678b1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.837573
@@ -4410,10 +3896,7 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 44462944-2f6e-4e4d-91bf-193edd9b5c7b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.885127
 4448e917-5896-4c57-841e-abc6fa020714	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:10.88964
 44495a50-1317-4d85-937e-757588298f65	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.894233
-445dacd4-c727-400b-961c-34bee6629e8b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.898812
-446f4076-090b-4516-b4c4-56a1e8444924	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.904287
 446f6cc6-1c0f-4ee3-8707-0a9566793a37	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.909021
-44775a3f-2481-4c78-83ee-b68e87b8dda4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.913775
 44827e38-c907-4d3c-9940-d409fa0a3974	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.917717
 44887cbe-cd17-4821-9ce5-c34d3bd5bec1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.922902
 4488cb82-39ba-4c64-8508-6fff9baf1a4a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.926715
@@ -4421,31 +3904,22 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 448fd455-1baf-474f-9e0f-d70c1c8ca23f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.936002
 449a5596-8dba-410c-91c4-f13d3b80bf92	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.940629
 449c1028-cd77-4e86-a587-9f6958e0593b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.945113
-44a2977d-026b-4707-9cdf-7d0fea30b6e2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.951483
 44a82bce-b1c1-4cf8-95f3-0b52538288f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:10.957893
 44b1bf2e-958f-4483-8a65-3b36950fe799	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.963189
-44b54316-7540-4f98-9be9-301ddfd56dd4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:10.968799
 44bec924-df21-4b18-8a67-e78cef2435eb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.978922
 44c0577d-ad09-4ec4-8efe-9c445037fc92	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.984319
 44c11c59-d984-441e-9757-fcfab4f2eee6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.988546
 44c1b9e4-b7b8-4dcc-95e1-850e1d178332	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.993522
 44c209de-e4b2-4bc5-9f36-f4d5a0e5410f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:10.997963
 44cda7e6-d983-4a4f-8231-ed43dd23281d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.002928
-44d2c021-fb76-48dc-a5cb-d1f2df8ffbf8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.007815
 458ac71c-db87-4fe3-b02f-35c25e5986ab	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:49.078843
 46ac1960-2791-4f18-b743-4539ac9edecf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.33886
-4811986a-ba3a-417c-8096-6d2b92cb5743	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:49.264707
-488b7980-4616-42d9-b28f-beef4fd7fc23	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:49.304181
 48977a3b-6fc8-449c-b5ea-99dc72221364	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:49.311467
 48a226a2-27ff-4350-a2ad-46b46563c4ea	3	\N	1	TrongKho	\N	\N	2026-08-25 11:57:49.326286
 44f65382-0320-4eed-9733-4ed17c2a7ece	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.013136
 44fe0073-a515-46f1-93f3-e9c14287f009	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.018861
-45004ffd-4196-45be-99cb-daf2b68e62b3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.023749
 450faa6c-fb33-406b-b8bd-9de47b11bcff	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.028873
-4518ebb1-d282-49f3-9a50-cbb263ec3bec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.034096
 45281c1a-1bff-4c14-8246-02bd58c75b5f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.040045
-4535668e-06d2-4e8d-80e5-8e91d82fcd29	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.044967
-4538d1fe-c127-47f8-b71c-c933d83b377e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.05714
 4539c506-6609-4834-944e-d3e4685c01a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.063036
 454b5165-7804-4a59-8285-941defc4ef06	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.067882
 45533e44-8e98-4dac-876d-6b5194d78ca5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.072832
@@ -4468,7 +3942,6 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 45bf91c1-7d49-46f3-b5b7-895c28b1ceea	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.161016
 45c3d49e-c2f8-4ed0-a37c-9581b01193d7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.165683
 45c4cc44-5264-4248-b4a3-d15360316952	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.169406
-45ca1b7d-dcd8-4585-a614-795cfebb5fa0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.173623
 45db5197-a3eb-41a8-a952-4876874899c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.177521
 45df0c72-46fd-45a2-ba72-6deb54411506	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.181263
 45df784f-6581-4c9d-ac36-9158e5bca4ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.185443
@@ -4480,7 +3953,6 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4602c4a8-f6b8-481d-a37d-51efbeacf69c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.207406
 46101e4d-5835-4f1a-914c-7dd6ea6fc0cf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.211505
 4615b9e5-a53a-4356-8bbe-b091c4d8595f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.216971
-462e2a72-b30e-4398-9eef-d5621bc5aa59	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.225298
 46328bc6-e468-4687-a4f4-8e7f49c9c7cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.229248
 4638ef51-368f-4785-8cb1-31765e01feb1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.2344
 463b05d8-fc3e-4b4d-b3b3-08d15011d89a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.238662
@@ -4499,13 +3971,10 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 46681106-e82c-4a9d-a546-f824890a1d02	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.296044
 4668afc8-0306-4647-b761-bced746bdbac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.301743
 4671994f-3086-4606-a989-a423e2265b3a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.309481
-467b8106-6fe7-4bc1-9c7e-2a3d755250f9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.314444
 467cfe9a-81a2-420a-8eea-3a9006b4a930	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.319981
 4689cb1b-28e4-47e1-a757-14b6493ce034	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.325775
 46952774-ac07-4454-a6cd-5fe78338f6f7	9901	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.330642
-46a55912-5481-4836-be43-b61386b1cf6b	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:49.166099
 46ae2f76-4545-4567-8036-32809d5fc89e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.343809
-46b3a480-b032-4fab-a156-3cf34e706948	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.347769
 46b4437f-86f5-41fc-bfcb-99d5b9d50f29	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.352792
 46bad10d-09aa-4027-a296-222f87b3bf8d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.357639
 46beecfe-32f6-4807-b76f-fcaa0e5f0d64	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.362055
@@ -4516,8 +3985,6 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 46d9ab01-e3ca-40cc-94c7-3c8a5dacdb17	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.39029
 46e46473-8f8d-457c-baa3-b7869ed81ea0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.395014
 46e8acf5-079b-409a-961b-d77ee069526d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.400451
-46f9ffaf-ba45-4e23-aaf4-9d8e68341c36	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.405137
-46fab119-9435-422e-8b31-17cc0c91863f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.410208
 470c7532-1518-4136-841a-f2901341ac26	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.422209
 47160915-8270-4da7-a3cb-a8565a0f4b6c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.427258
 471c2d37-032e-4cd1-908c-504c0db354c0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.432246
@@ -4527,18 +3994,15 @@ d555aeb8-ce70-4fbc-a45f-84997ec5cb61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 475209b6-24c8-493e-9139-5e4940ef9d58	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.453208
 475ddae0-07bc-4b8a-a212-e10561fc3b5c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.458024
 476cf3f8-48e5-4ed9-91a3-9f4e86f96341	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.463325
-47776379-244c-420c-bcb4-62142094d99b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.468188
 47788264-7f76-4d93-b053-889baaa539c6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.474386
 47795a0f-7cc1-45ac-8c0d-32bb3880c2ee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.480064
 4779a743-619a-499c-ae59-0d57d74c3e2d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.485429
 47806532-8889-4fd8-b035-19ed3f5a8159	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.49186
 47821b9f-bf16-4045-b3a4-c46853c0368c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.497374
 4786ee6e-fbb9-47c3-a49d-ffeddbe7e6a7	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:49.23436
-491f4bbc-974d-4f98-8436-81af1ef35526	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:49.380164
 4927e0bb-86f0-4cf1-84bd-d397faa49020	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.885897
 d5592b4d-4dcc-40b1-a2cb-107a53b0d03b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.459992
 47893581-21d1-47a7-8ecd-80e4538e52c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.515504
-47abb287-75b4-4aa7-ad76-8e5a43dea13c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.52224
 47b6390c-9693-49eb-86a8-d3c02da4b16a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.529656
 47b9d937-07a8-485a-8e93-45501c40d7db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.536976
 47bb0b87-fbd7-481d-ad31-1b674f740015	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.54243
@@ -4553,10 +4017,8 @@ d5592b4d-4dcc-40b1-a2cb-107a53b0d03b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 483a1848-9ac5-4bf2-aa04-372ce5adec5a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.618017
 483cd6d7-1f95-484c-99a0-1a62e718caea	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.623341
 483ea595-2d5f-4a53-bac4-898d57509a44	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.629454
-484503b2-ba35-4fef-af9d-bf98a001cf99	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.634332
 484c37f9-9824-4bab-8fec-d1f9a7d53f59	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.639238
 484cf23d-7a15-4592-9aca-9c75c981fada	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.644322
-48553a4f-8da6-4923-a11e-af9340462f93	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.651566
 48566af3-16a4-4282-9e8f-a2068df1454f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.65584
 4862c4c9-27e7-4eee-b16b-f5a09b28fec4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.659878
 48698017-f654-4fd6-ba3c-779deb057611	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.664119
@@ -4573,19 +4035,15 @@ d5592b4d-4dcc-40b1-a2cb-107a53b0d03b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 489a54f3-7d9d-4964-9816-be5157852ff9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.744828
 489f2036-698a-4c5f-9b8f-e1d4978bc8c7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.751594
 48a07695-4f42-404c-bff8-a70bee226dd5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.75752
-48a18fe8-0d77-4805-ac34-f67d950b7783	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.762268
 48ac1b58-7fc1-4273-9c41-fbe86636739c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.774365
 48b91b55-4be0-4aa8-a03c-6f161b37adfb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.779846
 48bb2b9c-c411-4724-a56f-76561a8db5e3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.784799
-48bc85d1-c707-4514-9e3c-6d9b919f47be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.790241
 48be94a0-0918-4569-8f56-679a7b1463d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.794884
 48c56004-cfb1-4365-bce4-a7d37dde610c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.798879
 48c9ce7b-7c14-4f06-9392-5ad3ca2e7d5b	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:11.803514
 48d2bbf3-89b2-4f81-8143-f16b7517748a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.807698
-48d4425e-c708-4aa1-ad44-8cd9c63e11b2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.812799
 48d8dcb6-96af-41f2-a2e6-04a01b5bfa47	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.816958
 48e5e1e5-2d7f-4c47-bdcf-9c965fe8e6c1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.826275
-48ef4025-7d76-4e2a-946c-9a78e0aa31fb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.830614
 48efe332-d904-4ee2-b715-edaf8eaa455d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.836014
 48f020b3-3d7b-4479-a8d1-e7a6372882df	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.841994
 48fb947b-b2d7-4ad6-a3b7-9177fcc32d3f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.847435
@@ -4594,16 +4052,13 @@ d5592b4d-4dcc-40b1-a2cb-107a53b0d03b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 49098bdd-7d1e-4cae-a73b-09174a7e9c6a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.861966
 4911895d-d66d-4639-a881-7939c093e2dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.866854
 4917b698-44b2-4af8-81ec-21befe7b801d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.871065
-4918dc13-22d8-4828-9db6-277fbfcb6593	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:49.374599
 493000fd-f463-49ab-873b-02a8e124ee2a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.892352
 49325500-dda8-421d-ad9d-9b0768665300	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.897867
 4934d0d8-36a0-44e0-98c4-0703a4bdc99f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.904387
 493511e6-19fe-4297-b559-f23e920bd1a5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.909296
-493a70d4-482d-4af5-92b6-1364fa44f8c3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.91532
 494ac4ad-e6c6-4688-aff1-d86c892ba248	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.921158
 49501e12-5f75-4b1f-a9e6-ca1c14d1b002	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.927932
 496ff183-515d-478c-a9fa-7b0f632332d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.939245
-4972f063-876e-4d94-a62b-4ff02b218695	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.94699
 4973c0a9-a0f6-4114-8c18-04d2282dec5a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.952545
 498af4ac-0b3b-4b56-a811-4cf383c23a65	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:11.957077
 499040c6-0ee9-4c87-9750-817b99a9fbe5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.963189
@@ -4611,7 +4066,6 @@ d5592b4d-4dcc-40b1-a2cb-107a53b0d03b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 499925c5-6481-4548-af14-e5a6f1549312	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.97306
 499f479a-cfe6-4fed-8212-7974846ab8a2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:11.978383
 49a110c5-c0b9-4bf8-9b85-ba6f2139b195	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.982741
-49a2ff69-c163-4bd0-8474-f0f66805fc61	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:11.986799
 49ae4514-234d-485d-a5bc-25eccb8c1cbf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.991972
 49c8e94e-f006-4232-91dd-61c5b96e9418	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:11.998747
 49cfb771-b676-48ab-bf5b-e825b7c2134b	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:12.006385
@@ -4621,12 +4075,10 @@ d5592b4d-4dcc-40b1-a2cb-107a53b0d03b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 49ee60a0-2778-4b2d-b1b0-ada88b064e1b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.031588
 49f54f2f-f976-425f-aefc-290c018f3919	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.037035
 4a064ad1-2549-40e3-8c21-53922663f2e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.047436
-4a0df5c8-4734-47c0-b38d-43fc0ab1c872	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.053342
 4a0e724f-f2d6-479f-868a-1231eea5ea2e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.059016
 4a112f10-da96-464f-a96c-527d48c06751	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.064199
 4a11e7e5-a33d-4a5a-8206-a1d4667e8d01	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.068736
 4a1d9011-6620-4caf-b8b1-d9672aab0a26	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.073197
-4a217572-0a4e-4cfc-ac8d-47393ded4314	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.077713
 4a349244-9745-40b6-a460-7c6be03a192c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.082653
 4a3d75c0-bd62-45fd-b79b-5b2d217122d9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.086983
 4a4e9126-9709-4cd4-8e3d-2a75d536c0f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.091605
@@ -4634,7 +4086,6 @@ d5592b4d-4dcc-40b1-a2cb-107a53b0d03b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4a6089ec-c8fc-49c9-996c-afec0d2acb4d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.099895
 4a673787-0f22-4cd2-b421-a70e6062f1ca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.104694
 4a76cd6d-6ae5-413c-a22c-6c09eb85d055	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.108653
-4a8fa925-e621-4a66-a97d-9229a9f1a312	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:49.477068
 d55b536d-6a0c-4553-8341-76a7bb4704e0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.463735
 4c008a2d-3a75-4752-ae9d-39cd03165208	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.358211
 d55e784e-59c3-4fb9-9493-980ba60f098f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.4675
@@ -4645,7 +4096,6 @@ d55e784e-59c3-4fb9-9493-980ba60f098f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4aad97cf-85d5-43bc-840c-f354b14398a0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.137648
 4ab53c7f-6e22-4a61-8acc-441e86bd07be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.142736
 4acc3c5c-7bfa-4ead-8bfd-1a28c0700b5d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.150741
-4ace5a06-7f04-4037-8c63-c8aed6b8ef4e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.154631
 4ad15aa1-25c2-465b-8222-d2fd27b45193	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:12.158554
 4adcd639-6ff5-4fce-a7ac-956eed5876dc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.162479
 4adf40ef-974b-4f0b-a50a-d1eaa7c72141	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.166547
@@ -4655,11 +4105,9 @@ d55e784e-59c3-4fb9-9493-980ba60f098f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4af2f5cc-bfd0-425d-8d0c-a2681e1fc011	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.185584
 4af92a93-8a1b-4487-a73f-fc381a4b4f04	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.191346
 4b081b79-f981-4dfd-b16e-c41850df570d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.196745
-4b0a141c-15db-4c3c-9898-98acf5ff5811	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.200541
 4b18fa23-fabd-4b2b-9bd8-ec9772d84156	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.204442
 4b1bc3ff-bb51-4f67-afe6-1da8a8a15f56	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.209815
 4b224601-ca0d-4679-bf9e-daf27c76fb1f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.216285
-4b23c77c-06da-4652-b520-7eb577fa058e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.219503
 4b39e0c9-1cc8-4e1b-b4fa-6a20bafd24df	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.223787
 4b3eef8d-c9b6-491d-8174-05757b7e940f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.227905
 4b44065c-3626-4d0a-b014-8321df48ebf3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.23661
@@ -4681,15 +4129,11 @@ d55e784e-59c3-4fb9-9493-980ba60f098f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4bdcf86c-3e54-4797-afd0-3c2f8ef20697	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.318647
 4be469b9-5b06-4997-bcf8-261d11789cea	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.322632
 4be72b6c-f393-4071-b779-6efa1923c2b3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.33606
-4bea7a77-cb6b-46e7-9881-1be0f6331225	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.34235
 4bf1cf59-37fe-43a0-a6d7-1adaf159fff4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.347309
-4bf8fd29-6c64-406a-8e6f-ab220adee544	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:49.562929
-4c04c5b0-afb8-4ae7-93c5-2ca3c0ecb81c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.363297
 4c1a8684-b215-4401-92c8-c07168f61120	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.368635
 4c1d6ab1-eed3-4edf-aebd-cb63ad52be6d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.372805
 4c1e3852-8d18-441d-a0eb-23b34fc861e2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.378289
 4c21e711-999f-4878-bdbe-16ec907475d9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.38319
-4c234a51-749a-4020-981a-76f8b9818eae	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.387857
 4c263584-01d1-4dd9-8090-e5c479a7efdd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.391595
 4c2f9064-bc75-4320-a4eb-4f4907109045	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.395914
 4c3de4e0-0af3-401d-b20a-a99f37c832b3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.401125
@@ -4705,14 +4149,11 @@ d55e784e-59c3-4fb9-9493-980ba60f098f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4c9ad68b-0a95-484f-8cc4-91371a447214	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.462889
 4ca2924a-c0f4-49b6-8594-f549fa4bc570	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.469736
 4ca6e362-41bb-4f0d-a2b8-81be00927bd5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.476581
-4cb0c000-f68d-47b5-8c1d-c754ca4c6b7e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.482218
-4cb18b61-bd8f-4048-8fc6-dd7fcd61b910	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.488127
 4cb3e0e6-1ca1-40f7-9426-5f0141f49cf9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.493103
 4cc2336e-890d-4fe1-bea9-90e6a640b835	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.498258
 4cc6277c-243b-493d-b40c-b6489ee44a59	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.504466
 4cd46568-de7c-44b0-923d-e809b09c539d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.510281
 4cdcc014-88ce-4106-978c-7d2d2bd5d6e3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.515951
-4ce7a1c3-2b07-4792-9c45-bd0f7ce49cde	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.52008
 4ce9629e-5f73-4ce9-9e64-5b4262c171bc	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.525695
 4cec6bef-b86f-473b-8497-a93f8b6d3b91	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.532393
 4cff539b-45cd-47ed-982e-71b8064c174a	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:12.538951
@@ -4736,16 +4177,10 @@ d55e784e-59c3-4fb9-9493-980ba60f098f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4d71d25e-1c86-4001-a6e2-eaec179fe75c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.639832
 4d7a98f9-cf98-4722-95ca-1625cd8b61a4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.647898
 4d7c3966-8cb8-4ca4-87cd-70404467053c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.65179
-4ec27e37-4cff-4126-9ee8-bd26ec454fc8	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:49.741398
 4f3fc841-8336-49fb-9415-cd6f06ca2b74	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.960205
-5110b26a-06f5-496c-983e-5e597e480dba	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:49.926137
-51180709-f38d-4f12-a241-4e9f1bd714ae	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:49.932983
-5167a309-59b9-41bb-9b23-c1de0f935b1c	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:49.951839
-51ec1d05-ab60-4962-a47c-95afdb23d748	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:49.991941
 d56dd1b2-2cde-4a0f-86e5-9dd6630e2dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.471689
 4d8d1cd0-fb24-4e1a-a1e5-f76bdc6c7a68	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.659829
 4dae0118-f448-42f9-bf83-887996da0c00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.663519
-4db90cf1-497c-4248-9b36-15ffdc78a93a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.667635
 4dbcf438-13f2-4774-98ca-acb3765ec543	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.67243
 4dbea59a-6329-4244-ba53-068d1c09b48b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.678269
 4dc53bec-312d-423d-b196-b44fcbdc69bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.682838
@@ -4753,10 +4188,8 @@ d56dd1b2-2cde-4a0f-86e5-9dd6630e2dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4dc83515-443e-4459-a7ab-70a715b467db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.690841
 4dd9c170-26d5-4403-8c21-707f6a8ec378	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.694816
 4de456b4-850e-47a0-af1e-1b9149ca1f7b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.698424
-4deedbb5-bf08-4633-b951-8dce7cdeb800	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.702589
 4e07f400-4d66-46e3-bbd6-dc608e8fa6d1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.710635
 4e0b30a9-7927-420b-900e-d4d1ddbdb031	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.715405
-4e1530d9-66c3-4b23-9849-d132b43732bc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.719825
 4e253600-4bc4-47ef-b38f-33ef4c1debfe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.723905
 4e281d73-55a8-4dfd-bc8e-70b8070e0c81	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.727943
 4e33a3f0-8a37-45a1-9794-3ccf1a48801b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.731567
@@ -4768,7 +4201,6 @@ d56dd1b2-2cde-4a0f-86e5-9dd6630e2dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4e725e0d-b96a-4be4-b90e-5b99bcc39d98	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.759302
 4e748a0e-c4bd-4bdf-982a-e5f2cfef047c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.764067
 4e82892b-8514-4057-9acb-54ab838d476f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.769314
-4e831717-3dd7-4981-84e8-da090282f646	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.775088
 4e8a276a-b0b4-4a47-91b6-0922866699c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.779676
 4e8f9060-fa8a-45ed-9a8a-bc0114a5df36	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.784725
 4e95fa57-48ba-432b-b3ea-77dcbd2b218d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.794443
@@ -4786,10 +4218,7 @@ d56dd1b2-2cde-4a0f-86e5-9dd6630e2dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4ed44a6f-e72c-4199-9f45-50a6becaaae5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.860087
 4ed8ce8f-eced-4ad6-ae1f-800145e9aa54	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.864126
 4ee1a31a-e1d8-489b-aedb-c564d2441b8c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.868989
-4ee5d9d4-e53d-4462-8c4c-2f901ea7bda3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.874209
 4ee910cf-358b-49a6-908d-d7a15607f73d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.878939
-4eee11d6-dc2c-4764-97bd-20a8f00e25c3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.884138
-4ef1b8a0-19f7-4c8c-a109-6a179c64bb0e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.894285
 4ef341ec-dbd6-4214-8403-311760f3e1b1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.899269
 4efc5ae0-2cd1-4d54-b308-a26f547b5a6a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.904997
 4eff9808-e1e0-46f4-9462-d902b7d394da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.910398
@@ -4801,13 +4230,11 @@ d56dd1b2-2cde-4a0f-86e5-9dd6630e2dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4f30fe6f-1c8c-49dc-93b1-c1dcd47ec8ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.939
 4f345182-c7cd-4620-878c-e6d9b0a16475	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.944169
 4f348889-46f9-4964-89e5-ed6eddd4c4b9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.949187
-4f3f7b50-0bc0-49bd-b220-98676dc92e8d	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:49.793625
 4f4105f2-dce9-480b-9264-ec44460c8373	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.964993
 4f4577c5-3569-4ada-b9dd-687117a0a6ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.969962
 4f4775ff-ed30-4e45-8255-a735d40189c7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.973771
 4f512c10-fdd9-484c-8647-b8c43152d597	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:12.979003
 4f51603b-28ca-417a-b9b4-eab17a823156	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:12.98364
-4f5b5b3c-a614-4774-bb19-2e7148185b63	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:12.995294
 4f63821c-763c-49f4-a0d3-d63f6df7c88b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.001172
 4f69d155-1c94-4d69-b5fa-e39eccdea35b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.006092
 4f6a1581-3a97-4865-9506-f3004861c1b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.011279
@@ -4816,15 +4243,11 @@ d56dd1b2-2cde-4a0f-86e5-9dd6630e2dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 4f85a54e-5e82-4c88-bf83-14b9ef25e60d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.026334
 4f884233-0d3f-4fb0-9e76-4952d8fe7ddc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:13.030927
 4f91f3d8-3654-4ea6-94c5-2620d1c97c19	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.036055
-4f94b0aa-b52b-490d-b7e7-8e0cd8ad7d7c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.040019
 4fa8cb65-8c9a-42d0-8275-ecb9e4969cda	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:13.044998
 4fb2a59a-5cdd-4170-b7d9-09b86bf62ca9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.04948
-4fd3f403-d080-4d91-b593-ab1f11d2e099	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.053636
 4fd49a46-e28a-453c-9a96-2340f8f6fed1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.059396
-4fd9a67d-b838-42e4-a534-021d82d2adc3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.064024
 4fe9a2f3-a151-4015-bad7-f937fc0b066d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.069091
 4ff2493f-09b2-49db-8440-1b0bc5f8ee65	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.073855
-4ff48492-77d2-4340-8950-7b54de3deb56	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.079317
 4ff80ec3-28be-45fc-8db4-71d64057b2eb	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:13.088763
 4ffafcac-6a62-4107-a905-452108add766	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.094197
 5003ea48-dc75-41f6-8df2-d8d120f03da3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:13.099568
@@ -4835,10 +4258,8 @@ d56dd1b2-2cde-4a0f-86e5-9dd6630e2dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5025d7c9-ab4e-4dbf-8057-ed8b0d89a52e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.120592
 50326b3c-a838-4513-9b37-c6b0157f6a9a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.124585
 50387a77-2409-4e9c-b606-28ae4d066f89	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.128783
-503eac40-4130-4377-a353-0ad8cf9984e2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.132695
 50479b3e-d482-494d-958f-4d45f0f9bf05	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.13653
 505b8c4e-7e4a-4cce-b2a3-f4fdddd63336	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.140635
-506d8aab-7647-43c4-a400-c874a1a94715	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:49.883584
 52df331d-c1b8-44cb-9e22-d3ee1890e32b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.624217
 5312c4de-1e97-45fa-bbe7-378e308a2721	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.645727
 d5727349-8652-404a-b611-3a29dffb829b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.475608
@@ -4852,7 +4273,6 @@ d5727349-8652-404a-b611-3a29dffb829b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 50a191e8-eb3c-483a-a967-00ba7f6c04ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.188044
 50c09cf0-21e5-4476-9133-7be02505c485	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.195087
 50c0a98b-ed6d-40b1-b29b-6cb6f4761948	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.20056
-50c86a8f-b7e5-4d8a-8eae-4a837294f3b9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.206106
 50cf7ff0-2fc6-4856-ae29-3fe2790cd660	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.214852
 50ddf94a-82f9-4c8d-b081-664423d2909a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.218781
 50e7f9a1-d8ab-4e37-9f67-e1a50b0c5db0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.222492
@@ -4865,24 +4285,19 @@ d5727349-8652-404a-b611-3a29dffb829b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 5121e8ac-f73f-483d-a497-3ac65cc48077	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.263701
 51225394-b35f-4090-aa98-85c14f339857	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.267685
 51299279-26aa-481e-bb27-ed80f990a452	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.271688
-512ae043-9e32-40ea-9b15-f8aa081d3b74	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.275814
 51319ad1-49ca-4dd8-a888-da53c7405329	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.28064
-513881c4-3e58-423c-8aaa-896f9dff362f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.288473
 513f9abd-5104-44c0-918a-1b01ff8409e2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.293682
 514c1826-8343-47b3-a265-0f7718a26c9e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.297947
 516beb34-6d6c-4909-aa13-6d3abf7f4943	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.306765
 517067d1-a17e-419a-b66a-fef6f3e9dd89	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.310703
-5175eeed-f5e0-4756-bc7e-06d593c5362a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.316014
 5186ce69-ed3f-4356-aa60-a10b1d354ba3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.322264
 518af87d-0ebc-496e-ab2b-5ab303865f8d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.32714
 518ff636-0c94-4c71-b7f1-c0360bc8fb12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.333401
 519278e9-f34c-4730-b15a-b28304f15c5b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.339303
-519ad0f9-6f8f-4af7-af97-3dd3ed0bed99	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.343969
 519eac5d-7324-465e-b95c-266bc04311a5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.347678
 51a199ed-aa72-4c8b-8aa1-ef792e25f991	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.351627
 51a86a2e-f1d1-4d4a-8d95-26e79f01eebb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.355687
 51adaa33-ed8c-40d4-a5bf-bb27884d2757	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.359537
-51b521c3-0779-4e8e-915e-d63b87ebc7c1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.363545
 51c81eba-0b0e-4e9a-8514-53b77326f0f3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.369528
 51cb4c26-658d-4b4f-822d-cfc538dbf2e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.37371
 51d376ac-a46d-4d38-9a42-9d7b1384de9b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.381691
@@ -4899,15 +4314,12 @@ d5727349-8652-404a-b611-3a29dffb829b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 5214a8ce-e5fe-4e97-9424-f6d0eb316170	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:13.442856
 521ac937-3a33-4e5e-8e85-34b3bca6bd2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.448515
 521beaed-e889-4133-84bf-21ea02080eb6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:13.456744
-52201643-f2dd-4f70-8b0b-9ac32f8e907f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.464004
 52202f07-3f2c-4fd7-87b8-d229ab97b546	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.470817
 52251772-1c40-428d-b38a-854555da6163	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.476829
 52295fa7-6394-42d1-b087-73f7c8277eb3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.482286
 5235ba58-a1dd-4b74-b6b4-8aac3e374578	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.491389
 5238ca8a-adf6-48a6-9d72-86270dcac642	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.497181
 5239f026-ec69-4be4-aa70-23a1d9d91543	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.501751
-52435e87-1d41-4b20-9f2f-a190787e5a65	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.505827
-524a81fb-b664-4ed9-9a96-0588bceb69b5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.509809
 524cec98-94ec-4101-b8ec-aee2f57a6159	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.513934
 52518930-c6a4-45b2-aa47-e155d467ec55	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:13.517718
 52523187-0adb-4f38-8291-3cda42a704cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.521701
@@ -4919,7 +4331,6 @@ d5727349-8652-404a-b611-3a29dffb829b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 526a92ff-50cd-4906-a9a7-17e097b51e1c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:13.551552
 527032f7-9e0e-4e1f-83c2-5876aa545cac	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.555638
 5272d80c-2e50-4c38-90ec-f3e6a4af5743	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.559676
-527f4ba1-1ad9-419a-8ede-42ed6a1d1e14	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.563632
 52878f22-f915-4b0a-855d-333cbc741b6a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.568032
 52957940-399e-489f-a96f-3f9db43567bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.577269
 529598bb-253a-42a3-b4b4-1e790ad81da8	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:13.582088
@@ -4931,7 +4342,6 @@ d5727349-8652-404a-b611-3a29dffb829b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 52bf34da-29a3-4485-bf31-38951cfd58ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.607553
 52c9c95e-7b35-480a-9169-b1b3a67c1379	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.611567
 52d004c7-73e8-453f-ab5d-ca78e438e103	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.615559
-52d1db2d-9b6f-4ab7-87c7-263f602e940c	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:50.084566
 52e0e8ad-2d1f-4405-a2ed-7fdfb56d04dc	9901	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.629144
 52e10cb3-84b9-4111-bedd-bac1b030e6d8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.634022
 52ed22d6-bbc9-49e3-a6e1-7d277fd7fb66	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.637663
@@ -4941,7 +4351,6 @@ d5727349-8652-404a-b611-3a29dffb829b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 53434eb5-9e5b-47f0-a837-16ee163d9570	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.66069
 5426d3ca-8236-49a3-a65f-bb0f6885daad	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:50.188789
 54e3b2bb-d874-4bf8-a47c-d96204012bc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.009513
-55197ff7-c673-4a92-838c-2bd2ad6711c6	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.301646
 55365405-2da4-4d3d-b310-4eb046959eb6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.09665
 d573ec05-4b68-4a43-a39e-e36514ce6e82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.479542
 53499ea9-8779-49d7-86e2-b383cda1be3a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.672564
@@ -4978,9 +4387,7 @@ d573ec05-4b68-4a43-a39e-e36514ce6e82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 54216ce3-0e04-49d1-8bf1-e2931ff5b975	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.813168
 542ceec6-0842-4433-bad8-8b5e9cfcfc29	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:13.83736
 542da34b-5cf7-494a-bf53-fd6ce5810574	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.843307
-542f4e91-8cbb-42b2-9f07-601565fb7481	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.849917
 5430c99b-7e69-438c-8320-47f71f9aef3e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.867502
-54340e25-34fe-442d-b4a7-a18a9aa541a6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.872499
 543c01dc-da9a-43ff-8b42-266e13e1e2c2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.878223
 544052f9-19bf-4f6b-af44-898a442457c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.884745
 544348d0-21ac-4e07-bb55-54dc35713887	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.890286
@@ -4991,21 +4398,17 @@ d573ec05-4b68-4a43-a39e-e36514ce6e82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 545ebb1d-a84f-406e-9730-c3e7e925e944	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.912713
 5466329b-142b-4fea-ab15-9b5f24285def	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.916915
 5467963d-3b66-4979-9f41-ac57c24c9a10	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.920908
-547fb767-e0ec-4ccd-921f-e6adc6da1cf5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.924804
 5482af4c-fcd0-4596-8c16-d5546291b97d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.928657
 54857f6d-974e-4637-b7db-a9db640ad821	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.93493
 54857f83-92d2-40b1-96e9-8b65152641f0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.940204
 54886a5c-f6a9-4e2e-bd03-419649c1fa12	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.945309
 5494ae6d-ded2-44a4-8cf9-cb13c0ace1c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.951281
 5499d52d-e1bb-49a0-9291-0047743d9a52	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.959574
-54a3024c-9d27-4b2b-9447-d9b92fe95a10	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.96459
 54c674b3-88e9-46e5-9f86-3b46a19b1ebd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.970219
 54ce7c85-e2e6-4d9a-a460-d637f8611d6b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.976917
 54d44d83-301e-41c0-9943-0431e2068124	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.982474
-54d476e3-fec0-428b-ba85-cfe4a5b3df06	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.988066
 54e06865-2326-4a6c-87c8-bd2c205f75ce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.994107
 54e0d175-3217-4250-b4d0-abf3a38dcc8d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.999413
-54e12c96-b290-4766-a11a-35b77f8c97fc	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.260109
 54f04cee-57ca-4c6a-b5e0-5010238fc478	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.01617
 54f55c72-31fe-4993-baf6-c2a846d82f6c	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:14.021878
 54f829ce-9ed8-4536-8a39-83f9ecb1f30f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.027632
@@ -5017,7 +4420,6 @@ d573ec05-4b68-4a43-a39e-e36514ce6e82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 55036450-e905-41cd-ae2f-03346f656e4b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.062727
 55080a01-cfae-4a70-b8e5-dd13d44e4689	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.075097
 55095292-cd96-4b28-bcdb-6d483dcb048a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.081023
-55156c8c-6b7c-4ea5-bd44-00bf76f08254	3	\N	15	DaBan	\N	\N	2026-08-25 11:57:50.296368
 553a0471-5651-42a6-8616-9f836f8d6c98	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.102197
 553d6d57-9696-4453-b516-6ef31a3b9f6b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.107163
 553f350b-b11f-4fdc-b045-722d154d1b2c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.112762
@@ -5039,24 +4441,20 @@ d573ec05-4b68-4a43-a39e-e36514ce6e82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 557bf839-3c47-4776-af04-0f906fcc41a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.197883
 557c5183-691e-4302-b217-a6b513d3141d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.202872
 55812619-8ff8-4a0f-b145-fc2d9f02a39d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.207972
-55c78b1a-5aba-44e3-8194-1b2890945804	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.373716
 d57425fb-0e35-4694-821e-4e391492414f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.483664
 577ac2b1-1b43-473f-adfd-6449bbc493f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.560247
 57c2f1bc-4803-4cdd-a80b-2a6cefd5301f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.600407
-58545f40-67b1-4470-8544-3efb0634c8da	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.70486
 5587d5aa-44ca-41cf-8984-54ee7b2e0a5f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.218787
 558bbdcf-2967-4b05-9db5-d40932384c0d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.223124
 558cc384-b880-47e8-9844-0130d339c935	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.228048
 559330c6-b52b-4ce2-a97d-1719532f89e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.231837
 55aaf348-3420-416b-858e-2bc0789070f0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.236155
-55bf22a1-32e9-4c9e-b4a2-e8e42ee0161a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.240985
 55d34ce8-86c3-45b5-a4e4-870109589548	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.250076
 55de2f0b-2c88-4220-8c85-9c9f7f7bfcbf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.255349
 55e17d3d-ee68-4872-b266-10c67dc341d8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.260772
 55e3486d-66f6-4a7c-9bf4-a88f98adb80a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.264979
 55ee4618-ac8b-4a78-acdf-8ae9b840a74a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.269808
 55fa9c0b-fdb5-4548-8fd9-5ea4fb087aec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.274227
-560762d3-7fb8-42f4-a14c-5e5fa797c56c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.278843
 560d76e6-7fac-46b1-9593-08d7a099c979	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.284475
 560e09dd-13a8-41d6-a46b-17d9a13a1d5a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.290074
 5611c741-3de7-4923-a671-2b58ae4eb54e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.295493
@@ -5075,24 +4473,18 @@ d57425fb-0e35-4694-821e-4e391492414f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 566dceaa-d2e2-4204-994c-81f214c947b4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.368431
 566e83c4-e84c-4117-a6bb-1f802fe0ae32	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.372941
 5673d55d-c32a-4fd7-9dac-770c73577ad4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.37798
-56809586-07dd-4985-95a7-2d9bf194cc5b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.383146
 569e7dbc-3eec-458d-910c-e1acafbcdbd4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.388464
 56a3f8fa-ec4f-4d8e-b376-8eb048cfd821	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.393475
 56aef50c-c001-4a19-8714-ed812a522d60	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.399376
-56b77202-baf1-48eb-8e4b-b6328724bc35	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.40787
 56c20f99-9aab-441e-8f5a-8d5b3d59eb36	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.413401
 56c89f0b-514d-4f77-a9f7-a1a40d214805	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.418398
 56e23bde-4f12-4954-9398-67097da1a35f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.422927
 56e9c682-ee20-4ff8-b150-c3392a4433cb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.427946
 56f3146e-7c81-4df7-b01b-943d22dcde38	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.434634
-5702dc03-2abb-4eba-a804-342ce813dcc4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.439098
 5704b7af-bafe-441e-b070-163be4be0b69	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.443438
 571a754a-8c07-4568-a7de-6f3fba150693	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.447746
-571e364c-47bb-4f93-86a2-788f157596e3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.452502
-5725ea72-1dda-40a1-a717-85377ead9f2e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.45683
 572754a6-ab0d-4d45-aa16-becb97494568	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.461705
 572bed20-fdc9-450f-bdd3-1934aa640ebe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.466054
-573ac015-f12a-469a-ad95-e14fe9a41224	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.471092
 573aeffd-91a8-480f-8184-bde129f963b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.475072
 573ebe0f-48e8-49b7-8ad2-cf83ef2df0ff	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.480081
 57443b5a-3f78-4f3b-95b5-ab4660834e9d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.486202
@@ -5108,7 +4500,6 @@ d57425fb-0e35-4694-821e-4e391492414f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5765e47e-a59b-4c05-acbd-d8f029875af6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.541026
 5770112a-1948-461f-9efa-2d63c81546c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.545518
 57763a73-0770-4151-978f-dd8134a41612	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.54975
-57799a42-5f21-4a18-9872-efc95f1e42dd	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:50.49223
 578efdc0-55ad-4f89-b846-f51b92f3bf78	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.565039
 5791ef03-721d-43cc-bb7a-606b67348346	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.569236
 57a970c4-1ee8-411c-a34f-f6c901067d63	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.574325
@@ -5118,33 +4509,26 @@ d57425fb-0e35-4694-821e-4e391492414f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 57cb88ab-0b83-4933-bc69-1deb79520e92	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.604917
 57d0bfa5-1f18-454e-851e-ee215e32a16e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.610421
 57df2b69-a19b-4d81-9d7f-dad96ab3f9cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.615215
-57eb526e-becc-42d7-af37-47210a5408e5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.620348
 57ee585e-0dc0-4bc5-a334-57544215f38b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.625465
 57f84e7a-5394-4d8c-814e-e01e11a21d0b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.631081
 580910fd-33a0-4723-8d82-7c96f4d4ead8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.635153
-5818e1e6-bf8a-4b12-a03c-a5a4f0b1049f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.640177
-581ec5a2-9ed7-4012-8b00-45a2ba901f5e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.645478
 5820700d-569c-4f51-9ff2-3c7266aa877c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.651343
 5821c0d1-b083-467b-a43b-5a79016099b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.656828
-58287669-b2e9-4762-83f5-31161d40e156	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.661051
 582c5275-aa4c-4da9-bcfa-c72bfc94eb54	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.666387
 582d443d-abd6-4344-bdee-756ccde3c104	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.670929
 582fa361-0b9c-48f7-8698-a96d885cd7f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.67487
 58395138-2b5c-46e9-a33d-f6559b126e96	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.680361
 5839e6ee-f355-4d39-99e4-8a43cf1287fd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.68585
 5845c9b5-8b25-4e7d-999a-183f869b05e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.689939
-584cb9a0-5c0d-41ba-ab2e-1319a8e7e83c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.694807
 58715cef-3bb7-4a7c-a1da-20e2f8d8a812	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.709511
 587452fe-223e-4169-bf9f-785bbcf2c8dc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.714847
 587e173b-ae2a-4992-892b-305cbc3ebc4e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.71889
 5882f304-71aa-4a48-98f7-d2a2a261ba46	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.724197
 5883ff12-5490-403e-baf7-077a25be37bb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.728948
-5887b747-2b87-4bee-acee-ac4847091efe	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.733679
 588997ff-5206-401c-88dd-d2fb2be652e0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.737871
 5892a2aa-cfce-4159-92b1-6c6020ac7cb2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.74331
 d5743ecd-5a46-400c-b77d-445e233eb9f4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.48774
 5b108c51-7a73-477b-b118-d8ced0343ec5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.17803
-5be1c5e1-b33b-4bec-b1e5-d931939f7222	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.839334
 d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.491722
 58a82c7f-1f7d-4525-8e7d-8b8c995276ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.752863
 58b264aa-5e64-4dac-8d26-f58570fd270d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.757589
@@ -5156,7 +4540,6 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 58de93e1-f9de-4e1b-85cd-de6764593755	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.786805
 58e437da-e7f7-44de-a896-288ac86937f7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.79604
 58f010af-ebd0-4c27-8628-52d9de5bff52	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.801384
-58fdeaa1-8d60-4cb2-8ab6-7ff76105fb07	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.80671
 5900488e-8215-4a3a-8f2f-48befad5ea5f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.812195
 5903609d-511e-4c01-ad79-d23dc1a6922f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.817539
 59147f52-23d4-46c1-af4a-8f170104e3c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.823184
@@ -5166,8 +4549,6 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 591b36a4-2f1f-4e1c-a024-7c69e1a7fb00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.844865
 591b9e4b-9cbc-4a39-8608-b08ac97fda23	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.849384
 59206977-3018-4225-812b-b8fe6c1a3b8a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.853871
-592bb733-7569-48b2-8705-cc223fc5eb67	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.857768
-592ece23-5421-46b2-b646-a1c779fcc572	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.86197
 5932cfb9-7f6a-42ca-84d8-94d49b335fc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.865742
 59372df8-36de-40f8-b5ce-a048609a828c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.869923
 593c602a-d80f-4557-aab0-b6111703dd97	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.873708
@@ -5188,7 +4569,6 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 599ee14b-b8e2-4046-b139-e5fe607b6ecd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.949979
 59a9567c-5344-42e4-a144-12aabbe6455a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.953864
 59bf57e1-ea35-4e49-92cc-69104294e97e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:14.958846
-59c1574c-4940-4833-bdc1-166522057667	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:14.96326
 59c2f055-10ce-44fb-9823-37e74085543e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.96889
 59cf38ba-80d3-417c-a226-707ab699f0fe	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.979977
 59d5bf4c-674f-4aa6-b4ba-794a8a3ed330	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.985287
@@ -5196,10 +4576,8 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 59dc31e5-a808-4bc2-a6e6-181a60f215e7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:14.993785
 59e2cc17-681c-445d-8b08-fc989a1ea34b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.997947
 59e59a47-5196-4fe1-bb49-baf42612c095	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.00177
-59ec7f35-692e-4975-a63c-19c9178ead45	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.005702
 59f98513-6778-425b-ba3a-e4c37618f781	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.009856
 59fb347a-07d3-44ed-b554-a337315978c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.014669
-59fb97af-743e-46a4-9b99-da46a1b0e0bf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.018956
 5a0173c4-7a32-4ed5-b7fb-7dc01b3a767a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.022776
 5a03f3fb-ad83-457a-82e5-c0030c3f5507	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.027411
 5a0de7d2-aea9-4194-af9a-17b292b669f8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.033153
@@ -5209,7 +4587,6 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5a282ab2-1d1d-4b95-b4c1-b2f629545485	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.05398
 5a291496-4954-42d8-946d-597b6fc82575	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.058867
 5a33def2-4e4c-4760-a6e3-995a779feb35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.06684
-5a488441-e4a2-45e1-8935-f3c266160d3d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.070793
 5a586b42-6822-47dd-a604-c91554b33d43	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.074751
 5a652bd4-50cc-4633-b55a-f3829608b733	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.078548
 5a7b6524-8287-4369-bb92-1aaf2f69ee1c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.082652
@@ -5224,26 +4601,20 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5ab0d4a1-1f79-497c-9c8d-c5b51aaf5f89	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.121661
 5ab31614-52fe-4251-94fc-34a7a4376e26	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.125899
 5ab68592-d2e5-409e-a3ec-3feb1fd25f9f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.130236
-5abebba2-39b7-4ace-8b5b-2c94c15564fb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.135013
 5ac61e0a-798e-44f0-b294-c1f873092377	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.138871
-5ac9213e-108e-4e47-bd53-42c0e3f68488	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.143605
 5ad0fd67-748f-4b52-bbbd-e89d6e2b8af4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.151988
 5afb435c-1331-41c3-b1eb-56ff6df26ffc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.156142
 5b055312-80f3-4d5f-a113-18f77925d9f4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.159976
 5b0b9a3b-301c-4e71-a4c5-68206f938d15	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.163981
 5b0e149c-3e55-4aa0-9a97-79b7c04571e2	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:15.168196
-5b0e7188-0bec-4899-98c2-04a467408956	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.763569
 5b12f823-f4ec-4968-8eab-fb01fd2fa539	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.181827
-5b1379da-49ff-4a26-b505-c7f8d2dc47d6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.185996
 5b17d8e0-0a0e-4ba2-823c-6012ec628f59	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.190676
-5b1e4151-e17c-4f96-9bc3-c7468ae78926	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.195238
 5b21b266-384a-449f-b478-ee7a8a2df370	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.200953
 5b26b622-7844-4409-94e7-9b0ad0740a86	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.204902
 5b28e820-0991-4be6-a21e-6201b8bb767d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.209033
 5b2f0685-01b1-4411-bcd5-12a56aa042cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.214231
 5b3407d5-3397-4aad-8623-6d49052f5021	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.219133
 5b391828-f7d4-418d-8d66-9c80b7754fd3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.222956
-5b6ce48d-2722-4df1-9ed8-b7df01f22ba4	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.800115
 5d81d322-8246-4839-af12-d0df3bcd7ecb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.588713
 5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	15	\N	1	DaBan	\N	\N	2026-08-25 12:01:15.623654
 5b45a252-cce2-412a-8d62-9192d4c9c813	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:15.230738
@@ -5252,7 +4623,6 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5b7d2100-fac3-4311-88d5-421d858168bb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.247784
 5b7e9691-50eb-4a9d-92e2-33356b5925bf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.25682
 5b7eecc8-7d15-4c2b-93f7-a1ef4b8dbd31	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.261174
-5b8b6414-06c9-4bd1-a356-fd6368dee482	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.265854
 5b93a62d-7a58-4118-8d85-3ea6ba8ecd41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.269937
 5b941feb-5421-4451-ad83-650cf3f28ae5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.274725
 5b94ee53-2b58-4236-a08b-438b869a682d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.278904
@@ -5286,19 +4656,15 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5c749aaa-3ddd-4b58-800a-5380fc04ca41	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.429113
 5c7d7b75-a290-46df-a728-593d8f8112fb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.434434
 5c7ec7d2-971c-4e05-844b-d69a6f10d227	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.439258
-5c8872dd-f140-4d37-873c-627d70d23eca	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.449466
 5ca146e9-9a10-4846-b250-92e92bc89eec	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.455202
 5ca6ff1e-0860-4390-8610-173d796ea1f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.460284
 5cb365e9-499c-40ca-9ec1-ec60a3a57e52	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.465576
 5cbb1abf-f596-4427-8f25-48ddc47ad4c7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.471217
 5cc2559d-d6a3-4cee-ae3b-92b75abba7af	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.476491
 5cc5b5b8-1fc9-45be-8f1b-d55c84b5bcce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.481379
-5cc8b4df-b319-43bf-b289-ab6f03b3f1eb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.48813
 5cc8b9fd-bdc7-4450-8cac-6b84bcec5595	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.493236
 5cd0200a-b4b5-4e50-b1ac-3e560958abad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.497872
-5cd37d1f-0f1e-4b52-b004-f4022ec06b3f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.501813
 5ceb259e-9b9f-4230-9cdd-c85072ef563c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.506058
-5d118183-5b20-4a88-a433-9c133967c199	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.510221
 5d24db10-a109-4add-9f09-78b614a9fa97	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.513818
 5d268378-5396-4c66-b495-3eb7b7e310f1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.517703
 5d287d94-e60c-4c19-919b-d1da8eb9ff71	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.521821
@@ -5315,7 +4681,6 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5d60fec4-600f-4fcb-9f29-e8e8da6f62a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.572746
 5d62f928-c9c5-4aaf-b705-063b641a776a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.576781
 5d6fa1de-2129-4651-ab07-6a11747777e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.58073
-5d7e97e0-3d83-473c-bfcc-8dd7d4122d37	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.948227
 5d859337-2f6c-4da9-a942-e5a2f7e95230	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.595113
 5d864ec3-904c-4162-ba3d-923788fb44b8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.598982
 5d9374fe-eaaf-45b2-8047-4d7336baaa7e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.602903
@@ -5331,8 +4696,6 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5de9d0ce-7220-4168-8167-637df0ee08be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.656015
 5df12e95-4846-4e33-a572-117552d8d00b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.661305
 5e003f39-d84d-4f1b-9584-ef1e33e6c763	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.665945
-5e09584b-72fd-4f71-b8fa-00c8ce0245a8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.669844
-5e0e3c95-6f43-4257-b6a3-3b40f6f87a54	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.675064
 5e0f1b86-9854-40fc-a9e7-42907f184dc3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.679146
 5e0f21d7-6bf0-49db-a61b-671de1da3e8d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.683043
 5e114ba3-1e19-4cab-b991-2d6777e31305	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.687165
@@ -5345,10 +4708,7 @@ d5761833-d0d8-45fa-8fbe-c16ac4eb3c84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5e564936-59ee-42f7-851a-fe71826e4caf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.725783
 d576eb6d-ee31-4080-b202-ed7121c64363	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.496831
 d5935d87-1a02-45bd-8b0c-8ce113690b90	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.500711
-605e8e54-7942-48a9-8815-979f97dc33c5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.150011
 60e0b992-2e4a-406e-b81f-277c48dd6d6a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.233502
-621f909d-4d14-4b8d-8996-7fa25ac4139f	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.266496
-623f0bbb-b828-4512-889e-a40423f112b9	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:51.283349
 d594eba5-024f-4cb5-bff1-69ca24aad1a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.504768
 5e6a8b57-5613-4d76-b21e-f4c8c7454abd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.733921
 5e6d110b-2d08-4e11-984a-a6c8b1fd313c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.739059
@@ -5363,23 +4723,18 @@ d594eba5-024f-4cb5-bff1-69ca24aad1a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5ebcb8eb-a0af-4c3d-a2b3-b874a1c0e3cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.786449
 5ebfe687-8269-497b-8451-dacf0170f8c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.792785
 5ec24cf2-4d55-4feb-82f9-c5d672a5da55	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.798913
-5eca696d-e048-4ff1-9d46-a49a3565fcae	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.804581
 5ede5897-5b8a-4b65-9bcf-55dfc7f7bda9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.809648
-5ef6a45a-0681-474b-b809-93b88ddf6079	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.821931
 5ef735fd-a5f7-4ee2-8972-1438331d656e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.827568
 5ef8452e-f036-4d8b-8410-4f36271a8754	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.834761
 5ef929d3-d23a-487b-9002-68346a9788ef	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.840972
 5f0f9160-886f-402d-908c-1a506ac03bb1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.846199
 5f1335dd-a303-4991-90ea-d51b7b9b407f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.852017
-5f14db54-a472-4384-b5be-eb92cdaef7b4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.857598
 5f1b28d2-5a0d-4b16-9efe-c3ac2a56279a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.863852
 5f22d26f-7240-458b-8d21-cb484dfc541d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.869462
-5f26139b-ce41-42f2-92d0-88372e2feeeb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.87575
 5f2e707a-0e3f-4a92-ad58-a0f1c2f9d43e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.880444
 5f33b543-2c64-43eb-b540-f4b7a4dcdde1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.885878
 5f3490a1-70c5-4c69-863d-1bbcf2f40454	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.8918
 5f37b68f-34a1-4601-89ef-a82d0004e873	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.896424
-5f381111-9460-442e-80da-4f0b45d0d5b2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.902024
 5f4341ac-320a-4a25-aafc-9027a08ae294	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.90806
 5f4d6440-0664-4df4-b3e7-a272540fa6a8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.915583
 5f4f9693-119b-4661-8921-c3260628543f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.921282
@@ -5388,13 +4743,11 @@ d594eba5-024f-4cb5-bff1-69ca24aad1a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5f627180-d2d1-49e2-9443-d2f9817e84d0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.943565
 5f654edf-b7b4-4640-83ec-da4ed3b1214b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.950365
 5f6691b8-803e-4b93-9688-bc9d46bdbb1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.956561
-5f679038-e21c-4ac0-ba80-13312fc40be7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.962032
 5f67d2f6-c85d-4874-914a-92b5be05acf1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.967418
 5f7af820-5b57-4fa7-8018-161aee1bf27c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.973312
 5f88271e-e095-4734-97b0-9d4def4f5448	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.97825
 5f98319b-10a9-441b-ade8-0b3dbad75585	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.985026
 5f9c2f0d-a0d5-4d56-81c7-c5152fd377cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.991487
-5fa0c50b-86dc-4b76-8522-009a802b24b2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:15.99636
 5fa4072a-dd9f-467f-ab9f-0be38484b163	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.001373
 5fae8419-b382-47cb-b83b-fea4c1611175	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.006899
 5faf6a31-b72a-4cb0-b41b-29a3b9480221	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.012963
@@ -5409,36 +4762,29 @@ d594eba5-024f-4cb5-bff1-69ca24aad1a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 5ffb40cb-b87e-42e3-ae89-ba46bb48c883	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.061934
 5ffca52c-388d-460d-9d72-60744dc43d96	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.065929
 60003361-3016-461b-8669-51eac2e3a4e8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.070706
-6014f6da-9c60-4bea-b065-9e969996f362	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.077562
 60182810-935b-4a14-9594-4be11d16c617	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.083267
 602e29eb-cd64-4ec6-a653-3d0171d012a3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.091212
-6038d087-6883-4bc9-ae64-e368ccab0f2a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.097331
 603a2bc2-9150-41e9-bfbc-d1800df58b64	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.102259
 603b6e6c-8f3e-4427-9005-5de279469397	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.109362
 603d3a3a-b391-4a3e-a7f4-029377cea3b4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.114481
 6041a769-0fd4-40d6-825f-1da997e92d00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.119171
 6048ad01-5374-4f20-a205-99397b36e7b3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.123253
-604cacd7-c249-48f6-945d-9e6785cbe1c3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.128328
 605b1cb2-05f9-42e1-82da-a9d508248fb0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.139691
 605cad78-91fb-438e-8f9b-77381f9811e6	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:51.138657
 606863b2-675e-4af9-bcbe-aed1a89437d5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.156598
 6068b0c7-3ca3-40ed-87e8-d789538fc4c9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.161848
-606e4e30-83e7-4b93-a057-02ef49607b3c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.168449
 607562de-2bf0-43ce-96fa-0de151fe495d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.173575
 60793097-1bfa-414e-8d91-e28f77f7614d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.178023
 607fd833-8a2a-4f45-ba52-f8f9301a031e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.182521
 60806b64-045b-4a92-83e8-2bde99b80380	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.188529
 608599c9-5a73-413d-abd3-efbb8614e36e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.194759
-60b25dc6-c162-446e-90f9-51b09e4a07d5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.201174
 60b6e127-f135-4964-94ef-d74f02fe0edc	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:16.207648
 60c3692f-b763-4de5-a311-7ff1776b803e	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:16.2131
 60cc0ebb-c025-45f0-ac9e-1481a78bca50	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.218852
 60d3ce48-cc80-444e-81a2-b6139ff91652	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.223616
 60e04866-b60e-4a5c-863c-2806c583902c	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:51.172483
 60f03c4f-ce89-4d0e-a1e2-cc0843b5dd98	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.238078
-60f606ab-00c9-4b2a-86d8-4d4335743e4b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.242328
 60f874c6-2a10-45b0-be7f-88bcf76d8a6b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.252504
-60fff7e5-0959-4500-a4e6-62cccecd3901	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.258306
 610180f6-a565-4042-96b6-fd423dac7a98	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.263667
 610ac1c3-44f6-4b64-bc52-c064488feafc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.268671
 611f7899-8529-4402-ac16-0311d6061c1b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.273565
@@ -5446,22 +4792,17 @@ d594eba5-024f-4cb5-bff1-69ca24aad1a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 612d480b-6e22-493e-bdb0-03889dbb8c86	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.284745
 613501eb-77c1-43f2-854b-e2d2cb386a2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.289312
 6135cfa6-4d9b-4809-bfc7-87b13174fc27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.295286
-61b084b1-f71f-4630-bc5d-af37b26b3a14	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:51.237642
 62e7ea1f-27f9-4d70-934a-537053b89595	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.644441
-65690399-3542-471b-9a5d-889fba0d9dcf	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.517785
 d59dfcd0-0683-4d8f-b357-500cdee0c8d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.508763
 6152540c-055d-459a-b2db-1e056532d1fd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.305338
 615a4f47-60d5-41fe-a077-457a84f0566e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.311119
-615b3ce0-7608-4547-900e-c28ee892b142	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.316268
 6161d316-0020-413d-b9d9-4d953cb9a52b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.320054
-616a0dcc-791e-4c74-8702-7ea80e0db44c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.323995
 616c1449-8ac1-423d-bb5a-49178671e5dc	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.328085
 616d4236-8971-423c-9daa-0e64a288f5d7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.332114
 6174e91c-5c77-4d48-b50f-4d0843cf82ac	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.335886
 6178095b-3752-49a7-8d5c-df6c8c8da834	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.344864
 617e27c7-90cc-48cd-9bc4-a9df3155f6d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.349658
 6185fc2a-7c5a-4ffa-8597-850496218a6d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.355732
-61864af8-d9e3-4f3d-b51b-79b13dc25ed3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.360159
 619403de-903d-4daf-a74c-e48c44fe2c03	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.363999
 61a16e9e-7159-4fb1-9cfd-9f21a0d400b2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.368361
 61a838d3-9d80-44b5-a9bf-a516e1bbb0f3	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:16.373443
@@ -5478,16 +4819,13 @@ d59dfcd0-0683-4d8f-b357-500cdee0c8d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 61eddf6d-0600-4e2c-856a-c0d42483e13b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.440884
 62031929-25d6-4464-8eb5-0bd5ade3f6cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.457531
 62054a2b-b79a-4ee8-be43-18202e23df65	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.464706
-62120742-1a80-49d0-842c-80cec1e184e5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.469269
 62271727-987a-447a-ae02-d14b3bd2f37b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.481722
 6229ba97-78b3-4229-ab68-5f16bd54ed21	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.488897
-6229d15e-ab8f-4112-b630-82d293fac0e6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.497857
 622a3a2d-1afd-4d3b-8803-a732d245c8e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.503434
 622ba348-9105-4b6a-be0b-f20007fb7b2d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.508032
 62307597-1d89-41d3-8375-3aacdfb33802	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.513161
 623e21d1-8d29-4fe9-8f8d-03b6f3de6de5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.517146
 623ff4f1-a15c-431c-999f-12e2bee8b85e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.530846
-624ddb9d-e240-4796-b124-33337f46d1d5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.535883
 6253c504-8978-4e67-a311-df00e3e68827	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.540136
 62549df8-c89d-4842-9a07-834f542e1eb8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.545637
 62585337-5531-4b0d-90a8-cb2d28b7e5fa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.550319
@@ -5496,7 +4834,6 @@ d59dfcd0-0683-4d8f-b357-500cdee0c8d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 62624f9d-8319-4811-a84d-7cfa2391b742	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:16.561997
 626d5f81-e999-4ff5-8740-06a2d05a9b09	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.569878
 627f73da-bb0e-40ac-9255-7a3e19d817c3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.574004
-628c74f5-6f77-481d-af88-87b2c7a8a15d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.577927
 628f19f2-6a5f-4ee1-bd41-1d336bb48540	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.582977
 629192ea-4e95-4c2c-a9d1-fa21675e7143	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.588369
 62a21f12-8827-4adb-9323-2fa15bb4d7f1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.593241
@@ -5509,7 +4846,6 @@ d59dfcd0-0683-4d8f-b357-500cdee0c8d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 62c9df6c-2abc-4bbe-bdf1-ffa654aaffb4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.624322
 62ce6d00-1238-40a9-82d0-956166def4c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.629287
 62d727e7-963d-4b06-aa7d-f2f63c1ed634	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.634368
-62df5ef4-dea5-4329-9686-1346c7390025	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:51.33446
 62eb370d-7bbf-4828-882b-39491d1c5be1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.650715
 62ebda6c-16a5-4284-8f98-d2cfe5875be7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.656864
 62fe84d6-5f64-47d9-9507-23b9c9359450	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.66552
@@ -5526,10 +4862,8 @@ d59dfcd0-0683-4d8f-b357-500cdee0c8d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 63346fb6-f1e3-418a-a579-3728aa975263	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.720371
 63512477-c974-4a6e-8c2b-285eb8c58d47	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.725703
 635a76c9-ae97-4b15-8f52-2fccdc1a7a68	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.731375
-63613b47-9ba4-466f-b084-7842e597f2f8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.736846
 63636ea8-3b02-4498-8e53-571c30adb006	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.741355
 6368f788-46c4-41db-807a-a169c4257541	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.747276
-636a21f6-da82-42fe-8c41-9255a3b70724	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.753098
 637bd483-3037-41da-b539-d520caff5a32	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.763605
 6382e547-f586-4732-9015-2e61d6562f5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.769153
 638f7c05-5f45-4c86-a5c9-6a66d11ab00f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.773379
@@ -5537,10 +4871,8 @@ d59dfcd0-0683-4d8f-b357-500cdee0c8d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 639e633a-931d-4df5-8ac5-f1d2e47fe5da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.782705
 63a40287-eb85-4928-9b5e-517ffe801b84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.787465
 63a7cb8e-bc2c-451d-bf10-34f532649b8e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.792281
-63ae34ff-4283-4db4-97e5-4871d4e10ec0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.796525
 63ae797f-53d4-4fa8-90b5-212d6d4ecd6e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.801864
 63b6b0d4-16d3-46bf-8f9d-3aa21b125681	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.806248
-63ba5e6a-46e2-471e-897a-fa38b68c3d59	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.813496
 63c3987b-ab64-43c0-9f6e-0303822f3e54	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:16.818879
 63c6c6ca-049f-4fb1-9803-bd430fb442db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.824672
 63cc5f20-bda1-49d7-8225-dc9f85e01ffa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.829746
@@ -5552,17 +4884,12 @@ d59dfcd0-0683-4d8f-b357-500cdee0c8d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 65f891f1-15cc-4411-8125-9e7dbe590d2c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.217002
 665a1108-68de-4a03-8301-60891327b918	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.310954
 66c5d71d-62df-47af-a335-4eb50ed60f88	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:51.676052
-675c057f-f77d-49e5-9d38-2da507bc51ff	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.720484
 67f4414b-f41b-4cb0-8fdc-9b42fff97bac	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:51.782478
-6815881f-604a-440e-9948-801ba51cd389	1	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:51.806084
-6820b62d-b7e7-4e7b-8c8f-755f23b454db	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.822706
 d5a0f875-8108-4c8b-984a-0222267fc646	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.512597
 63f42bec-d75c-422a-8b95-314c05050364	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.862407
 63ff2caa-4f4f-4dd0-a18a-277f86d653f3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.868328
 63ffdea9-d61d-413e-b3f7-fa66cfecd140	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.873597
-64020d25-ec9d-4305-b922-84b9db245605	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.879962
 64061d01-bdd3-4c6d-a99a-f3a71bde8e42	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.884678
-6413ff8a-ebc5-4aff-bb6d-2f3e070686c6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.896965
 6416c119-67b9-4a3d-8840-5bc02918fdd1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.90279
 64179dd6-253d-4e15-bd67-213ec3a1394f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.907632
 641eae9a-bf46-443e-b030-2cd4a9a018c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.912481
@@ -5575,9 +4902,7 @@ d5a0f875-8108-4c8b-984a-0222267fc646	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 644e3837-eacc-41b3-900f-e6a21f7467e4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.94733
 645edd83-012c-4893-a256-48d82d674106	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:16.952309
 6462f066-dcbb-43b8-98b9-90849f9bdc4f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.957386
-646d416d-bc1a-4bdc-9042-f83ebb1e185f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.962602
 64706a93-4002-42df-b478-0d778365d429	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.96745
-6473be29-f776-4af9-b1b7-43a98f3efa9d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:16.980682
 647c4a66-b8ef-4ee8-bfde-711a555160a4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.985666
 64805c4c-d6a4-493b-a132-c163c5de3956	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:16.991478
 648a1abf-60c5-476e-b9fc-f26f299a4ef5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.001742
@@ -5594,10 +4919,8 @@ d5a0f875-8108-4c8b-984a-0222267fc646	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 64da261b-7b65-46fc-b264-f574be43caee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.049044
 64df4a12-57f8-4b92-873f-7c078ab9221f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.053378
 64e6612c-9526-47ea-9b28-fd56054e955d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.064188
-64ebab03-67cd-4e78-8aef-1e0e3e40699c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.068172
 64fbcd74-5b57-43e2-9717-1534db828bd0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.077229
 64feec46-df0b-46b3-84b6-4061bc8a9434	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.082187
-6526b37e-6dcc-47f3-8df3-453389b31c71	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.085907
 6552a37f-e8c6-4f92-adf7-1fec12d67c33	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.094072
 6554c24d-52f1-4776-8189-288284ba67da	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:17.098124
 655aa7f6-d994-46dd-897f-5ac5b3c65d84	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.10238
@@ -5613,47 +4936,34 @@ d5a0f875-8108-4c8b-984a-0222267fc646	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 65a82d50-6fe6-4d6d-a122-29296b9fe8a5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.154942
 65adae07-d17e-4498-a9cf-d5676e2295d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.158983
 65b46abc-7123-4c82-bfd1-0e3a95b42e29	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.164011
-65b78a5f-8d03-4872-a360-90edb2a57dfd	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.167929
 65ba82e6-58a1-4e03-b37c-0edfbfdd0fc4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.171854
-65c78a51-107b-4a26-b84d-8c9dd41fa9d5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.175933
 65daaf26-e0dd-4540-8587-5a5a9b8cb8e2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.184716
-65e6d08b-19b7-412e-b9e5-f1eb927d15e4	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.553311
 65ed5f86-08b2-4cd2-bdff-74945ee6895d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.200752
 65ef9e55-8c69-46ff-806c-44a07cf9ec93	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.205028
 65efd219-80fa-4b7a-b262-7399cd77309d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.208781
-65f864cb-d536-47ae-b4f4-1a39723fa3e2	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:51.569235
 65fd1e72-12ad-49e9-803d-aa10dc5b6451	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.221945
 65ffee3f-51ee-4c56-b87c-8419e0da5387	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.226029
 660ba98b-bf31-4257-b5c6-b82368d1e654	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.2306
 660cda04-56aa-473c-9373-b7c47c79d23e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.236405
 66198932-2cdc-40e0-ad3a-240e08b165f5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.242339
-661a0a90-f6c0-462e-ba14-6baebc1b912e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.247306
-6621a067-8fd3-47ce-8cd1-94bf8c59508f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.252606
 662c8f38-ae03-4545-bcfa-acb8daf84fac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.257272
 662d205a-4504-4459-9f43-94cb82265eab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.263485
 662e4c4a-1dec-4af6-acd6-e7cafaafb45f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.26848
 6635b594-2502-4ba4-a27f-14efb9510e2c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.273679
 663bd164-3dfb-465d-9e99-fafa13531b33	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.278639
-66435339-e7c6-4ca4-8ee6-4d4a99596361	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.28927
 66492b08-81f1-4620-8844-7dcc24e1d152	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.294546
 66575286-77ba-4aac-8bee-0bce5c96a7d7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.300406
-665948c4-37c5-4404-926c-afb300216192	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.621774
 665a8892-d07e-45b8-b4e6-2ac3781c327b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.315459
 665b418a-24a3-4de6-9360-70f2cba23318	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.32055
 665dda68-634b-4997-bfb7-414cbea00237	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.325545
-66648f47-56c8-4d36-aad3-6b8c6b4b1663	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.330874
 6670bcf3-1466-4e00-9f42-a3055583ea84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.335664
 6676a955-e1f4-458f-92da-c629660117bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.340365
 6677ee80-0e97-4152-8005-074e1d2df2dd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.344446
 667a96fc-e2ad-4a64-9261-11ccf0a5a904	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.349617
 667d549b-f295-43e4-88ae-8ee46a2911bd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.354407
-66c01ebd-d72a-459a-927d-0ccfffb93baa	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.670273
 d5a145e5-b624-4c65-b2e2-435b235b317f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.516727
 d5a5a572-3850-4f07-85bf-762b39042dfb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.520655
 68fed355-326e-4f0d-bc3b-616729cfbf98	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.851904
-6a25c8d9-91bd-4414-af6e-f27c5d626d22	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:51.998328
-6a84f70a-4f7c-4947-822b-a3b2936472b3	1	\N	2	TrongKho	\N	\N	2026-08-25 11:57:52.02902
-6aba7f99-a7ce-401b-a7ae-8e73167f669d	2	\N	2	HuyBo	\N	\N	2026-08-25 11:57:52.049597
 d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.524559
 66836def-3a2c-4401-9b73-e29a083e6fb4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.364643
 66908bef-5331-4fb8-ba51-afd718a05678	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.36948
@@ -5678,13 +4988,11 @@ d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 673d6306-f056-4cb3-b726-ded4390f5e95	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.476337
 673dcde1-26ad-430f-b9d3-25cc84ad630e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.480482
 674e390b-82ce-4228-b4cd-2ceac26f71cb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.486321
-676afe59-c973-4b4b-a0b3-1abfb49891c0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.499448
 6770743a-4ddd-4c28-98af-557115df632f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.504218
 6770f248-07b3-41eb-9ca0-73da04b5c370	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.508059
 677395ef-95a6-4756-9fa1-ddf15a8c85a3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.511985
 677c1e0c-c907-4340-a82c-e7d227cd9bfd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.520085
 677d4de7-689c-4cc3-a665-8ddefeb3f2f6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.524119
-677ffc99-e2f4-4a30-a43f-ecb1fc24156e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.527907
 67843c98-5ac4-4514-b5a9-4fc6e3d12e5e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.532404
 678c4548-4d85-4fc7-93ca-5eef1abe2a09	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.537127
 678e9f75-dc85-4042-9ee2-63f3b1b141cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.542546
@@ -5692,15 +5000,12 @@ d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 67a18cf1-6a8b-418a-b6f0-0f1200ae0762	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.557843
 67a1baa3-4f2b-4fdd-a9a6-59bbb2422cec	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.562611
 67a6e52b-fd31-44ba-b362-ceca9e87946a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.567438
-67ac25b3-a19f-49cb-83e5-0460d23368ca	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.571273
 67af1d7e-385e-4e04-9e79-a54a6362c26a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.576391
 67b4e0d2-9449-4173-aaf5-5e52cee38c6e	5	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.581972
 67d527a4-e52b-49f1-a1a9-ffca0d681bf3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.588403
 67e231af-eafd-4388-a10b-130986d57f16	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.593921
-67e542f2-0086-4842-b4cd-86588909e8a1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.598408
 67e9f508-4345-42dc-8215-b740e8deb91b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.604033
 67f598ad-fb4e-4af2-a410-8dbf2f12b377	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.614189
-67ffc4ec-eff3-4794-b30f-53f1ad634eec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.622403
 680c20eb-29df-477d-9bb9-13a361f987c1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.627491
 680e93e2-c73a-457f-a80b-a07445508603	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.631039
 68104487-b20f-43bd-ac7c-f33dcf9d8c1e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.635242
@@ -5718,20 +5023,16 @@ d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 684f06fe-cf9f-4efe-ba88-88cb77339ba2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.694409
 685b93e4-e2c6-459b-b58e-c2f700566036	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.698446
 68601b7d-9ee2-44cb-b688-b73a95ff137e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.703263
-6862afda-0fbb-4e0c-8159-dc18934de5d5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.717201
 687397e5-0f01-4294-8c64-92ce6683e3c9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.721158
 68792619-bf9e-4e2c-981e-58ce08f2f5d5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.725095
 687949ff-ff8f-4b2e-86ef-829f014f1a32	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.729215
 687a40f4-e162-43bd-a212-60066dba8dc8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.733236
 688e1112-ad10-43ab-8e47-1f87218551da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.737268
-688e2de4-5c3a-4c67-b1cb-80f2e53631a0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.740971
 68933a43-588f-4961-a3a7-162910db9186	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.746558
 6895546f-4572-4849-8203-bb4120adff66	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.752994
-689c7c13-a2c9-46aa-a096-1965d121e807	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.758583
 68a13a2a-dafc-4f21-8dc9-72353ac8f39c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.763191
 68a4ade6-e98d-4f97-b818-700dacc72a32	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.767513
 68ba4b41-a2ce-4fef-bd89-10ed331e0cde	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.77314
-68bbff72-7ecf-497f-97f6-89ef6bd7eb5d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.778293
 68bf49ea-6587-4a85-84af-8e9a1a712b50	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.782931
 68c195e2-19a0-48fd-bd3a-43585bbbc35a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.78733
 68cc2704-cabe-48f6-8344-7df98d629048	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.791253
@@ -5743,26 +5044,19 @@ d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 68e116ce-a805-4d43-a5fd-6cd29209d091	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.825562
 68e4ca49-5f27-47e1-8fd6-8db2552f8413	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.830349
 68eac240-6d91-4dca-b662-fc470d8bacca	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.834046
-68ed8400-2e78-41c8-ad8a-b3a71ccaa6c0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.838223
 68ed9192-4ffe-4222-8753-d87ad70ee608	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.843741
-68f7913a-edf1-4651-a467-6743c6d376df	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:51.917444
-69015cf8-4a29-4621-a6f6-5db7a9a349ae	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.855925
 6903ec35-7bb7-4f28-8364-519c5527c200	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.861353
 69044bf0-b4a2-4bdf-b389-6ec3893b1303	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.866198
 692e7539-a7b0-45b1-af0d-53a3e54441bb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.869859
 69364c5e-99c8-4eba-ba02-8934811875d1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.873859
-6982a684-c02d-489a-9b5c-117b165c8e8b	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:51.947721
 6ae42298-5f43-46df-b4f1-1eda24167ede	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.242199
 6bfada13-142b-416d-a1a7-5ff5c2c043ba	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:52.156089
-6c36b326-fa63-4490-88e3-f2a96b59c42e	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:52.181048
 6c9821b8-c2ff-466f-a2ee-4284386b48ce	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:52.220805
-6cd3b0a6-c97a-43e8-bdab-d169bfecdeb9	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:52.242406
 6cf7526b-fe05-4432-91ec-2aae65359f22	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:52.25741
 6936bc1e-f984-44d4-92c5-da2b5a059095	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.878859
 693989a5-80fa-4ec3-8809-8ca3e999a257	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.88307
 6952b39a-5b0c-456a-81ba-96d3911467ca	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.891029
 695414d2-6823-4475-8858-3b586c6dcc6b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.895307
-69574049-b250-40cc-a15a-4daf1ec204bd	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:17.900649
 6965c83f-6595-4865-92d1-bd2ae66945c5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.905415
 696fcc48-400e-4407-b16b-772b384753c4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:17.910113
 696fdd72-3537-4abb-b07f-39be8c53c6db	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:17.915944
@@ -5781,7 +5075,6 @@ d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 69b687f8-9785-4c9e-bb09-9beb0c97b3ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:17.998021
 69b86bfa-61da-446d-b965-d89683a7bc19	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.002258
 69c3401d-7a12-4d17-83ff-21c014f66c92	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.006228
-69d3b771-1b5e-489a-9bdc-c06c80954756	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.0101
 69da1dc5-bc7d-4bf1-918d-bba9e7d6d095	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.01423
 69deac1a-8ce4-47bb-bd82-fb4c899c8845	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.018232
 69df813c-1148-4cd0-9070-4a703510a0c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.022106
@@ -5789,30 +5082,24 @@ d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 69eae3d4-8fbf-4915-a1d3-626ec42c9154	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.030109
 69edb0d4-4074-4e86-bbc5-04186477f01c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.034069
 69eeae67-397a-489c-9f9e-8ad44559a4f1	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:18.03955
-6a0123d1-eddc-4eb4-92a5-2fdb78993599	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.044313
 6a085151-68d0-4338-a7e4-61f2d06cb71f	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:18.048005
 6a08f6ae-6205-4e0c-b0ed-0dca504b970e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.052293
 6a0ae58f-9e4f-4b0f-b885-52135582e5b1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.056496
 6a24ea10-ebb7-4f64-9cbc-30292fadcf42	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.061857
-6a254cca-80c6-49fd-b895-abfbba4b7070	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.067633
 6a2948d0-10fb-40c6-9f7e-5f6bfe4880fb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.076177
 6a322e7d-b6c4-4a94-aeee-0b3a67a140d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.084133
 6a3f8890-16cb-488a-8ac4-28070780b7cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.088038
 6a46b95b-29f9-4f0d-a4ef-880fc6777120	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.092021
 6a46dd5b-3997-49c8-a798-9eb81b18b5ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.096142
 6a4cdcab-eebe-460d-9f84-a483e5ec3aaa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.100868
-6a4e4673-b103-45a8-971b-f8b15a783237	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.105289
 6a53db47-31c2-45b7-b619-e8143daf8e4b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.108897
 6a5c2917-90b3-4558-9023-7614d17191cb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.114805
 6a63d74c-48fc-44f1-ba8a-844c102174ec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.121084
 6a670d67-f139-4363-86c7-7e5321a44f39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.125022
 6a6a5033-4c73-4a2c-be94-766cb91d3aad	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.128849
 6a6d2d8b-f00c-4ae4-ad13-21c730d6cb88	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.133374
-6a783711-39e0-4149-8500-d012c06d8236	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.138351
 6a7a8b0b-1941-4d57-8ebd-dbe8ec01b6ec	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.143303
 6a7d6acc-f0f2-4b9d-8a0c-96d015b9fa40	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.147031
-6a81d59d-45fd-4b6e-af96-fe2416b4a875	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.150979
-6a884403-f069-4236-8fc3-50400aa4120b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.161179
 6a8d9a4e-5039-4c5b-b2e4-052ccd354fd4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.165219
 6a934715-49c0-42da-b681-b7a3202f0125	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.17426
 6a96827f-851e-4d3e-955f-0e9fd168f339	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.1783
@@ -5846,15 +5133,12 @@ d5a91b62-a410-43b0-9b49-187b4eb0cc3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 6b718df3-057b-4e29-85e9-822e59f99cae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.325665
 6b815fe0-762a-47d6-b2f0-5bf4e99621c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.330724
 6b854235-a92e-41b6-8e25-359124975892	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.335241
-6b876f8d-d253-43ba-bcf7-0f72161f379a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.339301
 6b88dcb8-50da-45c7-be0a-1490d314e168	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.343363
 6b8c25de-2f14-46a7-9b31-91488f5adbd9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.347935
 6b8e8080-6f33-4a0e-864d-5ca72193c662	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.352434
 6bb1f85b-7ecf-442d-9492-b57da6623be3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.362848
 6bb26d65-7bd2-4366-8144-007e87d84aec	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.369044
 6bc9a661-daf9-4893-92d8-ea91ea55b89e	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:52.134934
-6e79362c-25c4-4d2f-ad57-f7d5fa8a3c9f	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:52.379853
-6fd5a2ac-34e5-4a35-a32d-74cc1ea8057c	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:52.46613
 d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.528821
 6bbebefb-e3de-4e3e-b982-fd532430fba4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.380796
 6bbf668b-2a51-4025-8ae0-3a5975d49b41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.387036
@@ -5874,18 +5158,15 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6c03a6cc-1a98-4636-84ef-83a6cd87de6c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.478102
 6c1564c3-edbf-4372-a5b6-448d0c2dbecc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.482692
 6c1f1bd2-04dc-4c32-a04d-f5864b4b8dfc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.488035
-6c23a34c-7101-4351-a4ef-99568ddf64cb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.494344
 6c2c8c15-56d7-4c2d-94bb-6c0886a5f382	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.498264
 6c336394-3499-41df-a143-9da6225dacdd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.50289
 6c4f3d55-ed67-4150-a648-42268ac4a565	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.511943
 6c4f7fd7-0ffd-410d-b6c4-04bae4e94cec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.516381
 6c4fe6c2-f3ef-4305-96fa-3e618b98ee7e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.521458
-6c5ab94b-0e3a-42d4-8fd8-b941e859af63	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.525108
 6c5c74c7-82fb-406d-aba8-ddcf69434379	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.529247
 6c60aac8-ceee-4a02-984c-8aedc58e803a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.53314
 6c62b26f-7541-46bb-b248-e58359b3a36a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.539471
 6c6a1c2d-ba33-4f53-950e-c78bb127afb3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.543161
-6c7346e7-5080-4c9a-a47b-6c64b53ba5cb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.547315
 6c78d104-5371-4be7-957e-9c9f154cce34	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.555433
 6c7d6d17-cbed-4d02-a231-989576ba1288	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.559071
 6c7fdb97-d461-4328-9937-545438e03fbd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.563208
@@ -5898,26 +5179,21 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6cb64b04-2186-4898-ad77-ddfd98d9b672	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:18.599316
 6cb8eb41-537f-4729-8d63-048658afc446	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.603179
 6cbe3c48-441f-45ea-9694-4c256f506235	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.607184
-6ccb0287-2e13-4996-a30f-247c42d93e3d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.611758
 6ccc42e3-ab3d-401f-9264-fc1154464d55	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.616035
 6cd0ef35-16d7-4a1a-ad2c-ad0f49ae4463	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.620123
 6cd314f9-994e-40f2-ab70-96f580142f0a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.624239
 6cd52fe6-9567-427c-a868-fa92b7968a26	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.636152
-6ce42e5b-1bd6-4fbc-a9e1-b19ae9cdaada	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.646476
 6cef2048-c1c3-49c3-8b2c-64a6d3b90e02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.650197
 6d00cb72-105f-4155-b093-ca3d62c21ddc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.659309
 6d0774d7-c5de-4623-a05c-5c579b9e776b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.663064
 6d0ebc50-e281-463f-85b1-aa817f35c413	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.66718
 6d14c0c4-24af-447d-a264-09dc56567b49	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.672975
-6d14c39b-172b-4271-97d3-7a331257d4e0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.678643
 6d15d7a6-20de-44a7-bf9e-64eb68ba6ab2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.684464
 6d22d8e7-bd40-4d1b-95c8-9b1ff5059ab8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.689516
 6d23c2ec-49e2-49ad-b418-ce7848eeea52	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.694193
 6d29df66-0ead-4af4-a53a-8ec17c4dece2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.69811
-6d2c690a-8fad-4cb5-871e-7ebd10600853	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.702306
 6d349027-2abf-426a-9290-f48d23728062	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.706409
 6d3c1239-9bca-4061-becf-2df53685c1dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.711446
-6d410cbd-b2aa-4e32-aa98-1d408671be18	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.715313
 6d486338-78f8-4af2-8193-cef3859fd61e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.719163
 6d49194e-7a26-468e-8046-c13697455643	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.723213
 6d4da4aa-d92d-49d8-a902-fd19bb6ae6d3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.728362
@@ -5925,7 +5201,6 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6d55acd6-3bae-4b17-8c4c-9fa54e189b08	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.743662
 6d5673fe-2e20-4507-b121-ebab732cbe24	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.74955
 6d5ab165-5d45-42f4-b624-ec81b4026088	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.755575
-6d5e4268-2aa7-4ea9-8b16-a579adcb4108	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.760527
 6d605a47-57ff-4f06-8eff-8a32c577f28d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.766632
 6d6a7936-deae-4369-876c-56975d4308e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.772671
 6d741383-db1a-42f6-b277-302fdd4b5dc7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.779601
@@ -5936,10 +5211,7 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6d88b194-a7ff-4d31-b0d5-70ee6a40d26e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.811483
 6d8dac2f-27ad-4026-a7cc-6ac680eda751	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.818677
 6d912719-5769-457f-aad1-fdc3d217ddea	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.824525
-6d95fd8a-ced7-478c-aa1b-439fba0afe13	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.83158
-6d9a29e8-4c2f-405c-9f2e-b1f45d335e23	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.837106
 6d9ac964-7cae-405f-a861-5d3d7c73a2b3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.842958
-6d9d3c7d-04a1-4ed7-af3a-92204dbe3700	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:18.848716
 6d9e4bc1-3584-47c6-a387-421afdf1edd8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.863438
 6da07dd4-6f84-46d9-b17e-8e4b5dc1a0f0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.867203
 6dbc4a27-7c27-4e34-a558-8c3cda8ef224	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.871269
@@ -5954,11 +5226,9 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6e0e8ed4-7db2-4414-a8cb-9b581e071ff8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.909061
 6e138103-f91d-4500-8e9d-cf3d73b57d4c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.913094
 6e170f77-f86f-439e-bcbb-3d3d25fc1d82	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:18.917187
-6e2fd84a-2d96-4e9f-b69f-18c1cba3feb3	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:52.363812
 7075b474-0d6d-4e50-be38-b465e4b91136	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.299214
 71137c48-95d8-491f-a94c-06b92957d770	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.428047
 6e2e87e9-38fe-4a8d-9719-c2b2b296a57b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.925692
-6e2f4f38-5490-4c43-8abd-bce0a185ff18	1	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:52.358408
 6e3e364f-05ce-4bfc-b9cd-b63ba61f7134	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:18.939509
 6e4e1437-f6fc-447c-a0e0-61f51503cf77	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.944355
 6e574686-334d-4402-8820-450f6c1c0437	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:18.948133
@@ -5973,7 +5243,6 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6ebd0f84-f3e1-48c2-8cfc-31194b38faa7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.002546
 6ecf9d03-8a12-458f-9e44-5d279c9f19c1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.008016
 6ed0bcd6-9689-4f3a-b7ac-33e747b353b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.01369
-6ed14524-58ef-4214-b2dc-f1692cd21133	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.019053
 6edb759b-542d-4e80-9a27-797fe3874a1b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.02335
 6edf66ed-a49d-4c5c-8358-c6370bf0a8c7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.028423
 6ee3a098-a808-4857-95e3-2ba17f15a26c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.034219
@@ -5982,17 +5251,14 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6f0db13f-a89b-4031-8be3-0fa26a5d1da5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.050741
 6f0dbf98-f919-4751-8664-2c1dbbc2a23e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.056402
 6f109416-35de-4082-9a48-077a2676f042	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.061726
-6f117eda-b5fa-491e-86ab-5d746e3164a6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.066567
 6f20852a-eaee-4f2f-bb00-5bcdde80bcce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.070782
 6f2236b6-bc84-4524-b128-bfd4666a849f	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:19.075785
 6f2c4269-6bb0-441c-9d88-dfa8774e08be	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.08567
 6f39202d-e161-409e-8a61-ea20d5156dd5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.090939
 6f3ab6c0-0734-453c-bc04-b319f7fc6060	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.096476
-6f3b8ccb-2bf5-4ad3-a427-141092b32f28	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.101062
 6f3c19d7-edfa-4b37-86c7-49dbeb5f7ade	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.106574
 6f3c1d1d-d6c0-40d7-93bc-cbfd93fa53bb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.112042
 6f3c8c4b-55ff-433a-afee-09ea8d80a885	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.116878
-6f3e1b45-9acb-439d-8e17-1ffc12e11eb0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.122638
 6f44ec33-2241-472c-851f-3851f34eb00b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.127848
 6f50296c-c0f3-41dd-84a2-4f5bd2e5f531	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.133327
 6f5549f1-b178-450e-95b7-61a8bf6c6d60	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.139262
@@ -6002,7 +5268,6 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6f75aed2-1f7f-4e68-8f90-d19fce324d15	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.162307
 6f7749ae-22df-4ccb-b1d6-892e3ec8227c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.167694
 6f86f323-1b3b-48b5-a68a-8eeaec9e454f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.17519
-6f8b6df7-3dd0-441b-9ec2-3aa049387333	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.181438
 6f958190-8ac0-4b14-9712-5e25386f5cf2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.194658
 6f9c77ae-98d6-4dc9-b448-c35b5aa02bec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.200051
 6fa63cbd-1e12-4c34-9262-e34c3007b335	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.204481
@@ -6010,38 +5275,31 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 6fb4ff17-58ae-4e78-b394-f23e1ac975c8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.213627
 6fbb3b89-9428-4d14-add8-90b0aa021c4c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.218833
 6fc91fd9-29de-4448-9d20-c01f567a02db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.223432
-6fe55e64-2901-478c-ba3c-60df597b478c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.232366
 6fe9dd66-3be1-451b-8151-74e297660d1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.236205
 6ff42774-b056-4197-aa8f-8cb04e2dce66	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.240217
 6ffa6385-9428-4de2-b0e3-c1bbebb2366f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.244172
 7018479e-5fd4-40d6-8098-ffe7dc2c45b2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.248756
-703105c2-a4a7-4ead-897b-d4e27d4020c4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.253545
 703f8c51-83bc-4ce2-ae27-61bedb51dc97	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.25828
 704dbefe-66e4-4bc7-8726-cd49a8c89ec8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.262263
 705070ae-ee1d-4ccd-ac98-ccecba94ee54	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.266329
 70546a8e-d089-460e-b1f7-472466755745	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.270077
 7056e635-030e-4f56-9002-f79a03123aa2	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:19.274195
 7062697c-e365-4c5f-b9e6-b73cd0be2420	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.283329
-7064ea20-a535-48c0-9ce1-306aaf79cf2d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.287308
 706a1e99-dc20-4f48-a29e-28c16ee813e8	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:19.291354
-706f2375-8a1c-4cca-8713-78744ea02661	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:52.498568
 707d1661-3315-45a5-b524-8e81db2d0c2f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.30544
 707f1101-c9b4-4397-8d4c-48d847b4e118	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:19.310854
 708ae90a-8b77-41ef-b089-3c844a88e2ad	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.315656
 708e7326-8d62-45b8-8e5d-eeeb0bbcbcb8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.320341
 7090798c-35b3-43b5-b5a1-c73af93bb457	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.324321
 709184cf-9b44-41e8-8c24-929be983bce5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.328155
-7098dba4-09c0-43ac-98e1-e6d2e085d513	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.33254
 709a1015-6bbe-4b9f-bbe7-7c6614f1381a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.337603
 709be820-91b7-4a02-9bd2-c3d5a793558b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.342251
 70a2315f-1c90-4103-a06c-87b93b4984b8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.346001
-70afacb4-6ec4-4734-b75d-257f6f7c1f2c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.350565
 70b14628-2e10-4217-8875-afa0d512b9f9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.357177
 70b2e8a3-b6ea-4b62-9391-d94515427924	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.362793
 70b982fd-5b53-4812-abb3-0f49431a391b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.367537
 70cc73ae-14d2-4c1c-8dca-5b5300eab05f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.376695
 70cce513-bb63-4f85-b7d3-3eb161cf697d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.381242
-70cf3d2d-f5ca-4558-804a-c27b3e39239d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.385233
 70d29a00-9d66-4283-9cc4-f548857af9ca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.390385
 70d75303-ee20-47e7-85cc-81043de86bf4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.394359
 70e3814d-207f-4933-b217-5cd9e2f59833	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.39811
@@ -6050,7 +5308,6 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 70f5d649-c995-457b-98d3-c82e267bd0b9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.411288
 70fe5e37-e1bf-4fe1-b6c7-a8b7a612c68e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.415383
 710b3141-752f-4cf7-b4b3-cb0a25ae1338	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.420235
-710d228c-37b8-4281-a779-6a82abf33ffb	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:52.551262
 7114e2d7-5046-4f0a-b032-0d2d99d898fd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.432788
 71166304-b805-4e83-b471-9e881dc438e8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.438317
 71214a63-2f4c-48b8-837a-5542c072fdf9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.442035
@@ -6058,21 +5315,17 @@ d5b9aac7-5a86-4287-9b03-ce69e3db02f7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 7134831e-5749-404a-ac22-596828f76042	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.451438
 d5bc0ae5-08a1-46e1-a018-9988b5866882	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.533327
 738f6ca4-3e95-4f8c-b731-130de63d8209	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.851131
-745de3de-5a02-46b6-af73-f06ddf531043	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:52.816903
 74d801be-21fb-4525-a535-ebd0b5b642ed	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:52.852924
 d5bd8ef3-98bc-4078-80c7-9093bde02b1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.539544
 713bb5ef-4d19-408c-bc9c-c96aae83f0e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.459404
-713c4207-afd5-4af9-8b0c-ab37a08343fa	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.464461
 715b6b1f-20bd-47f0-85ea-ae35e8cf983c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.46829
 715f6ddc-0abb-425e-99a7-86bf11306a6e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.47263
 716210eb-ab6f-4fc7-8dd8-b256d774f50c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.477459
 7167d983-5613-4e70-84db-07aa545f1d2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.48102
 716fc386-34ff-4a02-b88f-bf420e0cbbb0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.485485
-717bb6b2-858b-4947-8c96-152c5b72bdca	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.495438
 718158f6-3806-4acf-8216-5a01c9338085	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.500472
 719bac5f-77cd-4e61-a1a0-b273f2c367ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.504192
 71a16c3b-ffd8-4c48-8335-c2609b1b2eb5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.508714
-71a417a6-ff84-4eb0-81e9-433bbcc75d32	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.513443
 71b0fa4c-34ba-40f7-a718-0a8c1f5dc42b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.517319
 71cdb4d2-b40f-4585-9513-fa95ff42f6ad	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.521732
 71cf7863-8105-45bc-9a2b-b13ae98c11bd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.526246
@@ -6088,9 +5341,7 @@ d5bd8ef3-98bc-4078-80c7-9093bde02b1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 72150615-5277-420f-a598-0f93fe6937ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.572422
 721fb0d7-309f-483b-ab6a-09f6e1b1067e	1000	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:19.582845
 7222ac42-67b5-413d-9b48-fc837fcf8389	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.58862
-7228a6dd-ded1-4460-a4d1-801d5e5c19b9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.594031
 7232da37-3036-406b-ba43-31e153d9340a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.599628
-723384a9-19bc-4122-a6f6-45380fb00fec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.605706
 7246b0b6-ac34-493c-b180-72898874aedc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.610717
 724a3d26-516f-4159-b85f-3f8f9d7ff3d8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.616218
 724b1d13-2898-4bf9-9090-f48fbedacca6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.621507
@@ -6115,12 +5366,8 @@ d5bd8ef3-98bc-4078-80c7-9093bde02b1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 72cf5b82-ea93-49d4-b7df-b776ed094d7d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.716258
 72d4308e-a93c-4e4e-a053-688629a1b556	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.72073
 72db1c79-22ae-42b1-b554-d5013ac5f779	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.725658
-72dcf5ad-3f68-495f-999d-5bc766499517	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.7306
-72e93366-a19b-4668-a7b4-550022124644	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.734511
-72e947b8-bbdc-406f-8360-2387175df822	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.738278
 72ef15c0-a429-4a3d-be5d-48af3348cad5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.742288
 72fefb41-3300-4c91-9090-c591dc3dc901	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.74618
-7305e0c0-9ef2-4424-979a-e2ff17b26240	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.7503
 7306c523-bfa7-408e-b76f-2e1006485217	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.755602
 7308dbdb-6384-49a0-9b8b-e96652ce4423	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.764439
 730a854f-1a17-4bbe-a0df-59e77638f2e3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.768304
@@ -6140,37 +5387,29 @@ d5bd8ef3-98bc-4078-80c7-9093bde02b1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 737bdd70-8520-4d68-8430-724b6c561c3b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.829245
 7380130f-c787-4500-94a7-5992c3a904b5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.832941
 7385bda5-ee4e-4184-85b5-f5c00cbf0e76	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.837492
-738860a3-4b3d-404e-842a-53d53b622fe5	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:52.739534
 7392c644-aa04-428f-a6fe-ea449adf71d1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.856755
 73949312-ed1c-40d9-a725-2cb18bd1caa4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.861955
 739c7ae6-1e43-40fd-8a0c-d0df7526d34a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.867826
 73ac55a6-f3b0-41f4-850b-a502cb36fb64	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.873652
-73aec0c9-d90f-4d5e-ae2b-81567feed4ce	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.879217
 73b74e14-4595-4228-adc8-b2ca0327ad09	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.884548
 73bf8ff1-4cde-42e0-8a01-f5cf0fa28da0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.888723
 73c300a6-0d2c-428f-b399-9cbf5cd45eb6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.89332
 73cbe897-542b-47de-b53c-71c52129372b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.897922
 73d57351-ca2c-4226-8120-3f4c4ed0b541	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.902545
 73d66daa-bb10-45cf-9b82-7312d8a8ee27	9901	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.906294
-73e87e32-f73a-4c7f-ac45-ce017c83e6d6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.910794
 73fab3e4-6622-4ee3-9dab-07c508287754	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.9157
 73fb1a45-32ed-4865-8aff-6d86dd136860	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:19.921906
 73fbaf6e-ded4-4d99-8aa7-ca5b19a4fb6f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.926425
 73fd554d-9414-48a1-8e98-14ce652f7b88	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.930794
-7413d5e6-db5a-4845-a782-ed439262d901	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:52.789625
 d5bdca62-2256-4479-ac2d-1a9df6078e35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.546932
 740954be-94ea-4339-a0cb-cc3d6f83369d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.939843
 7418eb88-6586-48dc-b72c-8e66a15206ec	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.95011
 7424a041-1ebf-4d77-85ad-11db01b2d5df	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.960189
 74304aee-9f02-42b1-86aa-06ae8918d991	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.964254
-743f1418-ae24-48a5-8dfa-1b014edc3faf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.968617
-7440c605-bc6e-4ed1-be0d-d014485f3bcb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.97369
-7443be74-e8b2-47d3-9668-38864ba97a60	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:19.97902
 744f0f29-97de-44a5-bc2f-2adcc57f91da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.983376
 74547f5b-013a-4f61-9812-034cdfcbf228	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:19.988058
 745bbbe6-31c7-4c14-aafa-3ab60b062850	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.992553
 745f4818-55d6-492a-bba7-a5a183991581	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.003625
-746aefa4-d099-4eaa-9cdb-115f294ca216	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.007548
 746dabe0-dd87-4349-8e23-f08b9b1a0b8e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.012434
 747657ad-a514-4e42-a7b7-1a0a173dfbd8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.017499
 747ceee9-b7b4-41fe-bf26-70f0ee8705b8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.023613
@@ -6182,7 +5421,6 @@ d5bdca62-2256-4479-ac2d-1a9df6078e35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 74aa8ca4-3fc8-4f98-a3d2-24def6b6492e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.064288
 74bf7394-6211-4b65-ba7f-aa4350e3c6ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.070395
 74d319fa-7f32-41e8-b2b5-75e0f3dbda84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.07607
-74d6036b-2897-4bc6-bccd-ad1e902a065a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.082342
 74d724dc-630a-420c-965e-b70a9ee84b08	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.088554
 74ddd097-6b2c-4011-bb08-16a5adb97d5d	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:20.099779
 74e20462-24a8-448d-8b9f-594772206735	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.104561
@@ -6191,10 +5429,8 @@ d5bdca62-2256-4479-ac2d-1a9df6078e35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 74e5ac8a-5e39-4e78-aed1-867b1c146304	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.117548
 74ea15b5-602e-4a9d-b351-7eb0adcccd99	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.122821
 74eb34d1-357c-41ae-831d-57bfa9dfcaa0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.127731
-74f585da-60ae-47f2-a7b5-413a41cf2b08	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.132362
 751d8b06-d972-4899-8406-0363fd6a663f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.14478
 751fb4e5-072c-4cf7-b808-17cdde19b9f1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.14941
-75268a2c-aaea-4c5b-a76e-9b20e5054b15	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.153665
 752eed92-341e-4767-8d83-1a06048c21c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.162937
 753436be-f4bb-4bb8-b2af-0e31e871aea6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.16955
 7551a257-4eaf-4f35-8926-85c6a0c4ecde	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.174953
@@ -6218,14 +5454,12 @@ d5bdca62-2256-4479-ac2d-1a9df6078e35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 75db0989-6655-44fc-9399-efe5801b8cb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.261421
 75e4c52c-df8a-4366-83d4-02f643ff1877	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.265389
 75e88301-4144-4741-82fc-4b6999c318ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.269341
-75f14841-4906-432f-a397-2de64e927cec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.273316
 75f567d4-c0a3-4520-8605-2e8c054ef322	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.277989
 75fc5089-7602-460d-8429-1790a0dcdea0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.283834
 760b9f12-b316-43af-b664-395ef3ded99e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.288666
 76148029-28d0-4179-b772-de28d01c9bf5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.294718
 76173674-e750-424c-992e-0fc9fe2b0639	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.30019
 7618819c-84f4-484f-bcc1-d127ca5c896c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.305458
-7620e434-7684-40e1-9ba3-0d6e15c0b1c0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.310055
 7621cd45-b7ea-4404-a3d4-bcebec0fd55e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.315869
 7629ae95-29b0-4b3d-b4e9-e4a2d2aa20f3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.321513
 76311aef-42d4-4ef4-8426-5c8af3578e5d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.33296
@@ -6233,19 +5467,15 @@ d5bdca62-2256-4479-ac2d-1a9df6078e35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7646d827-6058-4019-bb89-e7528bfb57cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.342704
 76510f1a-c903-4521-88a5-63bc38efbf36	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.347793
 765119ab-b8c6-45d2-b880-917c561048d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.352492
-7668c636-4f9a-4f6f-a942-771f82c38311	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.356687
 767414b2-8289-413a-8ec5-5662ca693286	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.361473
 767cbd25-2825-4a11-86d6-92c1aa5dedbd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.365451
 767e57a2-4029-4247-8f7b-f4e644a01634	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.369252
 76812000-8695-4ac0-88d9-2ec5c65e3689	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.373532
-768a913b-9947-4fe5-896d-b171739c95ea	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.377329
 768e1c76-d344-441d-a25c-8f1751684e31	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.381728
 769ca7c4-d6f2-476d-ba47-f79c7cfbc3df	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.387905
 76ab1163-ef44-4cfd-a4fd-1a3d14648e91	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.39348
-76acab7f-6459-4351-844e-a88dbab4bf89	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.397576
 76b05688-8b28-4af0-ad66-6cef42d04905	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.401448
 76c0f001-e555-44b2-ac11-edf58aef0fcc	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:20.405629
-76cfab5d-5ed9-4d69-a726-b4b959bffec2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.410336
 76d9c469-5092-46f0-bb90-6e451b50ea75	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.41837
 76e62f95-3668-4edd-aece-1be23ff57068	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.422779
 76e8f12b-0b1c-4fb7-8327-c3344e035c03	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.427401
@@ -6259,9 +5489,7 @@ d5bdca62-2256-4479-ac2d-1a9df6078e35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7744d0c4-5d32-41f5-b810-c7da348c481a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.467513
 7749ae69-19e4-402c-8ca7-3cc6cd17f97b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.472021
 7750337d-4785-407a-bda0-656f0ab3b18d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.476698
-796f6c7a-14a7-4d88-8923-610e9e22d793	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:53.145493
 d5c09a3c-4bff-4ee4-b027-41ee934b9ed5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.550526
-77645173-e59f-4161-81be-cc1d240bc0b7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.487938
 776efccb-5d4b-428b-a58d-1150c15c44af	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.495629
 777022d7-1c28-456b-b8bf-fa345b5ddb2c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.50152
 777b04d0-5a92-4148-ad1d-44b9fcc1171e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.506968
@@ -6289,10 +5517,8 @@ d5c09a3c-4bff-4ee4-b027-41ee934b9ed5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 781cb63c-7756-4440-bc38-7e508920774d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.614424
 7827786e-3337-4d08-a5a8-8b30f8b7b642	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.618626
 7829941b-cf79-4335-b288-688cd170b60b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.62354
-782ac764-055d-4c37-b3d2-7343b19a163a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.627484
 782c1403-b612-4664-b6cf-3c7869a137d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.631089
 7834b4a7-d034-4a92-a108-619f2c57e08a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.635241
-783fcfd4-aae8-4385-b302-837e1eb005f2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.643577
 7852a0b7-d0c7-44a5-8107-6f2d61135f2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.647613
 7856f428-daff-4675-bdb4-f5d53cae388a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.651538
 787ae5be-7229-4db5-9e75-3f4bc3fe9ed1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.656517
@@ -6306,7 +5532,6 @@ d5c09a3c-4bff-4ee4-b027-41ee934b9ed5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 78cb6aa7-42dc-4429-9418-2aca2f7e9f83	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.695319
 78cbaddc-fb90-4299-9cab-3d8396cee980	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.699416
 78cdbc4c-75c9-47c1-b686-dce9ebdd6240	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.703313
-78d87aed-3214-46a5-84c5-568a40a04f63	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.708255
 78da6ae0-2d5f-4481-a8be-a613ff63f056	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.712494
 78e5c0b8-7210-4f26-bb8f-b2437f7ce96c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.716378
 78e5f157-749d-4ec5-bb12-713766d3838f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.720371
@@ -6323,15 +5548,12 @@ d5c09a3c-4bff-4ee4-b027-41ee934b9ed5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 792efe10-7a5d-41cd-91fb-2e7ba4dc3f4a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.77627
 7938b3be-8827-4a4b-a192-e80d343c287e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.780492
 79390375-5897-4fed-9aff-2c3ee674a5ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.784837
-7945cab6-b825-47e9-9b95-f893dbf176ea	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.789602
 7946ef20-c0f9-4691-b8cd-09654e6dc412	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.794886
 794a392f-d090-40e4-aefc-042a0bc319ad	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.799487
 795f585a-d60e-40c0-9c90-6d5745a16b53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.803662
 796c0f70-065a-496d-9390-1e2e41f7ffd7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.808603
-796dc221-eb2c-4fa6-939f-3f472bcbecf5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.813867
 7989d54e-8df8-4d11-bb3e-9f9ab00a730f	9951	\N	1	DaBan	\N	\N	2026-08-25 12:01:20.829608
 79906830-60e1-4fcc-b159-da9de62df60a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.834747
-7993fa9a-5fd1-42e1-a1aa-1ae33a77fcc1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.840089
 799bc214-7e97-4f70-9241-ada0db66658f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.844874
 799df3a0-d32b-4d02-a113-62e817bcff6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.851186
 799ead68-a28b-4611-a0d4-c6c28fe09686	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.857964
@@ -6341,7 +5563,6 @@ d5c09a3c-4bff-4ee4-b027-41ee934b9ed5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 79c7ae59-c7c9-4554-9fae-0f96d63e9b19	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.879887
 79cdadae-cd95-431c-8206-90bcc90a3490	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.885424
 79df0366-f55f-48fa-a24a-472316909e16	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.891632
-79ea3ae8-56ea-4e4c-b8f6-efeec508a494	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.898593
 79ea88b4-742c-4306-b67f-48c7c17b4ab1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.904511
 79f20645-a1a4-4ff7-b13f-35ba6525b46e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.909713
 79f7dfb2-cacd-4d48-a598-1b0bdc1992d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.914737
@@ -6350,10 +5571,7 @@ d5c09a3c-4bff-4ee4-b027-41ee934b9ed5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7a1c0e63-b815-4d33-9088-67f0d3cfb896	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.931345
 7a39a13e-5f88-4b6c-861b-2feb5d65bf3b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.935382
 7a53185e-0f37-45a7-bba8-0186769af9c6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.939381
-7a5c706d-e2d4-4ee9-b9ee-cf9bf22f97ed	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.943282
-7a5e6202-c9f1-441d-8279-e3fac2dac52b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.947308
 7a602683-b69c-4b1c-a258-e2265ea55e97	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.951363
-7a68a68e-94c4-4ffc-87cc-0841cb0417aa	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:20.955353
 7a7092b2-c134-412d-99c6-726723075949	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.959345
 7a772bae-55e2-43b3-a589-f805f24be97f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.963291
 7a7d5b03-fc12-46ad-93e8-7f38702bcc46	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.967387
@@ -6361,17 +5579,13 @@ d5c09a3c-4bff-4ee4-b027-41ee934b9ed5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7a847eab-7ba9-410a-b2fc-99173f0578b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.975366
 7a878d34-c7da-42c6-b009-2de70ded6c32	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.979283
 7a8926c9-2eca-4346-9946-0e5dd94514cb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:20.983451
-7b5faa2c-2b6e-4420-bf11-ba17e5ce8514	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:53.256158
 7d5eee19-0587-4c7f-8cb5-50ca4acda4a5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.378368
 7d78fe63-f972-4a3e-8e99-f6a8787b22ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.404331
-7e975d1f-3183-409b-8a58-0427ce335eb0	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:53.45643
 7f955062-01b1-4be5-8523-e3c63298fe8a	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:53.523257
 7fb5788e-4082-4083-accd-6e6df46a9f27	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:53.542935
 d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.554808
 7a8fbb3e-529b-46d9-bb3f-5e2e6ac70cf3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.994202
 7aa7caee-9bf1-4ff7-bcb7-9cf3330b88e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.998482
-7abbb8d0-7444-4ca2-900e-9535fc17be8e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.002369
-7ac21290-d742-4048-a8fb-b4bb4833fa3f	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:53.210375
 7ac2de97-895e-4c1f-ac8e-a8406ea14f48	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.010579
 7aeb3152-dde1-4194-af9c-d1d7905d11e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.014317
 7aef69d4-8f1f-406c-a772-cf896b902f12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.018208
@@ -6407,18 +5621,14 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7bc25998-97cf-42fc-b7ce-3a4c60b60edb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.177625
 7bc3b3af-a697-45ff-b536-8bd159fdbafc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.181338
 7bc9cc6b-d3d6-4be7-9c87-7a3ea75d17b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.185775
-7bccceed-08c3-4860-9ab0-561c08c10ce9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.190355
 7bce63c3-3ffa-4b55-ab0c-bd383baf0443	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.194316
-7bd830bb-c429-4f05-b976-37d39fe2466d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.198631
 7bd9d39c-2fce-4584-b740-3997a255ffc3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.203376
 7becca0b-0604-4ac6-89b0-9f7c0ad1f88e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.207873
-7bf0fc5d-eedd-4673-9dd7-e0cccb649150	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.212329
 7c000e65-e462-4b4e-8ae6-e635d7b41b1c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.216281
 7c12e297-efe9-4b69-ab2d-cd8b562fe58c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.220651
 7c1cfe6f-13fa-49b3-ab6e-a2f7bf6ae008	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.225411
 7c2185f8-9791-4594-9900-6e93e13233b8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.229759
 7c2572ae-b437-4ed9-b3b7-b0020c16fab6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.234479
-7c34ee69-4c57-44d1-b8bc-e8bbfc5f3fc1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.238174
 7c378b2d-05c1-401b-870b-4b90d41ecf2f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.242891
 7c5ae35c-cb09-40dd-9e8d-804ea1e44ab0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.247248
 7c65036b-f455-4d7e-b867-b5561ae4f35a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.255273
@@ -6447,32 +5657,24 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7d47503b-b0bc-4983-ab4e-20ae95805b4a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.360594
 7d47be2e-54da-43f0-95df-9dad7128ab9d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:21.36578
 7d4ed148-e7a8-42ce-8fb9-fc5b91938369	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.370516
-7d55c7ec-60fc-4326-b49c-0fa49e441f32	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:53.358838
 7d6523f6-1709-41d8-b6e0-b9d54d9d5243	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.382314
-7d68154e-6a96-4f22-80c0-d2bcfff85f07	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.387315
 7d6c2d6f-43b5-4a17-9ede-1091ec2c173b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.391304
 7d701ff6-2615-4f51-a204-a0d6f152df78	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.396002
 7d702672-d76e-4146-b1d7-933ed6f17a09	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:53.373879
 7d7c1356-dafd-4b5d-a9c3-bc4884cfe443	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.409144
 7d81c177-723d-4f13-bae6-e47721a85912	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.415997
-7d861017-3809-4fb5-b50f-ca55ec8fdbdb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.422586
 7d89cb5a-4561-4af3-b0a9-8d5992bab921	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.429253
 7d967430-cfc2-463b-b3a2-135206085649	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.440686
 7da1e587-0252-49e5-ab60-83ba202dd93c	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:21.44636
 7daebd9c-a6ce-4b2a-88f4-897f16febf80	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.450701
 7dbc0521-b769-4780-9b99-600c21829009	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.454447
 7dd71a9e-d202-4f50-b302-e54eadd2ce7c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.458293
-7e5be3ee-568a-4f3e-a27d-8514eab17b32	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:53.431556
 801b03f7-ea78-421f-8a6d-c600cf54cc3c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.944899
 80d2e45c-60e0-4527-8dc8-0d2fedb4c3dd	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:53.638501
-81299f51-b322-49ae-8b90-efc5c69066c8	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:53.672651
-81b47b75-aafc-4753-9445-7f99592bcc9f	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:53.743946
-81ea69c5-9677-4795-8dd9-515603660ece	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:53.753361
 7dd96158-7b96-48af-a52b-0924b229e26d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.462382
 7ddf8a96-2cec-4866-b222-0c71b229cebf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.466278
 7de49b23-aa39-436c-9763-00b2d44b5847	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.470192
 7de6c00d-3cc1-4e90-8a32-cd35e01d1d11	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:21.47438
-7de7135c-d662-45ce-a208-f2524525534b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.4783
 7df3c2c1-3c2e-429b-9493-726a52bdde52	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.48727
 7dfa195c-d4a1-493f-b8de-2acabee7827b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.491455
 7e0852ab-7465-433b-9193-908ef7be2e0f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.495665
@@ -6481,30 +5683,24 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7e1692d3-6513-4a3f-bd30-1156490f636d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.514206
 7e272f2a-0e59-4435-89e1-50b735f390ed	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.518578
 7e2bc44c-f187-4281-8498-8cd4fac5e41d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.522932
-7e3018a5-b379-4e24-ba0d-e95aa7078452	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.528016
 7e4798ac-bea2-4c9a-af9d-9f9d358d37e0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.532799
 7e4ca14c-3110-43fc-ab18-0e38f38c015b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.538025
 7e544fa1-7946-4efa-b842-949a45cd1cdd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.543074
 7e550950-bfd3-44c2-814a-99a1d3f2a49a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.547727
-7e5a665a-7f35-4d5e-883a-d3d0298c6abf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.552413
-7e5d1584-8b09-40f1-a297-2f0f17b0d99c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.561821
 7e5eead2-fde5-4fb0-be1d-9588bd6293cc	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.566771
 7e5ff2fe-b8a1-4be7-9267-6eeb0d253fd7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.570374
 7e6f35ef-7584-4849-bc84-056e3150d160	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.57455
 7e8110da-a54b-41fb-b4b2-9d728f4e3ee7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.585664
 7e9684d3-140b-4855-a91f-aaa2f83e5846	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.589464
-7e9716b3-1d3d-4b24-a461-b36b93fe4add	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.593566
 7e9f5d9b-569b-465b-b57b-63758a1665c5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.603733
 7ea3ff92-c502-43eb-b5bf-3d4321eed1e3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:21.608463
 7ea6088b-cdab-4d24-8452-58e000dd79ba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.612591
 7eb13d4b-860e-4f49-8d23-72a1e35a9c29	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.616279
 7eb17793-8e53-4f45-8af6-fd8756b83f75	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.62079
-7eb367b7-3a15-4f51-9a97-31e39050e59c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.627675
 7eb98836-ac0b-43b4-8bce-73f018e15edb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:21.632615
 7ed7cc57-c618-4bad-837c-993b79dfec13	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.636838
 7edb93c8-4094-4cf7-b72c-3b7370e467ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.642328
 7ee27290-0928-4859-bcd9-28b88ba58e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.6478
-7eee5ac1-b310-4270-b9f6-69bfc086d9cf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.65249
 7f004b59-3ed6-4c5c-ba6a-cda88d513aef	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:21.657187
 7f0301b5-561b-47c5-9d5e-e1992c27e801	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:21.663465
 7f0319b1-04c3-4375-9339-d0fcdd0dfa3e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.669349
@@ -6524,7 +5720,6 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7f676e7b-9ef4-49b3-8804-3acc20bb1c7a	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:21.754529
 7f77a8e1-471a-4daf-8772-e906f6ce0e8d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:21.759884
 7f78ca39-357a-4ca8-9d92-e5aaf700f302	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.764795
-7f79f664-77f4-40d5-ab57-18115cd69a40	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.769854
 7f7af17a-a10e-4774-9fd5-90d9349e78b4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.774839
 7f7c55d4-d07c-4ba7-a0c9-8dde6971857f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.779826
 7f8a28ca-d7e3-4c9c-b5c1-fa6bc71f1bb1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.795045
@@ -6547,25 +5742,20 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 7fdb9596-e1d0-43de-b5d1-520484789e5f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.8948
 7fe8b743-53c8-44d0-abcc-45dd274bfb65	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.905126
 7ffee527-db4e-4569-9f02-1d80fb0d7306	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.912165
-800834c4-f03a-4179-9e6f-45f5691a7237	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.918422
 8009a268-bd4d-47ba-822b-2a2b3f338e28	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.923885
 8014c3c4-e08f-4fe5-b0b3-f7d3f4d1bb05	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.928961
 8019dbe3-f704-45ac-b7d7-1d4250dcf23b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.934195
-8019de92-2ca7-4883-ab25-0326c5ee3617	1	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:53.580851
 80208275-d249-40d5-8687-088be142590b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.94977
 80294e8d-a8b1-4fde-aeb0-67029e2b2c80	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.955034
 802bd7e5-45df-4a17-8c63-2a8c44aa19e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.960461
 802de1d1-6b7f-4565-a12b-b9cc3ac8512f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:21.964448
-80300367-8aff-47ec-9b95-872ee0f8cfb0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:21.968428
 8032ea43-9aae-4202-8e16-4b07c82bde13	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.972298
 80360f19-3890-4c0c-9644-588aad44e6b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.978082
 803cea22-94f4-4e1c-a486-daeb852b0ded	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.983667
 803ef894-58c2-40a0-a8ab-498f211e9618	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.988828
 806252d2-c6dc-4088-a442-3fc4c2467a32	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:21.99338
 8066992b-e63f-4160-9ce0-e536ff7b5b53	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:21.9973
-80a388a3-3747-493a-9056-8e462c76349b	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:53.624032
 834949f7-7139-4f3f-8bd5-c7fd5046b06e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.504764
-8419e7f4-7a3d-4c90-8389-1d75ce610b8d	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:53.936939
 8079fa55-bb96-41e4-81a7-77ca92e3dc43	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.006605
 808e84e6-158e-426e-b732-cc8f6eb37322	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.010486
 8093ceef-0b34-4e67-bc05-e69ebb011cc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.014568
@@ -6577,7 +5767,6 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 80d1ff13-63d0-455f-9b2f-d1693e9aa783	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.05831
 80da23b7-dd31-4fbb-9b1e-2412a4056f0e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.071852
 80df4230-0cd3-4904-bee4-f4def62f27d5	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:22.077248
-80e84bab-9dc5-46d2-8dd5-ef9f88cae9e6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.081287
 80ece0fb-e5b6-4df5-96ee-3efa6ef14b1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.087244
 80f4c543-1e0d-4bd6-9d61-4e6ed629be7d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.092338
 80fff955-40f0-46a5-a112-9eb2f42bf599	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.096495
@@ -6587,12 +5776,10 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 81066673-301b-4f86-9582-000d6ad4f81d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.115635
 8109631a-28d1-409e-83ca-978cd4e328c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.119869
 810a89fe-6570-4a34-b003-158ad8848dc7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.125048
-810b532f-a0dd-4ec0-b790-1b93f6309ca9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.129477
 81275251-f3f4-41ef-ab86-3f7d6b88d4a6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.139705
 812e7c74-da88-4871-b0d9-4f2a9c39c462	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.151583
 812ef12f-804c-46bb-a420-b3ae77ddb4cd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.157448
 8133f99f-f4f7-45c9-a52d-c0c4f21bec8c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.161752
-8134a3d8-2a5e-4f23-a49f-b6d0e3440a5a	5	\N	2	TrongKho	\N	\N	2026-08-25 12:01:22.166633
 8136f95e-936e-4be3-b6db-17a87da5f921	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.170721
 81370616-f833-47ee-9fc3-d404777ebe2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.17467
 813b4fca-b7e6-4dc9-9f04-9691d1cb1a48	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.178564
@@ -6612,13 +5799,11 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 81a84e24-9320-4a43-b35d-fc25399a5062	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.241533
 81b03719-790b-4301-b25b-9ba0164939cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.245403
 81b44873-b466-42b2-b759-b3e805a16cdd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.249538
-81ba34e5-b416-4a22-aea9-e81ee238dabe	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.25739
 81bb2567-292e-4e0c-a0fb-fb470b82826d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.263875
 81f009ee-3dd2-4327-b673-53c5a89c66d4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.272492
 81f2c07c-2fd0-40dc-992a-c941e866ad86	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.276731
 82021edb-870f-42c9-a288-2bcfb6270678	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.28055
 82022894-f948-40c0-887c-48182659ed83	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.284328
-8205651d-d753-4e42-86f8-c0e4a6f25776	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.28826
 821a7ad8-0449-4c58-959a-93ae32cd9913	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.292384
 822506ed-d8a8-4fa0-be84-ddbf5bcc45e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.296513
 822800f0-8b36-47e1-b54c-5b0acfb106ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.302012
@@ -6642,7 +5827,6 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 82a171ec-84c9-4b6f-83b6-b80a72c83d65	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.386533
 82a3507c-045c-4cba-92ec-8bd3313c8057	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.390372
 82a64151-3943-4b2f-bcc8-cc6da78f8410	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.39559
-82bb51cf-77a4-482d-9674-cfc0af77e428	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.405465
 82be63ae-df15-43e9-996e-abb078b74879	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.409935
 82c59984-4c45-4dc4-9c9d-eaffeffcf3e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.414577
 82c90ff9-07a7-48a7-8912-d9a571d9ef32	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.418434
@@ -6657,18 +5841,13 @@ d5c17752-d17c-45b6-98a9-efaf74de6e00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8307a34d-0ce5-42e7-befc-8fdfff103268	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.45752
 830864d2-2726-4b16-98f6-12c09b3ec70d	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:22.46187
 8309f0f3-7f18-497c-b567-1dbf3bb66e99	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.466362
-830cf328-346e-421b-81a6-cbebbc2fbde8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.470296
 831ce3a1-3b0e-40e0-bdfd-4269e320b080	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.474736
 831de46e-35b0-4087-bee2-77d35a2b5e99	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.478333
-8323ecd8-6ac7-47ca-80a1-0cbea2a33e5c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.487556
 8327b9b6-a505-4eda-9dd4-fbef8b54c963	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.491312
 833926e3-23e8-404b-b974-63b6ba749dc9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.495609
-833e6fb9-0e47-4264-9eea-48eb740c22e7	2	\N	2	HuyBo	\N	\N	2026-08-25 11:57:53.865672
 8393eb4a-9015-4018-9823-de1155cda769	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:53.89104
 85d35cff-59ad-448a-b252-67493648a7fe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.984638
 85d7551e-15cb-4247-8ebf-a526d1be6a73	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:22.994878
-873d2776-6243-4ef7-a734-2b2e7fa75636	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.175814
-87ad7b05-d4a3-4232-a8c2-ec5612e1a7f8	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.213698
 d5cabad6-6440-4980-823f-e5c4b115f763	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.55957
 83634cdf-01f4-4933-abc7-e67d6514b8e8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.51547
 836770ef-a035-45a7-b6e5-be1fcc6f0fc9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.519779
@@ -6683,21 +5862,17 @@ d5cabad6-6440-4980-823f-e5c4b115f763	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 83a19efa-1981-41ec-8fb0-e690768a3ca7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.573593
 83a42608-b6a3-4de5-9335-2bcb4154cc75	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.577637
 83aa98a7-b33b-43ff-ad0f-b8643de16660	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.581494
-83b9d4e7-e765-420a-aa03-5ca577eab5ed	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.590573
 83c907cf-0757-468c-86cc-a75bf4791342	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.595221
 83d22ec7-c383-4a28-8fc3-f5e39bc24b0f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.59999
-83e26e6e-23ce-49b1-bdef-93e2153e5c36	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.60571
 83e5b048-a0ef-4768-99e7-7120bf94697d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.610965
 83ebb0d7-d397-42f2-87f8-ae3aec5a5244	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.615577
 83efcfaf-55b2-4a7d-82d8-c35d7b9b74fb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.61959
 83f0b402-9639-400a-a49c-d12a4e01fb78	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.623507
-83f51122-1766-4dbf-b9b0-6e3836626709	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.627433
 83fbe547-145c-479b-96e4-313e73fe23a5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.631391
 83fd3b30-6ff3-4172-8fe3-2c040e230cc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.635553
 840e1e9e-83d1-48aa-b76e-58a6f1bf9083	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.640471
 84108e99-0176-47f6-a5fd-eeb796b5e796	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.644463
 84141aea-e2a2-4c5c-97d2-16e63348dda6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.648525
-841eaa46-972f-4de7-94ed-9c7812adf4cf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.656581
 8423fce0-7fad-4160-a8cd-618961f76924	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.660582
 842bdbdd-15e7-480b-9464-3bbe867e9d50	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.664333
 8433a54e-d9b2-4453-9078-d9b2657fb159	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.66842
@@ -6706,10 +5881,8 @@ d5cabad6-6440-4980-823f-e5c4b115f763	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 84496991-a16f-430b-9469-1f9e102f41dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.689388
 845021b4-ba28-4313-888c-4dd716c2dbf5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.694095
 845543ab-c81c-4d74-9ec8-1d2f49633548	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.70459
-84596794-cb69-4721-bb76-214d263739cc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.712294
 845bdcce-3448-4069-ab1d-3fb53bc13041	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.719729
 845c4b37-9e01-4292-9b5e-446c0546de30	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.725566
-8461c84f-02df-42b1-8dff-1fcd2b3b3637	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.731363
 84664401-df3c-4e32-adfe-11a743b610ad	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.738007
 8468605d-19c8-4b02-ae82-2286aefa13d7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.743246
 846b292e-52b8-4119-9430-08df816321ca	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.748489
@@ -6718,24 +5891,18 @@ d5cabad6-6440-4980-823f-e5c4b115f763	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 84881840-4079-4e55-8d84-89c27ae46a4f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.763124
 848ab7de-1312-4781-8748-fbbb686768ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.768562
 8491a9b3-3c5b-4db8-9fe6-8b60ed4186b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.774102
-84969f6b-6ed1-4769-9562-18bf92bd918a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.779492
 84b60e74-770a-470b-9363-cfe6e80021bc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.791541
 84bc6255-0937-426e-a495-80fc2e3ee163	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.796677
 84df4af8-c850-4bea-97c6-f6cdeda75bb6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.801238
-84e3270d-0329-4020-8f17-3edb17845c1b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.806518
 84e549aa-54ce-429e-963c-59c9a65fabfb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.813549
 84e5736f-7ce7-478f-bb3d-8b570d4155d9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:22.819371
-84ec2930-e497-4b66-90ed-b43f3e3d37f4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.826344
 84f5a8fc-09ab-40b6-9f09-3485782f4722	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.834281
-850d5a58-d5a7-4d40-a710-f3fa6fa5409f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.840168
 850f300d-ba4d-476f-96b1-70fdc049721a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.846646
 85123b38-0fc1-413e-bffe-d57da244986e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.85169
-852907ac-f8e6-4f5e-a904-76f2472f421f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.856016
 8529eb31-4807-4df0-ae34-1ff593316260	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.860612
 852ea5f2-4cbc-4553-8698-293e57c3f118	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.865726
 852f4e2f-667f-4cbf-b0ab-8c4fd8f67a23	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.87087
 85323d5b-9c9d-4a8c-b1c7-28eb1fa64c3c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.876447
-8535b3e1-be1f-4b70-9904-d572bc20f8f2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.880842
 853e5e69-549a-4ad9-8f99-718be86eafec	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.886433
 855024a8-15f7-46e5-9e22-a5332e32d7ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.896853
 85542482-5d7a-433f-8ae2-8d778f0436c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.901836
@@ -6750,16 +5917,12 @@ d5cabad6-6440-4980-823f-e5c4b115f763	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 85b5c4ad-2267-4f52-8820-d2a9f8ff0228	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:22.954543
 85bc1b5c-92c9-4f3b-a850-c50c1fa48f78	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.958948
 85c2c063-0aa3-4c6f-b4e0-74cd892e1670	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:22.966224
-85c5784a-e1a6-4307-b239-6e5452c4f38a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:22.972635
-85cc43e8-17f3-4e38-ad9c-0717ce3aa712	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.054556
-85d4388f-d830-469d-9221-ff18cd0216aa	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.063328
 85e9c9a8-6e3f-45fa-8c86-b1db3d83c57d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.000011
 85ebf4d5-0d13-429a-9b4b-b92414f00773	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.004867
 85f472a1-c6b0-4159-b047-b4e822b523b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.015664
 85fa9378-3307-4aec-a097-3ebd6e298536	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.019724
 85fd3717-521f-4be0-b801-b8ab371db879	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.024866
 8603b8fe-1f58-4cb7-aa3a-89d6d06b4a63	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:23.029612
-860822c6-d0f5-4dd1-9193-acbb3e26b825	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.03356
 860e3705-6894-4b13-a54c-4140aa32c907	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.037489
 860ed39a-c3ce-4d70-b502-fd750b31d0ac	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.041434
 861ee708-b35b-4671-88ff-e0c5453d5c5d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.045356
@@ -6768,14 +5931,12 @@ d5cabad6-6440-4980-823f-e5c4b115f763	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 873a7cd2-8269-4b01-804c-85542c2fb700	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:54.169914
 d5cd4db9-321d-432d-8390-bfd77a47b3b3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.563672
 d5d0016c-a271-4b85-9757-4c7b37f9bdd8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.568075
-86495796-76e0-47c3-9869-70e3de4fddd7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.061464
 864b2d5e-2bd2-4e1d-8ff0-94f6b2caabd4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.065399
 8653c3ea-f751-4a25-846b-72bdba4ac3a2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.06946
 865a1259-f45e-4014-8a0d-913fd022842f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.073444
 866d4f12-862f-4f65-9deb-f25580a40161	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.07739
 867bcead-5789-4d45-bdbb-af1ebe54b998	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.081968
 868901cb-11c9-4b2e-a3d2-0ed8bcfc9ee8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.087757
-86918814-8e31-43a0-8bd4-32f90129503a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.092728
 8695eb60-f72b-4554-a6d4-0df45c256523	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.096948
 8699219c-a963-40ca-b29b-ea9d9549165b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.102658
 869a0c41-7796-4b51-9011-441d89d84bf6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.106518
@@ -6786,7 +5947,6 @@ d5d0016c-a271-4b85-9757-4c7b37f9bdd8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 86c20e3c-0116-43e1-820b-c3c45e79cdbd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.132601
 86c74cd4-ee61-4361-9179-0fa1eddf7efc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.137104
 86c83027-e2a6-4657-94fc-7cb27159999a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.141708
-86d37871-6658-4a14-b887-62b50029a5b9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.147355
 86da6569-6412-4cb5-a1a8-01053fd79dc8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.152843
 86dc13b8-6912-44e3-8b52-a52088ca29f1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.158322
 86dce8fa-e967-4161-8d5e-a7e7d371f541	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.162568
@@ -6814,7 +5974,6 @@ d5d0016c-a271-4b85-9757-4c7b37f9bdd8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 875d8efe-f7d5-40a9-9add-2514f2edcc9a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.296827
 875ec7a7-12b1-4398-a5fd-1ec8f20459a8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.301696
 875f465a-e4fd-4614-87ed-d416fff3ac92	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.307263
-8765b4a7-d712-483a-a892-68143deeb0f0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.31216
 876655ca-3346-41e7-92a0-55b8a772d074	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.317765
 876b4e0d-4a65-4973-99aa-c8538f1ea2c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.32352
 876ca171-3af6-4937-b2e8-5a3127272edb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.334084
@@ -6826,15 +5985,11 @@ d5d0016c-a271-4b85-9757-4c7b37f9bdd8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 87b89d35-07de-4913-9dc5-0f13add53087	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:23.370894
 87bcb5fe-f5b0-4d4e-9acc-f962777ad897	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.376549
 87bf0e60-8f83-4390-9684-fc78b558a940	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.380875
-87c6a88e-10f2-45a5-aa3f-67ba302786c5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.38622
 87c96105-dde3-4b24-be38-4fa39a85484f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.390592
 87caee30-839c-4c4f-8641-856f0a887878	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.394563
-87dfc6a1-2358-4786-8a6d-3eb70952925f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.398711
-87e145b4-e792-41d5-b8f8-7ca275e91898	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.402443
 87e81588-2375-4745-886d-7b3dfed44003	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.406616
 87e84cc2-c5d1-48b1-99d2-74c362bd07c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.411556
 87ee8e5b-8dc3-41c4-a3f2-fef2802a70bb	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:23.415332
-87f43c8c-a7fd-45fa-ad62-0f4ffabd0f41	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.419416
 880d4e9e-319e-44f8-a3b7-9c54285cd1e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.427594
 881113da-54d2-4490-b488-ef7d29c182dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.433244
 881838c7-0b14-4af2-a323-ac148a753b11	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.437522
@@ -6845,10 +6000,8 @@ d5d0016c-a271-4b85-9757-4c7b37f9bdd8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 8847bb7d-f407-43e6-9797-8f7815c91e27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.457281
 885306e0-e939-4783-b844-0407d605bebf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.461329
 88563d02-95f2-41f6-8537-3aa4ac2c3535	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.465459
-886ac81a-3fcc-4eb9-bf2a-a9a33221a051	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.469797
 886de814-57a6-41a4-be81-6a34d4486915	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.475845
 886f7a7a-e511-4d86-a0c5-5f0757f2bcb0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.480762
-88741894-9afd-4892-823d-d6bf2b4ef98e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.485882
 887d0fd6-f3fe-4a6f-98c5-c46317fda158	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.49062
 887ec4d3-b62a-4b43-b6cd-6fd07d1acc16	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.494421
 887fdd2b-747e-4e1c-bfc5-cd56b6a62b35	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.498316
@@ -6860,18 +6013,15 @@ d5d0016c-a271-4b85-9757-4c7b37f9bdd8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 889cceff-99d4-405e-9686-7019c04b9619	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.53922
 889f4e29-c575-4a17-8271-3815552e38e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.544776
 88a0aaf2-fd4d-46a8-a9ef-3dd141fe358f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.548655
-88ae7408-4cb0-43d0-8a99-d1398f56842f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.553641
 88b86db7-644a-4676-882b-48e95b390d89	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.559261
 88ba62b7-de59-4125-8df4-9101ff1d44b7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.563979
 88cdd57e-6546-4ed0-819e-2a4a27c5467e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.568812
 88e1a2c7-641b-4ea7-8780-a9c58d13a1e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.573782
 88e7c68a-7081-4655-8062-8ee70592c9bb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.579716
-88fd5472-e17a-42b2-82d9-4aa364d16cbb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.585369
 8902b19b-3b56-4deb-8b80-ca35f2a72306	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.591145
 8af2a270-91fe-4d8e-b63c-03f97022259b	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:54.465245
 8b39d037-b5d2-4ab1-82e9-2dd96ec9f0e8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.084006
 8b3d2bc1-c48b-4407-b280-ea572604c6e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.094991
-8b778651-1b8d-4ceb-93e2-396ff2c7816a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.116281
 8e246c29-ba73-4044-8be5-9af71cd7713b	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:54.680118
 d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.573248
 89173440-2e30-4afb-8051-2c29c9feb623	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.60602
@@ -6932,13 +6082,11 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8aa4fade-80f4-4ae2-a57d-703305e43255	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.921314
 8aa836a9-2758-4b89-9cd5-7b6b4d3d0c14	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:54.426926
 8aa94123-11c7-4ff5-8d88-471bb649493c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.932
-8aaa35f5-aaa3-4716-9f2a-87ba4deffe7c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.937817
 8aac2c79-83ae-4aac-a8b2-6f4687d5f55e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.943124
 8ab5d5ba-59cf-4e9e-8749-df3157ee83b9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.948322
 8aba34e3-5515-49fb-a290-023d2c7eda06	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.95338
 8abc3931-4370-4731-a677-727532801328	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.960242
 8abcd93e-0248-470e-a72d-7cb28d4e9492	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:23.966816
-8ac1994a-b6e6-4a43-af4d-a44aab5d6b02	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:23.972618
 8ac3dba2-07c7-4240-909d-69313cec5d5a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:23.978236
 8ac53195-500b-4ed3-a259-9b527dc0079f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.983798
 8ac6801a-cc2c-488c-9784-5a72031eb924	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:23.989211
@@ -6947,21 +6095,16 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8ae60476-2602-4faa-9279-235186f0d090	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.010404
 8ae6f9f4-7aca-4962-ada3-d7f2e07f6ec1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.016526
 8ae8df24-2b14-4b25-8d1a-13e1eedcf507	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.023575
-8af1f90f-27af-4807-9f9b-54650289a655	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.028435
 8af88016-14f1-4eb3-b116-d30613dafd7c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.04025
 8b0f9d2a-2fe5-4bb7-a82d-6e90f4bb01d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.045752
 8b0fb550-1fe0-4644-821c-2b872ac664fb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.051293
-8b1ad16b-de6d-42c7-8f56-a1aa0fbed7b3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.056322
 8b1d78eb-6aef-4ff8-91c9-ebb63b60b25a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.062034
 8b2fac6e-707e-4a4d-ba47-a86b6de9f8e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.06756
 8b329bbb-7161-4ff0-9917-10364582df3f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.072819
 8b37478a-7f50-458e-9b5b-66069de0ee89	1	\N	1	DangGiao	\N	\N	2026-08-25 11:57:54.481521
-8b3a01f5-c278-4431-935d-cc901cbee390	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.488739
 8b3f339c-2667-4583-8e18-5a38b5d8c0f5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.101199
 8b453128-21b6-48c9-8ba8-ecd834a5f73e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.105983
-8b69817e-57c7-4b41-a0fe-7c4798b37383	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.497044
 8b7b303f-9bc1-4c23-80df-53614d7a8649	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.122111
-8b8055bb-0781-43ae-8d97-123da023a2bf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.127369
 8b971991-9798-45d7-92a2-a0ac96f147c0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.137068
 8b976bf3-b3d2-4b73-be4c-b02b8099f280	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.142752
 8b9f9d73-3f82-40f2-b36f-72c04df2628e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.148277
@@ -6971,12 +6114,9 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8bc4c96a-dbab-49e8-a359-cf90f6e5b9eb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.171391
 8d4aa0d8-2238-4fb4-82e9-9a753ebcb262	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:54.627503
 8ee7d338-0df6-4a80-8f3f-ec5290dac6c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.730087
-8f8079ce-e2fa-4561-8d44-c40cfc3c9b5a	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.774998
-8f81563e-941b-4ac6-8d0b-e38956caa983	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.78027
 8bcb80d5-8696-4e76-a1d7-9bd91eea7e51	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.176042
 8bdd577e-cdff-4c95-9ea0-9951be5b7178	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.181116
 8be20dfb-cec7-4a7d-849c-ce2c47d0cf3f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.186807
-8be384fc-909c-4f09-8e57-0e3814e56dfc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.192324
 8beb332a-d5e3-494e-ad97-8e625b4153dc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.204945
 8bee1bb9-abe9-404d-97a5-aa7a4a53f6bd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.21097
 8bf4efc4-71fa-4e81-8c7d-ea9c1bbf864f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.217743
@@ -6985,16 +6125,12 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8bfef014-25dc-42b8-9e50-23d94c7b8a44	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:54.546726
 8c10bb70-cdf8-4645-8aec-b0fcd9cb4ec2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.239894
 8c132caa-4e44-4d60-999f-8c929b688f0e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.245042
-8c1cf293-1b7a-4efa-a697-ccc55e63d4d4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.250881
-8c20f5b1-0bd6-4782-9c0e-04d53ca53edc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.256223
 8c28233f-46a4-4e8e-a535-e41fcb75f098	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.261007
 8c28c1af-a086-455c-9681-5303533c0396	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.265937
 8c3f4d18-3c7a-4ad3-91d3-8149ee22163d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.271056
-8c4409fa-f82a-4dd3-9f25-09a1b22ccf2c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.276479
 8c555f05-aa53-4fde-a4cc-97b02d8b0435	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.282022
 8c5c0752-9c26-41fa-8d00-16632a80a031	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.287454
 8c5dc28e-6d2a-4bb2-90c2-c862d3536208	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.291851
-8c61c55b-be16-4410-9e27-e0e24689427f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.297157
 8c6d223d-1ed5-4500-b5f7-74c2e4b599b3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.307904
 8c70eac6-ad63-49ca-a74d-5133891e0e65	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.314204
 8c73fc0e-a24a-4797-84b7-4242f566469b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.319401
@@ -7023,7 +6159,6 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8d2b3047-5be2-4f22-a85f-9c685c4f1985	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:24.442457
 8d32b446-a21d-4206-9e24-239e84c190af	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.446532
 8d5bd2da-4b07-496a-9561-e0f8d4fafacc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.456332
-8d5ddebc-f2f2-46e6-a12f-60ae58bd78f9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.460596
 8d6bebcd-25d2-46f2-ba8c-80f599cd58b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.464515
 8d7e8d3c-6f74-4af5-8ad4-81fa5c0716be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.468335
 8d84517a-e52a-48b4-8c07-0396b6188041	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.47364
@@ -7044,7 +6179,6 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8e0eedb1-2bcc-44f0-9a1d-363ffa1b8e5e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.548027
 8e14424f-6836-4be3-a425-2484a6f326de	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.552669
 8e18cfec-d1f3-4f5a-8565-dc3f2f1ac3ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.557198
-8e2d08c6-9afa-4f26-a658-813b855d03a4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.566993
 8e2d2c3c-9f72-486e-949c-d0c2cd41eda9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.573043
 8e2f434b-755f-499c-8829-1bdb55d79c58	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.582219
 8e328411-d3cd-4814-8d7f-15995d8ff777	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.588496
@@ -7058,7 +6192,6 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8e551cd9-0b60-475a-b060-6aa16bebf256	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.641781
 8e5d31d7-3ee8-47d5-922e-9b2b5b0d2555	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.649257
 8e779509-d8ae-43ee-a5c7-ceb9b259808e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.655138
-8e7abc9b-aa49-4f0a-9ff5-25009a00def8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.660997
 8e7b52c6-8dde-440a-9ad8-fbb44d9e542a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.66638
 8e7c461f-1306-4a4f-a9f1-5d16a19bc348	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.671928
 8e7c7307-fb99-4540-9aa5-885b0d0c9aa2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.677903
@@ -7069,13 +6202,8 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8ec07763-1d76-4a07-b08e-50fb78165a6e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.707752
 8ecaaa6a-9a94-42a0-a683-e1654e1b39d7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.713353
 8ed4047a-7e63-4b10-a592-5821a47ea9b2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.719064
-8ee0ab8b-557e-45fa-869a-7cbdcf701097	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:54.73537
-8f3c91fb-283b-4e3d-90d0-9b3f19459e9c	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:54.75769
 91e3c0b1-863d-44d5-8a6f-3bfa3a01d5bd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.221249
-8eead2ec-fb7b-490f-81be-ee6aac36dcf2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.735803
-8f03e2c9-0488-42e1-b039-3880bcccabf7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.745902
 8f05f509-bc35-44d0-bfc4-9ab11de9aa8c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.751309
-8f0cafd8-ea38-4cc5-ad5b-f286d7f4231a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.756863
 8f10fcfe-d949-4942-9c2f-3fabdf2f0bd9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.761063
 8f1d9842-a823-4b02-8c03-04577498d9a6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.765811
 8f1fe92c-c92e-4ef3-89a9-370fea2572ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.770101
@@ -7091,17 +6219,14 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 8f9e6ba9-c7f2-4b9c-990f-802c5981400d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.836018
 8fb2fdd2-24dc-43aa-8c22-a05615addb4f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.840855
 8fc4a88c-d77d-43b5-9e6f-a0c94ce448dd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.852028
-8fd4052c-73a4-4e59-8c13-628dd21f490a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.857204
 8fdf8c14-6f97-47c4-a7a5-48c0505b4083	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.861934
 8fdf9d2a-eb3a-493a-9118-ed5793669f33	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.868237
-8ff4735e-e46d-43fe-b85d-c7629e87df15	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.872839
 8ff8cfd8-ebf7-4915-ad7a-47dbfeb078c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.877159
 8ff94aa0-bdab-418b-ad91-5fe8542131b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.882973
 900f95b2-016e-460a-96b5-f4b57584c029	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.888713
 902d3ef3-0d41-4a8c-856e-6c470157ecca	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:24.895499
 9050b478-bb80-4f8a-9523-2f6d82bd6756	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.900549
 90524a2e-8057-4dd1-8d54-9a403699408c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.904622
-905b620f-711b-4b64-b0f9-af7e110a2a70	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.909099
 905bf94a-97c7-47b2-a165-49d132939a7c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.914749
 905d1a36-fc0e-4fb3-bbd0-084f79f3fde1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.920148
 906097a6-c4a8-4a48-9105-5640b84ee6ec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.925628
@@ -7110,7 +6235,6 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 906a6608-bfff-4948-b863-e26e640278b7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.944277
 906caad0-95f0-4c0d-8cf5-25074730e6e6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.953648
 907657d7-3c0f-4f52-855f-35940ffbe018	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.958262
-907fb8aa-fe8d-4951-bccd-363278e5193d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.962919
 90804702-d07c-4fa1-8e57-a3429634b443	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.968242
 9086d75f-c58d-4dce-be23-d84f6b60e5c5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.972716
 908c4fdb-7921-47cf-98ab-e31bec1a81a6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.976667
@@ -7118,7 +6242,6 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 90989182-679a-4557-94ab-2abdfdc0a710	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:24.986464
 9098de50-d619-488c-a547-84525fb85151	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.990873
 909c495f-222b-40ae-8972-a8dd34a86084	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:24.994905
-909d37da-6a97-4855-adb3-5720dbf6b15e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:24.998689
 909fc047-387f-4ee5-bb2e-eb30f420d582	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.002924
 90af4beb-6cf4-4958-a662-4bc4d26b89db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.006596
 90b01296-453d-4d59-8f7e-517baa2acc5f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.010787
@@ -7132,9 +6255,6 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 90fde5d4-2c21-44fb-9542-40075e97e278	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:25.052407
 9103979f-8eeb-49ef-bbfe-e62895eb780b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.056773
 9105c474-7604-4dd3-8396-d3e71b61174f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.060888
-9107b664-35c0-40bf-9acf-d7544288e7a1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.065111
-910c264b-4729-498f-85cd-1003cf095749	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.069079
-91125a55-9e98-4445-a205-2628418b6fba	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.075007
 91175ecb-27c1-48b4-8dc2-65d2b4247422	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.080711
 911e74ec-a3b5-4b7a-8415-f35677014d5d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.085044
 912ccc12-597f-46f1-9e7f-24e54934c81e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.088751
@@ -7144,19 +6264,15 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 91419663-ff9c-4834-b146-c9360fa0d69e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.106925
 9150d330-ae0f-4354-bffd-369a68628a2f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.11073
 9153a9e3-08d0-435d-be94-31595c1080f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.114875
-9159a926-8c80-4432-920b-5444bfbcd605	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.126789
-91601a88-9f10-43d0-8ca6-125d848050ba	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.132021
 916d54f7-0462-416c-bd9e-2beb2f59a27c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.137257
 917b5258-b215-4411-8aab-cf19075ae620	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.14167
 91889820-b4f7-4246-b05b-f7f47beb0f5c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.146563
 9195ec2e-272e-40ab-b6a1-79c964d94a65	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.150901
 919e6137-6afa-417c-bd11-8a269140a783	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.156908
-91aec133-4647-49a7-a002-3f8bbd599a1e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.162706
 91afa0ab-1439-4fec-8b25-389a0339a276	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.168911
 91b466c3-571a-42c2-a9d0-0b0076d991d5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.174261
 91b46f8b-f3d9-4160-a817-1b591ec88d14	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.178777
 91b55e89-4815-47ad-8f09-7242fece7ce7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.184487
-91b7a529-8a27-4b91-8a76-5c6276269d72	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.189066
 91bbc4ff-6146-4e55-ba6d-a160662115c7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.193864
 91bc2401-d4b6-4cb5-ae2a-f192c31b0683	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.197678
 91c09ae9-1e2c-4740-bd94-d164e5d178de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.201846
@@ -7172,10 +6288,7 @@ d5db6c97-b89a-4f13-8461-534b3cd4b71c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 92060723-9b1b-4394-972a-242b80413ab6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.264799
 92081f9c-49c0-4795-85de-0bf01bb03538	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.269704
 9208ec4f-d67e-4bca-a4a5-d884017fb126	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.2746
-9495f830-ac5f-4950-8e9e-ed0873c093a2	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:55.121457
 953172d4-b867-4543-a499-364c6690c912	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.80429
-9585cd23-4efa-4e87-937e-25b93b2b78a2	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:55.206388
-96304157-8b05-446d-b2f2-e01c8eb4a3b0	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:55.265477
 d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.578329
 920e792f-6589-4745-9f54-ad1e813d3f01	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.284618
 920eaf4d-ef41-4d06-aa13-193f83728839	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.289091
@@ -7183,7 +6296,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 92227bf6-6dfd-4a88-81f2-6f5e4e6df57d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.298317
 9226ab0e-5700-48d8-be51-2866e94e20ff	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.303707
 9250da71-885d-4966-8389-800277f81cbb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.308535
-9255b202-ec65-4d4b-85ce-23928f89d13a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.31453
 925d87de-de4b-491a-81d0-7108c1c971be	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.320109
 92640cbe-b163-4c95-8bc8-d288cfeba3f1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.325378
 9279f0ba-ba14-4736-8f71-5989c33c65b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.33049
@@ -7198,23 +6310,19 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 92be0a47-6a0e-45d4-9927-7c7edb589fd7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.380499
 92c0f3db-48c2-404a-8a61-e11f36f48a27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.385479
 92d2ecfa-fcd1-4408-a65b-40bd39f25116	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.389852
-92e5b96d-9dfa-40c6-87fe-bfe15ed46572	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.394492
 92e77d4a-0c55-4e0d-9934-9d5c3c720823	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.400434
 92e914d7-658d-48df-b2e3-4bc66f09ccdd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.405806
 92f72f5d-75c3-487e-9894-71ea658f25bc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.411474
 92fe882a-7cec-4f0d-b09c-d10a1bad1c04	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.417582
 93021f69-3ee1-4f2f-ae6e-f76d97321fbb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.422315
 9306eb15-4b73-4e9c-8870-b5bb96a96ba7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.427671
-930b8ff5-064c-415b-9230-ad5b573a2db2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.432029
 930c1515-8921-4208-8c9c-0bacb972a21c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.435968
 93109930-f146-4061-bf1e-e17d3ac79a49	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.439998
 9319d697-8ae7-479d-b00d-8a22a3e1527b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.44391
 931b5b03-3143-41f9-a256-73ed8b90cd9c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.451827
-9325dc4c-e74a-42c6-a283-6cde4ed9f364	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.45621
 93274f0d-8e32-4f5a-877b-d63e2f3d9899	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.460973
 93326085-78f9-44e0-879b-97245f56bbe0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.465022
 93345bcd-e7ea-407e-a2d9-1d007ccbc41f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.469142
-933a4c8d-0b8e-4223-8b71-065c914f617a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.476052
 933bac79-72b2-437e-96c5-98e844068c74	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.481139
 93460d16-a842-475f-b186-82a454575105	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.484931
 93516d6a-a34a-4577-abbf-38f5cfb98888	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.48899
@@ -7224,36 +6332,29 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 935d814e-dcb3-4f74-bc97-76138b01565a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.5047
 935e7c14-5ac0-42eb-9772-0cf3e693650a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.508918
 9361f38d-ed36-42ae-b951-7f4f370fe4b8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.512955
-937462e0-9b15-4cb7-bbf4-51a028b38417	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.517423
 9385824d-6617-4d02-9235-205d12ee4868	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.523408
 9386cbe6-f3b2-41a6-bf84-aa189e32c10e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.529551
 9390afc3-3477-493f-87bf-95c9dd25f959	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.538092
 939a39c2-cf99-4c91-ad6c-eaf24039e152	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.54323
 939ae791-c58c-40b4-8b90-5a81736786ab	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.548471
 93a7b063-1451-44c6-95c9-f2f56bcc2f7b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.554773
-93afce75-f37c-4641-9458-60185ca54860	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.560648
 93b96285-84e1-4ad6-9e94-2eb157a59886	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.565439
 93c993bb-cb29-4b9d-bca1-352a64db480e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.569912
 93dd20da-93ce-438b-8cf9-5b83050ff794	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.574542
 93ed7f0a-5db5-49a7-b71e-16ca65c0e947	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.579047
-93ee49eb-9401-4514-865c-7f45ae4ec975	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.584949
 93f595a1-c0ad-47a6-9ae5-05429dec7c7e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.590508
 93f7688c-c2f2-4854-9ffa-0ca0990939e8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.595168
 93f8b287-a252-49b3-983c-221abcab19c4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.601185
 93fbadc0-497a-4ee8-b0f9-298ad9dc1334	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.606151
-93ff8bb1-07b2-43a3-b3ec-60e51ce2537e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.611286
 940158aa-a2a7-4188-9ce2-974106fe3fc3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.616734
 941ab108-089a-4b16-a04d-7dca4a5e7225	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.624064
 9439bd62-ad4a-4a8c-adc3-47105923204a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.62985
 944d5765-f8f2-4576-b320-c2eba520d20b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.640394
 944dcf54-4a4d-448b-b703-cc74d8f30839	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.646052
-9455c651-52bf-4406-a1e2-6998190538b9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.650228
 9457d02f-c4da-4a33-9310-8154e383a502	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.656247
 945aac73-2a9b-4d88-9d4e-153622b21190	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.661377
-945cec4c-2b66-48cd-86b2-e2ebcbf4f440	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.667133
 947229f9-7e54-4d41-851e-b39a1825a529	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.672783
 94769ca7-bd26-4eb4-b1a4-e30bee561e7b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.678529
-949af177-27fc-4a15-8d70-ce8177cd053d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.68859
 949d9eae-7313-49eb-9b6d-2945f094ef61	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.693232
 94a1d158-6630-4e2e-9ea0-f872106fae9a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.69911
 94a991fd-ac54-4922-a13a-c8e6f183f680	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.704884
@@ -7263,11 +6364,9 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 94ba8f6e-993e-47b3-b1c6-95caff81db0e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.727245
 94c4253a-ad06-46ec-bc0b-3d51ae241dc7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.732568
 94c51dd7-35d5-45a8-86da-7d1ec9bb4ed4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.737281
-94d6a1c9-bdc5-4756-af20-a0991e7441c9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.742455
 94e1a4ab-bca4-4430-8f4a-d7283516457c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.753897
 94f5555c-ff2d-49ce-ad58-e37d6a10271b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.759222
 94faae7f-13a1-4b3b-ba00-594cda80df5d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.765549
-95059e43-0b5e-4c85-8a63-aaddb643bfd3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.770418
 95083679-858d-410a-8282-947b438b253c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.776438
 950d9c58-6408-4f75-9952-fc434aeca6cb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.781487
 9511c77c-af6f-4b00-8f28-49eb57b75ca7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.788857
@@ -7276,22 +6375,15 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9534603c-59b0-4b83-9836-3f954962fd27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.809366
 953f085d-0f50-46c8-8dac-89ffbac83d73	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:55.183316
 9538424e-e3e0-4a15-bc0a-c9ae8524e7b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.815516
-998abce9-d499-4a82-8dff-03ec133dd753	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:55.516796
-99aa2d42-d501-43a6-98ce-d1ab9490bd15	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:55.537807
-99d9e6e0-b870-47eb-95b3-f5d33feb40a0	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:55.553867
 953a5e11-f5ce-4c1f-aa54-73d06c2f2ba2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.820336
 9540043b-d934-4eea-9dd8-75538d50830b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.830385
 9544b3eb-3667-45bf-9f13-d095d5aa5364	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.836179
-95536bbf-7948-414a-af35-cb0bc3a37f9e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.847387
 95587964-a9c4-43d6-816e-54c0abf0c5c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.852497
-95690f5f-5923-45fe-a5ea-aeed634f2828	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.857205
-95693588-4f65-41ff-9b08-c68efc7f7170	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.862499
 956b7c04-4d04-442c-b013-9c12039aab82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.867619
 9581c889-d966-4096-95b7-c3f29fd57137	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.880789
 958c770d-4fc4-4e3e-ac98-4da684b4bb93	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.894458
 9595961b-a942-4074-b750-49131688b424	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.899491
 959acff2-61ca-476f-ac4a-ec6966a3b8a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.904352
-959e29a7-ce89-4e20-bda7-54df864b8aad	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.910478
 95a0dc76-a50c-49da-82be-b341d295090f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.915699
 95a305bb-822e-411d-bb51-68563ba317ab	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:25.920761
 95a7c931-d465-48ec-a22a-53809ce498ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.924905
@@ -7299,34 +6391,26 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 95b2e1e0-4e8e-4bda-a517-e5271da28a50	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.93526
 95bfe9eb-e462-4e92-b043-b0efd79423ff	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.93997
 95c548e6-736c-4409-a56f-3a62a32c1ac8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.943885
-95c78110-9235-4244-bd37-d643e05a46af	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.947903
-95e4dee8-88e3-4c95-be45-aa3b57ba90f3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.9559
 95f016dd-db20-4dfc-a675-6aaaa4879944	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.960007
 95f2f1ed-7a21-4fac-9817-192c25e15100	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.963863
 95f6167d-e0e4-447a-b443-02b0b7849a3b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.967837
 95f6335f-af8a-46db-8565-d0c2c1e9dced	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.971803
 95f82465-a4d6-417d-a058-4ed95178fd12	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:25.976988
 95fdfd61-02d2-45fa-a0eb-783b824f4b87	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.982857
-9610ab3b-8159-4dd0-8dab-574edd885aa0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:25.986919
 9613dc01-407d-48bc-8590-d35418666300	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.990889
 96158301-5cfc-4b95-83d5-62bf28367155	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.994832
 9628c5be-6fea-4b2d-99ce-4366bfde0e6f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:25.998789
 962bcad7-8acd-4b7f-b507-a135720f1d12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.002814
-963cd91d-a9b2-4d0f-a7c3-909d9d2ef08e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.010822
 9640ffee-1c41-43a1-9237-a97366efc3f2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.014722
 9642c49b-db08-49c2-bf19-8a77f5705df2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.019403
-964f4096-cfe9-4cd2-bed4-fa895c7ecff3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.024424
-9659c82f-5037-46b4-895e-3eff6fd49e9a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.029036
 965ac765-e4f2-41a6-8b8a-104144bb56cb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.033358
 966559c9-9c9d-4d7e-868c-106989f8177f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.041855
 966a7177-b81d-4d1c-a92a-1b51b1c2c396	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.045674
 966d521e-5ad8-4f4c-9210-268f961dfb9c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.049655
 96772db8-7a9c-4825-8e75-e254d65e1456	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:26.054027
-9689e23a-a7ff-4531-a1a0-19353f1e9e30	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.058888
 968c83d5-d557-4b45-883e-04e3d15a8536	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.063137
 969c3c59-136c-4970-8cdb-e5b12e723f42	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.068475
 96a7180f-be00-4bf9-8df2-79923115e519	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.073339
-96bdb42c-b66c-4fdf-b97e-c03c35f745b1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.07814
 96c529ff-5409-4479-acce-9e8d1ba5bfd0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.082438
 96c536c4-0c23-41ea-ab9f-6643eb1b9498	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.087659
 96c8881f-ae05-4648-a457-4927c0890e96	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.092246
@@ -7334,7 +6418,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 96d27b99-8596-43b6-9cb1-8a444ca726ce	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.102219
 96d59833-cc14-4242-9b7f-87fd411c3a2f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.107609
 96db87ee-73f5-4880-ba2f-9978964648bd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.112673
-96dc93f8-1f39-4dca-bacd-174df3b0153d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.118247
 96e75c00-36d4-48d0-b8ef-a39719d87458	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.122217
 96faea86-35b7-4b96-86d3-774dd54babc5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.132065
 970fa4a7-e7a0-4361-91cb-a004188e4304	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.135844
@@ -7343,7 +6426,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9723a13a-4c11-4232-b7a2-64459197205b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.1528
 972ac0cd-4621-46f5-9ec1-27b6241a8e17	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.158468
 972c7b96-8a03-4777-ace4-51e9d138704c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.163602
-972e863e-5e51-462c-9611-0d2025563930	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.169364
 973f715d-53a3-46b3-b194-2fe3f9ba4742	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.174366
 974c9c24-0077-4a7e-8afc-e16538d00b4d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.180373
 975cb9a0-bd54-4e4b-a01b-ed8cfb78f083	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.185237
@@ -7354,7 +6436,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9773c5ab-35ba-4f08-9564-e0ab32cf8c75	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.210146
 977b1b5d-e65b-486a-a54d-758fa21d8b4e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.214259
 977ef94d-3f03-4b0a-81ee-70fff0c9a0e1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.219178
-978d2fed-7044-4de0-a5bc-db3a703ee7cd	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.224025
 97b35569-fec3-4184-a867-b259e29dd015	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.233381
 97c3c4d9-7b21-4446-8f88-cb20630a5bd2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.238194
 97d67bc1-ee17-4628-8891-b9997438f4dc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.242021
@@ -7362,34 +6443,27 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 97dbc239-c387-4280-aa99-f64b6d3b94e6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.251062
 97ddec5d-ae5a-4a8b-9c37-2dcf14b66b78	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.256309
 97e31640-478d-43c5-a2ea-52e79333d2e1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.261447
-97e479ba-87d5-4df1-9475-5cb1561f6b5b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.265994
 97e758f5-1274-4335-84e3-2dc8c8426d5a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.270299
 97fb3e6f-3ae7-4948-abde-410df4f9089c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.276293
 9804309f-16d7-46c7-a47d-df3c01ffc75a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.2825
 980eb918-cab6-48b1-8c9c-a201bf5ee49b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.28739
 98193b55-098c-4be3-913e-464755f8437b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.292435
-981e6186-c306-4f68-9345-7db0e6266ce6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.29776
 98325c3d-05c4-41b4-91ba-ac725a4189a2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.303119
 983ba0a7-61e1-4b5b-acec-549c07e8a3a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.30873
 98455bda-a6e4-4b39-a2de-f90975d177de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.313149
-9847eb2e-3954-47c0-9ff7-a627e3d0484f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.318422
 985de6b4-3006-442c-b768-4c671b8f9061	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.328279
 98645125-76bc-4185-b52e-6f6c56eeb95d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.333386
 986d0738-0707-4581-9e9a-41cfa631a9c4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.339366
 98d1dead-22a0-4537-bc85-092068dfd90f	1	\N	1	DangGiao	\N	\N	2026-08-25 11:57:55.455116
 98710a55-96a0-4410-a956-8b410b06bc03	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.349078
-9873d036-85b5-4577-851e-4006ad86b128	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.353573
 987430bd-582b-410e-bcb3-5b44206ae574	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.358299
 9874bb75-72ce-44cf-9d01-d91a22fa08d5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.363876
 9875f7aa-6c26-445c-bb7f-40c9b316d6da	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.368132
-987a4a9e-a702-4960-9e08-716621b22271	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:55.428019
 98854626-e7f5-460a-b706-0b2d521ef5a8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.377065
 98873311-721a-4e71-b02f-aa6da5b06e41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.38214
 988c8dc4-bce4-432e-b34d-48555132f5ca	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:26.385981
 988d026b-380f-440d-b055-fe1f6c585f18	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.391504
 98a3cad2-bbea-457c-88df-045e349bbb9f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.396464
-98afdf88-8c39-408e-9261-75f3027941b8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.402358
-98b9ede2-3651-45d9-8702-01446d7842d4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.407785
 98c4de8b-265b-46e2-afdd-3b2e02af834f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.418006
 98cf7c89-59fc-493e-9b89-603a3bdcbbbd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.422175
 98cfe6f9-1ad8-4730-a5c0-66b9b750082a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.427503
@@ -7399,17 +6473,14 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 98e1a847-5279-45b6-832c-6c2f2e83abd5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.449867
 98e33c0e-bd32-4739-9e60-ec0e8a20335c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.453817
 98e818e5-7a6f-4a6a-8fdd-dbfcd0e118a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.457828
-98ebe914-dd78-47ab-87bc-fc62e872a119	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.461976
 98f650fc-4101-4f94-a3b3-faf1f327c498	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.465862
 98f82563-91ab-4ee1-9b87-8b1fb2e8b869	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.469794
 98fe3a1d-b627-4548-b98f-2f1a7a42dc34	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.473737
 99076320-c459-490b-a494-1f2c62636912	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.477862
 9909868c-daea-4f81-b851-1dacfaead3ce	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.481889
-9909e065-52cd-4d1c-8dc4-db49307df29d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.486116
 9918595a-df08-442d-aea1-b06396cd41ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.492804
 991b2954-3fba-4e9c-889f-47730df2e4e7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.499399
 991c62d1-dce0-4f69-91df-27dc7ddc7f11	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.504028
-99251790-38cf-4652-b312-feb3afb51764	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.507841
 992d6cbe-26c9-4a34-9e2c-14c41449e985	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.512006
 99345c39-c43c-47a6-98b7-bc6baf3d36cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.516246
 9936648d-fe06-45e6-b75a-da47752018d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.519733
@@ -7439,7 +6510,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 99ca622f-d241-4229-88fa-3406a0156145	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.645704
 99d7a340-2c98-4ceb-8c78-724a6ec0c259	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.651281
 99da56f5-0e7a-43c4-bdb6-599e45de64f2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.664179
-99dc41c9-3b92-44ae-84e2-bfd5a9d11a44	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.669099
 99e426b8-603a-4673-bcd3-335753588f9e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.673216
 99e4bd3c-5dfb-4001-9fea-ca7fd09711c3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.677175
 99fc2059-0679-4c82-910b-08e56cf2f83f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.685082
@@ -7448,16 +6518,12 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 99fffb78-b0f4-4146-a6fd-091a41041fbe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.694863
 9a038b29-eb6c-4529-a777-ded5a6de7b9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.698881
 9a093519-e4a9-4edb-a13f-25fd15ebc530	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.702924
-9a09b9a1-0eae-4710-baaf-1912a445325d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.706799
 9a13d947-e751-4c65-a6aa-4ff65748b00d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.711243
 9a18b71b-0d3d-4dae-850c-a96910c5e48f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.716376
-9a1cd716-3983-40a9-89e9-82e89400e041	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.72189
 9a269122-2338-4b49-9dfa-9e2109a5bcdf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.726598
 9a26cc02-73f2-4f49-8a9d-d0322af1e005	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.731954
-9a380711-e9cc-445f-ad59-fe454adf7281	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.736264
 9a4445b2-3956-4b0d-8960-187d72e4a1c0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.741794
 9a536382-f868-46c4-9a12-2bde481e5d2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.74622
-9a55f15b-7723-4a66-87b4-20021218c20f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.751397
 9a5c032c-5bad-4291-ad07-26a89c99aa45	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:26.756329
 9a660168-e436-45a3-a1c3-890903dbb7ff	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.761883
 9a69f1e9-0399-4ee7-8b73-0bbc69d78f0f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.770977
@@ -7486,7 +6552,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9b03baaa-a1ef-42b6-b728-690ee28fad06	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.883905
 9b1d3bda-7be5-48ef-99fd-5a1a6074d652	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.888284
 9b2007e8-bb45-4581-8f9c-5c8bde4a8ee2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.898288
-9b24ee55-a21d-4fb4-a936-3dfe420e9d2e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:26.903208
 9b2ad7b6-a0e7-4750-94b3-1f1083226855	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.909551
 9b41dc4e-dd42-4734-95f5-92a8aaf18ca2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.914422
 9b500432-ee8d-466b-b5bd-ad23e33e72bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.920598
@@ -7506,7 +6571,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9ba4fda3-e5c7-4cec-8125-7b6921adcefd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:26.988013
 9bac7314-67d0-4ff4-ac03-11cd3746e3b2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:26.992564
 9bae99f7-2c6e-4c0b-9ace-5601c1e7c207	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:26.99694
-9bb0e5f1-dd7b-403e-a0d8-a0da09a783d2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.000895
 9bb43466-1a49-46a4-a0f5-5cc7ef682aca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.008237
 9bbb0f32-0239-4248-bf1b-aba578f3d77d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.012185
 9bbcc21c-658b-4c52-ae48-4608712a81d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.015882
@@ -7516,7 +6580,6 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9bdc01ce-0d2a-454d-a9ac-08db77feaaab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.031942
 9be44337-a72d-4df8-914e-a5b2de2b9e01	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.035879
 9bea8d4f-676c-47b1-b127-aceb76b57328	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.039796
-9bff01f0-e329-481b-a6bc-ca68502a3e1f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.044066
 9c00eea0-ed74-48cd-a820-fd2c9b24a12c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.049807
 9c09c775-783c-4af8-9459-8d10d114eeb0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.054235
 9c28ba23-fa16-4db2-9e32-fee2c8195c59	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:27.057853
@@ -7524,15 +6587,12 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9c3c2f19-7bd9-43c7-bdc1-1aa3f229c6d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.072495
 9c4b8a75-30d8-4779-b847-d55ae7d92b63	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.077348
 9c54f457-82a6-4abd-9314-a482d139dc40	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.082482
-9c6017e0-9fb4-4119-b488-b5d2716eb462	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.090682
 9c62b3ab-56db-4934-b34a-ff63e35f980d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.098174
-9c67d49d-c55b-488f-b6b6-cd50a4f6a092	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.10557
 9c6f985a-4a60-4699-b6a5-023cc376a8c8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.111798
 9c704f23-afb8-4f3f-8425-b31044801ead	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:27.117499
 9c7150ac-5a15-4161-9432-d419c34f3faf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.123134
 9c8461d6-b5cc-4c13-ad4e-e1985ce25331	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.129697
 9c8b63e6-8e2f-4be7-8753-3759ddf6ff5f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.134584
-9c9dd240-750c-46ef-a0e2-a5a19dfdc31d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.142221
 9ca27f7a-a11e-4332-b568-26b4174acecf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.14872
 9cc6c48b-36cc-4dbb-9db8-e1d6b6f70254	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.153624
 9cc833ef-dee1-4cb0-a3ca-b8500da664c1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.159234
@@ -7557,9 +6617,7 @@ d5dead75-131d-44f3-8f23-ade235cef67b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 9d2fbd45-cfd1-4253-8bbd-bb72bedb2817	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.265745
 9d350d58-3d64-4420-aaf8-7c35ba8cb5f4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.269949
 9d3eb0ff-4460-4761-87af-44ce690ffa2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.274713
-9d43ac55-ed6b-4164-9e1f-ea664a1a97e8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.283283
 9d487923-5cf6-4a73-a9fb-afbe15acd67c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.288843
-9d4efffe-bff0-49fa-a32b-a5927e24d9c5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.293214
 9d5269ec-3582-4f00-aec3-aff75f705f6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.299232
 9d54a5be-7f55-4a92-914c-1d0919220c75	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.305718
 9d597a67-00c5-4310-b51a-150626e4dbce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.310126
@@ -7596,7 +6654,6 @@ d5e82955-d2e3-40fb-a945-2e1acff7aa24	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 9e7009fb-d6bc-41a6-96bc-f55db377f755	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.470917
 9e784b2e-10cd-4913-b316-e3cd1f797d62	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.475023
 9e7a28c4-a40c-4752-8b5f-199abbdd6f9b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.480003
-9e7cc9a9-2249-42ec-9209-f359dde11e47	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.484014
 9e864ca6-e9d5-4d10-b9e2-47c80ad6d431	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.487861
 9e8ad9cd-78e3-47f4-9444-64d7ae882bdb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.491949
 9e9bd367-19d2-43d5-b2c1-8d7d73e4d2db	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.496061
@@ -7605,20 +6662,15 @@ d5e82955-d2e3-40fb-a945-2e1acff7aa24	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 9ec027fe-c444-437c-ae74-b760097e8d01	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.507803
 9ecff523-98dd-41df-aab2-424a223a7a12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.512191
 9edf91d8-93aa-4645-b529-329f70ceec9f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.515826
-9ef09b0d-fe5f-4989-978c-408944746071	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.519912
 9f04828a-2646-4e94-b2a5-6add1045e988	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:27.527797
 9f09b599-3729-4b03-ac5a-91a1d5190d75	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.531769
 9f0c1d80-ad86-499c-b24b-0c08972d3fbc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:27.53836
 9f11da1d-1e25-44cc-a4f9-18e07e73e790	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.5432
 9f16e7b8-2340-4a41-a20a-b050a9b0fb00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.547107
-9f3cb6e4-5109-411f-b4f9-3173fddc8164	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:55.894112
 9f45f21f-e3de-4cc3-8449-52fc7fb994bc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.555082
 9f5f94d4-b4b0-4fa3-b7a8-0624853f862d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.558853
 9f6b5eb9-b69a-4857-acf0-792133804797	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.563105
 9f6f618b-b692-46f0-b49b-b6ee36c9510e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.567858
-9f70f090-6a53-41ca-964d-0f44e25d7bda	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.572027
-9f716a82-7f38-4ec3-832d-27f438c9b9fe	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.576926
-9f757a62-4037-41a9-8bf4-feb1c70edbec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.581246
 9f829392-aef0-4f25-8775-3dbcaa13099f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:27.588128
 9f8414ec-4071-4878-91bc-64d2ea57ef58	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.593828
 9f8f0e15-6480-4408-845e-d86748ae64d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.598228
@@ -7627,7 +6679,6 @@ d5e82955-d2e3-40fb-a945-2e1acff7aa24	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 9facd6c5-1f86-4073-962b-9e732b9ae56e	5	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.619103
 9fbfea96-8de1-434c-825d-61536b0c40cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.623835
 9fc8f29f-83ba-4d55-b844-91002f5067b4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.629705
-9fcfde8c-9fa6-4cf8-9323-8892531d0017	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.635921
 9fd22578-8881-4287-b070-70bd36d7571c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.640322
 9fd2edaa-354d-4492-9ae4-67f2162aad4c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.645029
 9fd493fe-95a1-4447-8766-7c550ecd9305	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.650702
@@ -7635,12 +6686,9 @@ d5e82955-d2e3-40fb-a945-2e1acff7aa24	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 9ff2f197-9686-47e9-bc3f-dc6a9322096d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.660393
 9ff3b80d-8177-42d9-96ef-00f9adf4f089	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.664635
 9ffc4dcd-335c-46a1-98dd-e09c3653261d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.6702
-a0016269-a4bb-471c-9abd-1ee29de66fa9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.674767
-a004395b-8764-4008-ad39-182003b52485	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.680246
 a00bf590-c1fd-4e4c-9ccb-e4c43fda2766	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.68612
 a00ed431-a2cf-41b8-89c5-04dfa6ab745a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.691872
 a010f575-ecf2-4ce8-998d-884198d59f79	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.697426
-a011ed8c-f4bb-43dc-b4f3-3984a51d310a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.702733
 a01dc48a-f2df-4453-b32d-b0aafa9169ab	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.713273
 a01df483-205d-43f3-a55c-f2f835a9f1e4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.71839
 a027c9ff-c44b-4659-943a-beba2091f900	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.724612
@@ -7679,15 +6727,11 @@ a0bef806-0aa6-4277-85ec-dd0763583ad8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:2
 a0cdfaa1-09ec-4111-b5eb-a74ee4042243	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.89239
 a0d7f103-bf0e-4ff2-9d5d-9a92468705bc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.903514
 a0f1c895-b92f-4a15-a145-cf08f9046c08	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.90851
-a1a4fcb8-81a1-4afe-aaa3-0d2ae0879376	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:56.095963
 d5eb3ab4-2ed0-4ea0-ac52-c8a14f8b7ea9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.593793
-a0fb4fa9-6de3-4b3f-a3a2-5b5e74f92465	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.918958
 a1142dcc-c51a-4247-9902-8f0696bc7640	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.92445
 a118326b-bfa2-4866-98d5-d655080a74d9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.929924
 a11dcdb6-276d-4f8f-9eb6-73c26a33ffd6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.934392
 a1234b42-4228-4337-871a-38a0f884ad3d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.939552
-a12883aa-a10b-4481-b4f5-a60db2fcdcc0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.944076
-a1296ab6-dc1f-442b-bfd5-5fd311b78de1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:27.948063
 a12aaaed-2987-4b61-b554-54e8208b685f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.952142
 a1304f92-0a65-4366-86e1-1b63336d9c28	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.956003
 a1333191-ebab-4046-8404-2439e0865dea	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:27.964015
@@ -7698,7 +6742,6 @@ a13899e2-083c-479e-8d8f-ce3fea7033f2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a139d5da-4804-4486-aac2-a6f9a96b9ee4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:27.984951
 a145795c-5cf9-40ac-8e48-641d5167fa88	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.98907
 a1526eba-2e06-4571-b352-719930532e0b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:27.99445
-a1555692-bf7a-414d-b320-f4162e888a97	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:56.058417
 a15abb40-4a1e-40b4-a578-d5c8646ec333	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.003058
 a15d0924-0eb9-4ab6-ad8c-ab3f56983d84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.007251
 a162726f-4e84-4d32-852d-7be2d237a429	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.011305
@@ -7713,7 +6756,6 @@ a1870b8e-7adf-4133-9eb6-0a667eb4055d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a1941013-3862-4541-b4bf-3b34e5de4820	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.058215
 a1a11ea8-ede1-41d3-925d-09bfa9619104	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.062013
 a1a3e73e-9ea9-44a2-8925-9d754f068532	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.067634
-a1a4d7b2-0968-45e0-94f7-760eeecfb1fe	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.074181
 a1a555fd-7c4c-49ac-8290-3a59de0357ca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.084962
 a1a8407e-d149-4085-8661-4c182f6637cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.091808
 a1ac2fcd-e508-42af-b7c4-f8fb20cdf83d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.096408
@@ -7737,7 +6779,6 @@ a225ce4a-ea4d-46e5-8c2a-05a6ceaa056d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:2
 a23fd85f-6ef0-4a55-a594-27b393a6fd2d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.182997
 a24289c9-47fd-498f-a07c-74c31862542f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.190132
 a249348d-0548-4223-9f6e-0b96f2f09835	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.195273
-a24ae2de-5e77-4491-9fbf-e97eccb17f86	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.20254
 a24df398-6b91-4c22-9e96-ff51a26e0bcc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.207184
 a2523cc8-c61d-4dc5-8063-1bd0b5599406	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.211529
 a25ad4a0-e049-44b2-a3a4-3dbfc6d6430c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.216477
@@ -7745,10 +6786,8 @@ a25cc741-aa4a-43c9-acbe-7f5eb5cb7d79	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:2
 a25e7f0e-c390-4320-a7f2-282c9a4eb01a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.22477
 a2611c54-e084-4a60-af6b-19087e83ebf0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.229185
 a26a56b2-28b7-4e1f-8fd9-c3257820a359	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.240439
-a27c0c29-8a24-4139-9a60-dfed78c57bec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.246836
 a2832e41-e44a-40a0-8d3e-0336c3da04e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.252615
 a28baf7f-290b-4f08-b520-b5f6b781c97e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.26041
-a28e1413-4604-4b52-bcb8-8b2f853c45be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.266539
 a28f3f80-7417-46d9-a979-c20936fc205a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.27218
 a2929b42-482c-4ad0-a393-bbfa7996ae8b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.277975
 a297dcfd-3f55-4a47-8261-32e44dd1645b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.282456
@@ -7760,7 +6799,6 @@ a2ca4731-f6f7-4f25-9167-ebc5206f3061	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a2ca56ca-1d3c-448e-9d36-18a1f4e3b667	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.31278
 a2cc5eab-e252-4959-a08f-e6cc0b546c33	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.317706
 a2d79735-6a93-470d-8fe1-042b16a72b53	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.322188
-a2dc4d38-a5f1-4189-a51d-fa8614d7d19a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.326133
 a2e2f643-48cc-4d85-96d3-b56872dfa7e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.330261
 a2f17f44-26bb-452f-9ae7-17397eab68f7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.339831
 a2f9bbe3-fbf9-4f47-907d-a6e962368075	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.345714
@@ -7770,13 +6808,11 @@ a306602d-5245-45d1-8cdb-b8254fcc0277	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 a30a9b3f-968e-45fc-b1a6-a4abb20e8376	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.365319
 a30e56b2-e4a5-4860-8521-799f05286aa5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.369177
 a3132a12-1f64-4a6e-bbb8-671352be3880	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.373405
-a3137bb9-880e-4eb3-9e7f-eb4b2d6683b2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.378352
 a318bfa7-d559-4bcb-ab96-202426fb53e0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.382486
 a31c900e-5f3d-4fb1-aec4-704d968383fd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.387755
 a31f3d1f-7ef8-4dd6-bf89-dddf7c83255b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.39559
 a329ff71-7519-47b3-a60f-fb2fb6bf1d49	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.40146
 a339419a-6060-4ec0-8754-7bcf83da9305	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.407239
-a33ac650-f874-4f96-9483-57b636cd6dfe	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.413425
 a33e013d-5d30-407c-9659-c4e40cb25975	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.418482
 a33e8e08-b372-4ef0-997a-298d88897cd5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.423472
 a3414e67-0559-4e2c-bb7f-8d6c2744873f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.428684
@@ -7784,7 +6820,6 @@ a5c182ae-251f-464f-8f13-7923e6e88a70	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:56.
 a62b127b-a70c-4126-9a58-2549d175f79e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.920525
 d5edb65b-481e-434d-8913-3791101d6eb5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.599139
 a350ac8d-6e16-4c8a-880c-72dd705ccdaf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.44345
-a354c5f7-59e1-4320-a302-dc9b8090c6f6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.448993
 a35809c3-eb06-4ef3-93ee-1c4b2ec4854d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.453415
 a3591c95-8a84-46b7-9d95-908a8a4d2901	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.459216
 a359deef-1c0f-4366-91d6-52571da0a561	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.468128
@@ -7792,7 +6827,6 @@ a3644e3f-27f9-450d-8baa-f4f1d5d94e60	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a3646d0e-6723-48c8-890e-23e101a69314	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.480526
 a36b0af7-7a78-46d3-9103-4336ff5953be	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.488246
 a36b7ff5-4264-47a3-95e7-2e21f7dc943a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.494625
-a379ccd0-fadb-4b43-91e9-40e7da773213	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.506054
 a37ed6c8-0248-40f2-ae1c-7283517bf201	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.510556
 a3810bbd-1800-41c6-a1fa-cba4308a100d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.516516
 a38ea0c8-5c6c-44d0-b3a1-eccdce75d975	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.521348
@@ -7804,7 +6838,6 @@ a39cc1f8-caeb-4d46-8a1b-e0aba9f032b1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 a3a4ef9c-f5a1-41e7-880f-bef8ed6ef2d9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.551233
 a3a714c3-c12b-4dbb-a3dd-85e597faf959	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.556501
 a3a9062b-9ba4-406f-9699-d3c77351ff64	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.561267
-a3a931be-b9f0-45b1-b1d7-82d3d6d7de0b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.565121
 a3aa15a1-b862-48b7-ae20-56cfc62c8e3b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.569097
 a3bd5086-81cd-44f3-b8f8-df9ee013ea3c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.5731
 a3bef7d3-3093-403b-af75-33cfa4ff0138	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.576038
@@ -7827,24 +6860,19 @@ a46ff997-24bb-4840-be42-8f89d23fbafb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a47d27ab-e805-40f7-aaae-ca9957fb8513	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.656205
 a48bd6f1-6a54-4b51-bd96-dd9ad7808e4b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.660152
 a4951c12-0898-4ff7-b114-5dcc2de69b69	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.664392
-a499ddc8-bfae-4f4d-adec-77e1b6f3d118	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.669234
 a4b61040-5c3b-4a32-b9d0-4a9d98553277	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.676986
 a4be6e92-a6a5-4536-b370-670f1e6e1fd1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.681158
 a4c4794a-9f73-49a0-a205-d9a7c4da5a3d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.685014
 a4c528f3-5d3a-4a62-860a-28a7d69fc6a3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.689021
 a4d792ce-d5cb-4f66-9f92-6ed0a3a9fd55	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.693196
-a4d83c5f-58ab-4af2-ba58-389011ba6e2b	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:56.353379
 a4df5785-79fe-437a-b6b2-21c848878bc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.701041
 a4e04259-3523-4127-85e1-7b51ab9ff041	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.705538
-a4e092d3-a42f-4122-a586-3854ad43770c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.710421
 a4e54fc6-8a49-4659-b81a-e5b76a397977	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.71507
-a4ffb115-9f89-4508-8a88-750835b5c619	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.719202
 a514f74e-3d12-4005-8fa5-32f2bf96e9e8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.723105
 a51fc205-eff5-45d6-bdf4-12d29c935368	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.726994
 a5200fe5-585e-45f4-82b6-260bc2d3b0be	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.731052
 a523f54e-6f73-4291-9f7a-0fba349b6a92	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.735014
 a52473c8-40c8-4931-9ee9-43bc91c52c6d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.738868
-a52979c7-201d-4a72-9b0c-617da8fa226c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.745564
 a52d180a-d317-4ca2-93da-73f4cc56ceca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.751396
 a53b9249-8453-4d91-9582-d856e2d6a74c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.75986
 a540b8b3-a6c8-491d-a8df-b319a749b6de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.76421
@@ -7854,28 +6882,23 @@ a564941c-50d8-481a-9ee6-3ba36bc596a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a568ca8a-e1b7-4557-89fb-89ba6994c5e4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.780057
 a572dd6e-9076-4563-a6f2-06bb89cc4d0a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.784437
 a57a5c94-e794-4fd5-a3fe-55f86003519a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.788986
-a57d7548-cf3f-4208-ad10-cad7cdb82535	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.792853
 a582c5e3-c85b-4629-b606-0d21d03ff727	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.802512
 a58cc2e6-9467-45d0-b269-b06714ac2d1b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.8076
 a593d09a-5000-4876-ba39-48b7da25a480	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.812382
-a598d030-9a85-4551-8362-17764b07789f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.817711
 a5a82732-6e73-4d9f-a181-8904341cf8ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.8221
 a5b1b96a-f911-4670-80c4-e939cafe8f08	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.82595
 a5b237cf-47da-4dce-9a00-d7192cf95b66	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.830024
 a5b7f2bd-ed52-406d-a909-d0555c401dc9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.83474
 a5c0db1d-7593-47fd-886c-5919c8e36bb4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.839078
 a5cefc06-f610-40cc-86f9-7470788bb3b8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.852247
-a5d4a221-e515-435d-b79c-339e538e0db2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.857809
 a5d70ec6-92af-417e-a9e1-dfe48bfcd4f7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.864211
 a5e838b7-1ec4-42cd-bab1-e90b9bc35b43	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.86896
-a5eb2143-12a0-4a95-bb0f-5bd8e4aac666	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:28.876351
 a5ed86c2-37de-4c19-ab50-3f87784358b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.884001
 a5ef498a-4edc-44e8-9779-2a945e43d35d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.890407
 a5f65a2a-578a-487b-b1b7-648574df6a60	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:28.895479
 a601e3ba-6f3f-4ede-bb8e-c0194a7ee5fe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.900452
 a608f336-3450-4e8a-aa2c-2bfbb601ccec	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.906429
 a6198612-e051-4aaa-a48d-4f4de7017837	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.911291
-a621ecb2-5e2a-476e-b585-613668285cf4	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:56.457739
 a62bff61-fe92-406c-9842-2e9541ec9c9a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:28.925326
 a63d2afb-f2ce-47bc-a64d-c172e6cd51a1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:28.929407
 a63e2b21-9a02-490e-98a2-bca294aa1837	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:28.934148
@@ -7902,7 +6925,6 @@ a6be767b-1e6d-47e6-81cf-fa1dbbe2dd0d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 a6bf6214-7639-42cb-956b-0f63510799ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.035499
 a6bf9f05-23aa-4954-bb97-62c3dd3730a9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.040245
 a6c44af4-9c8c-4e34-9698-6319bec6d719	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.04442
-a6ccfc07-4344-4a88-80dd-860c2f1d745e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.049292
 a6d44a52-657c-4d26-acbf-2edfcf9585b9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.053205
 a6e135e9-970a-4c6a-afb5-0559af7c353e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.063396
 a6f02206-4104-4194-9ff7-d4da60c4de23	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.069628
@@ -7913,7 +6935,6 @@ a712398f-b073-430a-a21d-ccc089a53053	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a7139fb2-47f4-4045-8094-556dc305cfeb	9901	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.094292
 a713dbc2-6330-407f-86e9-aa833839ce2b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.099783
 a71437dc-8e6d-4bb9-9687-af891daf713e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.105131
-a7178558-1b83-4401-aa2e-5c1074512c15	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.110539
 a73b71a3-429e-4b60-baa9-97efed279406	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.115709
 a7443949-4ea5-403a-a16b-cd5075ed5495	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.121436
 a7525aeb-be23-4939-ae56-b7dc9ab60bb9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.127241
@@ -7927,15 +6948,12 @@ a77b9653-ef44-4093-b76a-f8fe955ed4f0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a77e6fc0-119c-4661-99fc-c014f407d386	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.172528
 a7869f82-459f-49f1-9490-7f76b88a4e02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.177616
 a78d03d2-1b0c-4b5c-9a19-5c01f902a490	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.183265
-a7946a02-9d62-4c0e-bffb-61258964477e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.187624
-a79b55d7-1661-4117-8180-b0071b1553bf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.192308
 a79c814d-f594-49f4-ac0d-ad94b09f52a1	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:29.196492
 a79cc029-bbd7-4838-aa05-73acab1d1e7c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.201252
 a79d05a8-6b14-4a94-91c6-78587b6721fe	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.205105
 a7a4f444-0f41-4046-a4d1-3e859b8578cf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.209891
 a7a97459-5079-45e9-9f07-7e9ac1b17d02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.215539
 a7aaf213-5fc4-4672-a2fb-a8415e4e5c92	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.221269
-a7b063ba-ce3b-4588-b41f-893f44a86ae4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.226533
 a7c7ed6e-fd09-42a7-b284-2c4ae54365ad	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.231889
 a7d12433-70eb-4580-832c-ac161a7646dc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.236638
 a7e805b5-5b82-4b52-82bb-2491ce1bbc8d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.242156
@@ -7955,7 +6973,6 @@ a8410336-4403-46ad-bedd-46648b4161b4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 a84636b4-4412-46a2-91b0-b3ceeabafc8d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.333084
 a8497625-9033-4ec7-a075-c18651848f25	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.339183
 a84aa7af-2fbc-482c-9b1d-a2ea53375bac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.345779
-a8595d58-2297-4df0-babe-ae9e16af7579	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.352473
 a86a6442-2856-4ed4-9f47-a9c7037dab2a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.357535
 a86efac2-f6f9-4892-9cbf-0eaebeefef13	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.362642
 a8756266-e255-4928-a62e-37154b4ab10e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.374199
@@ -7973,7 +6990,6 @@ a8c343bc-6d14-4470-baf5-ed993b41e654	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a8c6c618-437a-40fb-ae63-f55c20943e4f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.427513
 a8cae571-2305-49ff-aa41-5ee8257f190e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.43344
 a8cdad4b-31ec-471d-8e2a-92ae7a949a71	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.438674
-a8cf8c7d-cf0c-4c27-9a6d-03eeee45a041	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.443237
 a8d2d34a-2c57-41ea-8c46-c2202cdb350b	1	\N	1	DangGiao	\N	\N	2026-08-25 11:57:56.663685
 a8fa21ad-6757-4fc2-936e-c3c2e5278779	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.455896
 a90eb627-3965-4bf7-b3d0-cd10f0bb5c36	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.464161
@@ -7986,23 +7002,17 @@ a959cfa6-d511-4914-9bc5-ef21e340563e	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:56.
 a948f801-fa69-449a-96e9-66ec3f003e81	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.493026
 af76f064-e758-4d3b-910b-24dfa9c1e51e	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:57.093413
 a9558526-7fca-473d-8b18-d4dc33b4f1a5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.49765
-a959ca98-edbe-4899-a3eb-cb5ee0e26bc8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.502104
 a960a2a7-232f-4575-acc6-d5a05f1ad5b1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.51122
-a974df44-4efb-464c-ba64-005fea1f61de	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.519117
 a97b366f-acd3-46c5-a28d-22c0f2b35cee	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:29.523466
 a98bcbc7-5844-4e24-8f3c-b72cebb83e75	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.528328
 a98fb27f-9aa8-4728-b3c7-abf2b49a8509	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.532188
-a9950ffb-c312-4f73-b9c8-9caf65aaee91	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.536302
-a996e1d1-eac5-4c4f-9fc4-c294866100d8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.540199
 a99f1426-305d-4a40-ac0d-484f46f9dd72	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.544146
 a9ac9e49-ca00-4840-a415-5331ffb0351e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.548054
 a9b2bdda-07e2-46de-b6c5-3558ce5948e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.552361
 a9b488b3-1e4b-48c7-aa14-f4dc594161df	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.556272
 a9b555eb-e94c-423b-a7e0-e1707f8bc32a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.56168
-a9b57d12-2fb3-4a5d-99ec-42c023903080	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.566378
 a9b922dd-55e2-4369-b003-129d71b33a97	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.570117
 a9bd6e5e-bab4-4b50-9556-2be41ade8cc7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.574225
-a9c01c23-a6e6-4003-8e65-bab2533fac64	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.580561
 a9c68e8d-763d-4843-815b-749e8be0b0b8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.585328
 a9ca0657-b5da-4b02-893e-8d5e17f849ce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.589101
 a9cd9d4c-7711-473f-814c-f514c485f94d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.593128
@@ -8016,7 +7026,6 @@ aa0a19e5-a20e-4652-972e-5d9e4667ca12	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:2
 aa0c9ce6-85f8-4c9f-882b-97d979745541	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.630625
 aa12b1d5-dbf8-453a-9f3e-d41579c856e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.635296
 aa144cfb-502c-48d0-845d-e64e7e18c60d	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:29.639257
-aa1b7ae8-2575-4b7e-8138-18d8b8e1ff09	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.643183
 aa1bae0d-98c9-45c6-b3dd-2df726de0e26	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.647543
 aa1c7e49-a52f-4503-964d-a3090a9e5cb0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.652391
 aa1fa9b5-a69e-49ba-b23b-794373640525	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.6562
@@ -8024,7 +7033,6 @@ aa2e8d2f-16ec-413f-bf28-bebf40685ba3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 aa3678d4-e457-4993-8717-3e424e45d6e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.664133
 aa37258c-9361-4687-a915-9249d56f2021	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.668229
 aa3a4274-0e1a-4e85-a394-7e531d5d34ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.672181
-aa3a4fcb-de78-4968-92ff-9ab5c7d79a5b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.67631
 aa4f1b2e-d0be-4456-8d0f-3309e212b686	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.684154
 aa4fe40a-03ed-4e95-bccb-2a09f66c5d40	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.688212
 aa555c0b-0196-4c2b-9a1c-04fe1788b1e0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.692238
@@ -8033,24 +7041,17 @@ aa814573-1f50-4014-99fb-824622671e7a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 aa8fd23e-9bda-47ba-9986-4d5a24d3e8d7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.704297
 aaa15c10-274f-48c5-b147-909fefa054fc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.709372
 aac4154f-2e15-4a95-a139-810595ea2898	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.713129
-aac6415a-0ad1-4edf-9fe9-7b82b6680933	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.717181
 aad01e98-1083-4bda-989d-bd044a5a41f4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.721798
 aaed3e49-b7bf-46d9-99fe-ba636f3308d8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.726493
 aaed5ae4-6e7a-4fcd-934f-3265bac96399	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.73121
 aaee510e-788c-4573-ae14-7eaa64d3d973	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.735185
-aaf185a6-75f0-4223-bb79-a6accdcbcce3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.739159
 aaf40005-561c-45ca-af26-47a92fbc42b7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.743183
 aafc2462-3c0d-4b83-8a03-7116ee9091bd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.747238
-aafef2eb-06c2-454b-8534-f5044ac9fb64	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.751509
-ab19e8c7-ee54-41ac-a60c-87c7616a38a7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.759069
 ab397031-edea-4117-aa0e-0b7aa1863ddf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.763128
 ab3b5625-777f-40df-8eee-b100db9a1b6b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.767227
 ab3c6b9c-a9db-4270-b29d-785665bf728a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.772011
 ab3d713b-67c9-48bf-8355-d3a49f5c79d6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.777172
 ab54acdf-6898-4f8d-973f-2cf9d6a3cd42	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.783396
-ab6263fb-0ee1-4a39-b4ee-3cd94ff14f25	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.78867
-ab64080a-23e2-4be1-81a0-28018239320d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.795841
-ab6e5317-b0ab-4ea1-842e-5a431d6dde86	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.801502
 ab7f2c2e-b733-4c11-8afa-ac1cf32334ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.806226
 ab99c199-9916-45b8-b34a-b83b29258d36	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.810287
 aba3eea3-ba08-4082-afbd-02736e9e4929	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.81477
@@ -8069,8 +7070,6 @@ abef207e-dc8b-46b3-a7ea-3a1f1cee1b56	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 abf2e855-257d-4692-b7e6-ab4b303dbd76	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.873244
 ac007f8c-0503-42f4-be4c-9d7ec0fb4be3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.877039
 ac0ab432-daed-4e88-9b94-7210898aa327	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.881316
-ac14ac62-19f3-4fb3-a2c5-f44a48d9c42f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.885167
-ac26e8d4-27b8-450e-8e4b-84e37c35b758	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.88959
 ac29e804-b04b-41de-8bf5-846ff181ec9d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.893055
 ac314bb9-a61b-4c43-a449-be33129de60a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.897182
 ac3c1b9f-fa09-47ae-ae0c-72bd48d397ee	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.901187
@@ -8087,20 +7086,14 @@ ac94c82f-6dab-4f4c-95e6-b8fd704610cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 aef51705-5a04-4520-982a-75ea862c731b	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:57.044204
 afead066-6040-4462-ba69-14524c895a38	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.45951
 b0642611-24e1-46b5-9ec4-4043ecf896a3	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:57.174004
-b1a20f6d-1490-4574-8d87-b1f3345754bc	1	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:57.260279
-b2673059-478b-4f8a-99ad-591bc61e0656	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:57.31274
 aca5fbab-928b-4f76-ac6b-c9b7a1880a9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.950989
 aca823d1-5522-496d-a162-6db5db684756	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.955089
 acad03c1-f9bb-4cf9-aed3-003d12dc56aa	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.959119
 acbf1bf0-8c4d-4fe3-abc1-a8b2f8a380ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.967123
 acc3b409-faec-42b8-b624-fc24ccdca93c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.971172
 acd08981-665c-4c29-a3a6-b4fd0014ec54	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.976385
-acd569c5-ba51-4d8a-ae3f-eac289bc2eb4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.980246
-acdf1e76-24b9-45a2-8a70-0e9baad13cc6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:29.984272
 ace1e68c-1fe8-4cb5-82fb-46bd84f1ef49	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.988204
 ace2b19b-1b60-4212-8d88-9b3ad54aebb5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:29.993282
-ace2f34c-7408-4144-bdd7-a3562377c9b2	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:56.93002
-ace8e787-d663-4af7-9b84-86d0537531ad	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.001031
 acf797c9-d080-413c-9342-929d06ff8d22	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.00524
 ad04d7c8-b733-40ec-b0ca-b20984cdcf6d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.009134
 ad06c3a0-df02-48d1-87d2-c8e71634aefa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.013165
@@ -8114,11 +7107,8 @@ ad5ec8aa-1faa-49f6-9929-608bde369150	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 ad617288-4c1c-470c-94f2-5dd981039baf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.049082
 ad6adfb5-f522-4d3d-ad5b-6678ff9f9ae8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.053153
 ad7e8e8e-ad62-45f9-918e-de898332713c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.057016
-ad8df93f-ef23-4ead-ad16-77cc24b9c201	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.061065
-ad8e09d4-290b-484d-bbe6-b1d04ebb7cd6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.065181
 ad9a5fb8-b605-416c-ae40-54b756ca1ec8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.069419
 adb03833-7490-4c18-b031-1a53e8745992	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:30.073672
-adc2e344-a036-47dc-a8a3-501803d65084	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.081274
 adc87b27-c7b2-4763-ae0b-04cefb5ede49	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.090593
 adc9bb4c-f068-48d1-94b7-521a9620a8af	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.095882
 add2e91c-7c9f-4f23-a9e5-338df88dcc32	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.100299
@@ -8129,28 +7119,21 @@ adedf8aa-40e3-4f52-9a68-d9925bb69339	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 adf56db3-a56c-4ab5-9242-a5aeec1fa39a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.127721
 adf709a6-155f-4e3d-b29a-24d54ac51138	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.132866
 ae0a0f6c-78df-4ced-b9eb-93ffd43c10c6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.142579
-ae0dd3ab-1787-4ec4-a2bc-2b7d7dea8041	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.14784
-ae1ac507-b06e-4819-bda3-8a588aa50188	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.153125
 ae20c9b2-4570-4a39-8c91-e50e84aef04a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.157745
 ae2b06bd-29be-4829-969a-9a9f8c6a5e91	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.162912
-ae2c2f76-4ff2-4df4-9e43-07cf68e10ccc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.167647
 ae3a1c93-70fc-4e68-b382-32c4fc676a22	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.172875
 ae4c34ce-8964-4756-8f1c-a2995432afd4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.177719
 ae57873b-bd9f-4124-b539-ad61d6f7934e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.183259
 ae588c35-dadf-418e-9bcf-f8c4a900c2c0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.188913
-ae64d9c9-c37c-40e2-8214-8ac6999385a8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.193803
 ae7688ae-98e4-409f-91d3-01b3d70b4378	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.199135
 ae785152-af46-4de9-888e-bcee977492a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.20383
 ae82296e-ca39-48dc-bc17-9c9d17779968	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.209447
 ae9337ff-19ac-44e7-b6df-33989e04349f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.214891
-ae9e7fa9-5bc1-4968-977f-894f345a128a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.220949
 ae9ebb6d-d542-412b-825d-f1369eed9ea7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.225746
-aea0a175-ccd2-48ea-93a2-5311ade9e997	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.231028
 aeab0c7a-a628-40c9-8996-faa13c023b95	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.243253
 aeaf51ee-5d7d-4926-ac86-06def0eca250	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.24894
 aeb36e3d-62ae-477e-b7b7-594469b866f7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.253644
 aeb79289-4ab6-4c05-bfd8-7f21544a70fd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.258914
-aeb8bb99-f6ee-423b-a609-bb065083d000	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.264
 aeba541d-20dc-4014-b709-28b7d078e5bc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.268882
 aec149e5-8e29-41af-b04a-2bba264b79b4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.273863
 aec2dbf3-a881-46fd-a423-f17da840bdbe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.278732
@@ -8164,44 +7147,32 @@ af19c88f-d916-4ce7-ae1c-aad561ec70bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 af25647c-3b27-4bf6-bb3a-d604908790c4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.332802
 af25a14d-30ca-4cac-be42-8e3b79fe8f0e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.337709
 af40d422-5f9c-42d8-8db5-00d3097901aa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.343387
-af49b940-1a8f-4b47-9e2d-ef7913d968c9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.354855
 af49d8c9-55a5-45e6-8548-d8f14ec916d8	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:30.359745
 af511c18-0ccc-405d-88da-4e4d484060ca	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.364882
 af52a3f3-9932-44c4-bfa7-a2b096f609ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.369742
 af560b80-e0e8-4e6f-870d-c0e32ed88fb3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.374303
 af6293da-75ef-463b-84b5-26bb3430f8fe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.378579
-af642fdf-d293-4630-b5d4-aa58628b759f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.382469
 af65499e-6e93-492e-86b7-b4a3b6d0ca10	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.387611
 af68229c-80c8-4b18-aa19-d653248c3537	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.392478
 af72306f-e845-48f3-8216-5d0a0a75ad71	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.39634
 af766aec-3dab-4dca-abe0-d0e218d5e054	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.400332
 af842896-9154-4fd4-b76b-74553dc70564	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.40928
-af89e6ce-f317-4613-a8f1-c8d0c97a4fba	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.413187
 af90c0d4-a76e-4840-b3f2-b81058020413	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.417972
 afa11c8e-5d29-4e9e-a6f1-b78355e46d84	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.422219
-afaf32f0-f630-4414-8c99-2b32b71b85c9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.426101
 afb6f1a8-99a3-4d5d-99a7-1a5d38beb83b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.430106
 afd062de-7b02-4e68-9fd5-48ac1e4383bc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.434206
-afd78ddb-2c3c-476e-822e-0cdd72e2c221	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.442261
 afda07e8-31f0-4e5b-b808-f4234a5455cf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.446107
 afdb7241-93b7-417b-b87b-71fa02f58f1f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.45013
 afe6f595-e7b9-4123-827f-b9bc6acefb1a	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:57.122349
-b01ed8ba-87a9-46ed-9bb8-4312b1bf33e7	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:57.144138
-b569eebb-d014-4ac7-a16d-3c7f15fdcc4d	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:57.533659
 b56e708e-2a29-43f8-b1cb-406c4610ff45	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:57.539017
 d5f0331a-8e98-494c-aa1e-8380cda868cb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.604154
 aff49872-5d02-487f-b365-1be954a37642	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.467231
-aff7e6fd-533e-457f-a946-c943a7667a63	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.471204
-b00d5227-3f1b-4d75-aa57-8465e084d34d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.475158
 b00ef83d-986a-4625-9738-ae87f72363a0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.479192
 b0133e78-21b3-4236-bb3f-7c5c6cf494f8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.483259
-b019b0af-c976-4f70-a759-e561835cb6b3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.487175
-b0206d39-c0c5-4471-8b1b-1cb045e545f6	5	\N	2	HuyBo	\N	\N	2026-08-25 12:01:30.49523
 b025d3c1-1b86-4062-b163-da64758cf19e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.499394
 b031c204-58f6-475f-b8a6-211730e0e9da	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.50317
 b03585f2-8519-4bd0-b333-af46d265a3c3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.507118
 b035eae1-d83a-49b0-aa55-23ed2c7945be	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.511139
-b049b746-0fda-4687-93b1-8de2bb90e270	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.519164
 b04ff7a4-cbfe-44f8-8201-831cbd2824dd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.523424
 b05ecb62-13b5-4ff2-872f-de9f4d7a37c6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.527156
 b0613d71-1d66-45a4-9ab4-2a2e647c97c7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.531096
@@ -8210,7 +7181,6 @@ b0757bcc-0f70-4765-a704-b4cdd9937cc4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b07b5f2d-0dc7-4465-a781-a18260f987ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.548563
 b0855651-0694-4fd6-af72-5abd100469fd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.552498
 b08639ba-60ed-4e2e-8648-d95ae61910a0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.556332
-b0893b23-0a0f-4f7e-99e6-e21406f32f40	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.56
 b0912e82-43a8-45d0-b1a0-aab9ef57482d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.56456
 b091d523-6e2f-4dfa-88fc-6bdf2d238bdf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.569558
 b0a485c7-fc60-4168-99e9-3a68535e7602	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.574496
@@ -8249,29 +7219,23 @@ b19e3aff-c152-44e4-842d-d11b5724da4b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b1a53b85-5b59-44eb-9ef6-b5a3260214a0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.734399
 b1b578ed-a710-4df0-af60-4e9cce6432c4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.738231
 b1b79f62-cdfa-46f6-998a-4eb256d7f152	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.742106
-b1b82242-7f68-4195-8c82-41c97f05bf3a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.74606
-b1bb477d-6adb-4649-86aa-7f260b57a488	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.750108
 b1bca961-39ca-410f-83d9-08edeab40f63	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.754381
 b1c76869-0fea-466c-b623-ec5f4b42959f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.758055
 b1cb6f38-217e-479d-a2df-2804f8c5a63b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.762109
 b1d94f13-c74d-4249-be54-38e0024a0a8a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.766086
-b1db106b-bd3d-407d-8ee2-b2a4f7ab7390	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.771973
 b1e6a2cb-e364-4d8b-85ae-7cdb610aaef3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.782979
 b2021489-e730-44fa-8dcc-cb9a385e5133	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.787451
 b2090d94-737c-4047-9598-48e59f4c0216	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.792925
-b20df45d-3b1a-4ac5-b4a1-302b2e19d485	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.797326
 b20fc495-2220-494f-ada2-17a884f00863	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.801285
 b212d957-4449-4a2e-b175-41389a753fae	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.805583
 b225f25c-c5ea-47b7-aa81-11b6361d0657	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.810114
 b2453fa9-7f38-4134-a0d5-afb093bd1af8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.814958
-b24beefe-2ed8-46c1-8c92-ca7375f96ed7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.822245
 b253f834-bb01-47e5-8df6-a76285e0d6a3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.826266
 b2599ae8-2122-40a4-b571-5251d1a7dbe4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.830395
 b26315dc-6c96-4965-a834-e7359a2d0186	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.834637
 b264029b-5ab6-4645-92aa-db488519619f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.839114
 b268a062-5ded-44b1-8e2f-f525be38e23c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.848355
 b26a08a0-cc4a-4c94-bd34-fa89d7dbf178	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.852694
-b26f6eff-8b77-466d-9f3e-e43bd57ac760	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.857261
 b2741d76-cf70-41cd-98f6-797378733d68	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.86164
 b2806678-ed4f-4b05-b24f-f381bcb138b1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.870746
 b2831cee-567b-457c-8820-03cdaecb31aa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.875906
@@ -8288,10 +7252,6 @@ b2d123d1-e94a-402b-b8db-115f55c41917	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b2d39c17-fa52-4ebe-ad11-ad5206a78c43	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.929137
 b2dc1e8b-e9d5-469f-96c5-f02d7dc7a4e8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.933455
 b2e02f94-7cac-41b9-bba8-0c1a1801b853	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.938677
-b54550ca-52d3-4086-b738-f91d43d9bd27	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:57.512609
-b71dc64e-026b-4b37-aaf3-f6590f6ac829	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:57.640772
-b725b33d-a484-43ab-ae53-a9666149a610	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:57.646301
-b7f375da-ad45-492c-b839-0756ed8351e4	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:57.705081
 d5f4b5ea-8d5c-4b22-9e18-8ed50dc89cb8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.609274
 b2fd2f83-f639-424e-930e-105799cd5096	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.948696
 b3063d0a-9cc0-4a2b-87a6-266cf6980e08	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.953454
@@ -8316,8 +7276,6 @@ b35ff69c-75ab-4dcc-8329-1f1f9337be5a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b36395b4-8b83-4b87-880f-0de607f3b977	9902	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.041783
 b3682663-91cd-4bc0-9e40-4dabe43ed91b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.046446
 b3692599-8b06-4d7a-bfaf-a0dd21dfdc10	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.050275
-b37211f3-d692-4e55-bd82-70b56e167ac8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.054474
-b3742774-70d7-4a7c-b1ad-64d3113d623f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.059855
 b3763456-0ac0-48a0-99f8-31b648a68eb7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.069661
 b37b6b9f-d72b-46df-808b-7c86380e1281	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:31.074582
 b3840935-3074-4e66-af1c-06bbbf27a792	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.079281
@@ -8326,12 +7284,9 @@ b3918e2f-b490-4f5e-8032-ebe5c9152470	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 b3a2f423-6060-42b3-b5ca-b5f4d0e1680e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.093582
 b3a3c250-b70e-46f7-8876-fadccfd5bfe7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.098495
 b3beb24b-842e-492f-b450-bf54c5807e06	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.105301
-b3bfeeaf-2118-46bb-a9f6-13645575955b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.110878
 b3c3c212-1a2b-4b8c-bf5e-3f4a9cee79fd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.116478
-b3c83b19-dddb-43cb-8cd3-a75cb775cf2f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.121504
 b3cba24d-74ed-4dd3-a9df-3b967f77b910	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.125421
 b3d2d45d-8b0b-4992-9dbc-6089448e537c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.129371
-b3da4931-8540-4f84-85d7-338bb046cac0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.134408
 b3dd1bd6-4ab1-4749-a520-0685e79babdf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.138377
 b3f24057-bb9b-4b9f-a09a-145bba13f406	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.1438
 b404ee8e-f678-4f1b-bf37-ec636f321b72	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.148652
@@ -8340,8 +7295,6 @@ b4182669-db53-492d-b26f-d6fbc5626d2d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 b4209f65-5979-462a-9179-5b7a8c25c419	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.165148
 b424225c-b61b-47fe-beac-28c3e6b447d5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.16922
 b432e69a-433c-479f-bada-9e7c72dead38	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.173405
-b44048e6-6cae-4727-b631-b7a92a0cf9ad	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.178865
-b455e92d-8831-4cb5-9ed6-a222b89d4f4e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.183592
 b45aa479-8d10-4c5e-8755-080cc69675b2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.187481
 b45ae5f2-3ec6-4e84-9313-68657c60b4f6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.191287
 b4611c10-0a65-4a8c-a643-8015879cb588	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:31.19515
@@ -8372,9 +7325,7 @@ b5377d16-6771-4b37-9b6a-75d253859e22	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:31.
 b5384a55-89a0-4840-8257-9a4c3f687768	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.329574
 b5500cf3-72c3-4447-b8ff-b402870dfe4b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.339751
 b552c528-94ff-44df-9539-870426916e97	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.349518
-b5588138-d4f9-49ea-83a5-849b699df2d7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.354634
 b558abe8-1352-411f-a696-940ae4ffd287	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.359729
-b5595bf8-81f0-44c5-9cf0-bd0a3e758c45	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.364696
 b559d62a-74e2-4902-b205-d585d9dcd9d8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:31.370499
 b55b775b-33d7-47b3-a04a-83681c66953e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:31.375614
 b55c087e-bdca-48ad-a317-3b0e53d0ce8d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.380437
@@ -8389,10 +7340,7 @@ b5aecfe4-23b9-4f9d-85bc-e0e7e774ec9e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 b5b271e2-e216-4444-a6b4-0faecebe86a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.433613
 b5cb76b1-1e7f-4450-94e0-3ea7dac5a74b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.438813
 b5d6266d-9c50-47cf-8ba6-4abd5277a50c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.44488
-b5dff3aa-92b4-4f16-bfc5-40917e4d208b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.450335
 b92cd02f-3e64-47a6-9cf1-c1cba9988a66	1	\N	1	DangGiao	\N	\N	2026-08-25 11:57:57.812442
-b9b7803d-e419-443a-a503-29346102308e	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:57.865743
-ba18adea-b7eb-4cde-9b8a-83fd0c2fd973	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:57.891154
 bb3dbbc8-e842-4e4d-be28-3cb5aa04ade0	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:57.972436
 b5e09ff9-1604-4bec-adfd-c369093f744c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.456965
 b5e22dff-f2bd-4f22-8966-8ea9e5a9c69d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.462251
@@ -8403,9 +7351,7 @@ b6086d4c-0e7a-4028-990e-44f9ea928d8c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b609726a-4e2a-4af0-aa2e-e0e0f1232e54	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.494007
 b612ead1-a1f8-4a04-8b94-153f4a13be2b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.498397
 b61518c1-008c-44a2-a95e-98ae68cc3b79	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:31.502831
-b617e777-feb7-48d5-91dd-3bd29e0f66ad	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:57.578491
 b620e2ef-5d94-4b21-9695-5ee066248d4d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.515089
-b620f220-d287-45c3-ac48-53ad0bb3586d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.519462
 b6293daf-7feb-408a-b103-4fd72cd2ff01	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.523851
 b63b82cb-2603-4837-8251-ae647d61fa56	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.528821
 b649cf0e-dc1a-457d-b6b3-65b77b75bdc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.534214
@@ -8419,12 +7365,10 @@ b67b1238-23b7-4e10-aeb8-4cd3d80536ee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b67f2351-0e10-40b8-87cb-757bbbfc973f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.580388
 b6836ff9-6fb8-4521-b10a-d7561dfc59ea	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.586287
 b6897761-8eb2-4c77-b6bd-390114c457dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.591459
-b69df053-88cc-4dc1-9198-fe7a3f66abc5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.596063
 b6a0e81a-cc1d-42e6-96dc-d99e21e1ec41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.601419
 b6a51162-fb2a-420c-b03c-62e548dffe07	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.605941
 b6aff21e-6e53-4086-a132-ec90f60bd83a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.611228
 b6b7c18c-ebe1-44bd-a49d-e2f0b9161204	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.618211
-b6b7e161-db14-43f0-9e37-53f74c61cd93	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.624141
 b6c0a090-dac7-43dd-9117-ff31aa5a6172	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.629114
 b6d74344-c008-4e02-a3a3-735c701311c7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.636266
 b6de77be-fcbf-4f55-9c22-f0490c350a4a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.647655
@@ -8442,7 +7386,6 @@ b752dbc6-972f-4800-9bc0-6fae6aef8903	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 b756da56-1543-4f30-a2cc-dfaa0ce325de	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.721668
 b75bac48-e3e2-4d90-acc8-5536dd1ddd5c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.726706
 b77b9758-de47-4227-b81c-ae91404bee25	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.732968
-b77bb94d-5edd-4679-b7e6-cdd79bdda33b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.737561
 b78dce0a-4494-4195-be7c-53b88c293660	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.743946
 b7914f33-eded-4784-8be4-947a5e007cee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.749833
 b7927f27-84c8-4e79-a23e-935dbeecf849	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.755796
@@ -8467,11 +7410,9 @@ b80bc319-01a9-4b9d-9b9a-4a1113f93a7c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b8108ebe-bc8a-4f76-b78f-04a41a67354b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.875112
 b817b81c-edce-4f69-8565-d564ae829633	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.881092
 b817c7f8-76d8-4674-b8c6-65308bf861ca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.885632
-b81bb138-7c2f-4f1a-928a-8ad88b246ba0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.890615
 b81e0125-fa8f-4639-ba32-3c175e97ee45	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.895804
 b825fa47-9fd6-4e98-b99c-189e376eb527	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.900577
 b834d57b-a5de-4ceb-ac57-21e45dff630b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.911089
-b83bf6b6-1d62-4639-ae06-c68382f2dfc8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:31.916817
 b83dc649-ec83-4781-91b4-3a5dff6e1af1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.922411
 b843675e-b267-43b0-95d2-8f4c31571586	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.927921
 b844e27f-45c3-4fc0-867d-e04eaaafda98	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.933548
@@ -8486,11 +7427,7 @@ b85a1b78-a26a-4f6e-b6fb-81a06c3c284a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b874b6b4-6ee4-4b0d-959d-be23d67eaa2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.98932
 b87537ac-6c5d-45b3-9b58-658affc1eea8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.994377
 b87570f7-25a7-48c7-9458-a3c7ce37a24e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.999109
-b883c9fb-9973-434f-8d98-43fa717c89d6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.003582
 b88b95fb-4dd1-42ff-9495-d520f35b1369	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.008792
-b8a7ba57-d99d-4896-9adf-06b2dd479864	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.017547
-b8ac1cc6-a8ba-4afc-b48a-cd1acf44ca44	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.023636
-b8b1b438-c4be-4af5-b163-f8772642075e	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:57.77099
 b8b71a4f-efbd-42d6-83f6-69157cd89f59	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.039929
 b8b9a958-ea06-4c71-ba85-b2462fd46c9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.045377
 b8c64248-85fa-470a-957a-d5e4ba5651b5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.051159
@@ -8501,19 +7438,16 @@ b8e16c87-4905-4ad7-89f4-f73265a8d7b8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 b8e31b9a-504f-4231-8331-f971f1ea7c2e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.079149
 b8e54c05-3c03-4d91-9092-b3835c2290bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.085138
 b8f5b285-5f9e-4b0f-8e17-d9deaa51d352	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.089458
-b8fc7265-38a7-4819-af72-4d8fffda803c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.094936
 b9069df5-4daf-451c-acd0-69a97483efbf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.09991
 b9147333-2410-4930-b5e1-be3eddaaa1e2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.104688
 b91f45a3-88d1-42e9-b021-a4d0b90a411c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.109639
 b9264eff-710e-41c2-a6ad-71b6988052ba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.115058
-b929830b-6a6c-4386-afa3-a97da6a8eb24	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.119856
 b92aa350-0eef-419f-8869-e7466fdec61b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.1255
 b92af8cb-08c8-4f4b-baa1-e56898778bc0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.132098
 b9411afd-ce1a-4ad3-b77c-3b26f284f97e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.147498
 b943de8a-ce32-44d1-8c0d-7e851142f869	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:32.153026
 b9490f4c-4eee-41c3-916d-30adf80d75bb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.157421
 b9508d0d-9063-4850-961c-c697ef7d0baf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.161276
-b95147cb-ceee-4ca7-b990-94c2f01acbc4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.165192
 b95a2dcd-9e86-4284-a48b-5a4133b0be70	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.169253
 b962610f-6c1f-4ead-b59e-ee1c66afb25c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.173333
 b962914a-bf87-484a-b7cd-8a8ab5bb6d37	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.17713
@@ -8525,7 +7459,6 @@ b97664c8-b522-4306-b2e7-ca44248703db	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 b976f84f-7e9c-45d4-a11b-1159885ec3f1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.204531
 b9840340-b6fa-4520-81ea-5dcffecd4322	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.208161
 b9881e58-f4d9-4795-abb2-ff7b4502a4c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.212241
-b989706e-ba01-4ac0-9b20-a076fe157c38	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.216309
 b98ff80d-1f3f-4e66-96dc-1c4b2e1e1890	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.220234
 b99baf6d-2b22-47ec-8835-92fd9ac5d43a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.227957
 b99ed32f-0571-4107-8fb5-0e3d25159563	8801	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.232245
@@ -8535,27 +7468,19 @@ b9ab1784-8d3d-4b9c-830b-fe010a277a05	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 b9c79837-e560-4fb0-9a8a-a0a8055f88aa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.253141
 b9df0d94-c9bf-401e-ac67-89ff6022ffce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.257022
 b9e14f72-2c7f-4a52-ad06-e0a0557e8148	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.261213
-b9e4087a-806b-4c61-ae9d-cb02bc1d1f55	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.265844
-b9eedb2e-6190-42f3-a1df-594e38ed59a0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.270514
 b9f02592-2e3e-4aaa-9021-177efd5f76c7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.274217
 ba0394fc-45da-40c1-ad11-3da68060ca9a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.278668
-ba060aa8-b6c2-48a1-9be6-ed15507cafc1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.283394
-ba0a05fa-d0d0-465c-9cba-4441af6331d9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.287102
 ba149799-44c6-450f-be14-d876dd3cb165	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.291388
 ba1b2076-329c-45d3-8463-bfd4c161f3f0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.299558
 ba246556-063b-4aae-a3bb-d47b157aa3a8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.303406
 ba2e8e48-b811-4432-9fce-6aeba64b8637	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.308266
-ba392720-84b0-49b1-b14f-4c338af2a836	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.317015
-ba418bed-feb0-4d25-93a5-8b8353bfbc1e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.322851
 ba42744d-e8f2-4a14-92e6-daa7a4c8ecc3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.327567
 ba43a6ca-22d6-4a20-8b11-77aa19d2469e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.332457
 ba4d7fc8-13b7-47f1-847b-ccd9942ae234	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.337504
-ba50194c-1916-4858-bc3a-8d6136b30ba9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.341336
 ba56d042-1969-40ce-83fc-2792c157870b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.345547
 ba58021a-9b16-4087-980b-7c1764506213	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.349717
 ba5fc717-4388-473f-b322-d4944fd27345	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.354848
 ba658da7-9066-4d18-a092-22226b65d16f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.360664
-ba67dc7f-8ca3-4669-ba44-0408e1fdaa54	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.365387
 ba79f831-6533-4b98-aee9-494e1f9ca5c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.369735
 ba8ab763-f998-4530-ac0c-f7f21e3c8013	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.374648
 ba911bc5-74a1-43f6-8baf-0b626d2f140c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.379523
@@ -8575,14 +7500,12 @@ badbe573-36d1-4ac3-975e-23acca483eaf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 bae6bf91-f141-45c6-a399-5bb63122d610	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.449557
 baeb7e85-b648-4eee-8149-ade826989e5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.455015
 bafdf926-cfcc-44dc-adaa-3fe2bdd3019f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.459482
-bb0a2b82-f0ac-4e6b-9930-f45578afac54	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.465041
 bb0a3e58-3113-4cd6-a7bc-a05b76284e47	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.471717
 bb175724-2e91-4a67-a2a2-c28dfdd56ff0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.476556
 bb1e238f-658e-4110-a024-33025d99565d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.480586
 bb1f90a4-b7f3-4c94-b301-aa7de7e5f5af	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.484806
 bb229021-69c1-45d4-ade4-db8933808c81	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.489444
 bb264c45-b0b5-421e-b815-d5c0608c8a5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.497387
-bb306bf9-ae75-47ac-855d-cfbfb310c7be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.501321
 bb40ace7-9c41-402b-9c09-750c48565229	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.509146
 bb4cc228-7cfb-4901-9c80-37b2830e4b0e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.513336
 bb4fed15-6a41-44bb-aa6c-a0907be1a4dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.517139
@@ -8598,27 +7521,20 @@ d5fec890-b2c0-42de-bfa6-b3bf1b307c90	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 bb85df86-5083-46fe-a99d-8f87fa01fa5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.55434
 bb8863b4-18d1-44fb-8c55-eb0d73d554eb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.558883
 bb90872b-37fe-4051-9953-76eceec542d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.563545
-bb985ce0-5bc9-4fc4-b50d-b123d486d6a3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.569164
 bb9c1e38-ec5c-4ffa-9603-df9d335fe1d1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.576339
 bb9d2963-09a3-4535-846e-cb2defef4927	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.582797
 bba35da0-6482-4d65-93db-63496b7579b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.587819
 bba5d849-21bc-482d-a455-7798dcf32eab	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.592611
-bbaa8f5d-5566-486d-8e1e-5791d710826f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.596581
 bbb4d715-034d-461a-be5d-def026fe98a2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.607994
-bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	5	\N	2	CanhBaoGia	\N	\N	2026-08-25 12:01:32.613075
 bbc11dcd-541a-410d-9635-a52be365987e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.617863
 bbc42bc5-da51-494f-94de-4d1f3b5f329b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.624026
-bbc44f40-02be-4f2c-8ee4-705268dd4706	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.629834
 bbc66606-a6a5-41c7-a20f-51ac863be52a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.634491
 bbc7b373-a135-4499-8619-435e6e2b75f1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.638684
-bbced1df-bbef-48b7-aa05-d1bac7840ae7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.643549
 bbd0f547-2ea1-4621-9835-d6f2c3f09827	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.649026
 bbd23624-e507-4e83-a2bb-10f5a84b66a6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.653592
-bbd7c027-5b1a-4d1e-8bee-5743bfd8247b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.658951
 bbded11c-0a46-45aa-9cb3-6a2e82cbd4d7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.668376
 bbf3fe5e-7ecc-457b-ac50-b6acf6bdba01	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.673582
 bbf7bdc2-3c32-43a8-8424-bc05f57a4243	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.677457
-bbfd345a-4fa1-45ff-a867-46a66e1dfab4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.682234
 bbfe4beb-f4f2-4cdc-9c71-0144ee36eff6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.6881
 bc1595c3-1a5b-4767-966e-bb279770b590	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.693003
 bc24e595-da8b-499a-81e3-41e888d85e0d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.702547
@@ -8632,7 +7548,6 @@ bc71cff1-3e7f-4db7-838b-e681c18f7be6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 bc7a22cb-3bcc-41cc-8e5d-48d67a3ab17c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.743604
 bc8172de-69f0-4520-beb5-e3f3dae67fde	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.748597
 bc9ca230-5d97-487d-bccc-2a6bb12136e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.752435
-bca4c97a-0059-496d-be6f-1adf4f73a038	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.758171
 bcb6b0df-bfa7-43df-a5f0-d7ac030d4378	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:32.764126
 bce49508-4787-4605-b900-f20e50c63c5d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.769015
 bce94cb5-df59-4ac2-a094-ff2ea477e954	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.775914
@@ -8645,7 +7560,6 @@ bd1efe40-a593-4b14-a6c9-bb0c6ac45589	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 bd2429f3-c24c-43b2-8593-576d50ba025a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.817749
 bd25499c-fe1e-4bac-bf96-2af2fa966dcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.823374
 bd26280e-8e7e-4f2b-a26d-468445ec5f9c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.829168
-bd3521b5-f677-4dae-a81d-3978a97d217b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.835955
 bd400ada-4007-46e7-ab04-0f1c676da617	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.841941
 bd44cf07-3db0-4f5b-a2fb-5ab5f050fc84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.846932
 bd4b7fc5-9760-4c8e-a409-03cdd11a2dfe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.854239
@@ -8659,11 +7573,9 @@ bd9ac014-cf96-4cbd-bb85-3e20c41c6059	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 bdb73ee0-e006-468c-bdf6-a82dae2dd34e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.89661
 bdbebca5-6f78-4c82-8ec8-ea9d4fab5a94	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.902447
 bddc0a16-9420-48a8-aa59-d24f4f790ebe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.912468
-bddc4c0e-c5f0-4c8f-b457-3d08d640ed3b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.918126
 bde3191f-5937-432d-964d-016d9cbf3cc1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:32.923126
 bde48e9b-41a8-4eca-835d-26435ccc5088	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.927915
 bde67649-43d0-47cb-99d9-457f773e1e63	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.93294
-bdeb310b-e94c-4a22-b276-e94d5797ebe1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:32.937728
 bdfd6e52-df88-4361-91e1-24a5061b380c	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:32.942913
 be029907-044f-4be1-a4cf-491068137c10	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.94748
 be02cc96-32df-4aec-b185-a98e0677c315	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.952961
@@ -8676,7 +7588,6 @@ be3a2984-0d96-46c6-ac6d-5eb0f06f2ee8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 be3f4744-0311-4986-a0ce-5f300a15deb7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.988787
 be4166e6-fa3a-4ec3-a0d9-5acf5fcbb6a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:32.993834
 be533241-b8f7-459b-b61f-f87addda17ec	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:58.144895
-be6fc558-deba-4cce-b8bf-94cde13d5a50	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.00927
 be7b31f3-17d0-45ab-9e94-6132c249d274	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.014959
 be843987-a5b8-4e08-b522-87305bb9e4b1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.021121
 be847cfe-80e5-4ee1-8299-5ed62f2f7f87	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.026917
@@ -8692,25 +7603,19 @@ bec7b7b5-0e2e-4759-9ce2-f8cfbb361daf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 bec81a13-f796-48c5-92c5-de91dac3da2d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.077785
 becae87b-9ab6-4ea6-acd0-15f9fbdee902	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.083106
 bed27afd-1325-4ee3-9b78-72549b7a6a14	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:33.089487
-bed6462d-2834-4b6f-8d37-3ddc73df0f3c	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:58.180406
-bf4c51a1-424f-4a01-b1ee-166e43147362	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:58.21387
 c401c9af-4d20-48c2-b8ff-3e13bf72d0d8	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:58.579779
 c44e73b3-ca23-49ab-ad35-650075cfd301	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:58.608329
 c4543e54-d022-4f87-ac6c-4dbd923af3eb	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:58.615079
 d60382f6-9778-4965-8682-bd3a353f5fb9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.624045
 bee3a593-ee85-4b3f-af19-47f0cc01dbda	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.109178
-bee492bc-bee4-47fd-adcc-78c05f221519	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.113764
-bee532ce-ddb1-4a29-a2c9-f02eb6428f49	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.11883
 bee55caa-07c0-40f8-90e6-8acdaf73993d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.123876
 bee6213a-800e-4385-b939-ba06bf9710c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.128917
-bee95893-9c68-4f1b-8916-92bd35accd41	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.134065
 beee2b2b-5c38-4ed9-a2e6-5a906fdcf2e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.139595
 bf003967-f0b1-4e24-8148-cdff2968db5e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.148608
 bf1b3cba-5468-4189-8d0e-b6727a473d16	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.153806
 bf336841-77cd-4b0e-9554-1b3e1ec2a8f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.158694
 bf399cf6-40ff-4179-8aec-a47a93819423	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.163571
 bf4f3696-ea4b-463e-a8a4-9f12daa26d40	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.171291
-bf50fbb7-ca45-49ac-8fcb-1843fce1e360	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.175403
 bf55b0d2-cae3-4073-a9ba-8c335bb5c365	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.179204
 bf562bd9-fff9-499d-bc65-be6f7d0d2069	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.183231
 bf5f7dd9-82b2-4691-ad53-7a7d53cee4c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.18742
@@ -8723,16 +7628,13 @@ bf8b3279-5834-407b-b54d-6995f0b575c4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 bf910c2a-668a-4cc9-9770-72384b95abe7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.218419
 bf91fa24-adde-4bb2-9296-3c07d9bb65a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.222657
 bf9522c1-6b80-4907-a326-291950395133	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.226205
-bf987626-bbd5-43ee-bfc2-89a922be6f89	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.234169
 bf98d1d1-5dc7-4225-b05f-29c3ce0fd238	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.238231
-bf9d2b5f-0c62-45cf-a5cd-3c7b79cf889e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.242275
 bfa41756-3fde-429f-9f3d-4817f69d7264	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.246243
 bfb10361-a809-4945-893a-1e88b7c3dd2d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:33.250388
 bfb74d21-7dcf-4984-ac5a-35fd2d04a53e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.2554
 bfbd2255-b2af-4ccb-b188-dbfa197c8d72	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.259294
 bfbd9e74-327d-480e-b36f-5118e5d72fdb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.263106
 bfc6de75-8d8a-4745-b365-8f91bd527ec2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.267046
-bfccd273-a521-4a08-aac6-701622c5b5d0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.272012
 bfcf6886-f416-47ad-9c62-17e462bb0414	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.276602
 bfd17930-f8c9-432b-9408-e85a42b72e28	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.280168
 bfd274e2-db08-457b-a5e6-179ef8d124b0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.284218
@@ -8744,7 +7646,6 @@ bfe7340a-63d1-48bf-909a-64d2da7cff2a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 bff4de31-0cb2-4add-ac96-fec5614ff71f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.317683
 bff5c1eb-a3fc-44e3-a62f-2c04da873c50	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.321304
 c00356d5-076b-4b73-8b20-3f504f23e25b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.325416
-c003ba78-c653-4d84-b433-be441d3590bf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.329588
 c0171036-ed28-42b6-853f-e2598b665d5c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.337694
 c017999b-b112-4509-9fed-9467f440c8e9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.342663
 c017e132-b715-42bb-a052-7bb3583ad709	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.347479
@@ -8761,11 +7662,9 @@ c067c537-4058-44fe-82bc-f8876188e6ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c081c31e-6226-4e09-aafc-70c73bec6f33	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.400617
 c09ce98f-4c78-4e1b-84d5-3ac98f089cbb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.409655
 c09e94ef-a6d9-40ed-9c66-4ab559491074	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.41361
-c0a7c2dc-8264-47d4-8eec-c94d70218526	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.418762
 c0b9bb85-220c-4075-85d4-9e9a194f85e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.423708
 c0c4bb14-3aa7-4870-8ee5-5b4a0e93ce68	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.429539
 c0c4fd58-3b35-4d6e-8ccd-74ce747a4b96	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:33.435675
-c0d18290-c534-4bb6-988b-2ff8341eaedf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.440945
 c0d38b55-2c85-49aa-a652-9f6cc3f69f90	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.445638
 c0dd9462-cd83-4374-a2b5-f6a865934ce6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.44965
 c0df7162-e909-4262-a41f-fd6a7f0f49c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.454614
@@ -8794,33 +7693,26 @@ c1777249-61f0-4296-a783-dc0fd94b42be	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c17df0c8-9ba8-4b77-86b2-f5c40f38c874	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.580251
 c17e6564-87ad-43d3-b911-b006ec593458	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.585031
 c183eb7e-6a34-48d7-b6ea-baee49c688c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.589793
-c2739952-e59c-40b4-8341-bd72c8e382bd	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:58.474966
-c5c50fe6-cbcc-4c9e-b0a4-b4bca77fd6cb	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:58.72104
 c6c0261e-134a-4a31-8326-2484378921e5	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:58.810984
 d6085e88-13ab-48fb-9a0e-6a8a8a18859c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.62906
 c18970bd-9610-4e00-a15b-5e41be2b5219	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:33.600893
 c18b79c9-aae2-41d5-8126-011f26b81262	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:33.606161
 c18f7e1b-eb55-40a0-b347-b34145f8a94c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.612021
-c190a914-e8c2-4490-a063-f1582ac69a9c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.617284
-c198c8df-69d7-4f01-a59c-3d6bd1e7d822	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.621753
 c19f5295-94dc-4af9-b8d5-1a55e0468d61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.62784
 c1accd15-fe3a-4e46-938e-1aeb62317b25	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.633733
 c1b76527-ab4b-4166-a36b-3c40b5fc5185	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.639254
 c1bf9dec-0930-4541-80bf-3c910fd83d1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.645852
 c1c00e1e-43df-465c-9bef-6d2c0c750aed	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:33.652528
 c1c0a458-71fb-4ea5-a019-d7195867cce9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:33.658134
-c1ccf34e-b908-4871-9f88-1a552a0d50e7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.665076
 c1d32ab1-b396-49b9-9864-6a51790799ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.674615
 c1d63bcc-2732-4188-9777-4024d7bf69bc	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.678281
 c1fbd350-b0b4-4b89-a704-72d031ebe1db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.682664
 c213c986-efed-4a28-a04b-a5c20ba2420f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.687904
 c215e76a-a6cc-417e-92ec-f0defa292e26	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.692867
-c2227fb1-170f-445a-9a55-6c9d6290d5d7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.697492
 c22c26a3-f2c5-419f-8737-765be787c0cb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.701685
 c23c28e4-e5ba-4244-a3ae-a701a85a8265	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.707171
 c23d6eb4-48aa-4095-badb-5e97b2b3938b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.714296
 c2447939-42ff-4414-a743-b173dcd758dd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.719847
-c2496ea8-74ac-4f5e-84ad-6eb235674083	3	\N	15	DaBan	\N	\N	2026-08-25 11:57:58.464081
 c24d3152-b387-4133-8395-9a315e078143	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.728667
 c255e897-f667-4d19-b702-0c193c81197d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.735774
 c266a31e-fb29-49d6-966e-3eeff78f5827	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.740605
@@ -8828,7 +7720,6 @@ c27b9237-9418-4efb-afd3-88a9adc214df	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c282ad17-8bbb-43e2-be69-463f678bdb17	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.7524
 c29412c5-ae2d-471c-9a16-43b440efc3de	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.756503
 c2a7ae6d-7f82-4332-a28b-afaa9c17190a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.7649
-c2ade93e-9e44-47c1-8a3b-1210d05d8492	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.771566
 c2bd622d-8e58-48f7-b32a-e25af4e308d1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.77759
 c2c9642f-f601-4de9-bbbe-09baf49eb958	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.781624
 c2ca625e-d85a-4933-8c12-d85713012609	1000	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:33.785488
@@ -8838,9 +7729,7 @@ c2e51fee-b33d-45ca-97ac-908f24ec4269	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c2efd593-dc20-4172-a69f-988802fa7762	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.801259
 c2f1a42f-7f13-49bf-8122-1860537a4007	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.806071
 c2f3f592-65df-47c4-849b-251af8cf79b1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.81055
-c2f4e5f3-0d7f-4440-b653-beab454bceab	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.814312
 c2fafe90-c54f-4154-a92f-2936c050db8c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.818306
-c3013c7f-ca89-40e9-974e-b899c3a1542a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.822841
 c3091e6c-a9b5-4644-9ec0-ab8bcad97a8a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.827496
 c30c27ee-fe16-48fa-aab1-5275f656ea31	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.831355
 c30e81ba-af18-47a2-8b9a-07c2c46ab53d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.835647
@@ -8851,7 +7740,6 @@ c32f666c-6f0a-4b65-97f8-5e7b1c29556d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c3320dd2-9f88-4f42-8a11-70fcbbc46591	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.874042
 c33d84bb-0315-4dfa-a715-f5e30b2da429	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.879066
 c33eb0b4-04fb-44e7-bb33-2fca76106fb4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.88408
-c33ef9c3-65ec-44c9-a921-389feec20663	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.888612
 c347b560-efc5-4f0f-b830-d4e9544218f5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.89397
 c34c66d7-1279-4186-94f7-eb1d31d93451	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.898862
 c351651d-cabd-45e8-82be-7fba9448d1f6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.904286
@@ -8865,7 +7753,6 @@ c39998ca-7742-4275-bc48-a38a5a755eaa	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c39e6be7-09ec-4f07-83d1-c53cb4c29aac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.950048
 c3a07e19-5524-43c5-89e6-4007efe27df4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.960082
 c3a1c585-54a7-48c2-965a-9ff76652f554	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.965001
-c3b11d83-30cc-4954-8ce5-6a24abb85628	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:33.969668
 c3bdabd5-4244-49c2-bff7-e877300d4df7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.973351
 c3c4c9e4-c012-454b-89de-aeb56db2dc97	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.977421
 c3cb5d02-aab9-406e-a83d-5cc072d3f94e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.981509
@@ -8882,7 +7769,6 @@ c405a32f-ca49-4ae5-ad96-9cadf92e13a5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c407fa68-86d5-400c-80ac-da3c4d204e8c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.039153
 c40da1d0-e06e-4acf-8033-61cb360289ff	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.045186
 c414de31-00c0-4071-bea4-8aa2f8e51788	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.055874
-c4155c75-9f42-47d0-8607-f6659942c3bc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.06126
 c41fe937-e8dc-4479-aed2-e0a44453f128	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.065744
 c42ab7b6-5e72-4611-801d-57e2a0ea09dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.071229
 c42b469c-71fa-476d-8b7c-9cca04212328	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.078155
@@ -8892,7 +7778,6 @@ c447fe94-cd84-480b-996b-9773fff1dbe9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c450c452-c105-4785-9c43-7418d36f8c69	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.104403
 c453a33e-abbc-444f-a6e4-d62a54e3f1c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.109916
 c4609e3f-8425-4d7c-bd9a-38d1f5979f26	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.119968
-c4615f4d-507b-4028-adf3-0cb0a5cf738e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.125536
 c465a55b-24df-4168-8841-7d90c9cf3500	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.130808
 c472670f-186f-4e31-b8e2-e164ce9afd1b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.137194
 c4728c21-d8f0-43bd-af16-d413c3dac892	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.142393
@@ -8910,7 +7795,6 @@ c4b36de7-1701-489b-957d-0eb9a94c5292	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 c4b8c1ec-c71d-42a1-9088-a50252b45b6e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.209536
 c4babdc7-36e9-4cbb-be90-0a6db01623e2	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.219156
 c4bf7f61-1b0d-4b10-8e8c-a4c332a2521f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.22552
-c4cbba58-336b-4637-b7d9-63e56875101e	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:58.652212
 c4d4eb07-fdf7-4e8c-82f3-c4c2b4a35ae1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.231206
 c4f42525-1b9a-433f-884b-ada35484b70c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.235303
 c4fed0b0-953a-4204-ba14-e3644c1cd93e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.239486
@@ -8923,7 +7807,6 @@ c5293c92-8bdd-45dc-86e4-9a0da1aa4dca	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c529b6fa-a5c0-4481-98bf-5e83b7058015	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.270269
 c52db072-5505-4457-a4d6-fb5268fb965c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.274608
 c52fba44-bb4c-4a3a-ba2b-5622807a8dfb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.279604
-c534c68a-56ae-45f5-b311-65909f874fe0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.284238
 c5368796-77f6-410b-9be9-d2960cff88c3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.288526
 c567f231-686a-449c-994c-bb6942bcfd41	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.297537
 c570660c-ff6b-4e9c-8651-1814a19ac566	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.301786
@@ -8943,12 +7826,10 @@ c5bb3809-8875-4797-b19e-00c89c43c1fa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c5bdd0e4-3eb4-4444-86f1-e30312044182	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.38014
 c5c4b606-3f1e-4a1c-a401-b4e1879cd414	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.385642
 c5c90c18-8b19-4dd7-b4ee-9917831c463b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.396087
-c5cc7fdb-2d4a-49de-bf29-1b9b5c776697	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.405662
 c5d0a2e0-1c43-4d3f-8686-67958538b35d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.410913
 c5d198ca-194e-4381-b004-5531c8e05222	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.416015
 c5da7110-581d-4df9-9f6f-f77196961f1a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.420806
 c5de7b0a-5cfe-4733-9f46-1a4b4986c07b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.425657
-c5e631b6-dc29-435a-8534-066dcb2e25e7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.432034
 c5ec505f-a972-44fb-9699-965adc729deb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.436968
 c5f2b35e-6c56-46ca-b492-4eb41791f44f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.442661
 c5f60dea-0bf5-4d36-b61f-22bc2255b368	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.447989
@@ -8962,16 +7843,11 @@ c615786a-d29a-4332-aadc-2b3e5226bad2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c6165c93-0082-453c-9726-c14da883db18	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.487085
 c61b200c-e22e-4102-bec1-546d4313009d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.49426
 c62ad8fb-2a39-4437-9c41-4f42dff1a027	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.505018
-c62ae941-08cf-47b0-aa87-feb18e0f98ea	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.509995
 c63b77a4-16b3-4ddc-8671-968c0b3979c4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.514987
 c63c952f-d4db-46cd-a46a-fcade6daa879	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.520004
 c641cc57-5794-4325-979f-a648ac660e50	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.525052
 c643d356-baa4-41b7-99a6-6dc4fec5e507	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.529534
-c644980b-03c7-4803-bacb-9261c750f899	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.534008
 c645d2b0-db7c-4b5d-9095-3c9e22b41e2c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.538726
-c64bc8a5-ab7b-47e5-961d-08967a66785e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.54399
-c65a6058-3bc4-4913-8319-5bbb97ac9692	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.549438
-c65b202a-c15e-45a2-acd3-f9001de98d53	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.553748
 c65da2d8-4ddd-43a9-8463-170be97a5961	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.557832
 c65fc31b-708f-45d2-aae4-81f2463379f9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.563141
 c664a74b-dddd-4cef-904d-5ca4777e4478	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.568647
@@ -8979,7 +7855,6 @@ c66934ec-df53-4532-9c73-83ab2474dcaf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c672cfe0-33e0-4be8-bfce-4b5f2e016864	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.579016
 c677274f-8aec-4e3f-8f61-51fa8b83fcd1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.584143
 c67731ed-873f-4f2b-b79d-fd842ca02090	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.588921
-c67747fd-00ca-40ed-b8d8-b3381ed2a54a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.594103
 c67ef03f-e551-454f-9d82-ff3dfccf4938	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.603224
 c68ae824-5757-460b-a3dc-80783ce32e97	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.608128
 c6a1894a-8c56-4e7c-93e5-7205ffbf2afc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.615305
@@ -8994,14 +7869,10 @@ c6c098b2-bbb8-46f7-8efa-2c2105d97d79	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 c6c3c040-4d6e-46aa-ac2f-b850aba72e2c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.663814
 c6cba969-38e6-4b9b-989d-71466661ac91	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.669475
 c6cea16d-3630-42a6-8087-d950f800bfb0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.67483
-c6cf170a-4201-49c9-aa93-31bf49df984c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.679502
 c6d60fa8-be52-4078-8906-3027d39a7aa3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.684026
 c6e0573a-7932-4bba-a541-6b2d905cc736	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.688619
-c896433f-7480-43ef-8598-59ed83e427c2	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:58.974647
-ca870629-9915-4009-afd4-7b0c3f113c7b	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:59.149506
 d6188710-9086-40dd-a3c1-5156c80f501d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.640128
 c6e9ef2d-b17e-452a-b17d-fc472bf4f7e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.703005
-c6ed24f3-b175-4bac-b8e2-413173f26635	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:58.833562
 c6ee5d08-e6fe-448e-bfdf-7199744220a4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.711377
 c6ef8062-b136-4f63-a598-6114d2a08525	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.715573
 c6eff0c2-d876-4790-b938-23f2a181bc64	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.720818
@@ -9026,7 +7897,6 @@ c74fc2f2-8551-43d0-87e4-d5a4fc90c287	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 c7584409-5c4f-4f95-9f22-3cc51621235e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.8079
 c76488ed-c913-4c0a-9293-2f625974d0c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.813402
 c76b94f6-071d-47ef-b714-84ea9ad78f15	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.818106
-c76dc866-f077-4a34-9b3d-35c1e5c2941b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.822753
 c76e3194-38e5-4c68-9a59-9634ff6b4321	9901	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.827046
 c777540e-01f2-4e1a-be9e-96ddaeb7bf0b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.831658
 c78ca1fe-d4cd-4c8d-bb85-c02fd420447f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.835932
@@ -9040,13 +7910,10 @@ c7c049d8-c6ad-4213-b316-e32061a09b9c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c7c2becd-a66a-4fe7-a3fc-c10a09d9017a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.876619
 c7c3c7c9-9130-419d-ae3d-f4caeb8fe765	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.880924
 c7c58420-c3ba-4b00-a611-f75b89e8e5fe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.885875
-c7c5f052-ce22-47a0-a937-c5a749766ec1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.889812
 c7c6e857-2b57-4076-aa8b-ef022600f060	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.895895
-c7ccf5c6-670b-4f9c-8bbb-dd040b1950af	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.902155
 c7d2e77f-1e3a-408f-9303-e347e30ef6ad	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.907061
 c7d2fe98-876a-4953-ad23-ff99ac8d7415	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.91196
 c7db4f1a-4e88-4558-9505-2c735b141664	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.917306
-c7e1097a-a621-4349-816c-29c1c268f0cb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.921801
 c7eb4e52-9200-467f-8c16-0c0176679ed6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.927218
 c7f666ad-fce8-49c6-a57e-5b884ae19d97	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:34.936805
 c7f8bdc8-09d8-4aec-957e-a5121aeea024	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.940932
@@ -9056,9 +7923,7 @@ c7fe5e46-bfef-4b37-8ec9-673031590f84	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c8002a8c-e520-49dd-b975-6f3bb9516e8e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.959405
 c80d6148-2075-4e64-9e77-627b9c79f02b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.963898
 c81100e7-e41a-4dfc-8d01-b0982507b03f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.969046
-c811a037-8e0a-4b15-bd9b-8a6629bf30cf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.973988
 c82026df-667a-41e7-8c95-3c36c38428f3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:34.978828
-c821ff04-5639-4658-800e-22be021d7404	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:34.984133
 c8288a1a-3849-44eb-add2-d3255400775d	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:34.988657
 c82a0837-4f3d-4b81-8055-83a18f004b40	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:34.993672
 c82eec27-b221-45ab-a547-bcf65906aaaa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.001526
@@ -9066,9 +7931,7 @@ c834374b-b5c1-41f4-9fd1-1aa7fef75f17	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c8360ceb-ae2f-4de6-b35f-06a9e7f8c277	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:35.012201
 c838cda2-93f5-41ed-be00-6f5a7a797a31	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.017085
 c846be87-f508-4d72-a25b-36caea7f05d0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.022089
-c84d9623-bbf1-4524-bb79-7d5891a504ce	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.031778
 c8579a18-4528-4e64-bab5-eeea8e8fffb2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.036936
-c860425c-53cb-4226-826d-42888be0c5e5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.042087
 c8712f1e-271c-44a7-8645-302cdf57fbd9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.046799
 c8745da4-04ec-4236-b9b5-8e59c9092591	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.052072
 c8746de8-6c8b-4551-a66c-d35ad28bfbe3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.057034
@@ -9078,19 +7941,15 @@ c87e3149-7659-46d1-b887-c6476d7dd1c0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 c87e3ccb-69da-4bc0-b035-ed467aac4145	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.074815
 c8834664-7144-4fad-a80a-e377d822e6bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.079762
 c887a033-fe5b-423f-a8c9-7270615e2192	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.083941
-c88818ea-7619-45b4-95e5-ac17576695b8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.088889
 c894c402-26ff-4c53-8b9b-14f598f46b0d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.094007
 c89d7489-5f69-43c4-b273-d82da453c2fa	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:35.105025
 c8a2e002-1b36-438a-8b0e-5d82ce998f20	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:35.109958
-c8a364a1-79b2-4856-b2f2-20002562e366	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.115899
 c8a401e6-ce24-4e70-96da-f61b61490b71	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.121019
 c8b0c1cc-5274-4fff-8dfb-a20935bccd09	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.130785
 c8b70ec6-cf98-4d01-b076-42fa8b6e6409	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.136371
 c8b886d7-65b8-4d61-9e96-f7d1d08392a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.140662
 c8be7821-d101-47a0-b215-2d71dcd721f9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.145422
 c8cae722-57cd-445e-b752-cb4a67ea5705	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.151072
-c8d30ee8-4900-4a67-bb0b-812e47d6a0f3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.156351
-c8dbcfbf-631c-414a-a19f-e458179deaa8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.160883
 c8dd86ee-ecf1-4335-ba92-66cef9f76132	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.16686
 c8e1b042-c6ed-433d-99c8-bf1046b543f4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.171649
 c8e553c9-ad6d-49fd-88f0-c27f076aa757	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.177196
@@ -9099,7 +7958,6 @@ c8eb1334-569d-445e-bbc8-c5883361d776	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 c8f054c0-2b6a-447b-b489-6d3a7bb904b4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:35.189446
 c8f47357-43de-4052-84ba-b31c13ec53ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.193496
 c8fa53c9-5ade-4800-b6ce-4d2dbedc10f3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.197574
-ca5a21e6-72fe-4642-82c5-244a6c497b27	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:59.120545
 d61f4fb3-8aaa-4c87-b452-2f484305bad8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.645105
 c90bfaf4-ed06-4373-a296-7c1b9c71c0c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.205929
 c910ddc2-5361-4b1c-9cc5-e31ea4be3667	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.209513
@@ -9116,9 +7974,7 @@ c95fd8f5-02a2-4dfd-bd37-9839a7bb21f1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c974e5f4-5aba-4b8c-a90c-d8b88d36ffb6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.257271
 c9775f87-ed89-43f5-b177-8e0ca6f5fc94	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.261171
 c98a9a5c-0b24-4a41-b978-75ff9464c930	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.264229
-c98e8fd1-32b8-4f39-bfc8-e1b3e94cde15	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.267227
 c9923293-d5ff-40b2-b73f-28ed9327b1f7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.271239
-c99478d0-9bd5-431f-9e1f-771660d3fc18	1	\N	2	TrongKho	\N	\N	2026-08-25 11:57:59.045825
 c99527cb-1b55-4545-8683-cc021ec91baa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.279781
 c99734d3-f2dd-4d55-82eb-6fe105d6fabd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.283465
 c99ad482-f48c-4ee9-9ef1-1fd6a4e767d1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.287257
@@ -9129,7 +7985,6 @@ c9c6d281-08a8-4ae9-b0eb-21e45c97acb7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 c9cda9b7-6077-4bec-80e6-44c7f5862ca1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.307483
 c9d17078-b340-4c13-83c1-21ec16fb4810	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.311706
 c9d9d8ef-2d82-43fc-8993-6dd69fa0a734	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:35.320484
-c9e8a798-a4de-485c-a571-b89bfc94fae4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.325032
 c9e9ad29-60d9-4ed4-9f99-ccd667af685f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.329561
 c9f40e48-de9f-4db9-a4d0-c03b8eea5eab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.333512
 c9f46940-f26a-46f5-905e-5c7977bd37d1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.338155
@@ -9141,18 +7996,14 @@ ca1d8bcb-5c0a-4a97-a751-f5fdae954ab7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 ca1eb4ad-6d6a-4287-8932-e06603324c4a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.365711
 ca1f6723-60dc-4555-b44c-efb922200eb6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.369449
 ca239879-558b-45b2-b047-903cfed6f09e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.374116
-ca23d54e-a505-43bc-9221-1963ebe44ee6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.379615
 ca2987cb-b61b-4bbc-a0e5-cc9c44d4a19a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.383631
 ca2b5764-2bcc-4824-8304-e6196b8f17d8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.388296
 ca3ad6c9-d5cd-4c78-8787-1a5f4a02b1b1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:35.392515
 ca3f1622-d03a-4dfd-85ae-2a4c2ceaaac6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.396852
-ca482563-4bc8-4d8c-a322-5435e54fdbd6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.410581
 ca4c3ffa-a12f-4e76-9497-dce6fc92d93f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.415587
-ca4f6f84-da21-42e6-af08-36e724b5c467	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.419565
 ca53c5a9-60a0-4557-bc22-0b99e0fdcdf7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.423684
 ca54ffde-1803-4c5a-bce7-a539fab31a5b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.428253
 ca55920a-063f-40f9-97c8-ea32fd6c5630	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.432461
-ca597e32-2f53-4712-b0d6-918fc377c2e1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.436536
 ca59cdea-c445-40b5-af0a-fc549017da72	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.440371
 ca5bd365-e0e6-4305-8e96-23c5167b55aa	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:35.450159
 ca5bdd6a-cb90-4860-af4e-74e0219f5add	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.454642
@@ -9161,7 +8012,6 @@ ca5e6ce4-3db1-4203-8100-2b27e3552e82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 ca60c8de-99ab-4808-bf7c-d0eccda91e3e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.467504
 ca68fa4c-937d-4fb7-b84c-c50a6bb67a3f	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:35.471229
 ca6a2428-ac84-4d9c-a92e-536927423e63	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.47593
-ca78bd06-8bae-4ff8-a8dd-220a7a778a18	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.48098
 ca7fa075-c62e-429f-93fb-0b049a64f69b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.486542
 ca7fbe21-2bd5-4da7-b8c0-8503d4af5c8f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.491849
 ca857c4e-ed02-4eb2-bf4f-2f13ed0f5e9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.503216
@@ -9173,12 +8023,10 @@ cab137e4-00fd-4bce-8129-eae3b46c1278	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 cab9087f-57a8-4601-abbb-86a6a0301f7a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.538045
 cabed46d-3ee6-48e2-acd4-a4078aa8d360	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.542803
 cac57951-4dfe-48fe-a981-6af6c0fc8d27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.547927
-cac64ae4-dd2c-4314-b812-2341aaf5ce7c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.553444
 cad1a188-b66e-4ae2-9ca5-8ac0cad1ca71	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.559155
 cad88146-4d9c-4353-824c-1480e8f88132	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.565335
 cade488c-f416-4f0e-bf89-58d7ba30d034	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.56989
 cae62bb9-edfd-4aa8-833b-70086c0a752a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.576068
-caeb9e06-6e30-4e4e-b6bb-c8453eca536f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.581044
 caed3b24-8ac1-4659-84ac-c3a0f0f0bdce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.585783
 cafad2f0-4f33-460d-ad40-ad731bf1e9a1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.589605
 cafdd9cf-0647-4345-83ab-35996631da4e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.593538
@@ -9193,14 +8041,12 @@ cb465667-6bc3-4e73-a65b-6e8f4cb19beb	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 cb4b7127-98c6-4838-9453-db3514ea9dc5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.645888
 cb4b7adf-09bc-4920-a72d-1ce46535c6cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.651501
 cb4bf254-34af-496b-b7a9-72f040cdb7fa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.655788
-cb4cc86f-89bf-4431-9236-c3f08680c199	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.661338
 cb5240ab-067d-4336-8462-e46e088b2415	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.66574
 cb749d46-2391-40f9-a0be-31a529cd871f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.669605
 cb7fcaf8-9ef8-403a-b756-f4f0e8dd9f56	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.673712
 cb8539cf-4939-4e52-b00a-a24741cb6a1e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.677615
 cb8cf71c-5544-4651-b61e-33b645ea4a02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.681526
 cb8dccdb-0b93-42a9-a359-46053f655e11	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.685633
-cedf83b2-c1f3-491c-8174-41616bc77fcc	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:59.448678
 d622ce43-ac21-415a-936a-79069ba2d43b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.650297
 cba7af3a-9d8e-4de4-be65-87fe5d70d27e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.697509
 cbab22fc-f4f3-4433-a676-b779ca427243	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:35.701727
@@ -9216,7 +8062,6 @@ cc0c556f-e678-4cb1-ad0b-f7d22f486c83	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 cc0d9b73-285f-41e5-b83a-0f86e617903b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.751292
 cc1d9df4-b5b3-49d3-b43a-c2461d11d12b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:35.758166
 cc267ab9-413a-401b-b76c-65f4637d0a6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.763045
-cc2a4542-0bd7-4e2a-bead-932e4b2be5a7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:35.768061
 cc3ceacb-7238-4829-83c7-466a95243842	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.774816
 cc3dfac6-61b3-424f-812e-b21f845e05e3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.778338
 cc3fd725-8e73-4e24-8752-ad0670eb7aa1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:35.78249
@@ -9265,7 +8110,6 @@ cdc19eef-8178-4fc4-b06b-87c8f8210549	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 cdc64c3a-e3e6-4c19-a0c0-eaf9897b3948	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.023783
 cdd09daa-ece1-4632-8693-934c128e3e6f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.03162
 cdd3958d-045c-4e64-b997-ffd68f951a1b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.03552
-cdd6c8fc-6411-4975-a3fb-14b673fd0b1a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.039405
 cde020c4-b0ca-4e62-82b6-88b1f911dd25	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.043454
 cdf240bf-9482-4c69-a6be-2e1f8d01ba28	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.047813
 cdf317cd-bb8c-4896-9a22-dee8448848d5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.052992
@@ -9277,21 +8121,14 @@ ce1a9709-95a3-4386-a449-62e35de5720b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 ce1cbaea-268d-4a27-a936-b6f16be7e394	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.079646
 ce257292-da95-461d-8ff6-99908f3d1eda	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.08372
 ce2b1b3d-a435-4699-b327-7a5234050913	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.087655
-ce2c2691-70d3-4764-a526-45eba8289c31	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.091591
 ce3736f8-fa8b-46db-8743-993d144cc430	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.097172
 ce3c0b96-f238-44fb-b960-9c2a76e405c8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.102404
 ce3ee170-4e37-4d2e-a138-520116b46a3b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.107072
-ce3ef4a8-c68c-48ab-9f2d-64f2fc174cf4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.112024
 ce479b4b-a2aa-4924-8f38-4a399bcce3e3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.120651
-ce4d4803-01fa-4ae3-a7b8-b201b48f9dd2	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.124581
-ce51dbab-5627-425a-9b0b-8fda6a40e52a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.128762
-ce5bde22-109b-4226-921a-3cdd4089de32	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:59.410148
 ce6205a8-2c32-42cc-be60-457053a29773	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.136735
 ce693a9f-80f6-4a1f-9a8c-9028bafdee6b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.141943
-ce6b986c-549f-4d2d-b864-3323921e007d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.148652
 ce6c3653-52a0-4a59-844d-7aecb1fcc916	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.154153
 ce6efa2f-e657-46c1-b3e3-2257daffd57a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.159045
-ce6f1f9a-7920-4a97-b596-dfeb1503a643	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.164299
 ce6f2f7f-1c3e-44b7-8b27-845f22c6b453	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.1692
 ce774520-cd7f-4866-b53f-8b062932f9b3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.173761
 ce794251-07f6-468d-901f-3c29d5c459d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.177572
@@ -9299,23 +8136,18 @@ ce7fff47-5a23-4c84-8528-7b3c0eaa7c12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 ce89425a-ed6e-498a-b33f-329519bc0f3c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.185678
 ce9bfbb4-2b82-4da4-9d04-7567d5f48c8e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.189516
 ce9d3889-3bb1-49ca-bee7-5cf02f6b24b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.193525
-ceab29ad-fc35-4dc6-93fb-0a12d551a044	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.201567
 cec0cade-ee53-4a38-acb1-ad83dfd87b34	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.205501
-d0f1b531-2b09-4011-a636-497f7c016737	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:59.585845
 ced34ae4-e614-42dd-95a4-a483b8be6584	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.214359
 ced4b866-e464-44a5-962a-3b0dc392d17f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.218798
 cee4fbd2-b51b-4624-822e-7cf187851315	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.232642
 cef43ab2-0e03-43d8-a4bb-c03603e17426	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.237134
 cefecb68-fdd7-482e-aa9d-65afa44f92bf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.24195
 cf05de9c-c54c-4738-9d65-0628630aa310	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.245711
-cf0904ff-6699-4415-b851-dc630ce13f50	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:59.461281
 cf0b1fc1-d35f-402c-a655-56bc5613ff56	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.253516
 cf136e3f-a853-4eaa-95f4-6d6ae9e5b4b0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.257661
 cf187ed1-1989-48d4-b6bf-9ba7c21e6974	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.261411
 cf20cd05-e668-4551-a6fd-a315fcfec6d4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.265447
 cf2e9fb7-669d-4bb0-aebc-9b12228c1903	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.279803
-cf390d1a-733b-496a-b432-4557c0f63166	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.283793
-cf4704c0-094b-49df-9755-d600367a39de	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.287679
 cf4ce530-0dde-4136-9e94-19cf6c504eeb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.291557
 cf4faba6-a9dd-423a-87c5-a47b53674627	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.296849
 cf63f50c-5e0c-43b7-b558-4c93af495d77	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.301292
@@ -9323,7 +8155,6 @@ cf64059a-ea39-4262-8768-7da2f57afc48	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 cf71616f-9aae-4e74-b79a-905ce94e0169	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.309611
 cf74b775-2e7a-4c55-8210-cfdc6b4f3a58	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:36.314245
 cf7d9952-3c52-46b4-98c3-c60ed64d6e54	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.318708
-cf7ec7f2-d846-4a83-b1bc-db563d64adaf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.322736
 cf8282b6-c64c-4952-b094-5af869b61978	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.32674
 cf8d3030-c1cb-4497-a0b9-aaad7ac41bce	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.332403
 cf90684a-9921-4585-8929-adef1a3be42d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.339666
@@ -9335,7 +8166,6 @@ cfa6abf9-918d-403e-a88f-4786a0e93bf8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 cfac61f8-e0e2-4e3e-a58e-bf7d7ece3f9f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.375792
 cfb19ef7-a6ad-4e5f-b8e4-2ddbdbcffb9b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.380006
 cfbdd296-acd6-48a0-a6e4-129b2a5ef385	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.385334
-cfc0d6b7-68b0-466f-a111-40027448ac03	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.390056
 cfc9bb4c-2157-4691-8eba-192e7eeff956	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.395981
 cfc9d254-1e22-49db-844e-03842c997c03	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.401289
 cfd647f2-7f12-4287-90b5-1d9d6c40bc9a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.405934
@@ -9343,7 +8173,6 @@ cfe46e08-9280-4cd1-8441-d467231fd958	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 cfeda7b6-4490-473c-9605-b945569d38e4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.415903
 cfef2db6-220b-47d2-8830-4b7e09e58f08	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:36.419816
 cff6af99-2b92-4405-8f86-929984ea968c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.423958
-cffb8482-53d1-451f-95c7-9967a2b82a61	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.428254
 cffd52ea-7a6c-4c69-8379-a16da8528847	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.433448
 d0046476-5f0e-4f0e-8b02-c01ea3e4b40f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.437673
 d0192233-2f03-4bd3-aeaa-3098683b686d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.441594
@@ -9361,19 +8190,15 @@ d06790ee-0680-4c49-b8e2-cca38b40c090	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d079abcb-f67c-495b-92c7-443f1f2fa658	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.497661
 d083714d-e6fd-4edd-8bc3-c3986a08fa3b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.501714
 d086ca18-c740-4db1-bfc2-16b0eb4ff6a9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.505427
-d08a4574-9687-4669-b187-b0c8a99d309c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.509435
 d095fded-4db7-40c7-9a35-9867452e0572	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.515028
-d0a6aeb1-0c1b-44e2-a57b-cdd67d4b3c6d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.520296
 d0a71fb5-bf2a-43ac-ac7a-09ea6cc85127	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.52487
 d0b49b83-83c8-4943-9759-d5c39d6160d9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.528773
 d0b51ed0-73af-4ed2-988a-e5420389b5ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.532671
 d0e10d2d-a814-4f1e-a282-7b7a46a6f764	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.542343
-d0e11a85-f21d-4b19-868e-c707250a0544	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.547085
 d0e393c2-d208-4736-9a62-6fd3e6e765e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.551836
 d0e5d6ef-35f9-48b3-95f6-24c11353b838	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.555772
 d0e939dc-0ce3-4d8a-b06a-8926ae5a8395	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.559364
 d0ea5e24-771f-4506-9a79-f09ccb0e83e1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.563402
-d0eed2dd-0cc5-48c0-acc2-ee55bce0fcaf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.567556
 d0ef090f-acc5-40d0-abac-5fcb40f866a7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.57149
 d0f2b4cb-de88-4fac-a7e9-e1447b602c58	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.582212
 d0f55049-2ee8-40d6-95b6-403c1f6e746c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.587136
@@ -9382,7 +8207,6 @@ d103347f-5e59-4623-a6df-dea2089f8186	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 d1180678-aa83-432d-81f0-a52d1994d6c6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.602819
 d11bb49f-f352-4f68-af2e-183640171b3a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.609357
 d1274e6b-f328-4e6a-a87e-b24471e00c11	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.613774
-d12a3018-95b9-4ef8-88e6-c9d5eb3b5533	10	\N	2	ThuHoi	\N	\N	2026-08-25 12:01:36.61765
 d13c1c12-1444-444a-9625-eaa79adfc1ac	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.621668
 d14881cf-016f-4d12-88da-61118730cea6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.626711
 d1544e4a-1635-467f-94e6-79599bc8027d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.634344
@@ -9390,7 +8214,6 @@ d156ab5e-896c-4097-aa1a-84fb37c4af5e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 d1658054-2533-4363-8fa5-be9eb480b2e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.642497
 d167c994-90ad-44e9-9af8-b9b5ab44cf9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.648933
 d167eed0-91d8-4576-bccb-ec4b22e7556c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.654076
-d17fe5d6-719c-4822-8bd6-f0fc861a707f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.659038
 d185ab45-85b2-41be-94f4-244bc8b7dd93	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.663655
 d186edf6-c8c0-4fd2-8907-c84bc19caf07	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.667999
 d18d67ac-c29f-4aed-bf22-881ca6c34d6f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.672127
@@ -9402,14 +8225,11 @@ d1a82f5f-b4c7-40a1-8beb-2a7ab97e10b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d1ae6e89-e15f-4fff-9f4f-72a706351473	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.69752
 d1b6df44-6beb-42b6-8093-84e7f1882c88	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.701523
 d1b7c6fe-f1c4-41cf-9132-8128c201c0c4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.705915
-d36ad066-262e-485f-899f-1add2baef509	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:59.792714
-d53f6e0f-c4ae-4f10-842f-85d9addf8dc3	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:59.928475
 d635af5a-073c-4e4f-88d1-2555db4a6214	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.658813
 d1b8d2c1-69aa-4e76-8b0a-7ab9e5232e7b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.712797
 d1be23d7-2744-45c0-ba3e-dd43587b3d40	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.718926
 d1bffa4c-ea2f-465e-81ec-99fa5053b0a1	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:36.725358
 d1c1e953-6949-48b1-8dc7-004b1b115136	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.730079
-d1ce532c-9dcb-4646-8533-e1734922985e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.736814
 d1d1bbf7-1fb6-4237-b260-e0fd30dd73ce	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:57:59.654489
 d1f4d80a-53ef-4641-88d4-19eaf08a5d7e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.75635
 d1fa5b4e-8b66-469e-b5f6-d4d02cd35470	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.762218
@@ -9425,7 +8245,6 @@ d229ad50-6511-45cf-b3ed-ed28d3544156	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d22a5325-4e32-4cdf-b968-738202a05199	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.811543
 d22c1cf5-c34b-4841-8630-0b9d1ed5dd41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.815652
 d22e61fe-9ca8-42f4-a782-6912c3294a44	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.820378
-d232d388-de7a-4208-a931-698cec4de663	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.826072
 d235acb0-d0f1-407e-880f-a1554003dad3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.830828
 d237e6d5-3bfe-48db-98e8-b637a4e49e99	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.834568
 d242cc36-2137-46a3-81a2-e6987f3a4302	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.839463
@@ -9433,7 +8252,6 @@ d2465f21-ec19-420c-94de-6c01db9b810d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d248ad43-a1d0-4f0c-af04-b8b020df4b9d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:36.857059
 d248ddfd-038b-4f73-aa1a-503e39139d0b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:36.862768
 d24db4cc-f13b-4b8c-b9e4-e1996f57fa8f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.866643
-d2575562-d706-4a0b-a74a-2d378e10b8c1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.870711
 d2581abd-c97f-44c3-9d1e-4a08bb985ab8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.874585
 d25d187e-7b68-41a5-993a-8c1b355bbfc5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.878697
 d25e3611-9335-4939-9028-120583be1a44	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.882561
@@ -9459,14 +8277,11 @@ d2ddedc7-d0a5-4870-a245-d7e6352ed3b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d2de1ef7-fb45-4779-a9d1-06b61e02c92d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.982448
 d2de37a7-46a6-43b9-bc57-46b925f3f297	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.986867
 d2e1c538-7da1-46a5-8510-ca2c9fb4db13	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:36.990941
-d2e463cc-4c6e-4dac-8187-baf9aefd297b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:36.996134
 d2e6d23d-da19-408c-a634-d5534ef23fe0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.001408
 d2ec664f-bfe1-4d2f-a9a8-c896958bb13b	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:37.007305
 d2ed2471-aec2-4dc8-9fc9-5694a872f309	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.01262
 d2f22c38-0bfe-47b9-b9d8-26d28adf5cb6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.018313
 d2f37f2d-ef97-48e7-8921-93c4d1fac6f2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.02469
-d2f9ec1d-8ff7-4d53-bd90-b1a50a8b38fb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.036068
-d30061c4-3336-4d67-9378-769cc60f01ba	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.041632
 d309c40d-a3c2-4758-ba11-ee5d341d0865	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.04717
 d30a5c0d-0929-4746-ab06-6da498e75316	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.052122
 d3145cf6-637c-4e25-a8d7-aad958fdb79a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.057261
@@ -9478,14 +8293,11 @@ d33f1da5-df3e-48ac-86c1-fa07e312fc7f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d3527b99-e793-464c-a365-f3954c9ed7ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.085109
 d3600722-3d2e-4b54-8e5b-8614f4f99b16	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.088825
 d361ff5e-6a9f-45f6-afc7-12e1e8df91d7	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.093039
-d3645c8a-5cf6-4da0-9273-5bde6348650c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.096625
 d3811bdf-c772-4e20-a66d-9cb1ec02210b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.106564
 d38cdc79-c033-4af9-b987-85b133ad3dcd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.11259
 d38dc00b-dddb-4a05-ab20-7cb8f5aa2d7c	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:37.118449
 d394ce42-26fb-4230-a868-9f6cac7b3fc4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.123504
-d3ad92e4-7788-492f-84ad-760d079b8456	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.13185
 d3b00827-ef96-490e-97f0-b40b9eb4384b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.135791
-d3b6f4ef-0df6-42ef-b474-aa57db8922f6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.13978
 d3cec100-0064-45c9-9273-7f9237cf4053	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.143881
 d3e28c82-9c3f-496e-b4d5-2bb55dd6e478	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.147776
 d3e55c2f-18fe-43fd-bab6-396b1007513f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.153321
@@ -9501,12 +8313,10 @@ d41c8a6f-aa69-430a-9f9c-f806b3efe9fa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d422488f-da5f-4ada-952f-33eaa1713cd3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.200562
 d425b9d6-f7de-4c7c-b294-bf20f1fe04b8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.205458
 d4270525-d5a2-4dfe-b461-cbb0b554bfd6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.210784
-d493c758-62d2-4c68-9dfa-73b12bd40740	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:59.86781
 d635ca47-0392-438e-8a45-1dff8c37500e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.66263
 d6dea22d-5f6a-4e7f-89e7-8cdb17125338	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:00.057115
 d7786c4b-86e8-494f-aac4-3d59f1db5ad0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.86786
 d7ceacc1-8d5f-4aa9-9c48-a1514e5f4359	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.924845
-d8997eae-1baa-4b36-b2ea-3e5e01686e72	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:00.213233
 d8ae0753-32ef-40c2-9061-6bd2f89edb4c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.12948
 d637dc3c-a2a4-4db7-b726-b49978e49eda	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.66794
 d63c8058-2265-4872-9843-6165bc4109bd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.673413
@@ -9515,11 +8325,9 @@ d64dfe1c-6af9-4317-8a38-902b77055647	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d65296e9-bbb4-497a-80c3-c18ca562cca5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.687313
 d66e663e-e99b-4266-918d-0b294863b955	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.692556
 d6721630-fdfd-41a0-8ae2-c7c350f57873	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.697666
-d684c70c-bcd6-4e33-a8ed-062688e452d4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.703478
 d68a526d-2447-43fd-95aa-e081262247b5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.707846
 d6a0a5d1-b594-4363-8eab-48e683c32c70	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.71218
 d6a56465-f229-4afb-badf-ffa5bf75c732	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.717045
-d6b1078a-d479-454c-ad48-2de3d1f5e07d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.722063
 d6b8d262-9218-4ed0-8232-133f44ed474b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.727046
 d6b91f30-d8aa-4be6-85d1-0c0aa8c5033a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.732145
 d6c36773-c99e-46a4-9695-ba744eaf84c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.737977
@@ -9528,15 +8336,11 @@ d6c7b4cd-638f-4c6f-bab3-3daa508c4325	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 d6ca413b-ab51-4510-9e8d-2cfe82dd5197	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.75374
 d6cf710c-0215-41d8-a973-8791a08d5cee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.757767
 d6d8c866-e1c4-496d-b184-a0f7c572f592	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.763802
-d6dd14f8-fe8e-48ce-9ca1-50a15ddad5af	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.768036
 d6dd4607-5d4e-45ae-84bb-e71e4a99f89c	10	\N	1	ThuHoi	\N	\N	2026-08-25 12:01:37.773127
-d6df9749-8511-4671-aada-b0a5d4efc4cc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.781944
 d6e3d95c-801f-45e5-90f1-63430df0ef6c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.785927
 d6e5e19b-3c5a-4060-8928-33858bb74c2c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.789744
 d701f2a1-0b94-48e0-a3fd-316b7dd63525	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.793739
 d7257c69-3783-431d-8135-2f46c51d7549	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.80174
-d72958ad-aa88-4ca2-91d0-a65b1cd1dc8b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.805965
-d72f4a76-b269-454c-a378-127b76c31eb3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.811577
 d7312e74-d5d2-4822-a2a2-ef5d003aaba5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.816061
 d73448f0-d781-4ca7-bc85-6ab02dd02edf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.82145
 d7365b08-a655-4437-89c0-cb6fad0382a4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.825788
@@ -9548,13 +8352,10 @@ d7660f64-777f-431b-a109-e07fbdd2ec65	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d7672a31-aebd-4bdb-a65e-b9348e4a1cb1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.850683
 d76c4489-d334-45c3-b192-896439ea8b6e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.854811
 d76f5c35-bfe8-4087-8895-5eebc4b00f15	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:37.858491
-d771d41d-3975-431e-b5f4-77b5429060ea	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:00.100043
 d7842db7-fc9d-45ba-a0cd-c338abb308cd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.871549
 d788a385-0836-4631-8210-0e8fdd0a9947	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.875987
-d78b7333-ebad-4f1e-9a91-d3f814897280	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.880881
 d7931497-d974-4fd9-8d43-fca43957ec8d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.888632
 d7a12076-58af-4592-a791-310b4b99fa03	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.892734
-d7a76e5e-2dfa-447d-8f01-1d00567389e7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:37.896575
 d7a87d68-1825-4141-90b5-ea4225401b39	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.900745
 d7af5527-0268-4b1c-b1c0-c681037e12cf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.904601
 d7b49d37-9f3d-497e-9dc9-74c65206af8b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.908777
@@ -9576,7 +8377,6 @@ d80e9ac3-3b8e-49fa-b993-d838d964331c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 d8182621-04fb-4570-bc24-7782f1b22f20	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:37.992339
 d8189956-14cd-489e-aefa-222d00a8e2a6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:37.997346
 d81d30e3-877d-44b3-a060-7e98705a6d5c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.002036
-d81f3037-099c-43b0-bbd1-f662307d0fcb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.007412
 d82855bc-1133-498d-b4be-7239d047dece	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.013114
 d82a06a1-9c70-47c2-8fd0-60765de9d414	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.019721
 d839afe6-011d-48be-8bab-7407ac68021d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.025886
@@ -9596,7 +8396,6 @@ d875f107-d904-4277-87e2-848bdb12db76	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d8898a8f-7f20-4abf-b0a4-6a35ca382b58	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.104432
 d88a6e49-45c3-45e1-a587-566646202221	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.109443
 d88bd7d5-f793-41ac-b96d-4c4c30f5f463	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.114196
-d8973dd4-8f6b-41eb-8004-2c4ba885a1da	1	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:00.208444
 d8c33c40-a2b9-49b1-876d-b6ce3c2e57c9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.134774
 d8e36e98-fff0-4601-a860-17d08a601ec1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.140172
 d8ea9c9b-28dd-458e-bd54-a4dbd65b1e07	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.145283
@@ -9608,10 +8407,8 @@ d8fb24e4-3a5c-48ab-aadd-5c79bb2a4d77	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 d9077896-cbbf-42ff-9e15-55bfdb4c5237	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.218762
 d91b0d73-b520-42c6-afda-a593f0b7b0c3	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.238291
 d920e073-14a3-4907-8274-1fbc1d71915e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.243119
-d921f4e4-f845-4fdc-b899-74e1e4137bc0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.250621
 d923f077-d86c-4663-9082-d4930f48d793	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.256891
 d9242b1f-87c7-4f5b-a4de-7a9e97dc7ecd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:38.260879
-d92452f4-e058-410b-9f68-df46d3d85215	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.265343
 d9258910-2498-417d-b98d-feafc5aab231	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.269816
 d9317d8d-1f39-4da7-9f69-6ba0126159be	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.274468
 d93260b5-cbf9-4cb6-9190-988a9f61e3c3	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.278983
@@ -9619,8 +8416,6 @@ d9336b1c-c458-4e95-b205-13d1ff07db74	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 d9488300-3a4d-4b25-9eb1-bde28b1cfbad	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:38.292215
 d94ae66f-137d-4732-8f82-17fa5c16c1aa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.296942
 d95fa226-6a0e-48fe-baab-280b89cfb4a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.302379
-d9694286-7dc8-4e2c-aaa0-382f56a0fca3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.308597
-d97176aa-13b1-4552-811c-3825ab8b9341	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.312936
 d9766f10-fbc7-4249-aabc-25ad88f18afe	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:38.317633
 d97738ca-bf2f-4d7f-9a62-435df1fdc2cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.321912
 d97b86f6-645d-40a5-b404-52d4699b4325	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.325746
@@ -9654,14 +8449,11 @@ da1dbacf-eafa-40de-ae04-12ac67f581b2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 da2ba89f-f0d1-478e-ae0b-22ff4791b0f8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.476968
 da389eb6-13a2-4fa1-9f34-9146310e828f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.488285
 da4a0d5c-1544-4e35-b7a3-b2e9e029ef2b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.493555
-da4bdc28-80a1-4bfe-b382-bc5ea9f4bd8d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.4999
-da4c588d-0631-4ef6-b80b-1446f1c02e29	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.505984
 da5a9c37-df7d-4b27-93cf-f977b63f2cc3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.511011
 da692706-78b8-42ca-8633-87106983dcb7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.517008
 da69cca6-2411-4abf-bf91-b88aaad77275	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.522689
 da6a64aa-4d80-4f34-a341-59d82066a3e0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.530065
 da72491c-5385-4fca-b02e-ffeb8c476665	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.537971
-da73f867-64df-4876-a676-a834a9d6dfed	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.544259
 da75a70e-7ef4-4b16-9d41-04ca2ac7289b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.550836
 da782196-4fc7-40cc-b7e1-41390c605f6e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.557767
 da7b25f7-c4b2-4572-a529-4afed7e05f4e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.563054
@@ -9677,7 +8469,6 @@ dac86295-f877-4c61-b451-eb121b0fcd2a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 dad0691c-7b7e-44d2-a553-7d3eec045b98	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.621034
 dad0d049-ca80-4edc-b903-f6a64f999293	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.626605
 dad469e0-adb2-4642-ba4e-f9e6044dc989	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.63306
-dad78eec-7240-4308-831a-b3ed7ee8730d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.639204
 dae39b62-cdc4-450d-80cd-6c90f362eb5e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.644396
 dae4588f-4462-4cd6-8a5c-d48f59e2ec68	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:38.649975
 dae6bc25-4b73-4357-8f3d-685517c0b23a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.655676
@@ -9685,7 +8476,6 @@ dae94d59-eb72-4a8c-845f-cb796bd83584	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 dae97f5d-322f-4c37-b89f-7511545b5f11	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.667145
 daeb62b0-1258-45f0-8f70-41a5195d596d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.673638
 daf3a40d-a916-4104-93ce-d049418a3d81	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:38.678402
-dafb46e5-37dd-4ab4-9b81-bcbc33399fc8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.68301
 dafe6b91-7ff5-45f2-b640-b0903d854e17	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.687648
 daffc509-e5c2-423a-9276-f58fa413bc5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.693201
 db1107bf-6789-44f8-b4f3-5ed1db984bcb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.70481
@@ -9697,7 +8487,6 @@ db18e604-4cf8-4b65-889b-094e68939565	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 db22f799-b30b-4a97-95b3-3a0016b62be0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.738677
 db2cab92-674d-44cc-895f-de0f276fc41e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.743187
 db396b80-65f9-47a7-a626-25879b82d465	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.748679
-db3c8767-5e1d-43e2-a69c-52eb01f0c797	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.753676
 db45680c-7571-4ee3-a4c6-f471c43f68ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.760035
 db4fcb74-1028-42f8-8d0b-c4dc6beab064	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:38.767305
 db529d47-cda3-426d-b228-b2cb8c849216	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.773256
@@ -9712,7 +8501,6 @@ de095844-89f1-46d7-bae9-64e9748ab63f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 dba33d0b-b41f-4cdd-9a8b-3b971e8ac1ec	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.822355
 dba698d6-67aa-4036-92db-5bfbbec3f1ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.827375
 dbb07d4a-0d96-4102-8d7f-547032867c12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.832131
-dbb680cc-13c2-42e7-9056-d5e3ff188b15	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.83683
 dbc2fc60-d128-49db-93b7-52f5c3d5a322	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.841881
 dbc4ee37-ed89-4d57-a303-c8aa77476373	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.845895
 dbc857e6-cfff-4921-9a91-17b36e3d5c50	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.849693
@@ -9723,17 +8511,14 @@ dbdc1ee1-b319-47fd-a12d-0aab674f6668	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 dbdc67c8-5f49-4239-ae5d-401a267e1d83	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.869933
 dbdfde1b-c628-498c-bd09-55478be86dca	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.87483
 dbe8326d-fea5-48b9-b947-cbf83c75a43a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.879931
-dbfefdc3-0c41-48e2-941e-2e76558c91e8	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.883856
 dc1050e2-2e36-4255-82e2-bd1b6efa70c0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.887667
 dc168c74-38a4-4e79-9dd6-e68767ad0946	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.891682
-dc19ced0-f762-46a3-811d-7858dc762004	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.89569
 dc275fdc-cd44-4916-b9f7-cefcdbf88225	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.899656
 dc292cb6-856d-4ebd-a5da-de7b1d16655e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.90395
 dc2a45bb-5b8b-4c07-8c1a-a33af72fc34c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.909659
 dc2c4e2e-8251-4596-a1d5-6739fa7f6c87	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.914263
 dc2ed5ed-086e-4772-b56f-51a708f8cd1c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.918976
 dc369256-896a-4ba6-9319-015dc2e4d89f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.92307
-dc403747-d6f1-4551-975c-d56b5c350d43	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:38.928192
 dc5a68f0-5b3f-41e0-b118-613a52effd1c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.936714
 dc5e7bf4-1f4f-40e3-84bb-e8e047fa3200	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:38.940572
 dc6631c0-e299-4fcc-9101-309f2f07d5ee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:38.945499
@@ -9758,11 +8543,9 @@ dcee01e8-97e3-41d5-8232-fda493d5e586	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 dcfbc6ca-3f91-4d70-9a01-9fa0d23ae387	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.051186
 dd0455c6-3c2c-4882-944f-8f38f1c0aeac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.056514
 dd04f672-86f6-49c8-b67d-1593a4ed1c2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.062231
-dd080de6-607a-4209-a5ad-1385166b9ddb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.067067
 dd0c1124-ea0b-4d5c-8fe6-b59f6588685d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.071209
 dd15e3e1-a3ff-4b38-b0a2-0419b01aa37d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.076183
 dd323abb-5de2-484e-ab54-9213b465a242	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.080811
-dd4d25f1-cbe8-48b2-b07f-5fdbf227183b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.085016
 dd507c4e-f1f8-40ed-8c2b-cbc2e3f93f92	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.0894
 dd550cb5-7e6b-4a1e-b428-9a319b49aa99	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.095386
 dd584383-a87b-466a-9778-2f1e6b0a10ab	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.100204
@@ -9777,7 +8560,6 @@ dd8b090a-2c24-4619-b748-370ed9e3be2d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 dd8ecf19-6b41-41f7-9bed-2c148e56b320	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.153595
 dd946756-5b9a-411e-b9d3-015cc58827e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.158098
 dd94c3e4-2c94-4537-a224-c3b6d3c3c176	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.162046
-dda6500c-47e2-4160-b490-1b42f19dc366	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.167192
 dda66d24-00e4-49ed-9f2d-54c160e08de0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.172477
 dda84182-7047-4724-9d8f-cabb9a1aac6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.177072
 ddc16e8b-32d1-4ca0-9114-2d6910e27196	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.181766
@@ -9787,7 +8569,6 @@ ddd75723-bb7d-47d4-ab64-9ae43b80c359	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 ddda8e96-7aff-4beb-a129-ffb2ef546822	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.201084
 dde0240a-8aa4-4138-b798-4f4424c216ba	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.206398
 dde8e277-3acb-4200-abd7-a30190b7dc3b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.211301
-ddec3907-bade-428d-9736-472e4abeaad3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.216641
 de038c17-a51c-4b76-83c4-cf0a5e19b154	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.225217
 de07ef00-b26d-4ea3-8d0b-003f3da8de76	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:00.58872
 de1443ff-f81a-48f8-b25b-9f8dbf9307e8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.238949
@@ -9802,12 +8583,10 @@ de5b73c1-8f21-42bf-b450-e29e81d10446	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 de62c588-e57a-4ec1-8028-4cbaee77e80d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.281139
 de64e01b-ee1f-46a8-97ae-4d9425845250	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.287155
 de6d8db6-5464-4be7-bef5-fe27d4998898	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.292336
-de784f3e-4c99-474f-b11b-d7070d1498e7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.298502
 de7a4187-3485-483c-9666-746138312b30	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.303731
 de7cd301-9170-4583-94ad-116b9d820a6d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.308314
 de830cb2-12cc-47dd-abed-45bf3e725c3e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.313689
 de8e57e8-6dba-4184-ae54-84afd122bc41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.323224
-dee0f040-6245-45fa-9286-fd127d58e220	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:00.655038
 dfb4b228-2b13-4ae9-b8b0-ea3d7055f6b1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.500847
 e0ee50a5-7871-44a1-afe3-0f651b78bf5c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.690244
 de953ac2-a92c-4dd8-b84d-061d7d224931	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.328389
@@ -9821,9 +8600,7 @@ dec1c404-de4a-4504-9065-418bbe4fbf2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 decf6db0-7109-43c7-9c0e-d40e4f274144	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.360696
 ded153e9-b351-4672-ac5c-b97157787536	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.364699
 ded5c6ce-7c0a-4cff-8f9d-a08c13e61383	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.369226
-dedda8fa-6e72-4bd0-9378-46b1e255f74f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.374337
 def226d2-1e2b-4126-971b-203453e897a3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.382828
-def869c7-39e5-45a9-a6b7-1e49016abef5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.387443
 defe8109-c536-4b77-853e-70fe92b25f8e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.392284
 df039a68-e281-4919-86aa-0732a458bfbf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.39706
 df075747-4900-4732-a316-d6f3678f24ce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.401968
@@ -9837,21 +8614,17 @@ df4c62a2-4978-417c-9097-c1be2e83f7da	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 df5cce32-7ad4-4991-82ab-44b1cac525f8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.445501
 df5d8cfa-bbd4-4a56-b918-e2ea7d68c14b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.449972
 df65b3cf-5c9b-44d6-96c5-04bd24a17edb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.453659
-df692293-ec25-4ba1-b811-c3c3ebd8774d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.457887
 df8e78a7-0f9a-4b93-8476-39defe08711b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.462219
 df91cb2f-b55d-4d10-a48e-008c542568a8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.466919
 df91f189-e4e6-46e0-88d0-41ed073d6132	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.470899
 df97cf89-31b3-40c9-99da-ce57d81b55c3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.475104
 df9b6b05-d4ec-4bbe-951f-0a7c576080c4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.478907
-dfa2033d-bee1-4e5b-88ea-b38799cc69f9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.482909
 dfa3a02c-499e-45f3-9a2b-a969fe194094	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.488129
 dfacbc19-2475-4005-8c1f-cc7c94fe77c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.491808
-dfad2dca-1de2-42eb-b00e-a4f399fe2ee0	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:00.707112
 dfb7df45-5a77-4baf-8567-123427dff15d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.505045
 dfba632a-ed4a-402b-9948-f4da00b21220	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.510399
 dfc27bc5-e7b0-4de1-8a47-b53542a2911b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.515144
 dfe69f85-fdda-4901-abd1-81820933c5ab	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.526208
-dff9ef1e-8f97-4821-839e-d6c7652f7eee	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.531293
 dffb82be-3065-4bf3-a679-ba98767b9083	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.536054
 e0011903-f151-4ac7-91f9-01d226bc4672	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.540331
 e004bf35-7819-4d58-b3a2-6f0bde0c9151	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.544924
@@ -9861,13 +8634,10 @@ e02059c9-edf4-4e86-b710-accc45f5aaa4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e0308846-d251-487d-ba87-fc9dbadba8c7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.56308
 e0390c3e-3bf3-4fc7-bf6e-873ff67791df	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.567265
 e0439757-e3f4-40fe-8bd1-c4aac29db481	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.572129
-e044fd1a-0ee1-407d-a420-0708f8b174cc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.576293
 e04b53ec-afef-495b-b691-e2143189e44b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.581193
 e05a2ca8-8c68-4d7f-93d3-a2e6ac2746d7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.585242
-e05e241c-89e6-41c8-b654-982d06ec5593	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.589939
 e06ece46-7476-418f-a762-cd44d34f1c88	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.594486
 e0704610-5dfa-443e-8e02-f13bdc231d6d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.599043
-e08403dc-b9e1-4c25-877c-5f2cabe9d3a1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.603844
 e08dd5a1-8aa0-4490-97da-8a87785846e7	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:39.614532
 e095c41b-ef23-4c12-8cee-2d7c7b899851	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.6194
 e09649dc-b897-4d56-a2ed-e8c70b0d8f67	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.624337
@@ -9878,23 +8648,14 @@ e0afa37f-bf12-4a91-b611-df7bc228e643	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e0b3c749-9f7d-48f7-aa40-6ce958ac4507	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.650207
 e0bb6864-9341-4503-a37e-46635df68e5a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.655547
 e0c168bb-0e61-4096-ac27-f6592c186d8a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.660236
-e0cc4a85-f468-4a61-ac15-694a1bc7dabf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.665324
 e0ce32a4-45c0-48e0-b055-b4eb4657dd7c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.670615
 e0d3b018-9aa6-4995-b907-7422dff8d804	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.675176
-e0d8d9d3-2cfb-455c-a737-77e1d7991007	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.680848
-e0d96fe2-df04-4a14-9267-3a0df9a9161d	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:00.785238
 e0f5dbc4-fc8d-4791-8439-3eac057aa180	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.696281
 e1004cc7-2caa-480e-8bf8-a56d3f6ea9bf	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.701438
-e103dad0-69e9-4d93-8ac6-5ec3daa88a77	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.706844
-e10cac55-dd57-4ccf-b508-62e1ca0dada0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.716553
-e113d2f4-0285-47d1-a950-d1d473292f2a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.721588
 e1148afb-9ddf-4814-89f7-ed64d90e5375	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.726068
-e11ffb4c-d9aa-4ae2-8cc8-9d736cfb50e5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.730335
 e122d621-8a49-4dd4-b5fb-460ebd9fadd7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.735401
 e1285287-22e1-4ad7-8ff4-a9b9f7b337f3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.74021
-e12aae71-4f7c-4eb4-9bcc-70b6a8e5db4f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.744957
 e12dbbb7-d383-4257-a015-6f958b432ece	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.749197
-e1388860-908f-44c3-94c5-c215ee027bdd	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.754302
 e13a587e-f67b-4c68-94e2-ed710fbdeeb2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.759382
 e1414bde-7a66-4a1c-a7d0-eab107bff905	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.764236
 e1425ed9-aaef-4190-bc13-92e3fb5a3d0b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.770064
@@ -9907,9 +8668,7 @@ e17ed040-8956-4363-8374-ceb13830485f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:3
 e191e179-e221-4aa7-84dd-951900eacb7d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.813615
 e1946758-76ff-40e8-8951-c11b544a13fd	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.817777
 e1a1ae86-6e90-4e76-897a-0245c6d216df	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.822012
-e1a6fbab-1842-4986-9750-aee5d8c0d318	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.825939
 e1a84580-a55b-488a-a619-a73d4c7a13c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.829636
-e2c1ec0e-46b5-4191-b3da-198f7c611c4f	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:00.9052
 e411b38a-906e-4a24-af0e-78c2560f42a1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.192915
 e5d453a3-7185-42bc-b96d-3b0f40450e8e	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:01.108488
 e1aa3119-a8c1-4fe2-81cf-07cd0dcfadda	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.833796
@@ -9925,24 +8684,19 @@ e1e4345a-489e-4ee9-b8cd-f4c06245150c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e1fed254-f04a-4cea-b21c-3d4849e16653	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.88495
 e2053dbb-f027-4eb9-8925-3b743a92e88b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.889228
 e20b50aa-3893-495d-b60a-967f69ec85a0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.892785
-e20ee88e-4093-4710-9ae5-3e1d63384711	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.896849
 e20f5e7e-19a7-4370-b609-e610f2583d93	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.900852
 e210253c-ae71-446d-8514-b5f15611ad1a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:39.906719
-e21163a9-d970-4cb3-9364-d168493f09f5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.911867
 e2307da9-67a1-4478-bb44-07b555e3205a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.915742
-e23cd93a-114f-4e5c-86ab-2b0e8dfb8776	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.919962
 e2431f1a-5e9a-4086-a4af-ae8d52e1ecd5	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:39.924248
 e24b6b20-8c70-4ebd-b3d5-d67fd16ee922	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.928971
 e2667e80-1d05-4295-bd4a-5b8ff5cfd751	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.936734
 e27c3de5-d033-4907-967a-7b1b36da09f4	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:39.940837
 e28a3ea9-3243-4bc2-8d2b-152d39f0ae4c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.945107
-e292821a-62eb-4e0c-a595-f8707793c61a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.9489
 e29bfb2c-8b1d-4858-b69d-765ee5b1df6b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.953802
 e2a699f7-4f6e-4a6c-92f2-265bde35f830	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:39.958272
 e2b72b54-0f10-457a-8dcf-4b98fbf72fa5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.962889
 e2bc1423-4bb1-4260-8e59-08b1f93127b6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.966942
 e2c639e9-cafc-4c30-9dcb-c45bab9c21ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.975191
-e2d080a0-e5c0-4e7c-8dc2-f33a20e8632a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:39.978835
 e2d8ba1a-beb5-4800-999f-9af8bb20f49f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.982811
 e2dbaf53-6569-4c15-b37c-94ff9a5c2e43	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.987227
 e2decfd0-0dac-42bc-bf8d-5a1b6fc9ea83	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:39.992269
@@ -9952,13 +8706,8 @@ e304c803-a7be-4a7c-8c42-1dfcb656a3ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e308386e-420c-4dcb-b4a9-8361bffe3ecd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.011159
 e30ac166-147a-490f-8185-60ec986adfb1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.016741
 e32d042e-72e4-4496-86cd-dd9cb1eba96e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.026929
-e3320516-d3ba-4716-850b-bd58822a3918	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.031554
-e3356089-5b63-4071-8144-586b3842caed	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.036258
 e338788d-8cdb-49e8-b481-15d0c5400507	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.039941
-e3458dda-16e3-4697-ba37-d3e91c272edf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.044438
 e35947c1-eacc-4048-8ec6-e93df3daf60f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.048955
-e35a4305-390b-46f4-86f5-9ddfda509aef	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.052805
-e35f78d8-fcf2-4185-8520-0b915780b563	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.057781
 e3705cb3-4705-4f38-b305-4a4bc08ef835	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.06189
 e3788ae5-6273-43c4-9ba7-a766c36fed41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.065858
 e38364e1-f265-464d-bb5e-b7a5dabc23d3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.070249
@@ -9966,10 +8715,7 @@ e39069c8-31c9-40a3-8175-ca5b58bda7ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e39eccc7-d0c0-4cb2-9b48-ae1642f9fca7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.078857
 e3a7b256-a919-4c94-be9d-e1b093da0b9d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.083282
 e3a8fc3a-4022-49f6-8757-24f9fad2b364	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.088063
-e3a9fd60-ae65-420a-bfca-fd7eb72aa236	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.092441
 e3b0b376-2f69-4db0-a104-6e1230f47697	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.097074
-e3b3f419-467d-4021-9185-3c97fafa1824	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.101382
-e3b43bf2-8954-4bf7-8fbc-eeb0f209b163	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.106611
 e3c454a9-eab6-42b7-9569-d2426cf94143	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.115432
 e3c5482a-fb9a-42ff-a61f-0a79c42e7b90	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.120166
 e3ca694e-261e-4e4c-b0a3-f825bf647045	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.125004
@@ -9979,19 +8725,14 @@ e3da896b-5518-49e1-9a05-7e774b1a70b7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 e3e0bdc3-f9a1-47f3-87c4-98ce7a59ddfa	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.146946
 e3e26cee-8a50-4526-a77c-7bfaf7cabfa4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.152671
 e3e453aa-e269-445c-b867-07309142e997	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.158792
-e3ea39c9-f253-4c4a-9efb-8c52de9def56	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.164051
-e3fe9e94-f354-44c7-934a-df0b7c8dd8f5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.16994
 e402c716-f1dd-4ac3-b280-fdd6ed44b74e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.175793
 e40725fb-94b6-4c82-a678-aefef7d233c4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.181002
-e40b3e66-af0d-446f-9d16-ffd0afff079d	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:00.991737
 e418ddaf-8272-4e5e-a8da-6388bdacfaf4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.19867
 e4194105-c488-471d-bcac-9b7d174dfcc8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.203505
 e420b41c-f987-48b1-9cc9-6209518f70b2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.209084
 e4306a92-50c3-45c5-a6c8-dc7812ef0fd4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.220511
 e43de8e8-d52b-4db5-9f8f-9c16245f3621	999	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:40.225782
-e465ae3e-b679-495e-8d67-138bf2beac61	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.230694
 e46823bf-431d-4dfa-b763-1e062911fe5a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.236875
-e46823de-66cd-4ce2-a04e-ddae8b8d2bef	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.243005
 e47755bf-70f4-4b4c-844e-162df690dcfe	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.248418
 e47a6c4f-86cb-488d-ae3d-a738d072aeec	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.253389
 e484ca6e-5e06-466d-bd95-53c97156575c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.258992
@@ -10011,16 +8752,13 @@ e4e336e5-c80a-45c4-a736-85202387f57e	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 e4e76f03-107a-4958-89cd-5b95e45d24ee	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.333953
 e4ec5473-a055-44c2-984e-db40aa39e86b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.337796
 e4f30186-1222-404d-8aaa-fddfc864b16a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.341777
-e525ae14-2a30-409c-ae39-f4545635f0f0	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:01.065946
 e7419bd7-27d6-461b-bd3d-57ea1873dc88	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.733266
 e7472ff0-b146-4a43-839f-c54f9a4f1f10	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.741464
 e4f346bf-0c0a-446c-8662-f44cdebeb55f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.345962
 e4f8e64a-6169-412e-8111-eaa43487d69d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.350251
 e507f744-dc0b-48c6-922c-cc0a30103106	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.356459
 e50c03eb-b43a-4fa6-ad6e-8a2a18dab678	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:40.359279
-e51d0ad3-9f6a-4f59-a3aa-50e02cad3df9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.362874
 e51d6417-953c-4aed-a773-c233da513ae2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.366847
-e52abccc-7e4d-4464-b992-9b7a4033f675	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.374804
 e52b132e-d328-4024-afc4-e6dd3843a2ff	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.379044
 e53bcc82-54d2-4f4c-89fd-0fab1958a47e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.382992
 e53d6c12-1bdf-4dcb-a38b-f782b232a971	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.387531
@@ -10034,20 +8772,17 @@ e57d27f1-2b76-4220-b606-2274b53e054f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 e5835d5c-f449-48f2-8f7a-ac4bc13c50db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.421254
 e5910f23-3bfb-44cf-a6af-cc3ba7dafbb5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.426122
 e59d18c3-e4fe-4c58-ab60-cfec60b1756e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.430007
-e5a3972d-0e1d-45c5-83f6-31d8270160ad	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.434327
 e5a427b1-36f9-43ca-b747-1753eb60176a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.439079
 e5a845de-9ad6-40be-8d75-d5ad9ddc7a79	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.443367
 e5ae3739-a653-4b60-9266-285478e2072b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.448388
 e5b6672f-f0cb-48c9-b236-9485f0c10aee	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.452965
 e5be8de5-63e9-45c1-a84e-f5fdd2d67f15	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.457331
-e5c2333a-cf2c-4f85-a2a5-30897b2a6bd9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.462028
 e5d536e4-9c1a-497b-9186-e696dbc900d1	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.469938
 e5dbe0f9-6525-4e3e-94a9-70b25ba152ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.473952
 e5e46681-8c00-4d6a-882b-71a418e25cc8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.478474
 e5eb4910-bd44-4dad-84dd-53b993bbc895	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.483067
 e5f98353-b60a-47a3-b168-db02712a73b5	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.492241
 e5fa7734-0a10-4999-b96d-dc3a070e3756	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.496026
-e60cbf50-7b58-4be4-8d1b-46f894d4d05d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.500082
 e610347e-114f-449b-99cd-3ac8ad107e41	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.504871
 e6223820-f36f-4550-8a36-b4070fda5378	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.510594
 e631fad7-4687-44da-8705-0c0ae9a08114	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.515238
@@ -10060,10 +8795,8 @@ e65fa254-e0a4-4005-a6b6-33cd08c8baaf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e663657c-d2a6-4fb0-b2fb-ea3af71716c0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.550472
 e6723139-4421-44cb-b2f3-973b86169021	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.555953
 e67f6901-2f12-46d6-a91d-d4cdf4e5c3d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.560156
-e680e9a8-2cee-4d27-8494-e43584305c04	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.565057
 e687cd34-0e21-4db8-a775-b44ec3526749	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.570639
 e689c48c-5f43-4747-b689-1e68ff40a154	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.575272
-e68b93c6-dfc1-4b50-af54-d83ff308af48	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.580754
 e6908efa-d1fc-4436-a2f9-aa1374b3e773	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.590637
 e690d13c-fb70-4412-8258-fca8762f907f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.595111
 e699f153-7989-44f1-ba7d-b1786379f75a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.599841
@@ -10090,16 +8823,11 @@ e7323544-502d-4241-8818-7fa43c41294b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e735926b-091f-47b0-bc9c-a8cf49641162	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.710729
 e738ae3d-728b-45c4-9e3f-94044d810d31	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.716698
 e73b3402-df68-440c-a266-8c0e724f8fb9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.723091
-e7411f70-b2f7-45bd-a6e1-2d141f2a3a1b	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:01.231344
 e7424e1b-f36d-4eab-9744-c54a6cfb0e54	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:01.238279
-e74a3072-93fe-4bb9-8ee7-6fabb3a643f9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.746357
 e74a429b-1e23-4c4a-842a-7cc7175936db	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.751229
-e74c79d6-c61e-48e6-b955-8f29a19e8ee1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.755035
 e75113c6-6b48-4055-8c1c-77361d1c86ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.759476
 e7527469-3e9e-4004-910d-6b1161e3be45	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.764656
-e7528a3d-8d72-4064-8f1b-3c22167ffd18	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.77041
 e757d55e-6a20-4bff-8041-a82fe54b203f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.775487
-e75c172b-f4fc-4f4a-81cf-6d63294c3256	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.780595
 e76ce8eb-8f91-4f98-b11c-298544deee88	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.790573
 e77917b3-b463-4c81-bcb4-1802c4a2de16	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.795218
 e77cc464-1520-4060-8afe-725ff93427c7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.800736
@@ -10107,7 +8835,6 @@ e78c4661-cbdc-4cca-9989-dc768e6c9d27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e7944bef-d86b-438c-9475-e67dafa4aa72	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.810807
 e798a558-67da-4b88-b059-e25529bdd824	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.81514
 e79963dd-42e0-44dc-9cc3-5c0c6b76f545	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:40.819129
-e79da44a-e285-4cff-825c-cd21cc0355cb	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.822872
 e7a2e05a-40e4-4768-b287-4c2a2ab24fed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.826971
 e7a5af03-7bcc-4e21-86e7-52c8ceca5f3c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.830966
 e7ae298a-9164-4617-9d6d-48c039e4b803	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.836048
@@ -10117,23 +8844,19 @@ e8ca067d-e798-49a6-9a15-e24a35dea32e	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:01.
 e9fbe517-e686-4e59-b4f7-80ce02031291	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.227279
 e7c0993d-6b7c-4d53-a732-77d431fcc82e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.849457
 e7c7be88-ab98-453c-abda-0f299b974022	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.856004
-e7c8b5e8-a3a4-41fa-b95a-bc5673b086db	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.860246
 e7cd0f26-b5cf-4e0c-9022-ca506ce950f3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.864152
 e7d36b4c-183b-4637-b58d-9f230baca66e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.868103
 e7da2a1d-34d6-4187-bbf7-1f14dffdeaca	15	\N	2001	HuyBo	\N	\N	2026-08-25 12:01:40.874456
 e7e89105-f32b-4164-b464-764b807aeba4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:40.879217
 e7e8d39a-aeb7-427c-a62c-0fc0ce9cbf73	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.882915
 e7fc0945-4cda-4a15-9168-1c67c1980add	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.887003
-e800a60b-ca06-43b0-807f-696722829dec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.890902
 e807fec6-b1e7-4033-9452-546ca2d3bd4e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.895008
 e80a9975-b7f6-4942-a4bc-6e6de020132f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.898849
 e814f924-fdad-4d9b-be6e-3a38e766f597	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.902827
 e8208ad0-a807-45d1-a427-9c57074c2d61	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.911905
 e831ca21-97d4-46be-b55c-cd966cfe8a36	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.916679
-e8391d8c-58d8-4d3e-bcc1-7381eb4ec257	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.92157
 e8416815-079d-427c-8f1c-5597f5eec015	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.926119
 e859c4bd-89cb-4084-b66b-284d9e349a71	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:40.929967
-e86a6ccd-48b8-4a64-a3a9-92f1b0a84bea	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.934558
 e86b62d7-b649-495c-bd92-d1d84ba78c45	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.939499
 e86d3818-dc52-4300-b828-511fb2903a02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.944338
 e87304b6-65e0-4f8b-a869-e59d5d5a8588	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:40.949856
@@ -10145,7 +8868,6 @@ e891696a-3be7-414d-a638-1204e48a4676	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e8a065c6-ef60-4abe-a785-a244d2b031d0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.982227
 e8a1efcf-c7b7-4bb8-bb72-49881a99a0e7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.987496
 e8a62795-3f19-4291-8652-51c3f7c4ea4c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:40.992313
-e8b8348f-e06c-4617-9869-b8f6c04cc3b9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:40.997693
 e8d3af9d-1ae9-4634-90ab-5fffd174e51e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.012747
 e8d6aaee-aebf-4822-8677-774acd9de610	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.018512
 e8d702c9-1fec-4039-a03e-03358f2049ac	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.024251
@@ -10167,13 +8889,11 @@ e959564c-3598-425c-8b72-1f0030deae28	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e963bb44-e697-44a4-8579-3e063af35576	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.109165
 e96b6dc8-ad1e-4b08-af40-debafe5c4187	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.112973
 e973c81f-fe5a-4a8b-b6b3-0b0c7d4435b8	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:41.117028
-e9762556-3bdf-4876-bfc0-454dc83cf700	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.120916
 e97eacf4-5a48-40f0-a6a8-7a4a28ef9cb1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.124935
 e9813e21-9ab1-4fdf-ba84-79715a773bd9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.12907
 e9849184-f4f3-466e-ace4-108ddfb3c06e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.133137
 e987d58f-c988-4b0d-9633-df7f798bada2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.137754
 e9897623-5c51-4bc4-83fa-d1413bbb147f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.145867
-e9909c12-5e59-45d8-bdd5-ad4a34062ba7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.152506
 e99138ab-3c76-4a61-837f-11ee8aa30fd0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.157085
 e994a8bc-c092-44db-814c-9a43293c65d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.161178
 e9a000c9-a7c4-4223-add9-24c47a99de30	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.164932
@@ -10185,9 +8905,6 @@ e9bbcfa3-dd32-4429-895d-494a7f0350f5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 e9ccc712-ccda-4417-894a-76a1ba66d26f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.197395
 e9cdbbf7-bece-4728-b39a-3f6a7ff9232b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.202439
 e9e4b706-3c2c-4bb7-b988-71bd700c3cfa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.207645
-e9ecc6e9-d6fa-4540-b61e-824c5d0216b4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.21253
-e9f8916b-b8dc-4310-b5f0-6b186eb75b2c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.217465
-e9fa46b8-3a96-4aea-a51d-fa089c6f5e20	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:01.417664
 ea07bfa2-d2ff-4590-b879-2a610c57b285	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.232694
 ea0ee264-c0fc-4519-ba95-5374bcec677d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.237249
 ea11809b-c5de-4e19-83c6-8657300083a2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.241602
@@ -10198,9 +8915,7 @@ ea439c84-3b2f-4baf-abdc-7d678e12745a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 ea47d3bc-cdec-44e1-9cd7-bef4e1f00f3a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.273469
 ea51016d-48bb-474e-84d1-9c722a089202	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.278903
 ea54948d-f762-46d1-bce9-d880d4d9e304	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.284702
-ea58c7eb-b382-4465-9476-5972ffa75bdc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.289576
 ea742d11-b2e2-4747-9e28-d44831d0956b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.294954
-ea850155-e57a-4acb-8a58-140192611c1c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.305916
 ea9138ee-87b8-4837-94ef-20dd2171dff4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.310419
 ea9295d5-33f9-4f21-b3f4-270b7ca4c77a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.31586
 ea941686-27fa-4cd8-8275-869fc699bdfb	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.320667
@@ -10215,9 +8930,7 @@ eab65267-d316-41d3-9c45-ef7ee7536b88	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 eab7ec19-ac0a-496e-bfab-c1e160b6cf49	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.373878
 eabaa92e-3da1-4353-b75d-7e2055070335	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.379943
 eabcdfaf-f17d-4237-9353-0bf882767740	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.385936
-ead17bba-c64a-4c15-8482-0dfd0c0fe1c4	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:01.497802
 ed2a4261-3a2d-40bd-9d8f-9549234f441f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.905533
-ee042c3d-3d89-43aa-a96f-d1e7a8bebe13	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:01.819478
 eac7d474-f9c0-4571-afa9-23359d4a4ad2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.391482
 ead24b16-1f33-4754-a23d-87b2153cd894	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.402726
 ead4d735-b0bf-45e0-aea5-21cd77011653	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.407941
@@ -10232,14 +8945,11 @@ eafe9f46-8e73-4985-a4a1-a058e8d69a22	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 eb06cf9f-166e-413d-9a75-4c3aaa85da36	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.459812
 eb0c939f-a01a-42fe-9720-0a0a8b3f13eb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.464532
 eb0fbbf6-1327-4d12-a61b-7bcf2cb6497e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.469926
-eb1056f6-1053-4de8-be56-1db830265b38	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.475925
 eb185567-5846-4d78-a83a-119bd3a6f70d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.482645
 eb1e4b4f-13f3-4b02-b973-bb6b9853ff4c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.488331
-eb24415c-feca-4439-add9-a7e8fc6bbae9	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.492074
 eb265429-bb5f-4f2a-a1e2-a332485004a4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.498593
 eb283bde-934a-4ee2-881a-e33d1a3ea010	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.505288
 eb30ac4b-57c3-4248-af0a-aa0b02bbd8b8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.513048
-eb329def-5242-4073-8ceb-07906fb4f60c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.518379
 eb3803b3-e0bb-4ebc-a981-0ddabc0448bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.523305
 eb38abf3-7501-4db5-bb7d-b09ba2dfc654	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.527207
 eb418c2d-1233-4deb-a6b5-8359e27bfb59	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.532567
@@ -10255,10 +8965,7 @@ eb7e7f42-0f1c-4591-98ae-5f0b2f077891	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 eb80f980-4949-4161-b6f7-8772600066f0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.580452
 eb8b68bc-2009-4f32-a129-19a8b4453a5a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.585531
 eb8f010d-d3d5-4106-9b7a-1b888087bb90	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.590234
-eb95e623-1d49-4f5c-a790-bd0b0f07b0f7	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.594226
-eb9aa77d-1aa3-475c-a7c9-00faca95f2e6	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.598785
 eba52a2b-e19d-42f0-abcc-a73fbf9c78e6	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.603837
-eba6eb1b-12d4-4cf0-861c-01439a3b0266	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.609385
 ebb2b7ba-c0fd-4e44-80a7-3b5708c7f998	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.613403
 ebb3e614-da86-4744-bb17-8bd3dd97e098	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.618472
 ebbc08be-a07a-4fe3-adef-0f618e5d44bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.624496
@@ -10269,7 +8976,6 @@ ebd259be-ae93-481d-99a3-345c57c85363	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 ebd61a6c-7dc3-4c2d-a9db-60da2d7832df	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.656792
 ebdda4b2-da9a-4ba3-9911-cb9570d0c70f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.661248
 ebeff52b-d285-48cb-b5b7-ccf043e45f99	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.665299
-ebf593f6-2544-41dd-aacb-5e29137bd250	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.669097
 ec0525df-03a0-4b78-b53e-08b2e077e060	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.673093
 ec167b73-0c8e-41b2-81eb-b2d599d1b747	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.678322
 ec196a88-c7d0-4a22-ba4b-b0f447cbc1e0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.68418
@@ -10279,23 +8985,19 @@ ec26e2c2-8825-43d9-8d81-21e619e7d30f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 ec29e265-f0d2-48b1-b9b3-9abb0ff2cc72	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.702599
 ec2ac13f-41d2-4871-a076-0a690a0a8bc1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.707039
 ec2e8d12-5a2a-4b4c-9c5b-4a252bde7d2a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.711396
-ec2f72d7-1965-47bc-89cc-493268305144	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.715307
 ec36f3ab-847b-4490-98f5-b341a897e674	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.720741
-ec4a4d99-c1be-4ad6-be20-69dbcf5e6a23	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.729304
 ec51afb5-2669-42ea-b74e-e5c55b061bfc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.734443
 ec566d2f-9609-4a98-b108-f15c7d7f49c2	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.739741
 ec58174b-9044-45bd-83e7-5bfc51d2be52	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.745235
 ec5cb2c9-4c9e-4145-8a77-65c608892326	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.750731
 ec644176-635a-4165-b4fa-2a663ff68e61	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.755829
 ec6a661f-287a-48b4-a9cf-fcd6885f586f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.761871
-ec73812e-c18b-4f1c-bf3b-b810802abd68	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.769127
 ec7b5560-e884-4af6-86d6-ac52ba7cb356	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.775661
 ec7d5051-0687-4b33-8e37-1e9e60322c8e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.781885
 ec8b4b74-fef4-4f77-ab8d-ccd5eb7dcb82	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.788126
 ec8fd4e1-4dea-4ba3-b5de-7df3119945ea	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.796987
 ec9445dd-b018-4631-ab7f-613c83fb38ae	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.804563
 ec9c3403-193e-4921-b335-5b173b9247f5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.809589
-ec9efa07-6aa6-4c02-b4a8-3b4abdd08a71	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.814218
 eca48573-37b3-461e-b073-6bd61d882356	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.819583
 ecb492c3-773e-4e36-a344-e51e90aacca5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.824626
 ecbd675c-3b65-436e-9466-4e6596b8a939	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.829276
@@ -10311,32 +9013,25 @@ ecf5759f-93e4-4b1a-85e6-d7ba600c1dd5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 ecf8d14e-36b4-4654-84be-6dc838cc2a99	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.884506
 ed04bccd-d8bb-4914-9bbd-c41fab8792ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.890398
 ed0c7a80-814f-44e8-a102-17b849f14ba0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.895705
-ed26ddaf-4c03-44d1-a49b-e4404804fc15	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:01.719828
 ed2de0a9-9457-41f4-b91e-01f94b632e6a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.910481
 ed2fcb9b-c1d7-4f46-bd8a-c618fbc88002	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.915559
 ed30e717-b5d9-403f-88d5-0312923cd0d0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.921054
 ed3d56e9-40b9-44ce-9f02-d90155978a07	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.925708
-edb26049-b1fb-4bb5-af2a-32125ff0e73e	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:01.783006
 ef3e6ade-f9b2-4165-ae9f-b099e4f8f0b8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.399604
 ed418d28-6f9e-4308-b611-bf50438cfff4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.931976
 ed42c0c3-21de-4b49-8e03-82f570649eb0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.936701
 ed4fe46b-921c-4dc7-8b50-1b8458833559	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.941538
 ed553c7a-bc48-43c2-a634-7c9b39e23fc0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.946714
-ed57a090-eac2-4d53-810b-26e39ed81c6a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.951608
 ed5aff96-9bdb-4ff6-9e4c-11d35e0a9fcf	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.956904
 ed5c156e-e2d6-4eef-9db5-6388bdc02599	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.962714
-ed5ec9d0-ed3f-4a8e-b894-054de1ca1b1c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.969511
 ed65dc21-bd7c-47e9-898f-4eb6ca4bcb6b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.974945
 ed6a5fbd-0ba7-4254-99a0-21681c823e1d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:41.979375
 ed6e8ddd-a385-4d5d-abd5-21f9f376975b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.98457
-ed7e3709-989f-40e4-891b-83f4a38908b0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:41.989348
 ed80e6f9-09aa-4c0f-af34-c420cb4e5e21	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.993368
 ed80fa4d-a3bf-4121-88dc-abe4a4eb276a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.003485
 ed8247da-578e-48b5-977f-5d42331f6701	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.008242
 ed82b418-3dc2-4771-b273-b83098ad198f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.013362
 ed851c42-aca1-4f54-8396-8f0facbde364	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.019002
-ed893e1e-fe7d-4716-bfb6-0a723273c5de	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.024736
-ed8e3548-e35b-42ab-8d31-6be16450ba35	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.029389
 ed8f1a0d-4c2e-4294-a1fe-e7f929675c17	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.034547
 ed9f3ef2-2f5f-45fa-83e9-8632e011e52d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.040485
 eda9e0eb-8fcc-4997-a5b4-3c71d0ecb09b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.045395
@@ -10366,9 +9061,7 @@ ee656af3-e1ec-4df3-8dba-3fe13910f6d8	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 ee66d790-d29b-4346-a869-3e31ae3c5b07	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.188423
 ee6925cb-5a2d-4df2-8caf-ea71442c21a6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.192719
 ee729917-faf5-4985-9414-a99eca4ba8ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.197206
-ee7b153d-6223-48e7-8d80-c785de021288	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.202492
 ee89e302-3b10-46b9-adcc-5aee8aeb4594	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.212088
-ee8d38fc-fd41-494b-8922-de228611833d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.216226
 ee8efb31-7ff1-4308-9286-1db71d478692	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.220576
 ee9622cd-1b68-48b0-97cd-6cf6e2cf92c7	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:42.224096
 ee97e8ae-ddcc-4769-90c7-d6f6da9d2568	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.228638
@@ -10382,7 +9075,6 @@ eecb1321-2e70-428a-b587-7c3606fa81e6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 eecc93a9-db17-4458-9b86-919118323678	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.302541
 eed26e9d-76ae-453a-8b59-169e9ecfa0ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.309611
 eedb0f03-3c46-41d4-9b1f-cf553b567854	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.315596
-eeea5836-b237-4045-8ca9-ffc14b6e0b3f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.321408
 eef1d0c9-3638-4803-8d77-af6a2bcca8c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.325616
 eef1d0d3-e0d8-418c-9b76-430215de3715	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.330361
 eef4e63b-6b5c-45c0-8eb3-9e4555a147cc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.335483
@@ -10392,14 +9084,10 @@ ef08948c-bf82-45f9-a9b6-242740063deb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 ef0bb49e-bec1-4979-a0cb-5feeb22a2472	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.355684
 ef0dbec2-7bc6-4c46-a818-7fa19f2e6d5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.361423
 ef0e72ff-4e16-475c-b03b-71ea7a298bd4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.368548
-ef105a17-eea5-48c6-a6ec-b23fe5676f61	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.373312
 ef1a1cad-5bb8-4152-9413-143510de8e7f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.377255
 ef1ebd69-75ef-442c-b596-ec8236c46b81	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.381412
 ef25c21c-751d-44c6-b1d7-e83d5426b440	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.386405
 ef279eb1-6e58-4269-8fcf-2d56718fb944	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.39025
-ef288bd8-4690-4382-8aff-a2faee6054a2	3	\N	15	DangGiao	\N	\N	2026-08-25 11:58:01.937744
-ef52caf0-d8fc-4ea1-8f1f-c8c32aa34284	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.404713
-ef52fb1b-fce8-4fa8-bd24-2bd865bc5760	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.409514
 ef58c815-f91c-440f-81b1-fdd79daf35f4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.414428
 ef64d977-aedb-4351-a388-6792bc0f4e60	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.420951
 ef6b6484-2e92-47e0-bd28-e2a83a7b9280	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.425667
@@ -10414,10 +9102,8 @@ efc46e98-664d-4b4a-8d26-244e93c00fa0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 efc6ae98-6e59-4f02-abee-569e0d52f273	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.469254
 efc8e793-8a16-49be-891f-bda759724acd	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.473195
 efc9986f-53bb-4657-bbcc-140a975b9058	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.477285
-efe42618-d686-4fdc-8cc0-392cf5f5164e	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:01.979757
 f1fd789e-76d9-49bb-8b2c-f9fdbe2dd0b3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.942084
 f20c025a-8a71-4906-a23c-2128db4da8b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.95444
-f36f9506-ffb9-4214-9446-6360841488ed	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:02.251277
 efce8c5a-cd21-4e61-8e74-72d934540e3b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.482293
 efd57861-5093-4846-8dc9-0a569f62b004	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.489929
 efde7997-56c2-43a2-9d88-6e227175cefe	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.493873
@@ -10439,14 +9125,12 @@ f03aec97-8ba4-4014-83e0-e49fda762bdf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 f042b1bd-e5cf-48ca-a863-7f1f070d7f50	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.58082
 f046d3a8-4934-4386-b558-780459f509e4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.591505
 f0502f15-238c-49f8-95fc-b4ac2340d103	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.596572
-f051bc91-2628-41ff-97ce-b39c8b9b695f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.601786
 f052cd4d-72e8-47e2-b18a-025642785e2e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.606617
 f05763b0-4422-4d1c-ad18-5cc6a697a42b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.611816
 f066a885-ab25-4093-bfdc-e3c028b08565	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.617564
 f067a503-6ed9-480a-90a3-6aa1c93da02f	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:42.623779
 f07a640a-c669-43dd-9c95-237e69230ac8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.628682
 f07afefa-eca4-4776-8147-39245dd283eb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.633655
-f07e5cea-edcd-48a7-8f82-6061c3e1d984	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.638581
 f07e8129-9926-4c2f-b9f0-6a652977ae00	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.643644
 f08cc3d6-8585-4460-92c6-d0e52bd4f5a0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.648605
 f0939ba5-37a0-4295-9206-87ad7a1169de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.653549
@@ -10462,19 +9146,15 @@ f0e7f381-140d-4a95-b31c-6b37538d88ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f0fa4fa3-106a-48c4-8783-eb7c69ea1ae8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.712356
 f101c57d-55db-4f80-a01d-7b8a062f853c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.717787
 f10e7a30-fa87-4cda-9cb0-c1af020fb524	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.723005
-f116fceb-cd35-4fbb-a09b-f5e806468a70	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.729736
 f11bf844-b8c7-4afd-8b22-d6eaf4bfb379	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.734469
 f12104cc-e184-4406-99bc-0500e973e8a5	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.739414
 f1294f39-cedb-4ab2-8718-d4326c55c9f5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.743123
 f12e6542-735c-4118-a2ad-4181885007b0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.747235
-f1358b67-14e4-45f3-bca2-fbab41983f42	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.751169
-f136418c-6a55-44a9-948b-0fe4776a867e	5	\N	2	TrongKho	\N	\N	2026-08-25 12:01:42.756483
 f143c79f-b17d-44e9-9580-6e9c80481722	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.760398
 f1443d4c-9b65-4657-a867-70290c56f4c4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.764145
 f1457985-4b6f-40bc-9f5e-405a614de84c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.768518
 f1467c96-d7bc-4cb9-8b45-d11e1ae9cb49	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.773209
 f157ed5c-2a84-418d-9e17-9616e317dd94	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.781216
-f15a6020-b3a5-4546-adaa-7ab5aa9d8102	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.78526
 f15adf4e-8ed9-4020-9630-9f40e0b479f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.789283
 f1691b55-ae97-4588-830a-11b33f8bacb8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.79331
 f17cbb3c-1bf4-43d2-a48d-74ef133a5cb0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.797332
@@ -10495,7 +9175,6 @@ f1c04362-6b33-4d8b-9753-ebb1abc01a71	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 f1cc031d-7485-4dcb-95ee-d64382a6133a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.885919
 f1cf1b7c-8d97-4ae1-8813-15a0f5ca85ce	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.891397
 f1d1213e-f4cd-47f7-962d-0b8db9347d79	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.895196
-f1da6928-7959-40e2-a67e-6143c93fffb4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.899798
 f1da7b72-590c-4b40-b452-cea5c72bb434	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.904657
 f1dac503-c4bf-41c3-a00a-25cd14b02158	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:42.909361
 f1dad990-73dc-4e16-a889-f580dddd117b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.913284
@@ -10506,7 +9185,6 @@ f1ed2928-d0fe-437f-a07b-c7cde03fac33	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f1eda890-dc21-4fd3-88a5-5f9f2dba6fdc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.934508
 f1ef8f6a-0ff0-485c-a9a6-b0c991c79e8f	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:02.147404
 f208bef9-749e-472a-86d4-493709323abc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.946118
-f2095914-4652-4a0d-bf9e-84391491b04a	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:02.155667
 f2142ea2-fdf2-4772-b066-49db7bb0bc96	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.958038
 f2185aa9-59d4-46bb-acf5-ef18e79908aa	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.962166
 f225f8ef-7077-48e2-9f4e-330a01e62a08	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.970282
@@ -10516,7 +9194,6 @@ f2466983-89de-4fb6-b648-2d2ae1d3620f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 f24f08e4-68cf-452a-b6b4-eb2d25b34447	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.985957
 f2503ea2-c9b2-45f4-a946-ad75b6c200ae	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.990814
 f2d23942-a359-4637-99b5-c0dc203d297a	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:02.218163
-f38cd24e-a405-4fb3-a439-1385af6d2655	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.194783
 f396cca1-97fb-4c25-9911-0ae25ebeb7e0	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:43.218385
 f43a524c-ff89-49a0-8537-1111cce925b0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.344596
 f47eea60-1536-4d19-ae90-f874fd55cc6d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.389435
@@ -10524,14 +9201,12 @@ f4d0c5a1-c863-4691-bdd9-46330b8b2d5b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 f253641c-1c5a-4e7c-8d3d-3864e6a885f4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.995166
 f253819f-f40d-4185-af59-111321f2f16b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.999178
 f253ffca-a42e-4538-95b6-a4744e95cf0a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.003178
-f257e5a3-a68a-4895-8872-3d137380ee61	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.007574
 f268ebc6-260b-4ed4-85ff-5b7d619881de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.012513
 f2705159-1f78-4030-b801-a21e0a7a0f49	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.017251
 f272edfd-4c9e-49a4-86b1-3357a13a0333	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.021057
 f27c277e-8ae6-47ba-b827-2ad9de5a1ef0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.025566
 f2815d5e-706d-40df-9225-4f81240c6806	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.030233
 f281919f-ed25-435e-8b32-1c97f285c4d6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.034198
-f281f4be-0fa8-4736-9106-138758c5a9ec	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.038026
 f2826066-6217-4f80-bdde-feb6871cac7c	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.042531
 f282cf75-4cd4-480a-8abe-f7bb7b08ce2d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.047137
 f287ded8-dad9-439c-8f0b-5889404a299b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.052623
@@ -10544,13 +9219,11 @@ f2b08603-3aa3-480b-a14c-d0553e15a798	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f2b3c246-8847-4f56-b240-5115602022e3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.096033
 f2c53225-f9d7-432b-9695-c448cf0ac977	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.102266
 f2cc1fc0-89d8-445c-ad65-d6afcb0ff182	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:43.108416
-f2e3e039-7cab-467f-b82c-c598f7b336ac	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.118351
 f2e8f8b3-bbeb-4609-845d-be779316f360	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.122259
 f2e9adc1-bcca-4df1-8e49-cf03293ace7a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.126384
 f313060b-4b48-406e-961b-c61e6b4cb0da	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.130366
 f313624d-698b-4412-8d97-8a51c16a73a2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.134435
 f32b5032-ae6a-4910-803c-cc009cd21e74	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.13823
-f330d187-1e1a-4e2a-b135-8d615b3822ac	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.142066
 f34437e5-4776-404d-8286-3c2387b5fed6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.146156
 f3472ea2-55af-4369-9097-03b3630f89ed	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.150173
 f34a9dc3-3e49-4185-ad68-923161d06341	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.154256
@@ -10567,13 +9240,11 @@ f38ffdcb-c517-4607-b60a-e37c3f23454d	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 f3918405-39ae-4d9b-b69d-0eadbfb6cc35	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:02.273835
 f39945cc-f80a-4965-af3a-1544a0e7ca8c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.222322
 f39b9350-1262-41a0-81b1-11203fdf8886	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.226269
-f39d0bb6-2354-4dd2-b1e7-ec0ae81e53de	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.230184
 f3a481a4-491d-41fa-925d-af052ebfe356	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.234597
 f3a61b16-eeb5-48b0-93ea-674c988edebb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.241838
 f3a6520b-4609-4b63-a36a-456c5132ad1f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.246511
 f3a6ebcd-d485-41c8-87c9-cdcf05c4a000	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.251497
 f3a803ce-5766-4177-a8bc-bc205d71634c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.25652
-f3b1de17-bd2f-443a-9801-446c17a2abf4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.26143
 f3c200b4-59bf-40be-952a-69e971481f78	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.265369
 f3c4fea7-15b2-4b5e-bb3d-e313fb40562e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.269437
 f3c6e30f-471d-460c-a2c2-3779ea96c76f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.27452
@@ -10589,26 +9260,18 @@ f402fed4-bbc5-44db-b008-230dd19047e5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f40d902f-732f-4d74-88f3-5eef4f966fb0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.322502
 f41248ff-440c-4974-b2e4-4230f8c59ee8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.327899
 f42203e6-1a49-42f6-a936-063abebdb52b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.334819
-f4359d59-c459-4206-9a74-bc9897b987c4	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:02.320733
 f43d9983-c9a7-414d-87a0-9b6a382f6968	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.349718
-f43f03ea-380f-4b20-8342-0b640296e858	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.354456
-f4474061-38c2-4b27-9da6-c4ef4c1dff27	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.35929
 f4533d6e-bd6b-48cc-9cab-5282d13b3834	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.363479
 f457a4cb-2f2b-440a-8d9e-7fc3ab6eb43a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.368794
 f4584777-21fa-4cb3-992e-eef91b02712e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.373677
 f4752a22-233c-4df4-a866-7ee50259bc8b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.378245
-f47b0c68-397a-48a6-a95c-71c3da1b79b6	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:02.339426
 f481124c-ab6c-4707-9c97-b40396002a5d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.394411
 f4811b8e-aa3a-4ffd-9ef7-1f6941989a82	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.398358
 f48b28b8-05b7-4622-b9bf-8c8a5081d99b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.402306
-f4900069-ab24-4caf-bb65-98411d9cedcc	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.408465
-f4907df6-b6c7-461e-a066-6452554cd7be	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.414131
 f4908e94-3d88-4ede-bf74-03b9fd1b8fbe	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.420501
 f4918d9a-fbaa-47bb-882b-3a52d8831c02	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.426281
 f494eb86-e541-49d4-be69-2906d4df2111	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.43008
 f4b31a72-bd19-4af4-98a2-83a9f2337c2b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.435193
-f4b57417-0449-42e7-9e54-0102653151fe	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:02.360359
-f4d15453-d961-4365-bd3b-4f465fcce64a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.455168
 f4eddb63-1c5f-4d37-b3c9-de7499ba8e01	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.45926
 f4edee28-9f93-4371-bc38-f205f26374a9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.46343
 f4ee52ea-0192-40a9-b235-2978e6248758	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.468615
@@ -10616,10 +9279,7 @@ f4f308c2-0f21-4efa-8ea8-766744b75207	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f4f8986f-4523-4efe-bab7-7496a463c9b8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.476482
 f4fe3c3d-47f2-43b5-bf48-380daa4ce50b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.480662
 f4fe91b2-7728-4989-b1b7-a3e6705d2cc2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.485276
-f50085c1-f421-4806-92bc-f5d43bb3ac18	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.48933
-f56b69e3-40a5-499d-b873-e9c1f76978f1	2	\N	2	DangGiao	\N	\N	2026-08-25 11:58:02.419058
 f73b1b27-8cec-4e76-b57c-1ed6a8183a9f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.941933
-f8bf2d67-4b25-4839-8b4e-19458a5d5dc7	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:02.648317
 f5066442-55f6-4836-868d-09452394e5aa	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.493533
 f50b5a73-6d8b-4c31-8706-f9d0f438c928	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.498517
 f510a888-1332-43ba-b664-37d5d5e0d140	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.505743
@@ -10635,7 +9295,6 @@ f53f92ba-876e-473d-9b19-763a56f262f8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f54ef52b-15df-4209-a7fe-2bb12804000b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.571676
 f554acd0-4c7f-4b56-ba49-80a7120e69e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.578249
 f556dcc2-627a-42e2-93cf-91220da33319	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.583431
-f55d1a8d-1085-414b-87c4-bb1dbcf35fa3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.589256
 f55d45ee-f68b-4f0a-98f5-7bd561267488	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.594558
 f56164d9-a7f0-4e65-8417-4d057acce177	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.600123
 f56d691f-fef0-48a0-a028-57f8d5ffd5d1	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.610803
@@ -10644,13 +9303,11 @@ f57e4229-bc08-4b06-b6b7-7cb0cb8854ad	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f5823a39-f4d6-42c4-ab16-5e88a69d6434	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.623188
 f59daf51-9fce-416e-947a-516ec7595668	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.631207
 f5a149c5-08ff-487a-8fac-e4a9783685e0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.635393
-f5a438c0-73ab-42d3-bf2a-ea3c3cd8c8f0	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.639169
 f5a65a5f-a6f7-4c0d-9689-212dc133a380	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.643274
 f5afdef7-91c6-4415-ae1c-8c52da295a1c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.647376
 f5bf5009-a29f-4235-a93c-14e3560ffdc4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.65128
 f5c91167-9221-47a4-9ea1-05f769ef2b40	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.655291
 f5cb58aa-34b3-49ab-9f21-34bdc2fa356b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.659171
-f5cb6da9-8fdf-464d-af8c-f1e7e77e9516	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.66311
 f5d2b453-75d9-4451-a6dc-16f8ba49e268	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.668006
 f5d5bd08-2c3a-42de-8333-de715eca298a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.672463
 f5dc21f1-a487-437e-a8ac-74b41494dd18	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.67644
@@ -10678,17 +9335,13 @@ f68faca8-baf2-4166-9a0f-fc0388da7d99	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f69990b1-87fb-4951-bd21-ba133e3da3d2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.775221
 f69b1614-3dbb-401b-959b-c20531fb4b66	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.780256
 f6ad3744-1180-484e-a3a8-4f52d5112456	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.784398
-f6ae4428-550c-420e-a2e4-e73707401958	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.79212
 f6bef22b-23c4-44e4-b327-8dd18fb9a414	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.798763
 f6c37669-f458-40d8-9324-24e7988a9634	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.803416
-f6cfd172-8b3e-453c-bf85-072866d2a78c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.807145
 f6d05d50-7521-4180-9e0c-64da0707a78b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.811189
 f6d2f1fc-a9b6-4536-aba2-f3222295bfd4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.815254
-f6d3fef4-a6ef-451c-9637-97f84bb56f31	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.820596
 f6d70507-eac3-47fa-b288-532b1db1305b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.825198
 f6e6ef35-8a66-4345-9928-680264675e3a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.829447
 f6eb8107-ca1f-404c-85a9-f4f9a87b291f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.833077
-f6f502cb-c8ac-457c-8c28-3a8dc7d8ae47	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.837927
 f6f84991-2fc7-4a72-bc3c-b2fabe477a7e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.843869
 f6fc75da-70e3-4457-bd5e-2167568e3596	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:43.857686
 f700505f-7b85-4ddd-ac3d-0f17f79f786d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.866654
@@ -10705,7 +9358,6 @@ f73372b1-95a0-4f93-b0d1-544c3037ef72	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f7350ffa-5f4a-40e5-92d1-7f7087425ac6	1	\N	1	DangGiao	\N	\N	2026-08-25 11:58:02.541176
 f74ac7e8-83c2-4a11-be35-cfd486de0eef	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.949111
 f74c73ee-2190-404f-adde-7839f3f250dd	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:43.955277
-f7538e11-2652-42fe-8993-f7e6409e1f74	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:43.962251
 f7602b51-e7dc-4c0b-9e2a-cb9158ddcfc0	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:43.9699
 f769b5a4-eb2e-4db1-acf2-ff1758e89478	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.976009
 f76fa204-8c25-4f89-b0ad-97799cef5165	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:43.982343
@@ -10718,7 +9370,6 @@ f7b34998-656b-4843-9978-af833c1b4eff	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 f7b57aa1-6802-4b7a-bca5-78540a52ded3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.024447
 f7b74ac7-5b4c-4c2c-bebb-85be1b97d8d5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.029296
 f7c8a758-d2f2-48b7-bbae-4922ec5e523b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.033503
-f816c8c1-71e3-479d-923b-7fc29985f592	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:02.596949
 fa031792-624c-448b-935e-4a23059fa496	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.405933
 f7ce2e73-42ca-45fa-841e-46dcb3896e7a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.037388
 f7d9fc5a-2be2-47d9-9f24-2c5540238d82	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.041361
@@ -10728,12 +9379,10 @@ f7e08959-0066-4bcf-95e1-fad9423c79de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f7e62498-2bb7-49a6-9ee4-036343185cf1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.058799
 f7ed82c0-1c24-4fdd-87e0-a5357955d1c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.063601
 f7fea97c-1452-4316-84ed-7872a5727214	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.071387
-f8023805-9d32-477b-8c79-f25469afe488	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.075515
 f81335e3-08c8-4600-ae28-9e944fc5792f	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.080817
 f8185889-ed01-41c8-b6cb-458428eed0dc	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.09022
 f81a1c08-d4ca-4383-98a9-3386cf8ae809	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.094486
 f81daf4f-5167-41e5-8df5-2cc6e4bc1dc7	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.099817
-f8356f90-130b-4aac-898c-a225af8c7359	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.104847
 f8389c5e-3144-42b3-823e-2aaf9ddd3a9e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.109264
 f8444127-62a6-4912-96db-c6786afa461b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.113508
 f8462c3e-64a8-43e5-9cfc-de9f30d74baa	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.117742
@@ -10753,8 +9402,6 @@ f8be33cd-601d-4b9c-86b0-1b5595d0e553	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f8c6b3a5-9b43-4720-9305-9bc9a14ae476	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.198652
 f8ccdd0e-5f68-44e1-b920-aaee8d860894	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.203973
 f8d449dd-5ad2-46da-ad01-d710b343bd80	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.208939
-f8ec0667-e60e-436f-8c20-331fc04f1c72	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.214143
-f8ef8dcf-edb0-4e2c-97c9-bb6bec54570f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.220101
 f8f53e08-1736-4b07-a226-0d8a047ea970	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.225254
 f8f6cc88-2240-411b-b534-88de667aa84c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.229376
 f8fa09a7-0c6c-4a58-b740-0d8a0fb138ac	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.23344
@@ -10771,7 +9418,6 @@ f95066e7-943e-4502-8480-fdba52b653f1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f9669e51-b5d8-4edc-a2b4-04986f731666	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.288042
 f97096d2-7f39-4d7f-8939-f75227f3ad22	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.292958
 f972e6bd-d0eb-46d9-9d09-52f79a817cd4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.299915
-f9883f67-fb4d-44cd-903e-2f9bd045f8a1	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.305478
 f98f286e-f3f9-4dba-be80-bdab7a593039	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.310863
 f99d84e9-1c2f-46f0-9637-b06d6c2d8f97	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.315803
 f99fee04-5f7b-4c17-9025-a079ac307b68	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.320628
@@ -10784,15 +9430,11 @@ f9d60c3b-ac1a-4af5-8958-547953480e2e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 f9e1b809-65b1-4508-b35b-5c96abbaac42	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.360633
 f9e4743d-c60c-44ef-ab87-ddf894046f36	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.365792
 f9ef7c08-721e-43f7-84ba-e6ef1484b1c2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.370283
-f9f5bdce-15d4-42b8-a66c-8ee1e267660b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.376156
-f9f7bf01-4f95-401e-8e0f-463b97eb1781	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.382508
 f9fb5e32-bb78-44cb-bae1-85f6c1df1a94	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.389032
 f9ff5e78-8628-4881-bae2-935d8169ea9a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.394914
-fa021bcb-26f0-4f73-ae8d-34010eb31e28	3	\N	15	TrongKho	\N	\N	2026-08-25 11:58:02.739909
 fa0803e2-3516-4b2a-b61c-790269ad5477	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.412821
 fa0c1d26-e9b8-4df0-ad79-0d6c09b8eb95	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.419768
 fa0e5edd-308c-4be1-b8f4-d38597d57db4	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.426696
-fa10845a-a13e-4d43-b64a-3bcfc1384e9b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.432526
 fa1518a7-d275-43d8-ab0b-f209d79570e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.439013
 fa1717c2-a540-42f8-8f42-8859455dc7b9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.445912
 fa1ea4df-9945-4e95-a6f5-77f49c037d8b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.453391
@@ -10808,7 +9450,6 @@ fa5b880d-33ce-439d-a712-d11849d73fc1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 fa5ecf0b-14d0-4a65-a98d-5c08b462f7d8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.525275
 fa75e306-2da1-4b08-9d2f-0910c90120f5	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:44.532229
 fa83da6b-cbff-44b4-b717-b3d97283c09e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.536777
-fa977a82-f46e-48d3-9782-bb3cbfa4813e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.541394
 faa0f641-f091-4209-b3f2-812aa84e05ab	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.54526
 faa2fa10-d31c-4f15-b470-2199abe55d65	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.549837
 faa3d288-4b13-4b36-b607-0398b09e3b83	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.555085
@@ -10819,17 +9460,14 @@ fabb94f7-54c7-4630-99d7-0c2cedc2f1f3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 fabba24c-e4a6-4175-b751-56d38731a2f0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.578889
 facfd7f4-eb4f-4aad-b508-c731fab3d3ef	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.588542
 fad81be1-74ca-4e2d-92b1-133eaf77d5e1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.592487
-fb9d76eb-d334-4d2b-bc88-4aef0d2316cb	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:02.848804
 fd0a12b1-1973-48f2-88d7-95aa808121cd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.075581
 fad9823c-2303-4ec3-8d9d-54b124d6c081	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.596541
 fade0e75-3efa-47a6-b140-7bdfdbeca22d	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.608008
 fae2866e-8b0e-4d68-b29b-fda8ecd054b0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.61314
 faede24d-836c-419a-8190-f806882b8dca	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.617659
-faf9a711-c79f-4feb-9564-44760982cfee	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.623606
 fb07fd9c-f079-4915-8d19-0519e1d2e0b2	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.630354
 fb0ef6e8-eb65-456b-83d9-bb4dc2f3e93e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.635652
 fb1057ee-b1b6-44a9-9e57-f7dee5f10ab6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.6414
-fb2ab2af-76af-4c9b-a090-f1550bc9347c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.646627
 fb33e039-0b7e-4ec6-9fc1-7a64f3261b4a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.652097
 fb362e93-c6f5-4df7-bb46-c89fb85e6b97	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.656859
 fb38b825-ca32-461b-a6c9-e6626e1736b0	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.661729
@@ -10852,21 +9490,17 @@ fbbe4413-0829-4708-9a51-48fb2bdbf82a	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 fbc88f2f-1ce7-4e6f-a77a-05ad578ef436	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.760647
 fbdf27ae-337a-488b-852c-5fa9f0fa2a0c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.765713
 fbe0798e-cd2e-4667-88bc-4b94a4627e08	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.771282
-fbec7b79-046b-48e4-8e7e-a3234abc033e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.776706
 fbef6fa1-4629-4b1b-840a-0aa0b9ca628e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.780449
 fbf04c4f-97ff-4f15-9116-8b549fb41de1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.784766
 fbf508b2-7ae4-45f8-a045-139c8b40fac8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.790237
 fbfb2cbb-f331-4a3a-8dc3-6d05104883a0	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:44.795733
 fc0f8b05-aa61-4fc4-ba69-d92323417636	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.802065
-fc109496-ce3e-4ec6-8b66-f7afb7aea8bf	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.809735
-fc12d42a-1267-41b7-bf8e-034af5a66b84	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.815186
 fc1acf34-2e91-4746-8d2d-2569828b8fe5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.825969
 fc217902-5672-4b4e-98df-53116861e79e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.833247
 fc27c2f9-864b-40f7-bf80-c6523d40ccc8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.839456
 fc2eff83-504a-47d0-b5c5-2797195ffde6	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.845597
 fc310a5e-7b1e-462b-ba0b-ca64c3577c12	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.850584
 fc33aa2b-5326-47bb-8f93-c95d6daccb61	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.856744
-fc38d460-4a68-4865-a32c-168ff2e98f8f	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.862154
 fc3fc144-5f81-49af-a75b-413608058307	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.868671
 fc3fc76b-8a9c-4411-bb7f-9dfea1d6fe5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.874699
 fc47ff53-b6fb-44d9-a55f-a430601e77e8	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.880639
@@ -10878,10 +9512,8 @@ fc723e98-faf1-4b71-a111-3f49786feefc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 fc7befe7-a10b-43a9-87a3-6dcc729f6b01	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.920913
 fc850b51-8144-42e3-a783-71d0c18fdcc5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.933938
 fc870f93-a06f-4c6b-b7f8-39a5099bc6cb	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:44.940882
-fc87ad43-6ae1-4377-97f6-d0dd7d82342b	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.950956
 fc880b18-12d1-4eee-b454-dcc4d0734b43	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.958442
 fc8be30a-2ec6-4e5c-a724-b29eb85d962c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.964958
-fc929b7a-668c-4a9c-a848-b8557662a791	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:44.970595
 fca1f47c-36ab-44dd-b9f1-c2fce64e1c09	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.97731
 fca4e31b-0194-455f-b6cb-b14a2f20c2c9	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:44.984681
 fcab3ce8-f8a5-46a9-826e-84efaf4ac795	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:44.98975
@@ -10889,12 +9521,10 @@ fcac06a2-aec6-4980-bc00-5305b0ddaef0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 fcb288ef-3f23-41f8-b488-470245e549d4	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.002733
 fcc202ad-831d-4df7-9f2a-c4f03f5b4897	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.007955
 fcc40839-15e5-4010-816c-0e6fa8c43d0e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.013048
-fcc94dd2-7a01-4694-99f6-d2d743662380	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.017742
 fcccc970-6b58-4c2e-ac5e-994c46fd0b78	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.022644
 fcd1e1ce-c8c3-49ae-93fe-3788bb740c27	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.027625
 fce30ed4-0d48-4a87-8713-b9d2960024c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.032512
 fce3c1b1-c10b-4d1a-a74e-9749101eb77b	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.036588
-fce423ad-b050-4ee0-b4f6-f08cc32f37db	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.040355
 fce7a77b-b26f-46ab-9d0f-75c1270b8491	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.048399
 fcf1c18d-e3ca-4725-bdb2-fbbb8d6f190f	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.053904
 fcf4eb17-7410-4ac9-b196-93b3fa4b4e42	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.059634
@@ -10905,15 +9535,11 @@ fd136c33-0852-414b-bff5-bd9eb4be154c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 fd17149d-cc35-4387-a869-f39b340c3597	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.091764
 fd21256a-7d1f-4280-8239-cbc46b236303	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.096788
 fd254e93-5cfc-482d-8303-f25959b97a22	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.101837
-fd27ad48-0e90-40e9-840d-f0e4e9674e21	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.106746
 fd2e4aba-fd66-4e8b-95fa-9611c208b874	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.112308
 fd4a92cb-dd3b-4cc1-b053-888cd2658fc0	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.117569
 fd4f9cc1-5036-498e-8cc1-97b8059ff454	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.122029
-fd5b684b-318d-41ba-a2dc-638b94071031	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.127859
 fd5f8100-0061-41db-a48e-8e87c623c0ce	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.132645
-fd677bd3-990c-40cb-aabe-70bc2161ae00	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.13766
 fd88bdc4-8d82-4347-9235-66306f5ba47d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.147933
-fd93ebf5-d05c-4921-8e89-d1e8fdd41932	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.152743
 fd970247-a8ff-4c5b-ae12-c4573471d969	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.158432
 fdb049f5-b45c-4af8-873c-f51851710df9	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.162425
 fdb1c3c6-7b56-4977-af8b-c4f2144ac88d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.166439
@@ -10921,14 +9547,12 @@ fdb8dc01-30bf-4e04-b0a9-895df9847d78	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 fdcd9c61-f347-40cb-8915-055b4665999a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.174522
 fdcffbfc-77dd-4df3-9adf-cfcbeca43a07	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.17952
 fdd5b0ba-60cb-498a-84ed-b9aabad71eff	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.184011
-fdda3cac-c8f7-4b35-b409-b863f14596c5	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.188857
 ffcc65da-9ce0-48ca-b54b-d7eea8f061de	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.515896
 005d1b61-f113-4d57-abf9-2f7fb3c5bc11	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.473759
 00da35ee-5c5d-41b2-bec0-9bde9d853c88	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.571181
 01486024-6b24-474d-8551-e9aab3b00355	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.679222
 01db0671-8687-456b-aa21-07bfb12defbf	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:00:58.780744
 026f7362-9768-4951-9df5-ce8f9df00878	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:00:58.8781
-02c14c52-c380-4840-a39c-b4d4c88a857e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:00:58.949003
 02e1c1bf-7f3b-45d4-b3f9-43d67c4d0b60	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:00:58.992888
 03536720-88bd-4876-ba24-62f801882030	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:00:59.078678
 03d80e80-6da6-4587-82d4-57a0ef91d590	4	\N	1	XuatXuong	\N	\N	2026-08-25 12:00:59.185171
@@ -10977,19 +9601,15 @@ fe678641-b550-4305-a64c-1d3baff653c1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 fe771739-aa37-4ee7-8ec1-9433b71d9962	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.277257
 fe7b753c-eefc-4761-9aae-54cd7a56edb1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.282917
 fe978079-fef9-498b-b1ea-488c7e168324	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.287962
-fe98b1cc-4337-45b6-8436-fc93f4518617	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.294192
 fe9de57f-1912-4141-9b81-83aa34e35d18	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.299596
 fea4bbf4-a121-46f4-b362-367cb6e05993	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.303476
 fea4dcfc-e700-420c-b13b-52001609f593	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.307758
-fea95cd0-4c2e-4faf-be01-cb5fdefd3da3	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.312859
 febcd042-bbdf-4269-ad60-92116f86bd37	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.32267
 febe75a6-6e34-443c-bafc-57ca9151d44e	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.328887
 fec71878-fbe4-4270-956f-2cd70fba62f3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.333766
-fec8929a-02f0-4c2f-a1bb-e2f3e33eea5d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.337323
 feda8c29-5d72-40dd-950e-1302d008024b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.342075
 feddf7e8-37a3-4dcc-bc66-2c31b8a2054a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.346836
 fee03efb-f221-440a-9adb-5a2550584c61	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.352227
-fee61254-914c-45e5-ac90-73e9572e8c0a	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.356506
 fee86998-8ef9-49ee-b035-34db67c63279	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.361059
 feead52d-8d08-47fa-a111-7195e18a78cf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.365664
 fef0d314-5d12-4e4b-8196-fc45509b261d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.369315
@@ -11001,13 +9621,11 @@ ff0b03ff-21bd-4e18-9f67-493d8d3fbf77	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 ff16e357-9d3d-4ff9-8da6-973d577feb97	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.395724
 ff1ff112-76f9-4da7-8763-88df9a1d6334	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.404807
 ff247a0b-24e6-4ff2-ad0f-4714083e365a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.412791
-ff268768-eec3-4cbc-b583-f2731fdf9e1e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.418391
 ff37d1fd-b147-4e6a-9adf-c4972cd25298	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.424069
 ff3fd59a-981d-4cc4-9672-c8a13dfd6ed7	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.42932
 ff4a6db8-a1aa-46d2-9a2e-0790e020abb4	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.435311
 ff4fee15-8460-4047-acf2-97040efa3394	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.440437
 ff54a9dc-152e-4bee-903e-16a4f0490291	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.444625
-ff59ee96-6ecf-4365-80d8-7791cd12af6d	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.448414
 ff6780b6-5fcd-4599-9708-81b8b67974b8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:45.452495
 ff719ec7-dd65-4c71-b71a-13b61daf2578	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.456499
 ff80fdb2-2bf4-4138-8e10-a76c782da018	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.460388
@@ -11019,7 +9637,6 @@ ff9988af-4c91-4d25-b253-51f20ddcd660	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 ff9db72c-7b33-4490-8ceb-0894755e0400	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.484571
 ffb1132a-f17e-4160-96d6-ec5816ba661d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.494201
 ffbd13f8-8a24-466c-87f0-9d9b043b98f4	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.49979
-ffc22533-4051-41b1-bc11-36b7488ac350	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:45.505311
 ffc74a3d-5667-42ae-891b-5a67c650ce31	1	\N	1	XuatXuong	\N	\N	2026-08-25 11:58:03.127994
 ffcca5db-d041-4541-b7c3-d4d581d24d5e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:45.521296
 ffdd14fb-2837-4aa8-900f-688e59f9d1fc	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:45.527074
@@ -11041,7 +9658,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 168a45c8-b701-4cb7-b535-3aa576cadc74	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.599869
 16d0863d-0c7a-40ae-8e1c-e5a3be281743	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.643316
 1765ee66-2e8b-41b5-837e-2a857d5414fc	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:02.744581
-17f766f9-82be-49a5-b599-f66b1d556691	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:45.605789
 18992260-787b-4672-872a-249320d97fd8	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:02.973439
 1923063e-edbd-4461-9e7a-58c7365e26d6	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.058096
 1a06480c-0360-4f05-8bb2-46dc6d677278	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:03.155783
@@ -11085,7 +9701,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 2b3bb7b7-86c5-4d33-b62f-a78a283e8e94	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:06.379706
 2b83275f-59c8-43e5-9718-39b9fa366d7b	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.4548
 2c1d00cb-5938-47f2-9264-f00e1ea5a005	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.548125
-2c9b83e1-21ee-4892-8d58-95673caea875	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:47.202072
 2d3d64c2-5a72-4bc9-bd31-ddbf94f1c90a	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:06.743198
 2dac67b6-80b8-49fb-b3e4-8a84feb168dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.846211
 2e17f7dd-91f6-44dc-a6f8-158926296316	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:06.898412
@@ -11100,7 +9715,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 32b291c7-649b-484f-803f-8b05eb4c8d52	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.65438
 3321233d-5ea8-4e05-a820-184f85be40ff	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:07.753616
 338694ce-55ee-4f70-b117-52e665689809	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:07.859843
-33e5f1d8-4d8f-4b5a-a767-5a473fd604c4	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:07.947495
 343271c4-24b8-4324-b103-881195c862a2	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:08.022931
 34e0c18a-81c5-4828-8d2c-0382d71d494b	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:08.104285
 35580f41-a785-47c1-89f9-db315370300a	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:08.191789
@@ -11118,7 +9732,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 3b21f04e-1555-4903-81a5-c26f4d48ee13	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.263998
 3bb5c87f-4fcd-4c22-9ed2-d4b3553ea365	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:09.349496
 3c1c8897-3416-41cc-8a8c-37ff23996c97	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.439221
-3c4ef820-7b75-48c0-b71e-3fca7c2e5fa1	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:48.332257
 3c930305-a48f-4610-a975-47fe4d980c3a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.53095
 3d06c766-172d-48bd-b48b-906fdc7c1d85	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.635179
 3d77db74-03f1-44e7-98c1-fd5348a6885c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:09.746027
@@ -11161,7 +9774,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 4ef035d6-9b4d-46fe-936b-5b42ed640098	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.88906
 4f5925e3-b678-479c-9c9c-6251999b6612	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:12.989487
 4ff75d8f-9e40-4003-8865-651ae0633bf5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.084598
-50601073-9173-4e2f-9fe3-0ffaebc2c332	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:13.144479
 509339d0-37e3-4e29-a179-364b6d3e38dd	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.183619
 5134f810-2ab5-48c6-8d6c-d21835dc1b19	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:13.284535
 51ce2af0-dae4-4345-a26e-f2de3cc957e6	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:13.377445
@@ -11179,7 +9791,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 56b2d1fa-4483-4cb8-acf6-0df35fc72164	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.40419
 574a4643-247a-48cb-a5cb-26813c1c285d	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.495341
 57c075ed-fcf9-49d3-81e8-8f5e845f85c5	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.595119
-58544a33-8d84-491e-a98a-2e05f51436b6	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.555646
 589a7481-6c3a-4a60-b810-edc4eb756ec3	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.748198
 58df15e2-add1-40fb-b7a6-2f9a0ed16d4b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.791738
 594efb63-2b70-465d-9eed-cde353f49d99	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:14.88161
@@ -11192,7 +9803,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 5c2322c6-c23e-4ca5-9e5a-6d70db59faa7	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:15.34969
 5c85d757-4147-48f2-805c-cae36fc09d02	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.44435
 5d3930a6-7601-426d-aeaf-42408e757de1	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.534119
-5dbb7f49-1279-4195-873e-c8e86a8d2b1b	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:50.965785
 5e305b2c-7808-40d3-9df8-4647911787bf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.711583
 5e5b74e5-2955-4dd2-a6b7-223e2e9dc987	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:15.730011
 5edf85ce-8b1e-43ad-b146-0cf0b6f2d76e	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:15.815885
@@ -11244,7 +9854,6 @@ fff6fe54-f177-4157-91be-258b1df7bcb3	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:0
 7307ffa4-d125-4ee0-9a2f-218650a1870b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.760454
 73883b91-79d4-4738-9ba5-5e7c2c6ca296	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:19.842473
 740924e0-b38e-44dc-9a37-ac9a4f5ea126	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:19.935452
-741c1fe5-1bb5-41a9-9608-52c29f99d939	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:52.796267
 747d0d18-7215-40a6-85b2-c3d317d20691	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.028549
 75067120-0ad3-4dc5-bccc-5df11c804c94	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:20.139271
 7599c7ca-21e3-4315-bb78-b216360421e0	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:20.232375
@@ -11352,7 +9961,6 @@ a678d117-25d9-4351-a3e8-b5f9f39db9ea	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 a6dcb4f9-ebb8-4d8a-a913-f42df5ded625	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.058596
 a76f928d-a968-4346-8c02-b155a4bc8d0b	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.15757
 a7eb7cf8-0c4e-4ff1-b7e1-a117eb48997d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:29.250705
-a8385798-85d3-4949-9366-65143c91a821	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:56.604816
 a872ac4d-d0d1-4661-a193-b98dcb773174	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.36836
 a90a2bdc-50ed-41f8-8db9-7caa0b33345c	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.460267
 a96db9a7-1eec-4b53-8971-bb37203107f9	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:29.514998
@@ -11373,7 +9981,6 @@ b0e879f1-57e2-4c41-bd59-231cbf5c05fe	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b15e8ff7-633c-4826-aa75-e56d7b610597	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.689331
 b1e1ff25-1a74-47e7-8ccd-a370c6c24210	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:30.776893
 b27cbd52-05dd-4c87-8479-5a7aef6978c1	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:30.866432
-b2ec304d-30d8-448d-98e6-57b069d7a63c	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:30.943736
 b31fae23-633d-4da5-adad-77edcf768dd8	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:30.979796
 b374eecd-d561-4117-99c1-975dee2d11af	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.064647
 b412e74c-3acf-49fc-b4a9-a7f6609012a9	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:31.153378
@@ -11381,7 +9988,6 @@ b4b933c9-f836-4394-aa8e-b06b7603cedf	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:
 b5511d29-cd5a-41bb-a471-248eb68e4149	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.34495
 b5fb81c3-b90a-4ea0-ba3b-91e6a4f35f63	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.477701
 b67ea2fd-a8bd-4f56-942f-0b527e0f5986	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:31.575099
-b6d87883-9f2d-4571-a903-6b23bea0ea31	3	\N	15	TrongKho	\N	\N	2026-08-25 11:57:57.628124
 b735b5e3-749d-46be-af4b-a03290ed50b5	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:31.693393
 b7c53ad0-a608-4cf1-bf59-19e31f9420cb	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.801593
 b82ec7b1-c7da-4018-97b3-88387dc73c72	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:31.905634
@@ -11402,7 +10008,6 @@ bedf5533-11c1-4bc5-9bb3-71f15da485f1	5	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:33.
 befa6c34-695e-4eed-ae21-c295006aa18d	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:33.143924
 bf97d95c-9ea0-450e-8a1d-ecd7934fc49c	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.230241
 bff2382e-75ee-4438-8448-89ec8c9ee0b0	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:33.312828
-c005a3a7-8dc2-43b4-8c17-f9ba0206391e	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:57:58.303249
 c09383de-5faa-45e0-97a6-32e086ffa591	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.404631
 c109e9a2-1e42-49c1-bde0-4a7cd2289173	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.50287
 c188738d-8439-408d-bdff-54fe106dee3e	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:33.596126
@@ -11498,12 +10103,10 @@ ebc3392f-a8fa-481e-9c7e-7945dc94f77c	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:4
 ec40061c-eb20-4723-91b4-f61a8324d945	999	\N	1	XuatXuong	\N	\N	2026-08-25 12:01:41.725103
 ecc019fc-ea64-4b24-8bf9-759e09f7ff8f	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:41.834282
 ed80f7b7-c93b-4962-90e7-b7d9e74c4e7a	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:41.998501
-edd733df-ae88-4774-a594-73360ac6a30e	2	\N	2	XuatXuong	\N	\N	2026-08-25 11:58:01.805347
 edfdbbe7-b9d4-4910-80b6-ab71ccde0cde	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.112781
 ee867758-bcbb-4076-bdc4-d6a59b06f39f	9952	\N	2045	TrongKho	\N	\N	2026-08-25 12:01:42.207078
 ee99950a-1536-4172-a3fb-ec65ab7ecb14	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.233011
 ee9b89ab-9e53-4a46-b989-a1c4b54e6622	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.238305
-eeb03209-d52b-4b63-a215-d1157bf3ab1e	8	\N	9	ThuHoi	\N	\N	2026-08-25 12:01:42.258482
 eeb1486c-7c49-4da3-8e67-98d7eb71e739	15	\N	2001	TrongKho	\N	\N	2026-08-25 12:01:42.263929
 eeb61dd5-301d-48d4-b914-45d155583e65	9951	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.268264
 eeb7b159-c714-44e2-b9dd-980139415cac	9953	\N	1	TrongKho	\N	\N	2026-08-25 12:01:42.272518
@@ -11850,43 +10453,23 @@ COPY public.internal_transfers (id, transfer_code, order_id, from_facility_id, t
 \.
 
 COPY public.inventories (id, facility_id, medicine_id, variant_id, stock_quantity, reserved_quantity, updated_at) FROM stdin;
-7	4	1	1	250	10	2026-08-25 07:01:41.304095
-8	4	2	2	120	5	2026-08-25 07:01:41.304095
-9	4	3	5	80	0	2026-08-25 07:01:41.304095
-10	3	1	1	2000	50	2026-08-25 07:01:41.304095
-12	3	4	6	800	0	2026-08-25 07:01:41.304095
-14	1	\N	780	50	0	2026-10-11 11:53:05.938
-15	1	\N	765	50	0	2026-10-11 11:53:05.99
-17	1	\N	807	25	0	2026-10-11 11:53:06.035
-19	1	\N	11	50	0	2026-10-11 11:53:06.122
-16	1	\N	806	23	0	2026-10-13 13:29:59.671681
 20	2046	\N	1	50	2	2026-10-14 14:39:07.891317
-13	1	\N	781	49	0	2026-10-14 15:02:50.341375
 21	2046	\N	781	1	1	2026-10-14 15:02:50.352
-18	1	\N	795	50	1	2026-10-21 14:56:08.462948
 22	1	15	19	2	0	2026-10-22 15:44:27.683463
-23	2	2	4	97	0	2026-10-22 15:44:27.683463
-24	2	1	1	9	0	2026-10-22 15:44:27.683463
-25	2	2	2	97	0	2026-10-22 15:44:27.683463
 26	2001	2	4	2	0	2026-10-22 15:44:27.683463
 27	2001	1	3	4995	0	2026-10-22 15:44:27.683463
 28	2001	1	1	4995	0	2026-10-22 15:44:27.683463
 29	2001	2	2	2	0	2026-10-22 15:44:27.683463
-31	1	1797	795	49	0	2026-10-22 15:44:27.683463
+31	1	1797	795	49	1	2026-10-22 15:44:27.683463
 32	2001	992	810	2	0	2026-10-22 15:44:27.683463
 33	2001	991	809	5	0	2026-10-22 15:44:27.683463
 34	1	1756	765	49	0	2026-10-22 15:44:27.683463
-11	3	2	2	1500	0	2026-10-22 15:44:27.683463
-36	3	2	4	1	0	2026-10-22 15:44:27.683463
 37	1	9	11	50	0	2026-10-22 15:44:27.683463
 38	1	1763	781	48	0	2026-10-22 15:44:27.683463
 39	1	1763	773	48	0	2026-10-22 15:44:27.683463
-40	15	15	18	91	0	2026-10-22 15:44:27.683463
-41	15	15	19	91	0	2026-10-22 15:44:27.683463
 42	1	1762	780	49	0	2026-10-22 15:44:27.683463
 43	1	9	13	50	0	2026-10-22 15:44:27.683463
 44	1	1762	770	49	0	2026-10-22 15:44:27.683463
-45	2	1	3	9	0	2026-10-22 15:44:27.683463
 46	2045	1	1	1000	0	2026-10-22 15:44:27.683463
 47	1	15	18	2	0	2026-10-22 15:44:27.683463
 48	1	1	1	2206	0	2026-10-22 15:44:27.683463
@@ -12702,28 +11285,6 @@ COPY public.qr_scan_logs (id, uid, scanned_by_user_id, latitude, longitude, ip_a
 7	b92cd02f-3e64-47a6-9cf1-c1cba9988a66	\N	\N	\N	192.0.2.8	\N	2026-03-27 14:34:51.334	SUSPICIOUS	0
 8	b92cd02f-3e64-47a6-9cf1-c1cba9988a66	\N	\N	\N	192.0.2.9	\N	2026-03-27 14:34:51.996	SUSPICIOUS	0
 9	0f47daf9-9276-4701-b0ff-495e1a27872d	\N	\N	\N	192.0.2.10	\N	2026-04-09 19:52:37.089	AUTHENTIC	0
-10	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.11	\N	2026-04-09 20:32:42.428	AUTHENTIC	0
-11	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.12	\N	2026-04-10 14:23:25.327	AUTHENTIC	0
-12	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.13	\N	2026-04-10 14:24:51.046	AUTHENTIC	0
-13	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.14	\N	2026-04-10 14:24:55.267	AUTHENTIC	0
-14	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.15	\N	2026-04-16 08:26:53.261	AUTHENTIC	0
-15	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.16	\N	2026-04-16 11:02:24.348	SUSPICIOUS	0
-16	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.17	\N	2026-04-24 16:58:39.531	AUTHENTIC	0
-17	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.18	\N	2026-04-24 16:59:31.214	AUTHENTIC	0
-18	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.19	\N	2026-04-24 17:02:36.552	AUTHENTIC	0
-19	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.20	\N	2026-04-24 17:09:56.019	AUTHENTIC	0
-20	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.21	\N	2026-04-24 17:09:56.019	AUTHENTIC	0
-21	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.22	\N	2026-04-24 17:10:37.315	AUTHENTIC	0
-22	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.23	\N	2026-04-24 17:10:37.435	AUTHENTIC	0
-23	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.24	\N	2026-04-24 17:10:43.193	AUTHENTIC	0
-24	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.25	\N	2026-04-24 17:10:43.193	AUTHENTIC	0
-25	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.26	\N	2026-04-24 17:10:49.187	AUTHENTIC	0
-26	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.27	\N	2026-04-24 17:11:43.346	AUTHENTIC	0
-27	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.28	\N	2026-04-24 17:11:43.349	AUTHENTIC	0
-28	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.29	\N	2026-04-24 17:13:16.833	AUTHENTIC	0
-29	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.30	\N	2026-04-24 17:13:16.834	AUTHENTIC	0
-30	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.31	\N	2026-04-24 17:14:36.274	AUTHENTIC	0
-31	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.32	\N	2026-04-24 17:19:03.245	AUTHENTIC	0
 38	11111111-1111-1111-1111-111111111111	\N	\N	\N	\N	\N	2026-04-24 08:00:00	AUTHENTIC	0
 39	11111111-1111-1111-1111-111111111111	\N	\N	\N	\N	\N	2026-04-24 12:00:00	AUTHENTIC	0
 40	22222222-2222-2222-2222-222222222222	\N	\N	\N	\N	\N	2026-04-24 09:00:00	AUTHENTIC	0
@@ -12750,28 +11311,11 @@ COPY public.qr_scan_logs (id, uid, scanned_by_user_id, latitude, longitude, ip_a
 61	22222222-2222-2222-2222-222222222222	\N	\N	\N	\N	\N	2026-04-24 09:00:45	AUTHENTIC	0
 62	33333333-3333-3333-3333-333333333333	\N	\N	\N	\N	\N	2026-04-24 10:00:00	SUSPICIOUS	0
 63	33333333-3333-3333-3333-333333333333	\N	\N	\N	\N	\N	2026-04-24 10:30:00	AUTHENTIC	0
-64	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.65	\N	2026-05-14 09:20:02.506	AUTHENTIC	0
-65	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.66	\N	2026-05-14 09:20:02.506	AUTHENTIC	0
-66	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.67	\N	2026-05-20 12:04:48.787	AUTHENTIC	0
-67	bbbf80ea-0a2b-40b0-9911-14a43c3aa7e4	\N	\N	\N	192.0.2.68	\N	2026-05-20 12:04:48.871	AUTHENTIC	0
-68	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.69	\N	2026-05-20 12:10:34.583	AUTHENTIC	0
-69	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.70	\N	2026-05-20 12:10:34.583	AUTHENTIC	0
-70	55156c8c-6b7c-4ea5-bd44-00bf76f08254	\N	\N	\N	192.0.2.71	\N	2026-05-20 12:11:03.991	AUTHENTIC	0
-71	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.72	\N	2026-05-20 12:15:22.83	AUTHENTIC	0
-72	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.73	\N	2026-05-20 12:15:48.939	AUTHENTIC	0
-73	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.74	\N	2026-05-20 12:16:30.883	AUTHENTIC	0
-74	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.75	\N	2026-05-20 12:16:44.699	AUTHENTIC	0
 75	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.76	\N	2026-05-20 12:21:39.576	AUTHENTIC	0
 76	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.77	\N	2026-05-20 12:24:32.526	AUTHENTIC	0
-77	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.78	\N	2026-05-20 12:25:02.917	AUTHENTIC	0
-78	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.79	\N	2026-05-20 12:26:53.803	AUTHENTIC	0
 79	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.80	\N	2026-05-20 12:27:03.237	AUTHENTIC	0
-80	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.81	\N	2026-05-20 12:28:00.876	AUTHENTIC	0
-81	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.82	\N	2026-05-20 12:28:12.952	AUTHENTIC	0
 82	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.83	\N	2026-05-20 12:31:01.3	AUTHENTIC	0
 83	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.84	\N	2026-05-20 12:33:24.808	AUTHENTIC	0
-84	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.85	\N	2026-05-20 12:33:42.954	AUTHENTIC	0
-85	c2496ea8-74ac-4f5e-84ad-6eb235674083	\N	\N	\N	192.0.2.86	\N	2026-05-20 12:34:36.839	AUTHENTIC	0
 86	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.87	\N	2026-05-20 12:38:00.335	AUTHENTIC	0
 87	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.88	\N	2026-05-20 12:38:09.154	AUTHENTIC	0
 88	5dbf5a73-6bd9-4a78-8f6f-0bdca4ab8d9a	\N	\N	\N	192.0.2.89	\N	2026-05-20 12:38:13.857	AUTHENTIC	0
@@ -12830,7 +11374,7 @@ SELECT pg_catalog.setval('public.internal_transfers_id_seq', 1, true);
 SELECT pg_catalog.setval('public.inventories_id_seq', 52, true);
 SELECT pg_catalog.setval('public.inventory_logs_id_seq', 3, true);
 SELECT pg_catalog.setval('public.loyalty_point_logs_id_seq', 11, true);
-SELECT pg_catalog.setval('public.manufacturers_id_seq', 391, true);
+SELECT pg_catalog.setval('public.manufacturers_id_seq', 442, true);
 SELECT pg_catalog.setval('public.medicines_id_seq', 1845, true);
 SELECT pg_catalog.setval('public.moderation_audit_logs_id_seq', 28, true);
 SELECT pg_catalog.setval('public.moderation_reports_id_seq', 8, true);

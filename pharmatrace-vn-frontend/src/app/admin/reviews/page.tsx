@@ -618,6 +618,7 @@ export default function AdminReviewsPage() {
             {Math.min(page * pageSize, total)} of {total} reviews
           </span>
           <Pagination
+            className="ml-auto"
             current={page}
             pageSize={pageSize}
             total={total}
@@ -785,12 +786,13 @@ export default function AdminReviewsPage() {
 
         {/* Mobile Pagination */}
         {total > 0 && (
-          <div className="p-4 flex flex-col items-center justify-between gap-3 border-t border-gray-100">
-            <span className="text-xs text-gray-500">
+          <div className="p-4 flex flex-col sm:flex-row items-end sm:items-center justify-between gap-3 border-t border-gray-100">
+            <span className="text-xs text-gray-500 self-start sm:self-auto">
               Showing {(page - 1) * pageSize + 1} -{' '}
               {Math.min(page * pageSize, total)} of {total} reviews
             </span>
             <Pagination
+              className="ml-auto"
               current={page}
               pageSize={pageSize}
               total={total}

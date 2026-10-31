@@ -135,7 +135,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Main Header — Solid Brand Blue (#004996) */}
-      <div className="bg-[#004996] border-b border-[#003b7a] shadow-md">
+      <div className="bg-[#004996]">
         <div className="max-w-[1440px] mx-auto px-4">
           <div className="flex items-center gap-6 h-[60px] justify-between">
             {/* Left: Logo + Categories dropdown + Nav Links */}
@@ -253,6 +253,13 @@ export const Header: React.FC = () => {
                     </Link>
 
                     <Link
+                      href="/account"
+                      className="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-black hover:bg-slate-100 rounded-xl transition-colors"
+                    >
+                      <User className="w-[18px] h-[18px] text-black shrink-0 stroke-[1.8]" />
+                      <span className="!text-black">My Profile</span>
+                    </Link>
+                    <Link
                       href="/account/orders"
                       className="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-black hover:bg-slate-100 rounded-xl transition-colors"
                     >
@@ -276,10 +283,10 @@ export const Header: React.FC = () => {
                     <button
                       type="button"
                       onClick={logout}
-                      className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-black hover:bg-slate-100 rounded-xl transition-colors cursor-pointer text-left"
+                      className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-red-600 hover:bg-red-50 rounded-xl transition-colors cursor-pointer text-left"
                     >
-                      <LogOut className="w-[18px] h-[18px] text-black shrink-0 stroke-[1.8]" />
-                      <span className="!text-black">Logout</span>
+                      <LogOut className="w-[18px] h-[18px] text-red-600 shrink-0 stroke-[1.8]" />
+                      <span className="!text-red-600">Logout</span>
                     </button>
                   </div>
                 </div>
@@ -366,6 +373,7 @@ export const Header: React.FC = () => {
                   </span>
                 )}
               </Link>
+              <Link href="/account/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold !text-slate-800 hover:bg-slate-50 rounded-xl">My profile</Link>
               <Link
                 href="/account/orders"
                 onClick={() => setMobileMenuOpen(false)}

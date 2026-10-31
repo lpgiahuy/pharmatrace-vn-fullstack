@@ -1,6 +1,6 @@
 # PharmaTrace VN - Database Architecture & Schema Specification
 
-PostgreSQL schema, development seed data, application permissions, and prescription RLS for **PharmaTrace VN**.
+PostgreSQL schema, development seed data, application permissions, and RLS for **PharmaTrace VN**.
 
 ---
 
@@ -21,7 +21,13 @@ database/
 │   ├── 06_cart_rls.sql             # Enforced customer cart ownership
 │   ├── 07_review_rls.sql           # Review ownership, moderation, reports and audit
 │   ├── 08_order_rls.sql            # Orders, fulfillment, transfers and loyalty ledger
-│   └── 09_voucher_rls.sql          # Voucher scopes and order-bound consumption
+│   ├── 09_voucher_rls.sql          # Voucher scopes and order-bound consumption
+│   ├── 10_facility_rls.sql         # Facility access
+│   ├── 11_employee_rls.sql         # Employee access
+│   ├── 12_customer_rls.sql         # Customer access
+│   ├── 13_catalog_rls.sql          # Product and category access
+│   ├── 14_employee_facility_rls.sql # Facility-scoped employee management
+│   └── 15_manufacturer_rls.sql     # Manufacturer access and employee assignment guard
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -41,10 +47,11 @@ database/
     ├── cart_rls_test.sql           # Cart ownership and column-grant checks
     ├── review_rls_test.sql         # Review visibility and write restrictions
     ├── order_rls_test.sql          # Customer/facility ownership and transfer projection
-    └── voucher_rls_test.sql        # Exact-code previews, management and consumption
+    ├── voucher_rls_test.sql        # Exact-code previews, management and consumption
+    └── manufacturer_rls_test.sql   # Manufacturer permissions and facility assignment
 ```
 
-`backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth role/policies are prepared automatically; account RLS enforcement stays off until dependent modules are ready. Read [Auth RLS rollout](#auth-rls-rollout) before activation. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
+`backups/` contains ignored local database dumps. Master initialization includes both prescription and auth security scripts. Auth roles and policies are prepared by 03; scripts 11 and 12 enable RLS on employees and customers. Backend authentication must use the corresponding RLS configuration. These bootstrap scripts do not track applied versions or update existing Docker volumes automatically.
 
 ## Docker Development Setup
 
@@ -169,7 +176,7 @@ All tables must exist before importing the seed. Review grants are explicitly re
 
 ## Cart RLS
 
-Cart RLS is automatically enforced on new Docker databases through `security/06_cart_rls.sql`. It is independent of `AUTH_RLS_ENABLED`; keep that flag false on the shared application database during the account/module rollout.
+Cart RLS is automatically enforced on new Docker databases through `security/06_cart_rls.sql`. It is independent of `AUTH_RLS_ENABLED`; configure authentication to match the account policies installed on the target database.
 
 - Only customer context with matching customer ID can SELECT/INSERT/UPDATE/DELETE cart rows. Missing context and employee identities are denied, even if their numeric IDs match customers.
 - Runtime may insert customer/variant/quantity/timestamp, update only variant/quantity, and use the cart sequence. It cannot change ownership/row IDs, TRUNCATE, or reset the sequence.
@@ -209,7 +216,7 @@ Pop-Location
 
 The suite uses explicit localhost test URLs with that exact database name, never `.env` as a target. Without URLs it is skipped. It checks actual HTTP/JWT/Prisma/PostgreSQL behavior: ownership, same-ID employees, totals, quantities, sync, variant switch/merge/stock failures, clear/delete, forbidden direct writes, rollback and non-prescription checkout cart cleanup. Fixtures include synthetic accounts, products and stock, and are cleaned up after testing.
 
-To check cart API compatibility with future account RLS, activate `security/03_auth_rls.sql` on this test database only, set `CART_RLS_TEST_AUTH_ENABLED=true` and rerun. The order checkout regression is explicitly skipped in that mode: full order/account RLS remains a separate module rollout. Do not run suites concurrently against this same database.
+To test cart with account RLS, use a disposable database with the current auth, customer and employee policies, set `CART_RLS_TEST_AUTH_ENABLED=true` and rerun. Do not run suites concurrently against this database.
 
 ```powershell
 docker rm --force pharmatrace-cart-rls-test
@@ -218,7 +225,7 @@ Remove-Item Env:CART_RLS_TEST_DATABASE_URL, Env:CART_RLS_TEST_ADMIN_URL, Env:CAR
 
 ## Wishlist RLS
 
-Wishlist RLS is enabled automatically on a new Docker database, independently of `AUTH_RLS_ENABLED`. Keep that auth flag false on the shared application database until the account-dependent modules are ready.
+Wishlist RLS is enabled automatically on a new Docker database, independently of `AUTH_RLS_ENABLED`. Configure the authentication flag to match the account policies installed on the target database.
 
 `security/05_wishlist_rls.sql` permits only a customer context (`app.current_user_type=customer`, `app.current_user_role=CUSTOMER`) whose ID matches `customer_wishlists.customer_id`:
 
@@ -264,7 +271,7 @@ Pop-Location
 
 The suite requires those explicit localhost URLs and the database name above; it never uses `.env` as a test target. Without test URLs the suite is skipped, not verified. It tests HTTP, JWT, Prisma, cross-customer isolation, employee rejection, product relations, pagination/search/count, batch checks, duplicate-add concurrency, delete idempotence, forbidden database writes and context cleanup after rollback.
 
-To verify compatibility with future account RLS, activate `security/03_auth_rls.sql` **on this disposable database only**, set `WISHLIST_RLS_TEST_AUTH_ENABLED=true` in the test shell, and rerun the same suite. No other integration suite should share this test database concurrently.
+To test wishlist with account RLS, use a disposable database with the current auth, customer and employee policies, set `WISHLIST_RLS_TEST_AUTH_ENABLED=true`, and rerun. No other integration suite should share this test database concurrently.
 
 After testing:
 
@@ -280,7 +287,7 @@ Implementation branch: `feature/auth-rbac`. Date: 2026-10-25.
 
 ### Rollout status
 
-**Docker automatically prepares auth roles and policies for new databases** through `security/03_auth_rls.sql`, called by master initialization. The script does not ENABLE/FORCE RLS on the two account tables by default. The backend still defaults `AUTH_RLS_ENABLED` to `false`.
+**Docker automatically prepares auth roles and policies for new databases** through `security/03_auth_rls.sql`, called by master initialization. The 03 script alone does not ENABLE/FORCE account RLS by default; master initialization later applies scripts 11 and 12, which enable it. Configure the backend authentication flag for the deployed database policies.
 
 Policy preparation and enforcement activation are separate steps. Prescription enforcement can run because its workflow has been adapted; customers/employees are still used by modules without the required context. Do not delete an existing data volume to force Docker initialization to run again.
 
@@ -416,7 +423,7 @@ docker exec phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-
 
 Use container/database names matching your environment. The script is transactional, can be reapplied, and rejects unknown policies or audit foreign keys for manual review. Changing the audit FK to SET NULL may wait for table locks; allow an appropriate maintenance window. Rolling back only the code is unsafe because old code does not supply review write context. If rollback is needed, stop traffic and restore matching code/grants/FKs/policies from the saved baseline; do not disable RLS automatically on errors.
 
-Keep `AUTH_RLS_ENABLED=false` on the shared database during this phase. Review queries for customer/employee names are not yet compatible with enforcing RLS on all account tables; complete that work with the account rollout and dependent modules.
+Use the backend authentication configuration that matches the deployed account policies and test review visibility on a disposable database.
 
 ### Review-specific testing
 
@@ -477,7 +484,7 @@ docker exec phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-
 
 Use container/database names matching your environment. The script is transactional, refuses unknown policies and can be reapplied. It replaces the two earlier prescription order policies with shared order policies; do not rerun only `02_prescription_rls.sql` after this rollout. Do not rerun master/seed or delete the volume to upgrade. New volumes receive script 08 from master after the preceding scripts.
 
-Keep `AUTH_RLS_ENABLED=false` during this rollout. This script does not enable RLS for inventories/medicine boxes, vouchers or account/point balances; checkout still needs their existing baseline grants. Context is supplied by the trusted server and does not protect against someone holding app_user credentials or executing arbitrary SQL. This is not complete database-wide authorization. To roll back, stop traffic/jobs and restore matching code/policies/grants/constraints from the saved baseline; do not disable RLS automatically to bypass errors.
+This script does not enable RLS for inventories/medicine boxes, vouchers or account/point balances; checkout still needs their existing baseline grants. Context is supplied by the trusted server and does not protect against someone holding app_user credentials or executing arbitrary SQL. This is not complete database-wide authorization. To roll back, stop traffic/jobs and restore matching code/policies/grants/constraints from the saved baseline; do not disable RLS automatically to bypass errors.
 
 ### Testing on a separate database
 
@@ -533,7 +540,7 @@ npx prisma generate
 Pop-Location
 ```
 
-Use the correct container/database names. Deploy this script after 08: it also grants order insertion of `voucher_id`, which the earlier order grant list does not include. The script is transactional, can be reapplied, and refuses unknown voucher policies or an incompatible existing voucher FK. Do not rerun master/seed or reset the volume. New volumes receive 09 automatically from master. Old code performs unscoped voucher queries and must not serve traffic after enforcement; new code requires the new column and policies. Roll back code/schema/grants/policies together from a saved baseline rather than automatically disabling RLS. Keep `AUTH_RLS_ENABLED=false` during the current account-module rollout.
+Use the correct container/database names. Deploy this script after 08: it also grants order insertion of `voucher_id`, which the earlier order grant list does not include. The script is transactional, can be reapplied, and refuses unknown voucher policies or an incompatible existing voucher FK. Do not rerun master/seed or reset the volume. New volumes receive 09 automatically from master. Old code performs unscoped voucher queries and must not serve traffic after enforcement; new code requires the new column and policies. Roll back code/schema/grants/policies together from a saved baseline rather than automatically disabling RLS. Configure backend authentication to match the deployed account policies.
 
 ### Isolated voucher tests
 
@@ -572,17 +579,17 @@ For an existing database, back up and test a copy, stop backend traffic, apply 1
 
 ## Employee RLS
 
-`security/11_employee_rls.sql` enables and forces RLS on employees after the auth policies in 03 and facility security in 10. SUPER_ADMIN manages all employees through transaction-local management context. Other staff retain self profile and exact-email login access through the existing auth policies. Profile writes cannot change roles, facilities, status or other protected columns. Public unscoped facility queries no longer expose employee rows; facility administration can count employees before deletion. This does not grant STORE_MANAGER access to employee administration.
+`security/11_employee_rls.sql` enables and forces RLS on employees after the auth policies in 03 and facility security in 10. SUPER_ADMIN manages all employees through transaction-local management context. After applying security/14_employee_facility_rls.sql, STORE_MANAGER may manage PHARMACIST and WAREHOUSE_STAFF accounts only at their assigned facility; managers cannot assign elevated roles or move staff across facilities. Other staff retain self profile and exact-email login access through the existing auth policies. Profile writes cannot change roles, facilities, status or other protected columns. Public unscoped facility queries no longer expose employee rows; facility administration can count employees before deletion. Employee management fails closed until the facility-scoped policy is present.
 
-Apply 11 with an owner connection to a backed-up test copy first, stop traffic, then deploy matching backend and policies together. Keep AUTH_RLS_ENABLED=false until customer authorization is complete; employee RLS is enforced independently. Never rerun base grants after restricted scripts. Context trusts the backend; app_user credentials and arbitrary SQL must remain private. Rollback requires restoring the saved policies/grants and matching code. Existing 03 policy preflight intentionally rejects rerunning auth setup over additional employee policies.
+Apply 11 and then 14 with an owner connection to a backed-up test copy first, stop traffic, then deploy matching backend and policies together. Configure backend authentication to match the deployed account policies; employee RLS is enforced independently. Never rerun base grants after restricted scripts. Context trusts the backend; app_user credentials and arbitrary SQL must remain private. Rollback requires restoring the saved policies/grants and matching code. Existing 03 policy preflight intentionally rejects rerunning auth setup over additional employee policies.
 
-SQL checks: `tests/employee_rls_test.sql`. HTTP tests require explicit localhost EMPLOYEE_RLS_TEST_DATABASE_URL and EMPLOYEE_RLS_TEST_ADMIN_URL targeting only the disposable database pharmatrace_employee_rls_test. They cover login, administration, profile writes, privilege escalation and missing FORCE. Do not run other suites on that database concurrently.
+SQL checks: `tests/employee_rls_test.sql` and `tests/employee_facility_rls_test.sql`. HTTP tests require explicit localhost EMPLOYEE_RLS_TEST_DATABASE_URL and EMPLOYEE_RLS_TEST_ADMIN_URL targeting only the disposable database pharmatrace_employee_rls_test. They cover login, administration, profile writes, privilege escalation and missing FORCE. Do not run other suites on that database concurrently.
 
 ## Customer RLS
 
-`security/12_customer_rls.sql` enables and forces RLS for customers after the existing auth, order, review and employee policies. Customers can access their own account through the auth context. SUPER_ADMIN manages customers globally; STORE_MANAGER and PHARMACIST can access and change status only for customers with an order visible at their facility. Account profiles cannot directly change status or reward points. Existing order operations handle loyalty changes within their scoped transactions. Review moderators can access customers attached to reviews; staff remain limited by customer facility scope. Public review responses may show the existing anonymous-name fallback because public sessions cannot read customer rows.
+`security/12_customer_rls.sql` enables and forces RLS for customers after the existing auth, order, review and employee policies. Customers can access their own account through the auth context. SUPER_ADMIN manages customers globally; STORE_MANAGER can access and change status only for customers with an order visible at their facility; PHARMACIST has read-only access to the same scope. Account profiles cannot directly change status or reward points. Existing order operations handle loyalty changes within their scoped transactions. Review moderators can access customers attached to reviews; staff remain limited by customer facility scope. Public review responses may show the existing anonymous-name fallback because public sessions cannot read customer rows.
 
-Apply 12 on a tested backup with an owner connection, while backend traffic is stopped, before starting matching code. New Docker volumes apply it through master initialization; existing volumes do not automatically rerun it. Do not rerun base grants after security scripts. Keep AUTH_RLS_ENABLED=false until the complete authentication rollout is verified. Context relies on the trusted backend and does not protect against arbitrary SQL executed with app_user credentials. Back up policies, grants and code together for rollback. The auth setup script's preflight rejects later policies if rerun.
+Apply 12 on a tested backup with an owner connection, while backend traffic is stopped, before starting matching code. New Docker volumes apply it through master initialization; existing volumes do not automatically rerun it. Do not rerun base grants after security scripts. Configure backend authentication to match the deployed account policies. Context relies on the trusted backend and does not protect against arbitrary SQL executed with app_user credentials. Back up policies, grants and code together for rollback. The auth setup script's preflight rejects later policies if rerun.
 
 `tests/customer_rls_test.sql` and `test/customer-rls.e2e-spec.ts` use disposable databases. The integration test requires explicit localhost CUSTOMER_RLS_TEST_DATABASE_URL and CUSTOMER_RLS_TEST_ADMIN_URL for a database named exactly pharmatrace_customer_rls_test.
 
@@ -593,3 +600,9 @@ Apply 12 on a tested backup with an owner connection, while backend traffic is s
 Test a backup first and stop application traffic before applying 13 with an owner connection and deploying matching backend code. New Docker volumes apply it through master init; existing volumes do not rerun initialization. Do not reapply base broad grants after restricted scripts. Database context is supplied by a trusted backend; arbitrary SQL using app_user credentials can forge it. Restore policies, grants and code together from a saved baseline for rollback.
 
 Run `tests/catalog_rls_test.sql` and `test/catalog-rls.e2e-spec.ts` against disposable databases. The HTTP test requires explicit localhost CATALOG_RLS_TEST_DATABASE_URL and CATALOG_RLS_TEST_ADMIN_URL targeting exactly pharmatrace_catalog_rls_test.
+
+## Manufacturer RLS and Existing Databases
+
+`security/15_manufacturer_rls.sql` applies manufacturer policies and prevents employee assignment to external manufacturer records. New databases receive it through master initialization. `tests/manufacturer_rls_test.sql` checks permitted and denied access in a rolled-back transaction.
+
+Existing volumes do not update automatically. For an older database, prepare and test a data-specific upgrade after backing up and reviewing existing relationships. Applying the RLS script alone does not upgrade the schema or clean historical data.

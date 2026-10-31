@@ -1,4 +1,4 @@
-export type FacilityType = 'MANUFACTURER' | 'CENTRAL_WAREHOUSE' | 'BRANCH_WAREHOUSE' | 'PHARMACY';
+export type FacilityType = 'FACTORY' | 'CENTRAL_WAREHOUSE' | 'BRANCH_WAREHOUSE' | 'PHARMACY';
 
 export interface Facility {
   id: number;
@@ -17,7 +17,7 @@ export interface Facility {
 
 export interface FacilityStats {
   total: number;
-  manufacturers: number;
+  factories: number;
   warehouses: number;
   pharmacies: number;
 }

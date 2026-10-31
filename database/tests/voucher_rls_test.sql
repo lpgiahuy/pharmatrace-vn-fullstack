@@ -31,7 +31,26 @@ DO $$ DECLARE affected integer; BEGIN
     IF affected <> 0 THEN RAISE EXCEPTION 'Pharmacist modified voucher'; END IF;
     RAISE NOTICE 'PASS pharmacist read-only access';
 END $$;
-SELECT set_config('app.current_user_role', 'STORE_MANAGER', true), set_config('app.voucher_scope', 'manage', true);
+SELECT set_config('app.current_user_role', 'STORE_MANAGER', true), set_config('app.voucher_scope', 'read', true);
+DO $$ BEGIN
+    IF (SELECT count(*) FROM public.vouchers) < 2 THEN RAISE EXCEPTION 'Manager cannot read vouchers'; END IF;
+END $$;
+SELECT set_config('app.voucher_scope', 'manage', true);
+DO $$ DECLARE affected integer; BEGIN
+    UPDATE public.vouchers SET status = 'INACTIVE' WHERE id = current_setting('test.voucher_id')::integer;
+    GET DIAGNOSTICS affected = ROW_COUNT;
+    IF affected <> 0 THEN RAISE EXCEPTION 'Manager updated voucher'; END IF;
+    DELETE FROM public.vouchers WHERE id = current_setting('test.voucher_id')::integer;
+    GET DIAGNOSTICS affected = ROW_COUNT;
+    IF affected <> 0 THEN RAISE EXCEPTION 'Manager deleted voucher'; END IF;
+    BEGIN
+        INSERT INTO public.vouchers (voucher_code, discount_type, discount_value, total_quantity, used_quantity, start_date, end_date)
+        VALUES ('MANAGER-UNAUTHORIZED', 'FIXED', 1000, 3, 0, now(), now() + interval '1 day');
+        RAISE EXCEPTION 'Manager created voucher';
+    EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+    RAISE NOTICE 'PASS manager is read-only';
+END $$;
+SELECT set_config('app.current_user_role', 'SUPER_ADMIN', true);
 DO $$ BEGIN
     BEGIN
         UPDATE public.vouchers SET used_quantity = 1 WHERE id = current_setting('test.voucher_id')::integer;
@@ -45,7 +64,7 @@ DO $$ BEGIN
         PERFORM setval('public.vouchers_id_seq', 1);
         RAISE EXCEPTION 'Runtime reset voucher sequence';
     EXCEPTION WHEN insufficient_privilege THEN NULL; END;
-    RAISE NOTICE 'PASS manager cannot edit counter, truncate or reset sequence';
+    RAISE NOTICE 'PASS admin cannot edit counter, truncate or reset sequence';
 END $$;
 SELECT set_config('app.current_user_type', 'customer', true), set_config('app.current_user_role', 'CUSTOMER', true),
        set_config('app.order_operation', 'checkout', true), set_config('app.voucher_scope', 'checkout', true),

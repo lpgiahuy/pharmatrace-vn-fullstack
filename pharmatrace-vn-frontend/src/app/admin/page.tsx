@@ -13,6 +13,7 @@ import {
 } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
 import { apiClient } from '@/services/api.client';
+import { formatRole } from '@/utils';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -100,21 +101,23 @@ export default function AdminDashboardPage() {
           <ArrowRightOutlined className="text-slate-300 text-xs group-hover:text-slate-600 transition-colors" />
         </div>
 
-        <div
-          onClick={() => router.push('/admin/staff')}
-          className="bg-white p-4 rounded-[6px] border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-[6px] bg-slate-100 text-slate-600 flex items-center justify-center text-sm group-hover:bg-slate-200 transition-colors">
-              <TeamOutlined />
+        {isSuperAdmin && (
+          <div
+            onClick={() => router.push('/admin/staff')}
+            className="bg-white p-4 rounded-[6px] border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all cursor-pointer flex items-center justify-between group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-[6px] bg-slate-100 text-slate-600 flex items-center justify-center text-sm group-hover:bg-slate-200 transition-colors">
+                <TeamOutlined />
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 m-0">Staff & RBAC</h3>
+                <p className="text-[11px] text-slate-400 m-0 mt-0.5">Employees & permissions</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-sm font-semibold text-slate-900 m-0">Staff & RBAC</h3>
-              <p className="text-[11px] text-slate-400 m-0 mt-0.5">Employees & permissions</p>
-            </div>
+            <ArrowRightOutlined className="text-slate-300 text-xs group-hover:text-slate-600 transition-colors" />
           </div>
-          <ArrowRightOutlined className="text-slate-300 text-xs group-hover:text-slate-600 transition-colors" />
-        </div>
+        )}
 
         <div
           onClick={() => router.push('/admin/customers')}
@@ -147,8 +150,8 @@ export default function AdminDashboardPage() {
               <span className="text-slate-600">{user.email || 'N/A'}</span>
             </Descriptions.Item>
             <Descriptions.Item label="Role">
-              <span className="text-xs font-medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded-[6px]">
-                {user.role}
+              <span className="text-xs font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-[6px]">
+                {formatRole(user.role)}
               </span>
             </Descriptions.Item>
             <Descriptions.Item label="Status">

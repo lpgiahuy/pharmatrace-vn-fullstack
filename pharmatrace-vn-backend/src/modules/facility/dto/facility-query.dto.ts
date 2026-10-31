@@ -8,7 +8,7 @@ export class FacilityQueryDto {
   @IsString()
   search?: string;
 
-  @ApiPropertyOptional({ description: 'Filter by facility type (MANUFACTURER, CENTRAL_WAREHOUSE, PHARMACY, etc.)' })
+  @ApiPropertyOptional({ description: 'Filter by facility type (FACTORY, CENTRAL_WAREHOUSE, BRANCH_WAREHOUSE, PHARMACY)' })
   @IsOptional()
   @IsString()
   type?: string;

@@ -18,6 +18,11 @@ describe('Employee management context', () => {
     await expect(service.withEmployeeManagement({ id: 1, type: 'customer', role: 'CUSTOMER' }, run)).rejects.toThrow();
     expect(run).not.toHaveBeenCalled();
   });
+  it('allows a store manager only with a facility context', async () => {
+    const result = await service.withEmployeeManagement({ id: 7, type: 'employee', role: 'STORE_MANAGER', facilityId: 3 }, async () => 'ok');
+    expect(result).toBe('ok');
+    expect(tx.$queryRaw.mock.calls.slice(1).map(call => call[1])).toEqual(['manage', '7', 'employee', 'STORE_MANAGER', '3']);
+  });
   it('fails closed if RLS is not ready', async () => {
     tx.$queryRaw.mockResolvedValue([{ ready: false }]);
     const run = jest.fn();
@@ -27,6 +32,6 @@ describe('Employee management context', () => {
   it('sets a transaction-local administrator identity', async () => {
     const result = await service.withEmployeeManagement({ id: 12, type: 'employee', role: 'SUPER_ADMIN' }, () => Promise.resolve('ok'));
     expect(result).toBe('ok');
-    expect(tx.$queryRaw.mock.calls.slice(1).map(call => call[1])).toEqual(['manage', '12', 'employee', 'SUPER_ADMIN']);
+    expect(tx.$queryRaw.mock.calls.slice(1).map(call => call[1])).toEqual(['manage', '12', 'employee', 'SUPER_ADMIN', '']);
   });
 });

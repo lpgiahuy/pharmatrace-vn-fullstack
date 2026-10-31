@@ -36,7 +36,7 @@ export class FacilityService {
     const limit = Math.max(1, Math.min(100, Number(query?.limit) || 10));
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: any = { facility_type: { notIn: ['MANUFACTURER', 'LEGACY_EXTERNAL'] } };
 
     if (query?.search && query.search.trim() !== '') {
       const s = query.search.trim();
@@ -48,6 +48,7 @@ export class FacilityService {
     }
 
     if (query?.type && query.type.trim() !== '') {
+      if (['MANUFACTURER', 'LEGACY_EXTERNAL'].includes(query.type.trim().toUpperCase())) return { items: [], pagination: { total: 0, page, limit, totalPages: 0 } };
       where.facility_type = { equals: query.type.trim(), mode: 'insensitive' };
     }
 
@@ -82,25 +83,26 @@ export class FacilityService {
 
   async getStats() {
     const all = await this.prisma.facilities.findMany({
+      where: { facility_type: { notIn: ['MANUFACTURER', 'LEGACY_EXTERNAL'] } },
       select: { id: true, facility_type: true },
     });
 
     const total = all.length;
-    let manufacturers = 0;
+    let factories = 0;
     let warehouses = 0;
     let pharmacies = 0;
 
     all.forEach((f) => {
       const t = (f.facility_type || '').toUpperCase();
-      if (t === 'MANUFACTURER') manufacturers++;
+      if (t === 'FACTORY') factories++;
       else if (t === 'PHARMACY') pharmacies++;
       else if (t === 'CENTRAL_WAREHOUSE' || t === 'BRANCH_WAREHOUSE') warehouses++;
-      else warehouses++;
+
     });
 
     return {
       total,
-      manufacturers,
+      factories,
       warehouses,
       pharmacies,
     };
@@ -108,6 +110,7 @@ export class FacilityService {
 
   async getDropdownList() {
     const list = await this.prisma.facilities.findMany({
+      where: { facility_type: { notIn: ['MANUFACTURER', 'LEGACY_EXTERNAL'] } },
       orderBy: { facility_name: 'asc' },
       select: {
         id: true,

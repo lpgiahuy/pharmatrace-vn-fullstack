@@ -15,6 +15,7 @@ describe('Voucher transaction context', () => {
     ['read', undefined, ''],
     ['read', { id: 1, role: 'CUSTOMER', type: 'customer' }, ''],
     ['read', { id: 1, role: 'WAREHOUSE_STAFF', type: 'employee' }, ''],
+    ['manage', { id: 1, role: 'STORE_MANAGER', type: 'employee' }, ''],
     ['manage', { id: 1, role: 'PHARMACIST', type: 'employee' }, ''],
     ['manage', { id: 1, role: 'ADMIN', type: 'employee' }, ''],
   ])('rejects invalid identity for %s', async (scope, actor, code) => {
