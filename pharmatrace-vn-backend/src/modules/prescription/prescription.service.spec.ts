@@ -38,13 +38,45 @@ describe('PrescriptionService review boundaries', () => {
     }));
   });
 
-  it('rejects non-pharmacist staff before reading review data', async () => {
+  it('rejects unauthorized staff before reading review data', async () => {
     const prisma = { withActor: jest.fn(), withOrder: jest.fn() };
     const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
 
     await expect(service.getReviewQueue({ ...pharmacist, role: 'WAREHOUSE_STAFF' }, 'PENDING_APPROVAL', 1, 20))
       .rejects.toBeInstanceOf(ForbiddenException);
     expect(prisma.withActor).not.toHaveBeenCalled();
+  });
+
+  it('allows STORE_MANAGER to read review queue scoped to their facility', async () => {
+    const manager = { id: 10, role: 'STORE_MANAGER', type: 'employee', facilityId: 1 };
+    const tx = {
+      order_prescription_reviews: {
+        findMany: jest.fn().mockResolvedValue([]),
+        count: jest.fn().mockResolvedValue(0),
+      },
+    };
+    const prisma = { withActor: jest.fn((actor, run) => run(tx)), withOrder: jest.fn((actor, run) => run(tx)) };
+    const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
+
+    await service.getReviewQueue(manager, 'PENDING_APPROVAL', 1, 20);
+
+    expect(prisma.withActor).toHaveBeenCalledWith(
+      expect.objectContaining({ role: 'STORE_MANAGER', facilityId: 1 }),
+      expect.any(Function),
+    );
+    expect(tx.order_prescription_reviews.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { status: 'PENDING_APPROVAL', order: { export_facility_id: 1, order_status: { not: 'CANCELLED' } } },
+    }));
+  });
+
+  it('rejects STORE_MANAGER from deciding a prescription review', async () => {
+    const manager = { id: 10, role: 'STORE_MANAGER', type: 'employee', facilityId: 1 };
+    const prisma = { withActor: jest.fn(), withOrder: jest.fn() };
+    const service = new PrescriptionService(prisma as unknown as PrismaService, cloudinary as unknown as CloudinaryService);
+
+    await expect(service.decidePrescriptionReview(manager, 42, 'APPROVED'))
+      .rejects.toBeInstanceOf(ForbiddenException);
+    expect(prisma.withOrder).not.toHaveBeenCalled();
   });
 
   it('scopes the queue to the preparing facility', async () => {

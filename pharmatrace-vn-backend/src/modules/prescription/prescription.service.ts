@@ -25,8 +25,8 @@ export class PrescriptionService {
   }
 
   private staffActor(user: CurrentUserPayload) {
-    if (!['PHARMACIST', 'SUPER_ADMIN'].includes(user.role || '') || user.type !== 'employee') {
-      throw new ForbiddenException('A pharmacist account is required');
+    if (!['PHARMACIST', 'SUPER_ADMIN', 'STORE_MANAGER'].includes(user.role || '') || user.type !== 'employee') {
+      throw new ForbiddenException('A staff account with prescription access is required');
     }
     if (user.role !== 'SUPER_ADMIN' && !user.facilityId) {
       throw new ForbiddenException('A facility assignment is required');
@@ -219,6 +219,9 @@ export class PrescriptionService {
 
   async decidePrescriptionReview(user: CurrentUserPayload, reviewId: number, decision: 'APPROVED' | 'REJECTED', note?: string) {
     const actor = this.staffActor(user);
+    if (!['PHARMACIST', 'SUPER_ADMIN'].includes(actor.role)) {
+      throw new ForbiddenException('A pharmacist account is required to review prescriptions');
+    }
     if (decision === 'REJECTED' && !note?.trim()) throw new BadRequestException('A rejection reason is required');
     return this.prisma.withOrder('prescription', async (tx) => {
       const review = await tx.order_prescription_reviews.findFirst({

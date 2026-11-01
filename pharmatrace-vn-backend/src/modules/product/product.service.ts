@@ -10,6 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 import { authActor } from '../../common/auth-identity';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 export function formatProduct(item: any) {
   let realStock = 0;
@@ -27,6 +28,8 @@ export function formatProduct(item: any) {
     || item.medicine_categories?.[0]?.category
     || null;
 
+  const now = new Date();
+
   const baseVariant = item.packaging_variants?.find((pv: any) => pv.is_base_unit)
     || item.packaging_variants?.[0]
     || null;
@@ -39,23 +42,58 @@ export function formatProduct(item: any) {
           variantStock += Math.max(0, (inv.stock_quantity || 0) - (inv.reserved_quantity || 0));
         }
       }
+      const pvHasDiscount = Boolean(
+        (pv.discount_percent && Number(pv.discount_percent) > 0) ||
+        (pv.original_price && Number(pv.price) < Number(pv.original_price)),
+      );
+
+      // If a discount is configured, it is ONLY active if both sale_start_date and sale_end_date are set,
+      // and the current time is strictly within [sale_start_date, sale_end_date]
+      const isSaleActive = pvHasDiscount
+        ? Boolean(pv.sale_start_date && pv.sale_end_date) &&
+          new Date(pv.sale_start_date) <= now &&
+          new Date(pv.sale_end_date) >= now
+        : false;
+
+      const effectivePrice = (pvHasDiscount && isSaleActive)
+        ? Number(pv.price)
+        : (pv.original_price ? Number(pv.original_price) : Number(pv.price));
+      const origPrice = (pvHasDiscount && isSaleActive && pv.original_price)
+        ? Number(pv.original_price)
+        : null;
+      const discountPct = (pvHasDiscount && isSaleActive)
+        ? (pv.discount_percent ?? (origPrice && effectivePrice < origPrice ? Math.round(((origPrice - effectivePrice) / origPrice) * 100) : 0))
+        : 0;
+
       return {
         id: pv.id,
         unitName: pv.unit_name,
-        price: Number(pv.price),
-        originalPrice: pv.original_price ? Number(pv.original_price) : null,
-        discountPercent: pv.discount_percent ?? 0,
+        price: effectivePrice,
+        originalPrice: origPrice,
+        discountPercent: discountPct,
         isBaseUnit: Boolean(pv.is_base_unit),
         stock: variantStock,
         saleStartDate: pv.sale_start_date ? new Date(pv.sale_start_date).toISOString() : null,
         saleEndDate: pv.sale_end_date ? new Date(pv.sale_end_date).toISOString() : null,
+        isSaleActive,
       };
     })
     : []);
 
-  const hasVariantDiscount = Boolean(
-    baseVariant?.original_price && Number(baseVariant.price) < Number(baseVariant.original_price),
+  const baseHasDiscount = Boolean(
+    baseVariant && (
+      (baseVariant.discount_percent && Number(baseVariant.discount_percent) > 0) ||
+      (baseVariant.original_price && Number(baseVariant.price) < Number(baseVariant.original_price))
+    ),
   );
+
+  const isBaseSaleActive = baseHasDiscount
+    ? Boolean(baseVariant.sale_start_date && baseVariant.sale_end_date) &&
+      new Date(baseVariant.sale_start_date) <= now &&
+      new Date(baseVariant.sale_end_date) >= now
+    : false;
+
+  const hasVariantDiscount = Boolean(baseHasDiscount && isBaseSaleActive);
 
   const unitPrice = baseVariant
     ? (baseVariant.original_price ? Number(baseVariant.original_price) : Number(baseVariant.price || 0))
@@ -67,11 +105,11 @@ export function formatProduct(item: any) {
       ? Number(item.promotional_price)
       : null);
 
-  const discountPercent = baseVariant?.discount_percent
-    ? Number(baseVariant.discount_percent)
-    : (hasVariantDiscount && unitPrice > 0
-      ? Math.round(((unitPrice - Number(promotionalPrice)) / unitPrice) * 100)
-      : 0);
+  const discountPercent = hasVariantDiscount
+    ? (baseVariant?.discount_percent && Number(baseVariant.discount_percent) > 0
+      ? Number(baseVariant.discount_percent)
+      : (unitPrice > 0 && promotionalPrice ? Math.round(((unitPrice - Number(promotionalPrice)) / unitPrice) * 100) : 0))
+    : 0;
 
   return {
     id: item.id,
@@ -122,7 +160,10 @@ export function formatProduct(item: any) {
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) { }
 
   async findAll(query?: ProductQueryDto) {
     const page = Math.max(1, Number(query?.page) || 1);
@@ -360,23 +401,46 @@ export class ProductService {
   }
 
   async getManufacturers(): Promise<string[]> {
-    const records = await this.prisma.medicines.findMany({
-      where: {
-        status: 'ACTIVE',
-        manufacturer: { not: null },
-      },
-      select: {
-        manufacturer: true,
-      },
-      distinct: ['manufacturer'],
-      orderBy: {
-        manufacturer: 'asc',
-      },
-    });
+    const [records, mfgRows] = await Promise.all([
+      this.prisma.medicines.findMany({
+        where: {
+          status: 'ACTIVE',
+          manufacturer: { not: null },
+        },
+        select: {
+          manufacturer: true,
+        },
+        distinct: ['manufacturer'],
+        orderBy: {
+          manufacturer: 'asc',
+        },
+      }),
+      (this.prisma as any).manufacturers
+        ?.findMany({
+          where: {
+            status: 'ACTIVE',
+          },
+          select: {
+            name: true,
+          },
+          orderBy: {
+            name: 'asc',
+          },
+        })
+        .catch(() => []) ?? Promise.resolve([]),
+    ]);
 
-    return records
-      .map((r) => r.manufacturer?.trim())
-      .filter((m): m is string => Boolean(m));
+    const namesSet = new Set<string>();
+    if (Array.isArray(mfgRows)) {
+      for (const m of mfgRows) {
+        if (m?.name?.trim()) namesSet.add(m.name.trim());
+      }
+    }
+    for (const r of records) {
+      if (r.manufacturer?.trim()) namesSet.add(r.manufacturer.trim());
+    }
+
+    return Array.from(namesSet).sort((a, b) => a.localeCompare(b));
   }
 
   async getBrands(): Promise<string[]> {
@@ -440,7 +504,33 @@ export class ProductService {
     };
   }
 
+  private validatePackagingVariants(variants?: any[]) {
+    if (!variants || !Array.isArray(variants)) return;
+    for (let i = 0; i < variants.length; i++) {
+      const pv = variants[i];
+      const price = Number(pv.price) || 0;
+      const origPrice = pv.originalPrice ? Number(pv.originalPrice) : 0;
+      const pct = Number(pv.discountPercent) || 0;
+      const hasDiscount = pct > 0 || (origPrice > 0 && price > 0 && origPrice > price);
+
+      if (hasDiscount) {
+        if (!pv.saleStartDate || !pv.saleEndDate) {
+          throw new BadRequestException(`Packaging variant "${pv.unitName || `Variant #${i + 1}`}" has a discount configured, so both sale start date and sale end date are required.`);
+        }
+        const start = new Date(pv.saleStartDate);
+        const end = new Date(pv.saleEndDate);
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+          throw new BadRequestException(`Invalid date format for packaging variant "${pv.unitName || `Variant #${i + 1}`}".`);
+        }
+        if (end <= start) {
+          throw new BadRequestException(`Sale end date must be after sale start date for packaging variant "${pv.unitName || `Variant #${i + 1}`}".`);
+        }
+      }
+    }
+  }
+
   async create(dto: CreateProductDto, user: CurrentUserPayload) {
+    this.validatePackagingVariants(dto.packagingVariants);
     return this.prisma.withCatalogManagement(authActor(user), async tx => {
       const primaryId = dto.primaryCategoryId || dto.categoryId;
       const rawCatIds = Array.isArray(dto.categoryIds) ? dto.categoryIds : [];
@@ -523,6 +613,9 @@ export class ProductService {
   }
 
   async update(id: number, dto: UpdateProductDto, user: CurrentUserPayload) {
+    if (dto.packagingVariants !== undefined) {
+      this.validatePackagingVariants(dto.packagingVariants);
+    }
     return this.prisma.withCatalogManagement(authActor(user), async tx => {
       await this.findOne(id);
 
@@ -666,34 +759,34 @@ export class ProductService {
     return this.prisma.withCatalogManagement(authActor(user), async tx => {
       const item = await this.findOne(id);
 
-      const [orderItemCount, batchCount] = await Promise.all([
+      const [hasOrderHistory, batchCount] = await Promise.all([
         this.prisma.withOrder('read', async tx => {
           const [history] = await tx.$queryRaw<{ present: boolean }[]>`SELECT public.product_has_order_history(${id}) AS present`;
-          return history.present ? 1 : 0;
+          return history.present;
         }, authActor(user)),
         tx.batches.count({ where: { medicine_id: id } }),
       ]);
 
-      if (orderItemCount > 0 || batchCount > 0) {
-        // Soft-delete to preserve transaction history
-        await tx.medicines.update({
-          where: { id },
-          data: { status: 'INACTIVE' },
-        });
+      if (hasOrderHistory || batchCount > 0) {
+        await tx.medicines.update({ where: { id }, data: { status: 'INACTIVE' } });
         return {
-          message: `Medicine "${item.medicineName}" has active orders or warehouse batches and was set to INACTIVE status to preserve historical integrity.`,
+          message: `Medicine "${item.medicineName}" has order history or warehouse batches and was set to INACTIVE status to preserve historical integrity.`,
           isSoftDeleted: true,
         };
       }
 
       await tx.medicines.delete({
         where: { id },
-    });
+      });
 
-    return {
-      message: `Medicine "${item.medicineName}" has been permanently deleted.`,
-      isSoftDeleted: false,
-    };
+      if (item.imageUrl && (item.imageUrl.includes('cloudinary.com') || item.imageUrl.includes('res.cloudinary.com'))) {
+        this.cloudinaryService.deleteImage(item.imageUrl).catch(() => {});
+      }
+
+      return {
+        message: `Medicine "${item.medicineName}" has been permanently deleted.`,
+        isSoftDeleted: false,
+      };
     });
   }
 

@@ -143,4 +143,46 @@ BEGIN
 END
 $$;
 
+SELECT set_config('app.current_user_id', '14', true);
+SELECT set_config('app.current_user_role', 'STORE_MANAGER', true);
+SELECT set_config('app.current_user_type', 'employee', true);
+SELECT set_config('app.current_unit_id', '1', true);
+
+DO $$
+DECLARE
+    prescription_count integer;
+    review_count integer;
+BEGIN
+    SELECT count(*) INTO prescription_count FROM public.prescriptions WHERE id = 1;
+    SELECT count(*) INTO review_count
+    FROM public.order_prescription_reviews
+    WHERE id = current_setting('test.review_id')::integer;
+    IF prescription_count <> 1 OR review_count <> 1 THEN
+        RAISE EXCEPTION 'Facility 1 store manager check failed: prescription=%, review=%', prescription_count, review_count;
+    END IF;
+    RAISE NOTICE 'PASS facility 1 store manager can read assigned prescription';
+END
+$$;
+
+SELECT set_config('app.current_user_id', '14', true);
+SELECT set_config('app.current_user_role', 'STORE_MANAGER', true);
+SELECT set_config('app.current_user_type', 'employee', true);
+SELECT set_config('app.current_unit_id', '2', true);
+
+DO $$
+DECLARE
+    prescription_count integer;
+    review_count integer;
+BEGIN
+    SELECT count(*) INTO prescription_count FROM public.prescriptions WHERE id = 1;
+    SELECT count(*) INTO review_count
+    FROM public.order_prescription_reviews
+    WHERE id = current_setting('test.review_id')::integer;
+    IF prescription_count <> 0 OR review_count <> 0 THEN
+        RAISE EXCEPTION 'Facility 2 store manager isolation failed: prescription=%, review=%', prescription_count, review_count;
+    END IF;
+    RAISE NOTICE 'PASS facility 2 store manager cannot read facility 1 prescription';
+END
+$$;
+
 ROLLBACK;

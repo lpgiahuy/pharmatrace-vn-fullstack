@@ -36,6 +36,7 @@ import {
 import { OrderStatusBadge } from '@/components/ui/Badge';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { OrderPackingModal } from '@/components/shared/OrderPackingModal';
+import { useAuthStore } from '@/store/useAuthStore';
 import styles from './page.module.css';
 
 interface Props {
@@ -59,6 +60,10 @@ export default function AdminOrderDetailPage({ params }: Props) {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [activeReviewId, setActiveReviewId] = useState<number | null>(null);
+
+  const getUser = useAuthStore((state) => state.getUser);
+  const currentUser = getUser();
+  const canReview = !currentUser?.role || ['PHARMACIST', 'SUPER_ADMIN'].includes(currentUser.role.toUpperCase());
 
   useEffect(() => {
     if (order?.prescriptionReview?.id) {
@@ -277,13 +282,6 @@ export default function AdminOrderDetailPage({ params }: Props) {
           {(normStatus === 'SHIPPING' || normStatus === 'DANGGIAO') && <AButton type="primary" loading={updating} onClick={handleComplete}>Confirm delivery</AButton>}
         </div>
       </header>
-
-      {normStatus === 'WAITING_INTERNAL_TRANSFER' && (
-        <div className={styles.notice}>
-          <ExclamationCircleOutlined aria-hidden />
-          <div><strong>Waiting for warehouse transfer</strong><p>Items must arrive at {order.exportFacility?.facilityName || 'the export warehouse'} before packing can begin.</p></div>
-        </div>
-      )}
 
       <div className={styles.orderSheet}>
         <section className={styles.lineItems} aria-labelledby="order-items-heading">
@@ -654,8 +652,8 @@ export default function AdminOrderDetailPage({ params }: Props) {
         }
         open={detailOpen}
         onCancel={() => setDetailOpen(false)}
-        footer={[
-          ...(rxStatus === 'PENDING_APPROVAL'
+        footer={
+          rxStatus === 'PENDING_APPROVAL' && canReview
             ? [
               <AButton
                 key="reject"
@@ -680,8 +678,12 @@ export default function AdminOrderDetailPage({ params }: Props) {
                 Approve
               </AButton>,
             ]
-            : []),
-        ]}
+            : [
+              <AButton key="close" onClick={() => setDetailOpen(false)}>
+                Close
+              </AButton>,
+            ]
+        }
         width={880}
         destroyOnHidden
       >

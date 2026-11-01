@@ -11,7 +11,7 @@ import {
   MenuOutlined,
 } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
-import { formatRole } from '@/utils';
+import { formatRole, getAvatarColor } from '@/utils';
 
 const { Header } = Layout;
 
@@ -19,29 +19,6 @@ interface AdminHeaderProps {
   collapsed: boolean;
   onToggle: () => void;
   isMobile: boolean;
-}
-
-const GOOGLE_AVATAR_COLORS = [
-  '#1a73e8',
-  '#ea4335',
-  '#34a853',
-  '#f29900',
-  '#9334e6',
-  '#12b5cb',
-  '#e52592',
-  '#00897b',
-  '#5c6bc0',
-  '#8e24aa',
-];
-
-function getAvatarColor(str?: string): string {
-  if (!str) return GOOGLE_AVATAR_COLORS[0];
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % GOOGLE_AVATAR_COLORS.length;
-  return GOOGLE_AVATAR_COLORS[index];
 }
 
 export const AdminHeader: React.FC<AdminHeaderProps> = ({

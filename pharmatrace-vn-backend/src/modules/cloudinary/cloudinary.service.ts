@@ -112,4 +112,23 @@ export class CloudinaryService {
       invalidate: true,
     });
   }
+
+  async deleteImage(publicIdOrUrl: string): Promise<void> {
+    try {
+      let publicId = publicIdOrUrl;
+      if (publicIdOrUrl.startsWith('http://') || publicIdOrUrl.startsWith('https://')) {
+        const match = publicIdOrUrl.match(/\/upload\/(?:v\d+\/)?([^\.]+)/);
+        if (match && match[1]) {
+          publicId = match[1];
+        }
+      }
+      await cloudinary.uploader.destroy(publicId, {
+        resource_type: 'image',
+        invalidate: true,
+      });
+      this.logger.log(`Deleted Cloudinary product image: ${publicId}`);
+    } catch (error) {
+      this.logger.warn(`Failed to delete Cloudinary image: ${publicIdOrUrl}`, error);
+    }
+  }
 }

@@ -17,7 +17,7 @@ import { ProductService } from '../src/modules/product/product.service';
 
 const integration = process.env.ORDER_RLS_TEST_DATABASE_URL ? describe : describe.skip;
 integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
-  const a = 940001, b = 940002, manager = 940003, source = 940004, pharmacist = 940005, superAdmin = 940006;
+  const a = 940001, b = 940002, manager = 940003, source = 940004, pharmacist = 940005, superAdmin = 940006, sourcePharmacist = 940007;
   const customer = { id: a, type: 'customer' as const, role: 'CUSTOMER' };
   let app: INestApplication, owner: Pool, prisma: PrismaService, baseUrl: string;
   let primary: number, secondary: number, outside: number, medicine: number, variant: number, voucher: number;
@@ -71,7 +71,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     }
     [primary, secondary, outside] = facilities;
     for (const [id, name, role, unit] of [[manager, 'manager', 'STORE_MANAGER', primary], [source, 'source', 'WAREHOUSE_STAFF', secondary],
-      [pharmacist, 'pharmacist', 'PHARMACIST', primary], [superAdmin, 'super', 'SUPER_ADMIN', null],
+      [pharmacist, 'pharmacist', 'PHARMACIST', primary], [sourcePharmacist, 'source-pharmacist', 'PHARMACIST', secondary], [superAdmin, 'super', 'SUPER_ADMIN', null],
       [a, 'same-id', 'WAREHOUSE_STAFF', outside]] as const) {
       await owner.query(`INSERT INTO employees (id, full_name, email, password_hash, role, status, facility_id)
         VALUES ($1, 'Demo Order Employee', $2, $3, $4, 'ACTIVE', $5)`, [id, `order-${name}@example.test`, hash, role, unit]);
@@ -98,7 +98,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     for (const [name, phone] of [['a', '0944440001'], ['b', '0944440002']]) {
       tokens[name] = (await api('POST', '/auth/login', 200, undefined, { identifier: phone, password: 'OrderTestOnly2026!' })).data.accessToken;
     }
-    for (const name of ['manager', 'source', 'pharmacist', 'super', 'same-id']) {
+    for (const name of ['manager', 'source', 'pharmacist', 'source-pharmacist', 'super', 'same-id']) {
       tokens[name] = (await api('POST', '/admin/auth/login', 200, undefined, { email: `order-${name}@example.test`, password: 'OrderTestOnly2026!' })).data.accessToken;
     }
   }, 30000);
@@ -115,7 +115,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
       await clearOrders();
       if (medicine) await owner.query('DELETE FROM medicines WHERE id = $1', [medicine]);
       if (voucher) await owner.query('DELETE FROM vouchers WHERE id = $1', [voucher]);
-      await owner.query('DELETE FROM employees WHERE id = ANY($1::int[])', [[a, manager, source, pharmacist, superAdmin]]);
+      await owner.query('DELETE FROM employees WHERE id = ANY($1::int[])', [[a, manager, source, pharmacist, sourcePharmacist, superAdmin]]);
       await owner.query('DELETE FROM facilities WHERE id = ANY($1::int[])', [[primary, secondary, outside].filter(Boolean)]);
       await owner.query('DELETE FROM customers WHERE id = ANY($1::int[])', [[a, b]]);
       await owner.end();
@@ -228,12 +228,45 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
   it('preserves pharmacist approval/rejection, inventory release and point refund', async () => {
     await owner.query('UPDATE medicines SET is_prescription = true WHERE id = $1', [medicine]);
     const prescription = (await owner.query('INSERT INTO prescriptions (customer_id, prescription_image_url) VALUES ($1, $2) RETURNING id', [a, 'https://example.invalid/demo-prescriptions/order.png'])).rows[0].id;
-    const order = await place(tokens.a, { prescriptionId: prescription, usedPoints: 500 });
+    const order = await place(tokens.a, { prescriptionId: prescription, usedPoints: 500, voucherCode: 'DEMO-ORDER-RLS' });
     const review = order.prescriptionReview.id;
+    await owner.query("UPDATE orders SET payment_status = 'PAID' WHERE id = $1", [order.id]);
     await api('POST', `/admin/orders/${order.id}/pack`, 400, tokens.manager, {});
     await api('PATCH', `/admin/prescriptions/${review}/reject`, 200, tokens.pharmacist, { note: 'Demo rejection' });
+    expect((await owner.query('SELECT used_quantity FROM vouchers WHERE id = $1', [voucher])).rows[0].used_quantity).toBe(0);
     expect((await api('GET', `/orders/${order.id}`, 200, tokens.a)).data.orderStatus).toBe('CANCELLED');
+    expect((await api('GET', `/orders/${order.id}`, 200, tokens.a)).data.paymentStatus).toBe('PAID');
     expect((await owner.query('SELECT reward_points FROM customers WHERE id = $1', [a])).rows[0].reward_points).toBe(5000);
+    expect((await owner.query('SELECT reserved_quantity FROM inventories WHERE facility_id = $1 AND variant_id = $2', [primary, variant])).rows[0].reserved_quantity).toBe(0);
+    await api('PATCH', `/admin/prescriptions/${review}/reject`, 409, tokens.pharmacist, { note: 'Duplicate rejection' });
+    expect((await owner.query('SELECT used_quantity FROM vouchers WHERE id = $1', [voucher])).rows[0].used_quantity).toBe(0);
+    expect((await owner.query("SELECT count(*)::int AS count FROM loyalty_point_logs WHERE order_id = $1 AND transaction_type = 'REDEEM_REVERSAL'", [order.id])).rows[0].count).toBe(1);
+    await api('PATCH', `/admin/orders/${order.id}/status`, 200, tokens.manager, { paymentStatus: 'REFUNDED' });
+    expect((await api('GET', `/orders/${order.id}`, 200, tokens.a)).data.paymentStatus).toBe('REFUNDED');
+  });
+  it('assigns prescription approval to the preparing facility, not the supplying facility', async () => {
+    await owner.query('UPDATE medicines SET is_prescription = true WHERE id = $1', [medicine]);
+    await owner.query('UPDATE inventories SET stock_quantity = 0 WHERE facility_id = $1 AND variant_id = $2', [primary, variant]);
+    const prescription = (await owner.query('INSERT INTO prescriptions (customer_id, prescription_image_url) VALUES ($1, $2) RETURNING id', [a, 'https://example.invalid/demo-prescriptions/order.png'])).rows[0].id;
+    const order = await place(tokens.a, { prescriptionId: prescription });
+    const review = order.prescriptionReview.id;
+    const transfer = order.internalTransfers[0];
+    await api('PATCH', `/admin/orders/transfers/${transfer.id}/dispatch`, 400, tokens.source, {});
+    await api('PATCH', `/admin/prescriptions/${review}/approve`, 404, tokens['source-pharmacist'], {});
+    await api('GET', `/admin/prescriptions/${review}/image`, 404, tokens['source-pharmacist']);
+    await api('PATCH', `/admin/prescriptions/${review}/approve`, 200, tokens.pharmacist, {});
+    await api('PATCH', `/admin/orders/transfers/${transfer.id}/dispatch`, 200, tokens.source, {});
+    await api('PATCH', `/admin/orders/transfers/${transfer.id}/receive`, 200, tokens.manager, {});
+  });
+  it('rolls back prescription rejection when voucher usage is inconsistent', async () => {
+    await owner.query('UPDATE medicines SET is_prescription = true WHERE id = $1', [medicine]);
+    const prescription = (await owner.query('INSERT INTO prescriptions (customer_id, prescription_image_url) VALUES ($1, $2) RETURNING id', [a, 'https://example.invalid/demo-prescriptions/order.png'])).rows[0].id;
+    const order = await place(tokens.a, { prescriptionId: prescription, usedPoints: 500, voucherCode: 'DEMO-ORDER-RLS' });
+    await owner.query('UPDATE vouchers SET used_quantity = 0 WHERE id = $1', [voucher]);
+    await api('PATCH', `/admin/prescriptions/${order.prescriptionReview.id}/reject`, 500, tokens.pharmacist, { note: 'Demo rejection' });
+    expect((await owner.query('SELECT order_status, prescription_review_status FROM orders WHERE id = $1', [order.id])).rows[0]).toEqual({ order_status: 'PENDING', prescription_review_status: 'PENDING_APPROVAL' });
+    expect((await owner.query('SELECT reward_points FROM customers WHERE id = $1', [a])).rows[0].reward_points).toBe(4500);
+    expect((await owner.query('SELECT reserved_quantity FROM inventories WHERE facility_id = $1 AND variant_id = $2', [primary, variant])).rows[0].reserved_quantity).toBe(2);
   });
   it('awards loyalty once under concurrent jobs and reverses earned points on return', async () => {
     const order = await place();
@@ -252,6 +285,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     expect(order.id).toBeGreaterThan(0);
     const product = await app.get(ProductService).delete(medicine, { ...managerActor(), facilityId: outside });
     expect(product.isSoftDeleted).toBe(true);
+    expect((await owner.query('SELECT status FROM medicines WHERE id = $1', [medicine])).rows[0].status).toBe('INACTIVE');
     expect((await owner.query('SELECT medicine_id FROM order_items WHERE order_id = $1', [order.id])).rows[0].medicine_id).toBe(medicine);
   });
   it('fails closed for missing FORCE RLS and clears context after rollback', async () => {
