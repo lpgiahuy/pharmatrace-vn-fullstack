@@ -12,16 +12,16 @@ DECLARE
     sequence_value BIGINT;
 BEGIN
     FOR fixture IN SELECT * FROM (VALUES
-        ('facilities', 250), ('employees', 5), ('customers', 7),
-        ('prescriptions', 4), ('orders', 46), ('articles', 2),
-        ('manufacturers', 371), ('medicines', 543), ('batches', 24),
-        ('packaging_variants', 624), ('cart_items', 8), ('categories', 38),
-        ('customer_wishlists', 14), ('medicine_boxes', 9844),
-        ('internal_transfers', 1), ('inventories', 45), ('inventory_logs', 3),
-        ('loyalty_point_logs', 6), ('medicine_categories', 670), ('reviews', 6),
+        ('facilities', 15), ('employees', 5), ('customers', 11),
+        ('prescriptions', 4), ('orders', 47), ('articles', 2),
+        ('manufacturers', 422), ('medicines', 543), ('batches', 24),
+        ('packaging_variants', 624), ('cart_items', 9), ('categories', 38),
+        ('customer_wishlists', 15), ('medicine_boxes', 8631),
+        ('internal_transfers', 2), ('inventories', 25), ('inventory_logs', 3),
+        ('loyalty_point_logs', 11), ('medicine_categories', 670), ('reviews', 6),
         ('moderation_audit_logs', 24), ('moderation_reports', 6),
-        ('order_items', 51), ('order_prescription_reviews', 2),
-        ('qr_scan_logs', 105), ('shipments', 5), ('vouchers', 3),
+        ('order_items', 52), ('order_prescription_reviews', 2),
+        ('qr_scan_logs', 66), ('shipments', 5), ('vouchers', 3),
         ('purchase_orders', 0), ('accounts_payable', 0), ('accounts_receivable', 0),
         ('cashbook_logs', 0), ('sscc_cartons', 0), ('fraud_alerts', 0),
         ('purchase_order_items', 0)

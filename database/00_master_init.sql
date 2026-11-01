@@ -58,3 +58,6 @@
 
 -- Manufacturer access control.
 \i /docker-entrypoint-initdb.d/security/15_manufacturer_rls.sql
+
+-- Release voucher usage atomically when a prescription is rejected.
+\i /docker-entrypoint-initdb.d/security/16_prescription_voucher_release.sql

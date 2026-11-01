@@ -53,7 +53,7 @@ import {
   CustomerQuery,
   CustomerOrderDetail,
 } from '@/services/customer.service';
-import { cn } from '@/utils';
+import { cn, getAvatarColor } from '@/utils';
 
 const TIER_META: Record<string, { label: string; color: string; bg: string; border: string }> = {
   BRONZE: { label: 'Bronze', color: '#92400e', bg: '#fef3c7', border: '#d97706' },
@@ -113,28 +113,7 @@ const StatusBadge: React.FC<{ status?: string }> = ({ status }) => {
   );
 };
 
-const GOOGLE_AVATAR_COLORS = [
-  '#1a73e8',
-  '#ea4335',
-  '#34a853',
-  '#f29900',
-  '#9334e6',
-  '#12b5cb',
-  '#e52592',
-  '#00897b',
-  '#5c6bc0',
-  '#8e24aa',
-];
 
-function getAvatarColor(str?: string): string {
-  if (!str) return GOOGLE_AVATAR_COLORS[0];
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const index = Math.abs(hash) % GOOGLE_AVATAR_COLORS.length;
-  return GOOGLE_AVATAR_COLORS[index];
-}
 
 const UserAvatar: React.FC<{ name?: string; email?: string; size?: 'sm' | 'md' | 'lg' }> = ({
   name,

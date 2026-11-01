@@ -186,7 +186,7 @@ integration('Auth HTTP + Prisma + PostgreSQL RLS', () => {
   it('rejects stale employee claims and permits warehouse login with a canonical role', async () => {
     const token = await staffToken();
     try {
-      await owner.query("UPDATE public.employees SET role = 'WAREHOUSE_MANAGER', facility_id = 2 WHERE id = $1", [id]);
+      await owner.query("UPDATE public.employees SET role = 'WAREHOUSE_MANAGER', facility_id = 2001 WHERE id = $1", [id]);
       await request(app.getHttpServer()).get('/auth/me').auth(token, { type: 'bearer' }).expect(401);
       const login = await request(app.getHttpServer()).post('/warehouse/auth/login')
         .send({ email: 'auth-staff@example.test', password }).expect(200);

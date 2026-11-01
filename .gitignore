@@ -56,3 +56,5 @@ scripts/
 database/backups/*
 
 docs/*
+
+pharmatrace-vn-backend/coverage/*

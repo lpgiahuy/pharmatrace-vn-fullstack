@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { authService } from '@/services/auth.service';
 import { useAuthStore } from '@/store/useAuthStore';
-import { formatRole, formatDate } from '@/utils';
+import { formatRole, formatDate, getAvatarColor } from '@/utils';
 
 interface Facility {
   id?: number;
@@ -42,26 +42,6 @@ interface Profile {
   facilityId?: number;
   facility?: Facility | null;
   createdAt?: string;
-}
-
-const AVATAR_COLORS = [
-  '#004996',
-  '#1e4287',
-  '#00897b',
-  '#5c6bc0',
-  '#8e24aa',
-  '#e52592',
-  '#d97706',
-  '#0284c7',
-];
-
-function getAvatarColor(str?: string): string {
-  if (!str) return AVATAR_COLORS[0];
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
 export default function ProfilePage({ portal }: { portal: 'customer' | 'admin' }) {

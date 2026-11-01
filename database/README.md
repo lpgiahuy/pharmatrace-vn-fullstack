@@ -27,7 +27,8 @@ database/
 │   ├── 12_customer_rls.sql         # Customer access
 │   ├── 13_catalog_rls.sql          # Product and category access
 │   ├── 14_employee_facility_rls.sql # Facility-scoped employee management
-│   └── 15_manufacturer_rls.sql     # Manufacturer access and employee assignment guard
+│   ├── 15_manufacturer_rls.sql     # Manufacturer access and employee assignment guard
+│   └── 16_prescription_voucher_release.sql # Release voucher usage when rejecting a prescription
 ├── schemas/                        # Table DDL, constraints, primary & foreign keys
 │   ├── 01_core_master_tables.sql   # Categories, facilities, customers, employees, manufacturers, medicines, packaging_variants, medicine_categories, customer_wishlists
 │   ├── 02_inventory_tracking.sql   # Batches, sscc_cartons, medicine_boxes, inventories, inventory_logs
@@ -74,7 +75,44 @@ docker exec phartrace-vn-db psql -U postgres -d phartrace-vn-db -f /docker-entry
 
 The test uses the IDs from the committed seed data and rolls back its test order.
 
+Existing local databases do not rerun initialization automatically. To enable voucher usage release for prescription rejections, back up the database and apply the new script as the database owner:
+
+```powershell
+docker exec phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/16_prescription_voucher_release.sql
+```
+
+The release is atomic with prescription rejection and applies only to that cancellation path. Other cancellation paths do not currently release voucher usage. Paid orders retain `PAID` until a manual refund is completed and recorded.
+
 ## Development Seed Accounts
+
+### Interview demo setup
+
+Use Docker and Node.js to start the project on a new machine. From the repository root:
+
+```powershell
+Copy-Item .env.example .env
+Copy-Item pharmatrace-vn-backend/.env.example pharmatrace-vn-backend/.env
+Copy-Item pharmatrace-vn-frontend/.env.example pharmatrace-vn-frontend/.env.local
+```
+
+Set `APP_DB_PASSWORD` in the root `.env` and configure the backend `DATABASE_URL` with the same password for `app_user`, the database name and port in the root `.env`. Set a local `JWT_SECRET` and `QR_SECRET_KEY` in the backend `.env`. Optional external services require their own credentials; do not commit `.env` files.
+
+```powershell
+docker compose up -d db
+cd pharmatrace-vn-backend
+npm ci
+npm run start:dev
+```
+
+In a second terminal:
+
+```powershell
+cd pharmatrace-vn-frontend
+npm ci
+npm run dev
+```
+
+Open `http://localhost:3000`. The demo password below works for seeded accounts including super administrator `employee11@example.test`, store manager `employee12@example.test`, pharmacist `employee13@example.test`, and customer `customer1@example.test`. The seed is loaded only for a new database volume; it does not replace an existing local database. Verify the demo flows before an interview, especially optional image, map and AI integrations.
 
 The seed is derived from a local export, with application IDs, relationships, stock, and transaction amounts retained. It excludes `_prisma_migrations` and the two legacy medicine backup tables. Personal contact fields, prescription text/image references, customer free text, and QR location/client data are replaced or removed. It is a development fixture, not an exact backup of the local database.
 

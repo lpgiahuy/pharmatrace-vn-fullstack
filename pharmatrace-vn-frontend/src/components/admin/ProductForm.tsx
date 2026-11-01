@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Form,
@@ -90,11 +90,11 @@ const SectionCustomFields = ({
                 </Form.Item>
               </div>
               <AButton
-                type="text"
+                type="default"
                 danger
-                icon={<DeleteOutlined />}
+                icon={<DeleteOutlined className="!text-red-500" />}
                 onClick={() => remove(fieldName)}
-                className="shrink-0"
+                className="shrink-0 !bg-transparent !border-red-400 !text-red-500 hover:!border-red-600 hover:!text-red-600 hover:!bg-red-50/40 !shadow-none"
               />
             </div>
           ))}
@@ -264,7 +264,15 @@ export default function ProductForm({ productId }: { productId?: number }) {
   const [imageUrl, setImageUrl] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [, setPackagings] = useState<PackagingSpecification[]>([]);
+  const [manufacturers, setManufacturers] = useState<string[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
+
+  const manufacturerOptions = useMemo(() => {
+    return manufacturers.map((m) => ({
+      value: m,
+      label: m,
+    }));
+  }, [manufacturers]);
 
   useEffect(() => {
     categoryService.getCategories().then((res) => {
@@ -272,6 +280,11 @@ export default function ProductForm({ productId }: { productId?: number }) {
     });
     productService.getPackagings().then((res) => {
       if (res?.data) setPackagings(res.data);
+    });
+    productService.getBrands().then((res) => {
+      if (res?.data && Array.isArray(res.data)) {
+        setManufacturers(res.data);
+      }
     });
 
     if (!isEdit || !productId) {
@@ -744,6 +757,33 @@ export default function ProductForm({ productId }: { productId?: number }) {
       const rawCatIds = Array.isArray(values.categoryIds) ? values.categoryIds.map(Number) : [];
       const categoryIds = Array.from(new Set([...rawCatIds, ...(primaryCategoryId ? [primaryCategoryId] : [])]));
 
+      for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+        const vPrice = Number(v.price) || 0;
+        const vOrig = Number(v.originalPrice) || 0;
+        const vDiscount = Number(v.discountPercent) || 0;
+        const hasDiscount = vDiscount > 0 || (vOrig > 0 && vPrice > 0 && vOrig > vPrice);
+        if (hasDiscount) {
+          if (!v.saleStartDate) {
+            messageApi.error(`Variant "${v.unitName || `Variant #${i + 1}`}" has a discount configured, "Sale Start Date" is required!`);
+            setLoading(false);
+            return;
+          }
+          if (!v.saleEndDate) {
+            messageApi.error(`Variant "${v.unitName || `Variant #${i + 1}`}" has a discount configured, "Sale End Date" is required!`);
+            setLoading(false);
+            return;
+          }
+          const start = dayjs(v.saleStartDate);
+          const end = dayjs(v.saleEndDate);
+          if (end.isBefore(start) || end.isSame(start)) {
+            messageApi.error(`Variant "${v.unitName || `Variant #${i + 1}`}": Sale end date must be after start date!`);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
       const mappedPackagingVariants = variants.map((v: any) => ({
         unitName: (v.unitName || '').trim(),
         price: Number(v.price) || 0,
@@ -917,15 +957,9 @@ export default function ProductForm({ productId }: { productId?: number }) {
                   >
                     <AutoComplete
                       placeholder="Select manufacturer (e.g. DHG Pharma, Pfizer, AstraZeneca, Hasan...)"
-                      options={[
-                        { value: 'DHG Pharma', label: 'DHG Pharma (Manufacturer)' },
-                        { value: 'Hasan - Demarpharm', label: 'Hasan - Demarpharm (Manufacturer)' },
-                        { value: 'Pfizer Vietnam', label: 'Pfizer Vietnam (Manufacturer)' },
-                        { value: 'AstraZeneca Vietnam', label: 'AstraZeneca Vietnam (Manufacturer)' },
-                        { value: 'Sanofi Vietnam', label: 'Sanofi Vietnam (Manufacturer)' },
-                      ]}
+                      options={manufacturerOptions}
                       filterOption={(inputValue, option) =>
-                        (option?.value || '').toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                        (option?.value || '').toLowerCase().includes(inputValue.toLowerCase())
                       }
                       allowClear
                     />
@@ -1398,10 +1432,11 @@ export default function ProductForm({ productId }: { productId?: number }) {
                                           className="mb-3"
                                           extra={
                                             <AButton
-                                              type="text"
+                                              type="default"
                                               danger
-                                              icon={<DeleteOutlined />}
+                                              icon={<DeleteOutlined className="!text-red-500" />}
                                               onClick={() => remove(name)}
+                                              className="!bg-transparent !border-red-400 !text-red-500 hover:!border-red-600 hover:!text-red-600 hover:!bg-red-50/40 !shadow-none"
                                             />
                                           }
                                         >
@@ -1496,10 +1531,11 @@ export default function ProductForm({ productId }: { productId?: number }) {
                           className="mb-3 bg-slate-50 border-slate-200 rounded-[6px]"
                           extra={
                             <AButton
-                              type="text"
+                              type="default"
                               danger
-                              icon={<DeleteOutlined />}
+                              icon={<DeleteOutlined className="!text-red-500" />}
                               onClick={() => remove(name)}
+                              className="!bg-transparent !border-red-400 !text-red-500 hover:!border-red-600 hover:!text-red-600 hover:!bg-red-50/40 !shadow-none"
                             />
                           }
                         >
@@ -1559,19 +1595,107 @@ export default function ProductForm({ productId }: { productId?: number }) {
                             </Form.Item>
 
                             <Form.Item
-                              {...restField}
-                              label="Sale Start Date"
-                              name={[name, 'saleStartDate']}
+                              noStyle
+                              shouldUpdate={(prev, curr) => {
+                                const prevV = prev?.packagingVariants?.[name];
+                                const currV = curr?.packagingVariants?.[name];
+                                return (
+                                  prevV?.discountPercent !== currV?.discountPercent ||
+                                  prevV?.originalPrice !== currV?.originalPrice ||
+                                  prevV?.price !== currV?.price
+                                );
+                              }}
                             >
-                              <DatePicker showTime style={{ width: '100%' }} placeholder="Sale start" />
-                            </Form.Item>
+                              {({ getFieldValue }) => {
+                                const variants = getFieldValue('packagingVariants') || [];
+                                const variant = variants[name];
+                                const origPrice = Number(variant?.originalPrice) || 0;
+                                const price = Number(variant?.price) || 0;
+                                const discountPct = Number(variant?.discountPercent) || 0;
+                                const hasDiscount = discountPct > 0 || (origPrice > 0 && price > 0 && origPrice > price);
 
-                            <Form.Item
-                              {...restField}
-                              label="Sale End Date"
-                              name={[name, 'saleEndDate']}
-                            >
-                              <DatePicker showTime style={{ width: '100%' }} placeholder="Sale end" />
+                                return (
+                                  <>
+                                    <Form.Item
+                                      {...restField}
+                                      label={
+                                        <span>
+                                          Sale Start Date {hasDiscount && <span className="text-red-500 font-bold">*</span>}
+                                        </span>
+                                      }
+                                      name={[name, 'saleStartDate']}
+                                      dependencies={[[name, 'discountPercent'], [name, 'originalPrice'], [name, 'price'], [name, 'saleEndDate']]}
+                                      rules={[
+                                        () => ({
+                                          validator(_, value) {
+                                            const v = getFieldValue('packagingVariants')?.[name];
+                                            const vOrig = Number(v?.originalPrice) || 0;
+                                            const vP = Number(v?.price) || 0;
+                                            const vPct = Number(v?.discountPercent) || 0;
+                                            const isDisc = vPct > 0 || (vOrig > 0 && vP > 0 && vOrig > vP);
+                                            if (isDisc && !value) {
+                                              return Promise.reject(new Error('Start date is required when discount is set'));
+                                            }
+                                            if (isDisc && value && v?.saleEndDate) {
+                                              const start = dayjs(value);
+                                              const end = dayjs(v.saleEndDate);
+                                              if (start.isAfter(end) || start.isSame(end)) {
+                                                return Promise.reject(new Error('Start date must be before end date'));
+                                              }
+                                            }
+                                            return Promise.resolve();
+                                          },
+                                        }),
+                                      ]}
+                                    >
+                                      <DatePicker
+                                        showTime
+                                        style={{ width: '100%' }}
+                                        placeholder={hasDiscount ? "Required with discount" : "Sale start date"}
+                                      />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                      {...restField}
+                                      label={
+                                        <span>
+                                          Sale End Date {hasDiscount && <span className="text-red-500 font-bold">*</span>}
+                                        </span>
+                                      }
+                                      name={[name, 'saleEndDate']}
+                                      dependencies={[[name, 'discountPercent'], [name, 'originalPrice'], [name, 'price'], [name, 'saleStartDate']]}
+                                      rules={[
+                                        () => ({
+                                          validator(_, value) {
+                                            const v = getFieldValue('packagingVariants')?.[name];
+                                            const vOrig = Number(v?.originalPrice) || 0;
+                                            const vP = Number(v?.price) || 0;
+                                            const vPct = Number(v?.discountPercent) || 0;
+                                            const isDisc = vPct > 0 || (vOrig > 0 && vP > 0 && vOrig > vP);
+                                            if (isDisc && !value) {
+                                              return Promise.reject(new Error('End date is required when discount is set'));
+                                            }
+                                            if (isDisc && value && v?.saleStartDate) {
+                                              const start = dayjs(v.saleStartDate);
+                                              const end = dayjs(value);
+                                              if (end.isBefore(start) || end.isSame(start)) {
+                                                return Promise.reject(new Error('End date must be after start date'));
+                                              }
+                                            }
+                                            return Promise.resolve();
+                                          },
+                                        }),
+                                      ]}
+                                    >
+                                      <DatePicker
+                                        showTime
+                                        style={{ width: '100%' }}
+                                        placeholder={hasDiscount ? "Required with discount" : "Sale end date"}
+                                      />
+                                    </Form.Item>
+                                  </>
+                                );
+                              }}
                             </Form.Item>
                           </div>
 

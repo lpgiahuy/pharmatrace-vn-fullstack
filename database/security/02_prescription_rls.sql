@@ -13,7 +13,7 @@ DROP POLICY IF EXISTS prescription_order_scope_select ON public.orders;
 CREATE POLICY prescription_order_scope_select ON public.orders FOR SELECT TO app_user
 USING (
     current_setting('app.current_user_type', true) = 'employee'
-    AND current_setting('app.current_user_role', true) IN ('PHARMACIST', 'SUPER_ADMIN')
+    AND current_setting('app.current_user_role', true) IN ('PHARMACIST', 'SUPER_ADMIN', 'STORE_MANAGER')
     AND (
         current_setting('app.current_user_role', true) = 'SUPER_ADMIN'
         OR export_facility_id = NULLIF(current_setting('app.current_unit_id', true), '')::integer
@@ -57,7 +57,7 @@ USING (
     )
     OR (
         current_setting('app.current_user_type', true) = 'employee'
-        AND current_setting('app.current_user_role', true) IN ('PHARMACIST', 'SUPER_ADMIN')
+        AND current_setting('app.current_user_role', true) IN ('PHARMACIST', 'SUPER_ADMIN', 'STORE_MANAGER')
         AND EXISTS (
             SELECT 1 FROM public.order_prescription_reviews review
             JOIN public.orders order_record ON order_record.id = review.order_id
@@ -83,7 +83,7 @@ USING (
     )
     OR (
         current_setting('app.current_user_type', true) = 'employee'
-        AND current_setting('app.current_user_role', true) IN ('PHARMACIST', 'SUPER_ADMIN')
+        AND current_setting('app.current_user_role', true) IN ('PHARMACIST', 'SUPER_ADMIN', 'STORE_MANAGER')
         AND (
             current_setting('app.current_user_role', true) = 'SUPER_ADMIN'
             OR EXISTS (

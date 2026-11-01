@@ -69,5 +69,28 @@ export function formatRole(role?: string | null): string {
   return ROLE_LABELS[normalized] || ROLE_LABELS[role.trim().toUpperCase()] || role;
 }
 
+export const AVATAR_COLORS = [
+  '#1a73e8',
+  '#ea4335',
+  '#34a853',
+  '#f29900',
+  '#9334e6',
+  '#12b5cb',
+  '#e52592',
+  '#00897b',
+  '#5c6bc0',
+  '#8e24aa',
+];
+
+export function getAvatarColor(str?: string): string {
+  if (!str) return AVATAR_COLORS[0];
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % AVATAR_COLORS.length;
+  return AVATAR_COLORS[index];
+}
+
 export * from './image';
 
