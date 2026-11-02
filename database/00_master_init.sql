@@ -61,3 +61,7 @@
 
 -- Release voucher usage atomically when a prescription is rejected.
 \i /docker-entrypoint-initdb.d/security/16_prescription_voucher_release.sql
+
+-- Logistics tables, operations and access controls.
+\i /docker-entrypoint-initdb.d/schemas/10_logistics_operations.sql
+\i /docker-entrypoint-initdb.d/security/17_logistics_rls.sql

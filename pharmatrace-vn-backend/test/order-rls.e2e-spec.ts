@@ -6,6 +6,7 @@ import { Pool } from 'pg';
 import * as bcrypt from 'bcryptjs';
 import { AuthModule } from '../src/modules/auth/auth.module';
 import { OrderModule } from '../src/modules/order/order.module';
+import { LogisticsModule } from '../src/modules/logistics/logistics.module';
 import { OrderCronService } from '../src/modules/order/order-cron.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { PrescriptionService } from '../src/modules/prescription/prescription.service';
@@ -42,6 +43,9 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
   }
   async function clearOrders() {
     await owner.query('DELETE FROM loyalty_point_logs WHERE customer_id = ANY($1::int[])', [[a, b]]);
+    await owner.query(`DELETE FROM logistics_events WHERE transfer_id IN
+      (SELECT t.id FROM internal_transfers t JOIN orders o ON o.id = t.order_id WHERE o.customer_id = ANY($1::int[]))
+      OR shipment_id IN (SELECT s.id FROM shipments s JOIN orders o ON o.id = s.order_id WHERE o.customer_id = ANY($1::int[]))`, [[a, b]]);
     await owner.query('DELETE FROM orders WHERE customer_id = ANY($1::int[])', [[a, b]]);
     await owner.query('DELETE FROM prescriptions WHERE customer_id = ANY($1::int[])', [[a, b]]);
     await owner.query('DELETE FROM cart_items WHERE customer_id = ANY($1::int[])', [[a, b]]);
@@ -85,7 +89,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     voucher = (await owner.query(`INSERT INTO vouchers (voucher_code, discount_type, discount_value, total_quantity, used_quantity, status, start_date, end_date)
       VALUES ('DEMO-ORDER-RLS', 'FIXED', 1000, 20, 0, 'ACTIVE', now() - interval '30 days', now() + interval '30 days') RETURNING id`)).rows[0].id;
     const module = await Test.createTestingModule({
-      imports: [ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true }), AuthModule, OrderModule],
+      imports: [ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true }), AuthModule, OrderModule, LogisticsModule],
       controllers: [PrescriptionController, CustomerController],
       providers: [PrescriptionService, CustomerService, ProductService, { provide: CloudinaryService, useValue: {} }],
     }).compile();
@@ -183,15 +187,15 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     const order = await place();
     const transfer = order.internalTransfers[0];
     expect(order.orderStatus).toBe('WAITING_INTERNAL_TRANSFER');
-    const listed = (await api('GET', '/admin/orders/transfers/all', 200, tokens.source)).data;
+    const listed = (await api('GET', '/admin/logistics/transfers', 200, tokens.source)).data;
     expect(listed.map((t: any) => t.id)).toContain(transfer.id);
     expect(JSON.stringify(listed)).not.toMatch(/recipient_name|shipping_address|order-a@example|prescription_image/);
     await api('GET', `/admin/orders/${order.id}`, 404, tokens.source);
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/dispatch`, 404, tokens.manager, {});
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/dispatch`, 200, tokens.source, {});
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/receive`, 404, tokens.source, {});
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/receive`, 200, tokens.manager, {});
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/receive`, 200, tokens.manager, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/dispatch`, 404, tokens.manager, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/dispatch`, 200, tokens.source, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/receive`, 404, tokens.source, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/receive`, 200, tokens.manager, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/receive`, 200, tokens.manager, {});
     expect((await owner.query('SELECT stock_quantity, reserved_quantity FROM inventories WHERE facility_id = $1 AND variant_id = $2', [primary, variant])).rows[0]).toEqual({ stock_quantity: 2, reserved_quantity: 2 });
   });
   it('accepts canonical status updates for legacy English aliases', async () => {
@@ -216,13 +220,13 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     await owner.query('UPDATE inventories SET stock_quantity = 0 WHERE facility_id = $1 AND variant_id = $2', [primary, variant]);
     const order = await place();
     const transfer = order.internalTransfers[0];
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/dispatch`, 200, tokens.source, {});
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/reject-damaged`, 404, tokens.source, {});
-    const replacement = (await api('PATCH', `/admin/orders/transfers/${transfer.id}/reject-damaged`, 200, tokens.manager, {})).data;
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/dispatch`, 200, tokens.source, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/reject-damaged`, 404, tokens.source, {});
+    const replacement = (await api('PATCH', `/admin/logistics/transfers/${transfer.id}/reject-damaged`, 200, tokens.manager, {})).data;
     expect(replacement).toMatchObject({ status: 'REQUESTED', order_id: order.id });
     expect((await owner.query('SELECT status FROM internal_transfers WHERE id = $1', [transfer.id])).rows[0].status).toBe('REPLACED');
-    await api('PATCH', `/admin/orders/transfers/${replacement.id}/dispatch`, 200, tokens.source, {});
-    await api('PATCH', `/admin/orders/transfers/${replacement.id}/receive`, 200, tokens.manager, {});
+    await api('PATCH', `/admin/logistics/transfers/${replacement.id}/dispatch`, 200, tokens.source, {});
+    await api('PATCH', `/admin/logistics/transfers/${replacement.id}/receive`, 200, tokens.manager, {});
     expect((await api('GET', `/orders/${order.id}`, 200, tokens.a)).data.orderStatus).toBe('PROCESSING');
   });
   it('preserves pharmacist approval/rejection, inventory release and point refund', async () => {
@@ -251,12 +255,12 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     const order = await place(tokens.a, { prescriptionId: prescription });
     const review = order.prescriptionReview.id;
     const transfer = order.internalTransfers[0];
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/dispatch`, 400, tokens.source, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/dispatch`, 400, tokens.source, {});
     await api('PATCH', `/admin/prescriptions/${review}/approve`, 404, tokens['source-pharmacist'], {});
     await api('GET', `/admin/prescriptions/${review}/image`, 404, tokens['source-pharmacist']);
     await api('PATCH', `/admin/prescriptions/${review}/approve`, 200, tokens.pharmacist, {});
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/dispatch`, 200, tokens.source, {});
-    await api('PATCH', `/admin/orders/transfers/${transfer.id}/receive`, 200, tokens.manager, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/dispatch`, 200, tokens.source, {});
+    await api('PATCH', `/admin/logistics/transfers/${transfer.id}/receive`, 200, tokens.manager, {});
   });
   it('rolls back prescription rejection when voucher usage is inconsistent', async () => {
     await owner.query('UPDATE medicines SET is_prescription = true WHERE id = $1', [medicine]);

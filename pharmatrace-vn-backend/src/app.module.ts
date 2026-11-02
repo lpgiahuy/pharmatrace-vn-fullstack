@@ -14,6 +14,7 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { ReviewModule } from './modules/review/review.module';
 import { ContentModerationModule } from './modules/moderation/content-moderation.module';
 import { OrderModule } from './modules/order/order.module';
+import { LogisticsModule } from './modules/logistics/logistics.module';
 import { CartModule } from './modules/cart/cart.module';
 import { PrescriptionModule } from './modules/prescription/prescription.module';
 import { AppController } from './app.controller';
@@ -36,6 +37,7 @@ import { AppService } from './app.service';
     ReviewModule,
     ContentModerationModule,
     OrderModule,
+    LogisticsModule,
     CartModule,
     PrescriptionModule,
   ],

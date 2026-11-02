@@ -378,22 +378,5 @@ export const orderService = {
     }
   },
 
-  // Inter-facility transfer management
-  getAllInternalTransfers: async (orderId?: number) => {
-    const url = orderId ? `/admin/orders/transfers/all?orderId=${orderId}` : '/admin/orders/transfers/all';
-    return apiClient.get(url);
-  },
-
-  dispatchInternalTransfer: async (transferId: number, trackingCode?: string) => {
-    return apiClient.patch(`/admin/orders/transfers/${transferId}/dispatch`, { trackingCode });
-  },
-
-  receiveInternalTransfer: async (transferId: number) => {
-    return apiClient.patch(`/admin/orders/transfers/${transferId}/receive`);
-  },
-
-  rejectDamagedInternalTransfer: async (transferId: number) => {
-    return apiClient.patch(`/admin/orders/transfers/${transferId}/reject-damaged`);
-  },
 };
 

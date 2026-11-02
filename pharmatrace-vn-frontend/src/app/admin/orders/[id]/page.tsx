@@ -27,6 +27,7 @@ import {
   EyeOutlined,
 } from '@ant-design/icons';
 import { prescriptionService } from '@/services/prescription.service';
+import { logisticsService } from '@/services/logistics.service';
 import {
   orderService,
   Order,
@@ -121,7 +122,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
   const handleDispatchTransfer = async (transferId: number) => {
     setUpdating(true);
     try {
-      await orderService.dispatchInternalTransfer(transferId);
+      await logisticsService.dispatchInternalTransfer(transferId);
       message.success('Internal transfer marked as dispatched.');
       const updated = await orderService.getAdminById(orderId);
       setOrder(updated);
@@ -135,7 +136,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
   const handleReceiveTransfer = async (transferId: number) => {
     setUpdating(true);
     try {
-      await orderService.receiveInternalTransfer(transferId);
+      await logisticsService.receiveInternalTransfer(transferId);
       message.success('Internal transfer received! Stock transferred to export hub.');
       const updated = await orderService.getAdminById(orderId);
       setOrder(updated);
@@ -155,7 +156,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
       async onOk() {
         setUpdating(true);
         try {
-          await orderService.rejectDamagedInternalTransfer(transferId);
+          await logisticsService.rejectDamagedInternalTransfer(transferId);
           message.success('Damaged shipment recorded. Check the transfer status for the next action.');
           setOrder(await orderService.getAdminById(orderId));
         } catch (err) {
