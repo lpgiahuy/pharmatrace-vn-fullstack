@@ -31,7 +31,7 @@ integration('Cart HTTP + Prisma + PostgreSQL RLS', () => {
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
     expect(response.status).toBe(status);
-    return await response.json() as any;
+    return await response.json();
   }
   async function cleanupAccounts() {
     await owner.query('DELETE FROM public.orders WHERE customer_id = ANY($1::int[])', [[a, b]]);

@@ -30,7 +30,7 @@ describe("AdminOrderService receiving unassigned packages", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    return { tx, service: new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService) };
+    return { tx, service: new AdminOrderService(scopedPrisma(prisma)) };
   }
 
   it("assigns and moves physical UIDs when checkout deferred package assignment", async () => {
@@ -86,7 +86,7 @@ describe("AdminOrderService listing", () => {
       },
     };
     const prisma = { $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)) };
-    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma));
 
     await expect(service.adminGetAllOrders({}, { type: "employee" as const,  id: 12, role: "SUPER_ADMIN" }))
       .resolves.toMatchObject({ items: [], pagination: { total: 0 } });
@@ -158,7 +158,7 @@ describe("AdminOrderService packing", () => {
       ),
     };
     return {
-      service: new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService),
+      service: new AdminOrderService(scopedPrisma(prisma)),
       tx,
       prisma,
     };
@@ -282,14 +282,14 @@ describe("AdminOrderService facility access", () => {
 
     return {
       prisma,
-      service: new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService),
+      service: new AdminOrderService(scopedPrisma(prisma)),
     };
   }
 
   it("scopes order lists to the staff facility", async () => {
     const { service, prisma } = setup();
 
-    await service.adminGetAllOrders({} as any, facilityStaff);
+    await service.adminGetAllOrders({}, facilityStaff);
 
     expect(prisma.orders.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -304,7 +304,7 @@ describe("AdminOrderService facility access", () => {
   it("allows super admin to list orders across facilities", async () => {
     const { service, prisma } = setup();
 
-    await service.adminGetAllOrders({} as any, superAdmin);
+    await service.adminGetAllOrders({}, superAdmin);
 
     expect(prisma.orders.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: {} }),
@@ -398,7 +398,7 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) => run(tx)),
     };
-    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma));
 
     await service.adminReceiveInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -434,7 +434,7 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) => run(tx)),
     };
-    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma));
 
     await service.adminReceiveInternalTransfer(9, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -483,7 +483,7 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma));
 
     await service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -539,7 +539,7 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma));
 
     await expect(service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -596,7 +596,7 @@ describe("AdminOrderService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new AdminOrderService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new AdminOrderService(scopedPrisma(prisma));
 
     await expect(service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,

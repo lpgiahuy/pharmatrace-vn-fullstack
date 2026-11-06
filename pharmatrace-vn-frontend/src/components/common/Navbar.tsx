@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -10,11 +11,7 @@ import { useAuth } from '@/store/useAuthStore';
 export const Navbar: React.FC = () => {
   const router = useRouter();
   const { user, isAuthenticated, logout, fetchProfile } = useAuth();
-  const [mounted, setMounted] = React.useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   useEffect(() => {
     if (mounted && isAuthenticated && !user) {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Tag, Button, Descriptions } from 'antd';
@@ -13,11 +14,7 @@ export default function WarehouseDashboardPage() {
   const getUser = useAuthStore((state) => state.getUser);
   const logout = useAuthStore((state) => state.logout);
 
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const user = mounted ? getUser() : null;

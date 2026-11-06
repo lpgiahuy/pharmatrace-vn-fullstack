@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -37,7 +38,7 @@ export default function AdminProductsPage() {
   const getUser = useAuthStore((state) => state.getUser);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
 
   const [data, setData] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -58,10 +59,6 @@ export default function AdminProductsPage() {
 
   const screens = useBreakpoint();
   const isMobile = screens.md === false;
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const user = mounted ? getUser() : null;
@@ -127,9 +124,13 @@ export default function AdminProductsPage() {
   }, [page, searchVal, categoryFilter, prescriptionFilter, statusFilter, sort, messageApi]);
 
   useEffect(() => {
-    if (mounted && isAuthenticated) {
-      fetchData();
-    }
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (mounted && isAuthenticated) {
+        fetchData();
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [mounted, isAuthenticated, fetchData]);
 
   const handleResetFilters = () => {

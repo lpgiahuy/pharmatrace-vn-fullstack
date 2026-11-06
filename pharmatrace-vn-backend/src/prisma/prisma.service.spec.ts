@@ -17,7 +17,7 @@ describe('Auth transaction rollout', () => {
 
   it('keeps role switching disabled until activation and still clears every context field', async () => {
     process.env.AUTH_RLS_ENABLED = 'false';
-    await service.withAuth(async () => 'ok');
+    await service.withAuth(() => Promise.resolve('ok'));
     expect(tx.$executeRaw).not.toHaveBeenCalled();
     expect(tx.$queryRaw).toHaveBeenCalledTimes(6);
     for (const call of tx.$queryRaw.mock.calls) expect(call[1]).toBe('');
@@ -41,9 +41,9 @@ describe('Auth transaction rollout', () => {
   it('switches the transaction role before running the auth query', async () => {
     process.env.AUTH_RLS_ENABLED = 'true';
     tx.$queryRaw.mockResolvedValue([{ rolsuper: false, rolbypassrls: false, protected: true, connection_restricted: true }]);
-    const result = await service.withAuth(async () => {
+    const result = await service.withAuth(() => {
       expect(tx.$executeRaw).toHaveBeenCalledTimes(1);
-      return 'scoped';
+      return Promise.resolve('scoped');
     }, { actor: { id: 1, role: 'CUSTOMER', type: 'customer' } });
     expect(result).toBe('scoped');
   });

@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -117,7 +118,7 @@ export default function StaffManagementPage() {
 
   const [messageApi, contextHolder] = message.useMessage();
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -130,7 +131,9 @@ export default function StaffManagementPage() {
   const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [viewingEmployee, setViewingEmployee] = useState<Employee | null>(null);
   const viewingEmployeeRef = React.useRef<Employee | null>(null);
-  viewingEmployeeRef.current = viewingEmployee;
+  useEffect(() => {
+    viewingEmployeeRef.current = viewingEmployee;
+  }, [viewingEmployee]);
 
   const [searchVal, setSearchVal] = useState('');
   const [roleFilter, setRoleFilter] = useState<string | undefined>(undefined);
@@ -144,10 +147,6 @@ export default function StaffManagementPage() {
   });
 
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const currentUser = mounted ? getUser() : null;
@@ -188,9 +187,13 @@ export default function StaffManagementPage() {
   );
 
   useEffect(() => {
-    if (mounted && isAuthenticated) {
-      fetchEmployees(pagination.current, pagination.pageSize);
-    }
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (mounted && isAuthenticated) {
+        fetchEmployees(pagination.current, pagination.pageSize);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [mounted, isAuthenticated, fetchEmployees, pagination.current, pagination.pageSize]);
 
   useEffect(() => {

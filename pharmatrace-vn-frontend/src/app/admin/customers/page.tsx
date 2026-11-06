@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -171,7 +172,7 @@ export default function CustomersManagementPage() {
   const logout = useAuthStore((state) => state.logout);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -202,10 +203,6 @@ export default function CustomersManagementPage() {
     pageSize: 5,
     total: 0,
   });
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const currentUser = mounted ? getUser() : null;
@@ -247,9 +244,13 @@ export default function CustomersManagementPage() {
   );
 
   useEffect(() => {
-    if (mounted && isAuthenticated) {
-      fetchCustomers(1, 10);
-    }
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (mounted && isAuthenticated) {
+        fetchCustomers(1, 10);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [mounted, isAuthenticated, fetchCustomers]);
 
   const handleSearchClick = () => {

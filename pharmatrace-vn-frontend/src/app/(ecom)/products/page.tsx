@@ -76,9 +76,11 @@ function CategoryFilterItem({
 
   const [expanded, setExpanded] = useState(isParentActive);
 
-  useEffect(() => {
+  const [previousParentActive, setPreviousParentActive] = useState(isParentActive);
+  if (previousParentActive !== isParentActive) {
+    setPreviousParentActive(isParentActive);
     if (isParentActive) setExpanded(true);
-  }, [isParentActive]);
+  }
 
   return (
     <div className="space-y-1">
@@ -174,9 +176,11 @@ function ProductCardItem({
   const [isFavorite, setIsFavorite] = useState(initialFavorite);
   const { isAuthenticated } = useAuth();
 
-  useEffect(() => {
+  const [previousFavorite, setPreviousFavorite] = useState(initialFavorite);
+  if (previousFavorite !== initialFavorite) {
+    setPreviousFavorite(initialFavorite);
     setIsFavorite(initialFavorite);
-  }, [initialFavorite]);
+  }
 
   const handleToggleFavorite = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -508,7 +512,7 @@ function ProductListContainer() {
     router.push(`/products?${current.toString()}`);
   };
 
-  const fetchProducts = useCallback(async (retryAttempt = 0) => {
+  const fetchProducts = useCallback(async function loadProducts(retryAttempt = 0) {
     setLoading(true);
     setFetchError(null);
     try {
@@ -564,7 +568,7 @@ function ProductListContainer() {
       console.error('Failed to load products:', err);
       if (retryAttempt < 1) {
         setTimeout(() => {
-          fetchProducts(retryAttempt + 1);
+          void loadProducts(retryAttempt + 1);
         }, 1200);
         return;
       }
@@ -576,7 +580,11 @@ function ProductListContainer() {
   }, [page, categoryParam, minPrice, maxPrice, search, selectedBrand, sort, inStockOnly]);
 
   useEffect(() => {
-    fetchProducts();
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      fetchProducts();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [fetchProducts]);
 
   const hasActiveFilters = Boolean(categoryParam || minPrice || maxPrice || inStockOnly || selectedBrand || search);

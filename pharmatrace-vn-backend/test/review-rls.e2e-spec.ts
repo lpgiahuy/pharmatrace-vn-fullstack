@@ -31,7 +31,7 @@ integration('Review HTTP + Prisma + PostgreSQL RLS', () => {
       method, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
-    const result = await response.json() as any;
+    const result = await response.json();
     expect({ status: response.status, ...(response.status === status ? {} : { result }) }).toEqual({ status });
     return result;
   }
@@ -199,7 +199,7 @@ integration('Review HTTP + Prisma + PostgreSQL RLS', () => {
     expect((await owner.query('SELECT status FROM reviews WHERE id = $1', [ids[1]])).rows[0].status).toBe('HIDDEN');
     expect((await owner.query('SELECT count(*)::int AS count FROM moderation_audit_logs WHERE review_id = $1', [ids[1]])).rows[0].count).toBe(0);
     expect(await prisma.reviews.count({ where: { id: ids[1] } })).toBe(0);
-    await expect(prisma.withReview('moderator', async () => true, pharmacist)).rejects.toThrow('Invalid review access scope');
+    await expect(prisma.withReview('moderator', () => Promise.resolve(true), pharmacist)).rejects.toThrow('Invalid review access scope');
   });
   it('aborts a service mutation when its audit write fails', async () => {
     const audit = jest.spyOn(app.get(ContentModerationService), 'logAudit').mockRejectedValueOnce(new Error('audit unavailable'));

@@ -22,7 +22,7 @@ describe('Voucher transaction context', () => {
     const run = jest.fn();
     await expect(service.withVoucher(scope as VoucherScope, run, { actor: actor as AuthActor, code })).rejects.toThrow();
     expect(run).not.toHaveBeenCalled();
-    expect(service.$transaction).not.toHaveBeenCalled();
+    expect(jest.spyOn(service, '$transaction')).not.toHaveBeenCalled();
   });
   it('fails closed before the query when RLS or runtime is not ready', async () => {
     tx.$queryRaw.mockResolvedValue([{ ready: false }]);
@@ -31,7 +31,7 @@ describe('Voucher transaction context', () => {
     expect(run).not.toHaveBeenCalled();
   });
   it('normalizes the exact code and clears actor/order fields for public previews', async () => {
-    await service.withVoucher('validate', async () => true, { code: ' demo-code ' });
+    await service.withVoucher('validate', () => Promise.resolve(true), { code: ' demo-code ' });
     expect(tx.$queryRaw.mock.calls.slice(1).map(call => call[1])).toEqual(['validate', 'DEMO-CODE', '', '', '', '', '']);
   });
 });

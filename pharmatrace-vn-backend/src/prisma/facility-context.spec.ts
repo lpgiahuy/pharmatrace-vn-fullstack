@@ -20,7 +20,7 @@ describe('Facility management context', () => {
     expect(run).not.toHaveBeenCalled();
   });
   it('sets a transaction-local administrator identity', async () => {
-    const result = await service.withFacilityManagement({ id: 12, type: 'employee', role: 'SUPER_ADMIN' }, async () => 'ok');
+    const result = await service.withFacilityManagement({ id: 12, type: 'employee', role: 'SUPER_ADMIN' }, () => Promise.resolve('ok'));
     expect(result).toBe('ok');
     expect(tx.$queryRaw.mock.calls.slice(1).map(call => call[1])).toEqual(['manage', '12', 'employee', 'SUPER_ADMIN']);
   });

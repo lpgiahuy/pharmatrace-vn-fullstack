@@ -17,7 +17,7 @@ integration('Facility HTTP and PostgreSQL RLS', () => {
   async function request(method: string, path: string, token?: string, body?: unknown) {
     const response = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
-    return { status: response.status, data: await response.json() as any };
+    return { status: response.status, data: await response.json() };
   }
   beforeAll(async () => {
     const runtime = process.env.FACILITY_RLS_TEST_DATABASE_URL!, ownerUrl = process.env.FACILITY_RLS_TEST_ADMIN_URL!;

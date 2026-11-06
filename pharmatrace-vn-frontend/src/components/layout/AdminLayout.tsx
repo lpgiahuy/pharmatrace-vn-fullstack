@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Layout } from 'antd';
@@ -18,13 +19,11 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const getIsAuthenticated = useAuthStore((state) => state.getIsAuthenticated);
   const getUser = useAuthStore((state) => state.getUser);
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-
     const handleResize = () => {
       const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);

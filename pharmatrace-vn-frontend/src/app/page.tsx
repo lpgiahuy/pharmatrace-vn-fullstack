@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -11,11 +12,7 @@ import { useAuth } from '@/store/useAuthStore';
 export default function HomePage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
