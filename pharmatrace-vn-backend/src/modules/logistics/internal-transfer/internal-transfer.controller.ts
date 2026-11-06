@@ -36,7 +36,13 @@ export class InternalTransferController {
   @Patch('transfers/:id/dispatch')
   @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'WAREHOUSE_STAFF', 'WarehouseStaff')
   async dispatch(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload, @Body() dto: DispatchTransferDto) {
-    return { success: true, data: await this.transfersService.adminDispatchInternalTransfer(id, dto.trackingCode, user) };
+    return { success: true, data: await this.transfersService.adminDispatchInternalTransfer(id, dto, user) };
+  }
+
+  @Get('transfers/:id/transport-staff')
+  @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'WAREHOUSE_STAFF', 'WarehouseStaff')
+  async transportStaff(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.transfersService.transportStaff(id, user) };
   }
 
   @Patch('transfers/:id/receive')

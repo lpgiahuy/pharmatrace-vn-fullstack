@@ -66,11 +66,12 @@ export default function AdminOrderDetailPage({ params }: Props) {
   const currentUser = getUser();
   const canReview = !currentUser?.role || ['PHARMACIST', 'SUPER_ADMIN'].includes(currentUser.role.toUpperCase());
 
-  useEffect(() => {
-    if (order?.prescriptionReview?.id) {
-      setActiveReviewId(order.prescriptionReview.id);
-    }
-  }, [order?.prescriptionReview?.id]);
+  const reviewId = order?.prescriptionReview?.id;
+  const [previousReviewId, setPreviousReviewId] = useState(reviewId);
+  if (previousReviewId !== reviewId) {
+    setPreviousReviewId(reviewId);
+    if (reviewId) setActiveReviewId(reviewId);
+  }
 
   useEffect(() => () => {
     if (prescriptionImageUrl) URL.revokeObjectURL(prescriptionImageUrl);
@@ -80,11 +81,11 @@ export default function AdminOrderDetailPage({ params }: Props) {
     if (!orderId) return;
     let active = true;
     const timer = setTimeout(() => {
-      setLoading(true);
-      void orderService.getAdminById(orderId)
-        .then((data) => { if (active) setOrder(data); })
-        .catch((err) => { if (active) message.error(err?.message || 'Failed to load order'); })
-        .finally(() => { if (active) setLoading(false); });
+        setLoading(true);
+        void orderService.getAdminById(orderId)
+          .then((data) => { if (active) setOrder(data); })
+          .catch((err) => { if (active) message.error(err?.message || 'Failed to load order'); })
+          .finally(() => { if (active) setLoading(false); });
     }, 0);
     return () => { active = false; clearTimeout(timer); };
   }, [orderId, message]);

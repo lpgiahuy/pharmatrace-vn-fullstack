@@ -97,7 +97,7 @@ integration('Auth HTTP + Prisma + PostgreSQL RLS', () => {
             ...(payload === undefined ? {} : { body: JSON.stringify(payload) }),
           });
           expect(response.status).toBe(status);
-          return { body: await response.json() as any };
+          return { body: await response.json() };
         },
       };
       return call;
@@ -223,7 +223,7 @@ integration('Auth HTTP + Prisma + PostgreSQL RLS', () => {
   it('scopes credential lookup and clears role/context after success and rollback', async () => {
     expect(await prisma.withAuth((tx) => tx.customers.findMany(),
       { operation: 'customer_login', identifier: '0977770001' })).toHaveLength(1);
-    await expect(prisma.withAuth(async () => { throw new Error('intentional rollback'); },
+    await expect(prisma.withAuth(() => Promise.reject(new Error('intentional rollback')),
       { actor: { id, role: 'CUSTOMER', type: 'customer' } })).rejects.toThrow('intentional rollback');
     expect(await prisma.withAuth((tx) => tx.customers.findMany())).toHaveLength(0);
     expect(await prisma.withAuth((tx) => tx.employees.findMany())).toHaveLength(0);

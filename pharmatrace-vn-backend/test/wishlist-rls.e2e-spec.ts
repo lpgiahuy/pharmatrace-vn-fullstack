@@ -28,7 +28,7 @@ integration('Wishlist HTTP + Prisma + PostgreSQL RLS', () => {
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
     expect(response.status).toBe(status);
-    return await response.json() as any;
+    return await response.json();
   }
 
   async function cleanup() {
@@ -161,9 +161,7 @@ integration('Wishlist HTTP + Prisma + PostgreSQL RLS', () => {
 
   it('does not carry an actor into the next transaction after rollback', async () => {
     await api('POST', `/customer/wishlist/${medicines[0].id}`, 201, tokens.a);
-    await expect(prisma.withActor({ id: a, type: 'customer', role: 'CUSTOMER' }, async () => {
-      throw new Error('intentional wishlist rollback');
-    })).rejects.toThrow('intentional wishlist rollback');
+    await expect(prisma.withActor({ id: a, type: 'customer', role: 'CUSTOMER' }, () => Promise.reject(new Error('intentional wishlist rollback')))).rejects.toThrow('intentional wishlist rollback');
     expect(await prisma.customer_wishlists.count()).toBe(0);
     expect(await prisma.withActor({ id: b, type: 'customer', role: 'CUSTOMER' }, (tx) => tx.customer_wishlists.count())).toBe(0);
   });

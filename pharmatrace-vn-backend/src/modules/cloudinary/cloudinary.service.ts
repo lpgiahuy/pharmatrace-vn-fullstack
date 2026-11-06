@@ -41,7 +41,7 @@ export class CloudinaryService {
         (error?: UploadApiErrorResponse, result?: UploadApiResponse) => {
           if (error) {
             this.logger.error('Cloudinary upload error:', error);
-            return reject(error);
+            return reject(new Error(error.message, { cause: error }));
           }
           if (!result) {
             return reject(new Error('Cloudinary upload failed with empty result'));
@@ -70,7 +70,7 @@ export class CloudinaryService {
         (error?: UploadApiErrorResponse, response?: UploadApiResponse) => {
           if (error) {
             this.logger.error('Cloudinary prescription upload error:', error);
-            reject(error);
+            reject(new Error(error.message, { cause: error }));
             return;
           }
           if (!response) {
@@ -117,7 +117,7 @@ export class CloudinaryService {
     try {
       let publicId = publicIdOrUrl;
       if (publicIdOrUrl.startsWith('http://') || publicIdOrUrl.startsWith('https://')) {
-        const match = publicIdOrUrl.match(/\/upload\/(?:v\d+\/)?([^\.]+)/);
+        const match = publicIdOrUrl.match(/\/upload\/(?:v\d+\/)?([^.]+)/);
         if (match && match[1]) {
           publicId = match[1];
         }

@@ -288,7 +288,6 @@ export default function ProductForm({ productId }: { productId?: number }) {
     });
 
     if (!isEdit || !productId) {
-      setInitLoading(false);
       return;
     }
 

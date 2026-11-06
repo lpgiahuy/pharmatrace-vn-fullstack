@@ -83,10 +83,10 @@ GRANT INSERT (order_id, medicine_id, variant_id, quantity, unit_price, total_pri
     inventory_reserved, medicine_name, unit_name, source_facility_id) ON public.order_items TO app_user;
 GRANT UPDATE (assigned_uids, inventory_reserved, source_facility_id) ON public.order_items TO app_user;
 GRANT INSERT (order_id, tracking_number, courier_name, shipping_status, cod_amount, cod_settlement_status, note, created_at, updated_at) ON public.shipments TO app_user;
-GRANT UPDATE (shipping_status, actual_delivery_at, updated_at) ON public.shipments TO app_user;
+GRANT UPDATE (shipping_status, picked_up_at, actual_delivery_at, cod_settlement_status, cod_settled_at, updated_at, courier_name, tracking_number, carrier_confirmed_at) ON public.shipments TO app_user;
 GRANT INSERT (transfer_code, order_id, from_facility_id, to_facility_id, status, items, distance_km, estimated_hours, notes, created_at, updated_at)
     ON public.internal_transfers TO app_user;
-GRANT UPDATE (status, tracking_code, dispatched_at, received_at, notes, updated_at) ON public.internal_transfers TO app_user;
+GRANT UPDATE (status, tracking_code, dispatched_at, received_at, notes, updated_at, transport_mode, transport_employee_id, transport_employee_name, courier_name) ON public.internal_transfers TO app_user;
 GRANT INSERT (customer_id, order_id, transaction_type, points, description, created_at) ON public.loyalty_point_logs TO app_user;
 REVOKE ALL ON SEQUENCE public.orders_id_seq, public.order_items_id_seq, public.shipments_id_seq,
     public.internal_transfers_id_seq, public.loyalty_point_logs_id_seq FROM PUBLIC, app_user;
@@ -108,6 +108,9 @@ BEGIN
         ELSIF op = 'status' AND public.order_staff(OLD.export_facility_id)
             AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST') THEN
             allowed := ARRAY['order_status', 'payment_status', 'note'];
+            IF NEW.order_status = 'COMPLETED' AND OLD.order_status IS DISTINCT FROM NEW.order_status THEN
+                RAISE EXCEPTION 'Customer receipt confirmation required' USING ERRCODE = '42501';
+            END IF;
             IF NEW.order_status IS DISTINCT FROM OLD.order_status AND NOT (
                 (OLD.order_status = 'PENDING' AND NEW.order_status IN ('WAITING_INTERNAL_TRANSFER', 'PROCESSING', 'CANCELLED'))
                 OR (OLD.order_status IN ('WAITING_INTERNAL_TRANSFER', 'WAITING_TRANSFER') AND NEW.order_status IN ('PROCESSING', 'CANCELLED'))
@@ -145,10 +148,22 @@ BEGIN
             allowed := ARRAY['assigned_uids', 'inventory_reserved'];
         ELSIF op IN ('pack', 'receive', 'replace') THEN allowed := ARRAY['assigned_uids', 'inventory_reserved', 'source_facility_id']; END IF;
     ELSIF TG_TABLE_NAME = 'shipments' AND op = 'status' THEN
-        allowed := ARRAY['shipping_status', 'actual_delivery_at', 'updated_at'];
+        allowed := ARRAY['shipping_status', 'picked_up_at', 'actual_delivery_at', 'cod_settlement_status', 'cod_settled_at', 'updated_at'];
+        IF NEW.shipping_status = 'DELIVERED' AND OLD.shipping_status IS DISTINCT FROM NEW.shipping_status THEN
+            RAISE EXCEPTION 'Customer receipt confirmation required' USING ERRCODE = '42501';
+        END IF;
+        IF OLD.shipping_status = 'PENDING_PICKUP' AND NEW.shipping_status = 'PENDING_PICKUP' THEN
+            allowed := allowed || ARRAY['courier_name', 'tracking_number', 'carrier_confirmed_at'];
+        END IF;
     ELSIF TG_TABLE_NAME = 'internal_transfers' THEN
         IF op = 'dispatch' AND OLD.status = 'REQUESTED' AND NEW.status = 'DISPATCHED' THEN
-            allowed := ARRAY['status', 'tracking_code', 'dispatched_at', 'updated_at'];
+            allowed := ARRAY['status', 'tracking_code', 'dispatched_at', 'updated_at', 'transport_mode', 'transport_employee_id', 'transport_employee_name', 'courier_name'];
+            IF NEW.transport_mode IS NULL THEN
+                RAISE EXCEPTION 'Transport method is required' USING ERRCODE = '42501';
+            END IF;
+            IF NEW.transport_mode = 'INTERNAL' AND NOT EXISTS (
+                SELECT FROM public.transfer_transport_staff(OLD.id) e WHERE e.id = NEW.transport_employee_id AND e.full_name = NEW.transport_employee_name
+            ) THEN RAISE EXCEPTION 'Invalid source transport employee' USING ERRCODE = '42501'; END IF;
         ELSIF op = 'receive' AND OLD.status = 'DISPATCHED' AND NEW.status = 'RECEIVED' THEN
             allowed := ARRAY['status', 'received_at', 'updated_at'];
         ELSIF op = 'replace' AND OLD.status IN ('DISPATCHED', 'REJECTED_UNFULFILLED') AND NEW.status IN ('REJECTED_UNFULFILLED', 'REPLACED') THEN

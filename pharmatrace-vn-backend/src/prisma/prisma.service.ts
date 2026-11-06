@@ -6,7 +6,7 @@ import { AuthActor, authActor } from '../common/auth-identity';
 
 export type ReviewScope = 'public' | 'customer' | 'staff' | 'moderator' | 'helpful';
 export type VoucherScope = 'validate' | 'read' | 'manage';
-export type OrderOperation = 'read' | 'checkout' | 'cancel' | 'status' | 'pack' | 'transfer_read' | 'dispatch' | 'receive' | 'replace' | 'prescription' | 'loyalty';
+export type OrderOperation = 'read' | 'checkout' | 'cancel' | 'customer_receive' | 'status' | 'pack' | 'transfer_read' | 'dispatch' | 'receive' | 'replace' | 'prescription' | 'loyalty';
 
 export interface AuthContext {
   actor?: AuthActor;
@@ -212,7 +212,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     const actor = identity ? authActor(identity) : undefined;
     const roles: Record<OrderOperation, string[]> = {
       read: ['CUSTOMER', 'SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
-      checkout: ['CUSTOMER'], cancel: ['CUSTOMER'],
+      checkout: ['CUSTOMER'], cancel: ['CUSTOMER'], customer_receive: ['CUSTOMER'],
       status: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST'],
       pack: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
       transfer_read: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],

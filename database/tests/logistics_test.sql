@@ -22,7 +22,7 @@ END $$;
 SELECT set_config('app.current_user_role','SUPER_ADMIN',true);
 DO $$ DECLARE first_id integer; BEGIN
  first_id := public.collect_shipment_cod(current_setting('test.shipment')::integer);
- IF first_id IS NULL OR public.collect_shipment_cod(current_setting('test.shipment')::integer) IS NOT NULL THEN RAISE EXCEPTION 'COD duplicate handling failed'; END IF;
+ IF first_id IS NULL OR public.collect_shipment_cod(current_setting('test.shipment')::integer) IS DISTINCT FROM first_id THEN RAISE EXCEPTION 'COD duplicate handling failed'; END IF;
  IF (SELECT count(*) FROM public.logistics_cod_settlements WHERE shipment_id = current_setting('test.shipment')::integer) <> 1 THEN RAISE EXCEPTION 'COD settlement missing'; END IF;
 END $$;
 SELECT set_config('app.order_operation','dispatch',true);

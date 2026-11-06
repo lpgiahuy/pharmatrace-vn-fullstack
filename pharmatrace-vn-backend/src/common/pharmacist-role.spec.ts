@@ -28,8 +28,11 @@ describe('Pharmacist permissions', () => {
   });
 
   it.each([
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- Inspect handler metadata without invoking the method.
     [CustomerController, CustomerController.prototype.findAll],
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- Inspect handler metadata without invoking the method.
     [VoucherController, VoucherController.prototype.findAll],
+    // eslint-disable-next-line @typescript-eslint/unbound-method -- Inspect handler metadata without invoking the method.
     [VoucherController, VoucherController.prototype.findOne],
   ])('grants pharmacists customer and voucher access through %p', (controller, handler) => {
     const user = { id: 1, type: 'employee', role: 'PHARMACIST' };

@@ -50,7 +50,11 @@ export default function AdminOrdersPage() {
   }, [page, status, message]);
 
   useEffect(() => {
-    fetchOrders();
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      fetchOrders();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [fetchOrders]);
 
   const cols = [

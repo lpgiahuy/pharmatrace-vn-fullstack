@@ -192,11 +192,15 @@ export default function AdminModerationPage() {
   }, [auditPage, auditPageSize, auditActionFilter]);
 
   useEffect(() => {
-    if (activeTab === 'reports') {
-      fetchReports();
-    } else {
-      fetchAuditLogs();
-    }
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (activeTab === 'reports') {
+        fetchReports();
+      } else {
+        fetchAuditLogs();
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [activeTab, fetchReports, fetchAuditLogs]);
 
   const handleOpenDetailModal = (report: ModerationReport) => {

@@ -36,6 +36,7 @@
 \i /docker-entrypoint-initdb.d/security/07_review_rls.sql
 
 -- Order ownership, fulfillment facility scope, transfer projection and loyalty ledger.
+\i /docker-entrypoint-initdb.d/schemas/11_logistics_transport.sql
 \i /docker-entrypoint-initdb.d/security/08_order_rls.sql
 
 -- Voucher management, exact-code previews and order-bound consumption.
@@ -65,3 +66,4 @@
 -- Logistics tables, operations and access controls.
 \i /docker-entrypoint-initdb.d/schemas/10_logistics_operations.sql
 \i /docker-entrypoint-initdb.d/security/17_logistics_rls.sql
+\i /docker-entrypoint-initdb.d/schemas/12_customer_receipt.sql

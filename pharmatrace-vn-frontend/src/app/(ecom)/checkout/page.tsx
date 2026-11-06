@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -42,7 +43,7 @@ export default function CheckoutPage() {
   const { message } = App.useApp();
   const { user, isAuthenticated, isLoading: authLoading, fetchProfile } = useAuth();
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const items = useCartStore((s) => s.items);
   const selectedItemIds = useCartStore((s) => s.selectedItemIds);
   const appliedVoucher = useCartStore((s) => s.appliedVoucher);
@@ -52,8 +53,8 @@ export default function CheckoutPage() {
   const fetchServerCart = useCartStore((s) => s.fetchServerCart);
 
   // Form State
-  const [recipientName, setRecipientName] = useState('');
-  const [recipientPhone, setRecipientPhone] = useState('');
+  const [recipientName, setRecipientName] = useState(user?.fullName || user?.name || '');
+  const [recipientPhone, setRecipientPhone] = useState(user?.phone || '');
   const [shippingAddress, setShippingAddress] = useState('');
   const [note, setNote] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('COD');
@@ -72,10 +73,6 @@ export default function CheckoutPage() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [prescriptionId, setPrescriptionId] = useState<number | null>(null);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   // Fresh user profile fetch on mount to ensure real-time reward points
   useEffect(() => {
     if (isAuthenticated) {
@@ -84,17 +81,15 @@ export default function CheckoutPage() {
     }
   }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Pre-fill user profile
-  useEffect(() => {
+  // Fill profile fields when the loaded profile changes, preserving entered values.
+  const [previousUser, setPreviousUser] = useState(user);
+  if (previousUser !== user) {
+    setPreviousUser(user);
     if (user) {
-      if (!recipientName && (user.fullName || user.name)) {
-        setRecipientName(user.fullName || user.name || '');
-      }
-      if (!recipientPhone && user.phone) {
-        setRecipientPhone(user.phone || '');
-      }
+      if (!recipientName) setRecipientName(user.fullName || user.name || '');
+      if (!recipientPhone) setRecipientPhone(user.phone || '');
     }
-  }, [user]);
+  }
 
   // Selected items from cart
   const selectedItems = useMemo(() => {

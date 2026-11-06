@@ -1,9 +1,18 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from "@nestjs/common";
 import { randomBytes } from "crypto";
+import { Prisma } from "@prisma/client";
 import { authActor } from "../../../common/auth-identity";
 import { PrismaService } from "../../../prisma/prisma.service";
 import { CurrentUserPayload } from "../../../common/decorators/current-user.decorator";
 import { isBoxUnit, AVAILABLE_BOX_STATUSES } from "../../../common/inventory/box.helper";
+import { DispatchTransferDto } from './dto/dispatch-transfer.dto';
+import { LogisticsHistoryEvent } from '../logistics.types';
+
+type TransferItem = Prisma.JsonObject & {
+  variantId: number | string;
+  medicineId: number | string;
+  quantity: number | string;
+};
 
 @Injectable()
 export class InternalTransferService {
@@ -34,7 +43,7 @@ export class InternalTransferService {
   async adminGetInternalTransfers(orderId: number | undefined, user: CurrentUserPayload, status?: string) {
     return this.prisma.withOrder('transfer_read', async (tx) => {
       const facilityId = this.getFacilityScope(user);
-      const where: any = {};
+      const where: Prisma.internal_transfersWhereInput = {};
       if (status) where.status = status;
       if (orderId) {
         where.order_id = orderId;
@@ -69,12 +78,39 @@ export class InternalTransferService {
         include: { from_facility: true, to_facility: true },
       });
       if (!transfer) throw new NotFoundException(`Internal transfer #${transferId} not found`);
-      const history = await tx.$queryRaw`SELECT old_status, new_status, reason, actor_id, created_at FROM public.logistics_events WHERE transfer_id = ${transferId} ORDER BY created_at, id`;
+      let history: LogisticsHistoryEvent[] = [];
+      {
+        const [eventsTable] = await tx.$queryRaw<{ exists: boolean }[]>`
+          SELECT (to_regclass('public.logistics_events') IS NOT NULL
+            AND has_table_privilege(current_user, to_regclass('public.logistics_events'), 'SELECT')) AS exists
+        `;
+        if (eventsTable?.exists) {
+          history = await tx.$queryRaw`SELECT e.old_status, e.new_status, e.reason, e.actor_id,
+            COALESCE(e.actor_type, CASE WHEN emp.id IS NOT NULL THEN 'employee' WHEN cust.id IS NOT NULL THEN 'customer' END) AS actor_type,
+            COALESCE(e.actor_name, a.actor_name, emp.full_name, cust.full_name) AS actor_name,
+            COALESCE(e.actor_role, a.actor_role, emp.role, 'CUSTOMER') AS actor_role,
+            e.created_at, e.occurred_at
+            FROM public.logistics_events e
+            LEFT JOIN LATERAL public.logistics_event_actor(e.id) a ON true
+            LEFT JOIN public.employees emp ON emp.id = e.actor_id
+            LEFT JOIN public.customers cust ON cust.id = e.actor_id AND e.actor_type = 'customer'
+            WHERE e.transfer_id = ${transferId} ORDER BY e.created_at, e.id`;
+        }
+      }
       return { ...transfer, history };
     }, authActor(user));
   }
 
-  async adminDispatchInternalTransfer(transferId: number, trackingCode: string | undefined, user: CurrentUserPayload,) {
+  async transportStaff(transferId: number, user: CurrentUserPayload) {
+    return this.prisma.withOrder('transfer_read', async (tx) => {
+      const facilityId = this.getFacilityScope(user);
+      const transfer = await tx.internal_transfers.findFirst({ where: { id: transferId, ...(facilityId === null ? {} : { from_facility_id: facilityId }) } });
+      if (!transfer) throw new NotFoundException('Transfer not found at your source facility');
+      return tx.$queryRaw<{ id: number; full_name: string }[]>`SELECT * FROM public.transfer_transport_staff(${transferId})`;
+    }, authActor(user));
+  }
+
+  async adminDispatchInternalTransfer(transferId: number, dto: DispatchTransferDto | undefined, user: CurrentUserPayload,) {
     return this.prisma.withOrder('dispatch', async (tx) => {
       const facilityId = this.getFacilityScope(user);
       const transfer = await tx.internal_transfers.findFirst({
@@ -83,24 +119,37 @@ export class InternalTransferService {
       if (!transfer) {
         throw new NotFoundException(`Internal transfer #${transferId} not found`);
       }
+      if (transfer.status !== 'REQUESTED') throw new BadRequestException('Only a requested transfer can be dispatched');
+      if (!dto || !['INTERNAL', 'THIRD_PARTY'].includes(dto.transportMode)) throw new BadRequestException('Choose internal staff or a third-party carrier');
+      let employeeName: string | null = null;
+      if (dto.transportMode === 'INTERNAL') {
+        if (!dto.transportEmployeeId || dto.courierName?.trim() || dto.trackingCode?.trim()) throw new BadRequestException('Internal transport requires a source employee and no carrier tracking');
+        const staff = await tx.$queryRaw<{ id: number; full_name: string }[]>`SELECT * FROM public.transfer_transport_staff(${transferId})`;
+        employeeName = staff.find((employee) => employee.id === dto.transportEmployeeId)?.full_name ?? null;
+        if (!employeeName) throw new BadRequestException('Choose an active employee at the source facility');
+      } else if (!dto.courierName?.trim() || !dto.trackingCode?.trim() || dto.transportEmployeeId) {
+        throw new BadRequestException('Third-party transport requires the carrier and its actual tracking number');
+      }
       const [transferOrder] = await tx.$queryRaw<{ prescription_review_status: string | null; order_status: string }[]>`SELECT * FROM public.transfer_order_state(${transfer.order_id})`;
       if (!transferOrder || transferOrder.order_status === 'CANCELLED' || (transferOrder.prescription_review_status && transferOrder.prescription_review_status !== 'APPROVED')) {
         throw new BadRequestException('This transfer cannot be dispatched before pharmacist approval');
       }
-      if (["CANCELLED", "REJECTED", "REJECTED_UNFULFILLED", "REPLACED", "RECEIVED"].includes(transfer.status)) {
-        throw new BadRequestException(`Cannot dispatch transfer #${transferId} because its status is ${transfer.status}.`);
-      }
-
-      return tx.internal_transfers.update({
-        where: { id: transferId },
+      const dispatched = await tx.internal_transfers.updateMany({
+        where: { id: transferId, status: 'REQUESTED' },
         data: {
           status: "DISPATCHED",
-          tracking_code:
-            trackingCode ||
-            transfer.tracking_code ||
-            `ITR-TRK-${new Date().toISOString().slice(2, 10).replace(/-/g, "")}-${randomBytes(3).toString("hex").toUpperCase()}`,
+          tracking_code: dto.transportMode === 'THIRD_PARTY' ? dto.trackingCode!.trim() : null,
+          transport_mode: dto.transportMode,
+          transport_employee_id: dto.transportMode === 'INTERNAL' ? dto.transportEmployeeId : null,
+          transport_employee_name: employeeName,
+          courier_name: dto.transportMode === 'THIRD_PARTY' ? dto.courierName!.trim().toUpperCase() : null,
           dispatched_at: new Date(),
+          updated_at: new Date(),
         },
+      });
+      if (dispatched.count !== 1) throw new BadRequestException('Transfer changed. Reload before dispatching');
+      return tx.internal_transfers.findFirst({
+        where: { id: transferId },
         include: {
           from_facility: true,
           to_facility: true,
@@ -124,7 +173,7 @@ export class InternalTransferService {
         throw new BadRequestException("Only dispatched transfers for waiting orders can be rejected as damaged.");
       }
 
-      const items = (transfer.items as any[]) || [];
+      const items = (transfer.items as TransferItem[]) || [];
       if (items.length === 0) {
         throw new BadRequestException("Transfer has no items to replace.");
       }
@@ -283,7 +332,7 @@ export class InternalTransferService {
           from_facility_id: transfer.from_facility_id,
           to_facility_id: transfer.to_facility_id,
           status: "REQUESTED",
-          items: transfer.items as any,
+          items,
           distance_km: transfer.distance_km,
           estimated_hours: transfer.estimated_hours,
           notes: `Replacement for damaged transfer #${transfer.transfer_code}`,
@@ -296,6 +345,8 @@ export class InternalTransferService {
 
   async adminReceiveInternalTransfer(transferId: number, user: CurrentUserPayload,) {
     return this.prisma.withOrder('receive', async (tx) => {
+      // Serialize all receipts for an order before counting its remaining transfers.
+      await tx.$queryRaw`SELECT id FROM public.orders WHERE id = (SELECT order_id FROM public.internal_transfers WHERE id = ${transferId}) FOR UPDATE`;
       const facilityId = this.getFacilityScope(user);
       const transfer = await tx.internal_transfers.findFirst({
         where: facilityId === null ? { id: transferId } : { id: transferId, to_facility_id: facilityId },
@@ -312,6 +363,8 @@ export class InternalTransferService {
       });
 
       if (!transfer) {
+        const visible = await tx.internal_transfers.findFirst({ where: { id: transferId } });
+        if (visible) throw new ForbiddenException('Only staff at the destination facility can confirm receipt. Contact the destination facility manager.');
         throw new NotFoundException(`Internal transfer #${transferId} not found`);
       }
 
@@ -326,7 +379,21 @@ export class InternalTransferService {
         throw new BadRequestException(`Transfer #${transferId} must be dispatched before it can be received.`);
       }
 
-      const transferItems = (transfer.items as any[]) || [];
+      if (transfer.orders.order_status !== 'WAITING_INTERNAL_TRANSFER' ||
+        (transfer.orders.prescription_review_status && transfer.orders.prescription_review_status !== 'APPROVED')) {
+        throw new BadRequestException('The order must still be waiting for transfers with its prescription approved.');
+      }
+
+      const transferItems = (transfer.items as TransferItem[]) || [];
+      for (const item of transferItems) {
+        if (![item.variantId, item.medicineId, item.quantity].every(value => Number.isSafeInteger(Number(value)) && Number(value) > 0)) {
+          throw new BadRequestException('Transfer contains invalid medicine, variant or quantity. Contact the source facility.');
+        }
+        const orderItem = transfer.orders.order_items.find(oi => oi.variant_id === Number(item.variantId));
+        if (!orderItem || orderItem.quantity !== Number(item.quantity) || orderItem.source_facility_id !== transfer.from_facility_id || !orderItem.inventory_reserved) {
+          throw new BadRequestException('Transferred items do not match this order reservation. Contact the source facility.');
+        }
+      }
 
       const received = await tx.internal_transfers.updateMany({
         where: { id: transferId, status: 'DISPATCHED' },
@@ -345,11 +412,12 @@ export class InternalTransferService {
         const deductResult = await tx.$executeRaw`
           UPDATE "inventories"
           SET "stock_quantity" = "stock_quantity" - ${quantity},
-              "reserved_quantity" = GREATEST(0, COALESCE("reserved_quantity", 0) - ${quantity}),
+              "reserved_quantity" = COALESCE("reserved_quantity", 0) - ${quantity},
               "updated_at" = NOW()
           WHERE "facility_id" = ${transfer.from_facility_id}
             AND "variant_id" = ${variantId}
             AND "stock_quantity" >= ${quantity}
+            AND COALESCE("reserved_quantity", 0) >= ${quantity}
         `;
 
         if (deductResult !== 1) {

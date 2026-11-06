@@ -249,7 +249,7 @@ export class VoucherService {
 
       return this.formatVoucher(created);
 
-    }, { actor: authActor(user) }).catch(this.writeError);
+    }, { actor: authActor(user) }).catch((error: unknown) => this.writeError(error));
   }
 
   async update(id: number, dto: UpdateVoucherDto, user: CurrentUserPayload) {
@@ -304,7 +304,7 @@ export class VoucherService {
 
       return this.formatVoucher(updated);
 
-    }, { actor: authActor(user) }).catch(this.writeError);
+    }, { actor: authActor(user) }).catch((error: unknown) => this.writeError(error));
   }
   async remove(id: number, user: CurrentUserPayload) {
     return this.prisma.withVoucher('manage', async tx => {
@@ -318,6 +318,6 @@ export class VoucherService {
       await tx.vouchers.delete({ where: { id } });
       return { success: true, message: `Voucher #${id} deleted successfully` };
 
-    }, { actor: authActor(user) }).catch(this.writeError);
+    }, { actor: authActor(user) }).catch((error: unknown) => this.writeError(error));
   }
 }

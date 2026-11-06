@@ -19,7 +19,7 @@ describe('Review access context', () => {
   ])('rejects an invalid identity for %s before opening a transaction', async (scope, actor) => {
     const operation = jest.fn();
     await expect(service.withReview(scope as any, operation, actor as AuthActor)).rejects.toThrow();
-    expect(service.$transaction).not.toHaveBeenCalled();
+    expect(jest.spyOn(service, '$transaction')).not.toHaveBeenCalled();
     expect(operation).not.toHaveBeenCalled();
   });
   it('fails closed when table protection or the runtime role is not ready', async () => {
@@ -29,7 +29,7 @@ describe('Review access context', () => {
     expect(operation).not.toHaveBeenCalled();
   });
   it('clears actor context for anonymous calls without switching database roles', async () => {
-    await service.withReview('public', async () => true);
+    await service.withReview('public', () => Promise.resolve(true));
     expect(tx.$queryRaw.mock.calls.slice(1).map(call => call[1])).toEqual(['public', '', '', '', '']);
     expect(tx.$queryRaw.mock.calls.some(call => call[0].join('').includes('SET LOCAL ROLE'))).toBe(false);
   });

@@ -109,7 +109,7 @@ describe("OrderService inventory reservation", () => {
 
   it("atomically reserves inventory and a physical UID for a box variant", async () => {
     const { prisma, tx } = createMocks(1);
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await service.createOrder(customer.id, dto);
 
@@ -143,7 +143,7 @@ describe("OrderService inventory reservation", () => {
 
   it("rejects the order when the atomic inventory reservation fails", async () => {
     const { prisma, tx } = createMocks(0);
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await expect(service.createOrder(customer.id, dto)).rejects.toBeInstanceOf(
       BadRequestException,
@@ -155,7 +155,7 @@ describe("OrderService inventory reservation", () => {
   it("accepts an order with aggregate stock before physical UIDs are available", async () => {
     const { prisma, tx } = createMocks(1);
     tx.medicine_boxes.findMany.mockResolvedValue([]);
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await expect(service.createOrder(customer.id, dto)).resolves.toMatchObject({ id: 101 });
 
@@ -165,36 +165,44 @@ describe("OrderService inventory reservation", () => {
     });
   });
 
-  it("uses the nearest facility even when a farther warehouse has every item", async () => {
+  it("uses a facility with all items instead of a nearer facility without stock", async () => {
     const { prisma, tx } = createMocks(1);
     prisma.facilities.findMany.mockResolvedValue([
       { ...facility, id: 20, latitude: 21.0, longitude: 105.8 },
       { ...facility, id: 10, latitude: 10.77, longitude: 106.70, inventories: [] },
     ]);
     tx.medicine_boxes.findMany.mockResolvedValue([]);
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await service.createOrder(customer.id, { ...dto, latitude: 10.775, longitude: 106.705 });
 
     expect(tx.orders.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ export_facility_id: 10, order_status: 'WAITING_INTERNAL_TRANSFER' }),
+      data: expect.objectContaining({ export_facility_id: 20, order_status: 'PENDING' }),
     });
-    expect(tx.internal_transfers.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({
-        from_facility_id: 20, to_facility_id: 10, status: 'REQUESTED',
-        items: [expect.objectContaining({ variantId: variant.id, quantity: 1 })],
-      }),
-    });
+    expect(tx.internal_transfers.create).not.toHaveBeenCalled();
     expect(tx.order_items.createMany).toHaveBeenCalledWith({
       data: [expect.objectContaining({ source_facility_id: 20, assigned_uids: [], inventory_reserved: true })],
     });
+  });
+
+  it("chooses the nearest facility among those that can fulfill the whole order", async () => {
+    const { prisma, tx } = createMocks(1);
+    prisma.facilities.findMany.mockResolvedValue([
+      { ...facility, id: 30, latitude: 21.0, longitude: 105.8 },
+      { ...facility, id: 20, latitude: 10.78, longitude: 106.70 },
+      { ...facility, id: 10, latitude: 10.775, longitude: 106.705, inventories: [] },
+    ]);
+    tx.medicine_boxes.findMany.mockResolvedValue([]);
+    await new OrderService(prisma).createOrder(customer.id, { ...dto, latitude: 10.775, longitude: 106.705 });
+    expect(tx.orders.create).toHaveBeenCalledWith({ data: expect.objectContaining({ export_facility_id: 20, order_status: 'PENDING' }) });
+    expect(tx.internal_transfers.create).not.toHaveBeenCalled();
   });
 
   it("atomically applies voucher and reward points", async () => {
     // 1st $executeRaw for inventory, 2nd for voucher, 3rd for customer points
     const { prisma, tx } = createMocks([1, 1, 1]);
     prisma.customers.findUnique.mockResolvedValue({ id: customer.id, reward_points: 500 });
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await service.createOrder(customer.id, {
       ...dto,
@@ -223,7 +231,7 @@ describe("OrderService inventory reservation", () => {
       used_quantity: 0,
       min_order_value: 0,
     });
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await expect(
       service.createOrder(customer.id, {
@@ -245,7 +253,7 @@ describe("OrderService inventory reservation", () => {
       used_quantity: 10,
       min_order_value: 0,
     });
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await expect(
       service.createOrder(customer.id, {
@@ -258,7 +266,7 @@ describe("OrderService inventory reservation", () => {
   it("rejects the order when concurrent race condition exhausts the voucher", async () => {
     // Inventory succeeds (1), but voucher update fails (0) due to race condition / exhausted limit
     const { prisma, tx } = createMocks([1, 0]);
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await expect(
       service.createOrder(customer.id, {
@@ -316,7 +324,7 @@ describe("OrderService inventory reservation", () => {
     // Note: C is returned before B to ensure distance sorting actually chooses B over C
     prisma.facilities.findMany.mockResolvedValue([facilityA, facilityC, facilityB]);
 
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await service.createOrder(customer.id, {
       items: [
@@ -379,7 +387,7 @@ describe("OrderService inventory reservation", () => {
       },
     ]);
 
-    const service = new OrderService(prisma as unknown as PrismaService);
+    const service = new OrderService(prisma);
 
     await expect(
       service.createOrder(customer.id, {

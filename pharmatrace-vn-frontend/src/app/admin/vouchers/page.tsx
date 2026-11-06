@@ -133,7 +133,11 @@ export default function AdminVouchersPage() {
   );
 
   useEffect(() => {
-    fetchVouchers(1);
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      fetchVouchers(1);
+    }, 0);
+    return () => clearTimeout(timer);
   }, [fetchVouchers]);
 
   const handleOpenDetail = (record: VoucherItem) => {

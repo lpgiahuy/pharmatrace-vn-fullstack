@@ -95,6 +95,7 @@ export class ContentModerationService {
       // Remove any HTML tags
       .replace(/<[^>]+>/g, '')
       // Remove null bytes and non-printable control characters
+      // eslint-disable-next-line no-control-regex -- Sanitization intentionally removes these control bytes.
       .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
       // Normalize multiple whitespace to single space, except single newlines
       .replace(/[ \t]+/g, ' ')
@@ -244,7 +245,7 @@ export class ContentModerationService {
    * Currently uses deterministic linguistic heuristics (token diversity, medical claim patterns)
    * and can be seamlessly upgraded to an LLM API (e.g. Gemini / OpenAI) in the future.
    */
-  async checkAi(text: string): Promise<{
+  checkAi(text: string): Promise<{
     riskScore: number;
     label: 'safe' | 'suspicious' | 'harmful';
     reason: string;
@@ -255,7 +256,7 @@ export class ContentModerationService {
       .filter((t) => t.length > 1);
 
     if (tokens.length === 0) {
-      return { riskScore: 0, label: 'safe', reason: 'Empty or trivial text' };
+      return Promise.resolve({ riskScore: 0, label: 'safe', reason: 'Empty or trivial text' });
     }
 
     // Token diversity / Lexical entropy check
@@ -294,11 +295,11 @@ export class ContentModerationService {
     if (finalScore >= 0.7) label = 'harmful';
     else if (finalScore >= 0.35) label = 'suspicious';
 
-    return {
+    return Promise.resolve({
       riskScore: finalScore,
       label,
       reason: reasons.length > 0 ? reasons.join('; ') : 'Content analyzed within normal parameters',
-    };
+    });
   }
 
   // ================= COMPREHENSIVE MODERATION PIPELINE =================

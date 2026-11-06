@@ -302,6 +302,10 @@ model internal_transfers {
   status           String     @default("REQUESTED") @db.VarChar(50)
   items            Json       @default("[]")
   tracking_code    String?    @db.VarChar(100)
+  transport_mode String? @db.VarChar(20)
+  transport_employee_id Int?
+  transport_employee_name String? @db.VarChar(150)
+  courier_name String? @db.VarChar(100)
   distance_km      Decimal?   @db.Decimal(10, 2)
   estimated_hours  Int?       @default(24)
   notes            String?
@@ -387,8 +391,9 @@ model purchase_order_items {
 model shipments {
   id                    Int       @id @default(autoincrement())
   order_id              Int       @unique
-  tracking_number       String    @unique @db.VarChar(50)
+  tracking_number       String    @db.VarChar(50)
   courier_name          String    @default("EXPRESS_LOGISTICS") @db.VarChar(100)
+  carrier_confirmed_at DateTime? @db.Timestamptz(6)
   shipping_status       String    @default("PENDING_PICKUP") @db.VarChar(50)
   picked_up_at          DateTime? @db.Timestamptz(6)
   estimated_delivery_at DateTime? @db.Timestamptz(6)
@@ -402,6 +407,7 @@ model shipments {
   orders                orders    @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([cod_settlement_status], map: "idx_shipments_cod_status")
+  @@unique([courier_name, tracking_number], map: "uq_shipments_courier_tracking")
   @@index([order_id], map: "idx_shipments_order_id")
 }
 

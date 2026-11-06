@@ -32,7 +32,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
       method, headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
-    const result = await response.json() as any;
+    const result = await response.json();
     expect({ status: response.status, ...(response.status === status ? {} : { result }) }).toEqual({ status });
     return result;
   }
@@ -157,7 +157,7 @@ integration('Order HTTP + Prisma + PostgreSQL RLS', () => {
     const order = await place();
     await expect(prisma.withOrder('cancel', tx => tx.orders.update({ where: { id: order.id }, data: { payment_status: 'PAID' } }), customer)).rejects.toThrow();
     await expect(prisma.withOrder('cancel', tx => tx.order_items.updateMany({ where: { order_id: order.id }, data: { source_facility_id: outside } }), customer)).rejects.toThrow();
-    await expect(prisma.withOrder('status', async () => true, { id: pharmacist, role: 'WAREHOUSE_STAFF', type: 'employee', facilityId: primary })).rejects.toThrow();
+    await expect(prisma.withOrder('status', () => Promise.resolve(true), { id: pharmacist, role: 'WAREHOUSE_STAFF', type: 'employee', facilityId: primary })).rejects.toThrow();
     for (const sql of ['DELETE FROM orders', 'TRUNCATE orders', 'DELETE FROM loyalty_point_logs', "UPDATE loyalty_point_logs SET points = 99999"]) {
       await expect(prisma.withOrder('status', tx => tx.$executeRawUnsafe(sql), superActor())).rejects.toThrow();
     }

@@ -43,6 +43,7 @@ pnpm-debug.log*
 pharmatrace-vn-backend/prisma/generated/
 
 # Uploads & Temporary files / Scripts
+test-ci.ps1
 pharmatrace-vn-backend/uploads/*
 **/.private/
 !pharmatrace-vn-backend/uploads/.gitkeep

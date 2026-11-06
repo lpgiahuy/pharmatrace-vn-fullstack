@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Tag, Button, Descriptions } from 'antd';
@@ -20,13 +21,9 @@ export default function AdminDashboardPage() {
   const getIsAuthenticated = useAuthStore((state) => state.getIsAuthenticated);
   const getUser = useAuthStore((state) => state.getUser);
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [adminTestData, setAdminTestData] = useState<any>(null);
   const [loadingTest, setLoadingTest] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const user = mounted ? getUser() : null;

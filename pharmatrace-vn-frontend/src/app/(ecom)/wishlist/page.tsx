@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -17,7 +18,7 @@ function WishlistContent() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const addItem = useCartStore((state) => state.addItem);
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<number | null>(null);
@@ -27,10 +28,6 @@ function WishlistContent() {
   const page = Number(searchParams.get('page')) || 1;
   const sort = (searchParams.get('sort') as 'newest' | 'oldest' | 'price_asc' | 'price_desc') || 'newest';
   const search = searchParams.get('search') || '';
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const fetchWishlist = useCallback(async () => {
     if (!isAuthenticated) {
@@ -69,9 +66,13 @@ function WishlistContent() {
   }, [isAuthenticated, page, sort, search, message]);
 
   useEffect(() => {
-    if (mounted && !authLoading) {
-      fetchWishlist();
-    }
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (mounted && !authLoading) {
+        fetchWishlist();
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [mounted, authLoading, fetchWishlist]);
 
   const updateQueryParams = (key: string, val: string) => {

@@ -190,7 +190,11 @@ export default function AdminReviewsPage() {
   }, [page, pageSize, status, rating, search]);
 
   useEffect(() => {
-    fetchReviews();
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      fetchReviews();
+    }, 0);
+    return () => clearTimeout(timer);
   }, [page, pageSize, status, rating, search]);
 
   // Open Detail Drawer

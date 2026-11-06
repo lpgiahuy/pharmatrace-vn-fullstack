@@ -7,6 +7,7 @@ import { CurrentUser, CurrentUserPayload } from '../../../common/decorators/curr
 import { LogisticsService } from './logistics.service';
 import { ShipmentQueryDto } from './dto/shipment-query.dto';
 import { ReturnShipmentDto, ShipmentStatusDto } from './dto/shipment-status.dto';
+import { ShipmentCarrierDto } from './dto/shipment-carrier.dto';
 
 @ApiTags('Admin - Logistics')
 @ApiBearerAuth('bearerAuth')
@@ -31,6 +32,12 @@ export class LogisticsController {
   @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'PHARMACIST', 'Pharmacist')
   async updateShipment(@Param('id', ParseIntPipe) id: number, @Body() dto: ShipmentStatusDto, @CurrentUser() user: CurrentUserPayload) {
     return { success: true, data: await this.logistics.changeStatus(id, dto, user) };
+  }
+
+  @Patch('shipments/:id/carrier')
+  @Roles('SUPER_ADMIN', 'SuperAdmin', 'STORE_MANAGER', 'StoreManager', 'PHARMACIST', 'Pharmacist')
+  async updateCarrier(@Param('id', ParseIntPipe) id: number, @Body() dto: ShipmentCarrierDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.logistics.updateCarrier(id, dto, user) };
   }
 
   @Post('shipments/:id/return')

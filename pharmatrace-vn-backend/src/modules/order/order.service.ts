@@ -215,6 +215,7 @@ export class OrderService {
           : Number.POSITIVE_INFINITY,
     }));
     scoredFacilities.sort((a, b) =>
+      (Number(b.coveredCount === itemsToOrder.length) - Number(a.coveredCount === itemsToOrder.length)) ||
       (a.distanceToCustomer - b.distanceToCustomer) || (b.coveredCount - a.coveredCount),
     );
     const primaryFacilityObj = scoredFacilities[0]?.facility;
@@ -575,6 +576,16 @@ export class OrderService {
       return formatOrder(order);
 
     }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
+  }
+
+  async confirmReceipt(customerId: number, orderId: number) {
+    const result = await this.prisma.withOrder('customer_receive', async tx => {
+      const rows = await tx.$queryRaw<{ result: string }[]>`SELECT public.confirm_customer_receipt(${orderId}) AS result`;
+      return rows[0]?.result;
+    }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
+    if (result === 'NOT_FOUND') throw new NotFoundException('Order not found');
+    if (result !== 'RECEIVED' && result !== 'ALREADY_RECEIVED') throw new BadRequestException('Receipt can only be confirmed when your order is being shipped.');
+    return this.getMyOrderById(customerId, orderId);
   }
 
   async cancelMyOrder(customerId: number, orderId: number) {

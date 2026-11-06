@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -27,7 +28,7 @@ function CustomerReviewsContent() {
   const router = useRouter();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [activeTab, setActiveTab] = useState<'my_reviews' | 'pending'>('my_reviews');
   const [myReviews, setMyReviews] = useState<ReviewItem[]>([]);
   const [pendingProducts, setPendingProducts] = useState<any[]>([]);
@@ -42,10 +43,6 @@ function CustomerReviewsContent() {
   const [reviewImages, setReviewImages] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [submittingReview, setSubmittingReview] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const fetchCustomerReviews = useCallback(async () => {
     if (!isAuthenticated) {
@@ -68,9 +65,13 @@ function CustomerReviewsContent() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (mounted && !authLoading) {
-      fetchCustomerReviews();
-    }
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (mounted && !authLoading) {
+        fetchCustomerReviews();
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [mounted, authLoading, fetchCustomerReviews]);
 
   const handleOpenReviewModal = (product: any) => {

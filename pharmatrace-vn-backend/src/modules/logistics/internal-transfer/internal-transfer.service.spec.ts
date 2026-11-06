@@ -41,14 +41,14 @@ describe("InternalTransferService receiving unassigned packages", () => {
           items: [{ variantId: 11, medicineId: 21, quantity: 1 }],
           orders: {
             order_code: "ORD-1", order_status: "WAITING_INTERNAL_TRANSFER",
-            order_items: [{ id: 6, variant_id: 11, medicine_id: 21, unit_name: "Tube", assigned_uids: [] }],
+            order_items: [{ id: 6, variant_id: 11, medicine_id: 21, quantity: 1, source_facility_id: 20, inventory_reserved: true, unit_name: "Tube", assigned_uids: [] }],
           },
         }),
         findUnique: jest.fn().mockResolvedValue({ id: 8, status: "RECEIVED" }),
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    return { tx, service: new InternalTransferService(scopedPrisma(prisma) as unknown as PrismaService) };
+    return { tx, service: new InternalTransferService(scopedPrisma(prisma)) };
   }
 
   it("assigns and moves physical UIDs when checkout deferred package assignment", async () => {
@@ -89,7 +89,7 @@ describe("InternalTransferService facility access", () => {
   const facilityStaff = { type: "employee" as const, id: 21, role: "WAREHOUSE_STAFF", facilityId: 3 };
   function setup() {
     const prisma = { internal_transfers: { findMany: jest.fn().mockResolvedValue([]), findFirst: jest.fn().mockResolvedValue(null) } };
-    return { prisma, service: new InternalTransferService(scopedPrisma(prisma) as unknown as PrismaService) };
+    return { prisma, service: new InternalTransferService(scopedPrisma(prisma)) };
   }
   it("shows only transfers involving the staff facility", async () => {
     const { service, prisma } = setup();
@@ -147,13 +147,13 @@ describe("InternalTransferService transfer completion", () => {
           order_id: 1,
           status: "DISPATCHED",
           items: [],
-          orders: { order_items: [], internal_transfers: [], order_code: "ORD-1" },
+          orders: { order_status: "WAITING_INTERNAL_TRANSFER", order_items: [], internal_transfers: [], order_code: "ORD-1" },
         }),
         findUnique: jest.fn(),
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) => run(tx)),
     };
-    const service = new InternalTransferService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new InternalTransferService(scopedPrisma(prisma));
 
     await service.adminReceiveInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -183,13 +183,13 @@ describe("InternalTransferService transfer completion", () => {
           order_id: 1,
           status: "DISPATCHED",
           items: [],
-          orders: { order_items: [], internal_transfers: [], order_code: "ORD-1" },
+          orders: { order_status: "WAITING_INTERNAL_TRANSFER", order_items: [], internal_transfers: [], order_code: "ORD-1" },
         }),
         findUnique: jest.fn(),
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<void>) => run(tx)),
     };
-    const service = new InternalTransferService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new InternalTransferService(scopedPrisma(prisma));
 
     await service.adminReceiveInternalTransfer(9, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -238,7 +238,7 @@ describe("InternalTransferService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new InternalTransferService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new InternalTransferService(scopedPrisma(prisma));
 
     await service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -294,7 +294,7 @@ describe("InternalTransferService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new InternalTransferService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new InternalTransferService(scopedPrisma(prisma));
 
     await expect(service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -351,7 +351,7 @@ describe("InternalTransferService transfer completion", () => {
       },
       $transaction: jest.fn((run: (client: typeof tx) => Promise<unknown>) => run(tx)),
     };
-    const service = new InternalTransferService(scopedPrisma(prisma) as unknown as PrismaService);
+    const service = new InternalTransferService(scopedPrisma(prisma));
 
     await expect(service.adminRejectDamagedInternalTransfer(8, { type: "employee" as const,
       id: 1, role: "SUPER_ADMIN", facilityId: 1,
@@ -363,6 +363,65 @@ describe("InternalTransferService transfer completion", () => {
       data: { assigned_uids: [], inventory_reserved: false },
     });
     expect(tx.internal_transfers.create).not.toHaveBeenCalled();
+  });
+});
+
+describe('InternalTransferService transport methods', () => {
+  const actor = { id: 21, type: 'employee' as const, role: 'WAREHOUSE_STAFF', facilityId: 3 };
+  function setup(status = 'REQUESTED') {
+    const tx = {
+      internal_transfers: {
+        findFirst: jest.fn().mockResolvedValue({ id: 8, order_id: 101, from_facility_id: 3, to_facility_id: 4, status }),
+        updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+      },
+      $queryRaw: jest.fn().mockImplementation((parts: TemplateStringsArray) => Promise.resolve(
+        parts.join('').includes('transfer_transport_staff') ? [{ id: 21, full_name: 'Source transporter' }]
+          : [{ order_status: 'WAITING_INTERNAL_TRANSFER', prescription_review_status: 'APPROVED' }],
+      )),
+    };
+    return { tx, service: new InternalTransferService({ withOrder: jest.fn((_operation, run) => run(tx)) } as unknown as PrismaService) };
+  }
+
+  it('dispatches with an active source employee and no external tracking', async () => {
+    const { tx, service } = setup();
+    await service.adminDispatchInternalTransfer(8, { transportMode: 'INTERNAL', transportEmployeeId: 21 }, actor);
+    expect(tx.internal_transfers.updateMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { id: 8, status: 'REQUESTED' },
+      data: expect.objectContaining({ transport_mode: 'INTERNAL', transport_employee_id: 21, transport_employee_name: 'Source transporter', courier_name: null, tracking_code: null }),
+    }));
+  });
+
+  it('rejects an employee from another facility', async () => {
+    const { tx, service } = setup();
+    await expect(service.adminDispatchInternalTransfer(8, { transportMode: 'INTERNAL', transportEmployeeId: 22 }, actor)).rejects.toThrow(/source facility/);
+    expect(tx.internal_transfers.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('dispatches through a third party without assigning an internal driver', async () => {
+    const { tx, service } = setup();
+    await service.adminDispatchInternalTransfer(8, { transportMode: 'THIRD_PARTY', courierName: ' ghn ', trackingCode: ' GHN-001 ' }, actor);
+    expect(tx.internal_transfers.updateMany).toHaveBeenCalledWith(expect.objectContaining({
+      data: expect.objectContaining({ transport_mode: 'THIRD_PARTY', transport_employee_id: null, transport_employee_name: null, courier_name: 'GHN', tracking_code: 'GHN-001' }),
+    }));
+  });
+
+  it('requires actual tracking for a third-party transfer', async () => {
+    const { tx, service } = setup();
+    await expect(service.adminDispatchInternalTransfer(8, { transportMode: 'THIRD_PARTY', courierName: 'GHN' }, actor)).rejects.toThrow(/actual tracking/);
+    expect(tx.internal_transfers.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('cannot change transport details by dispatching a second time', async () => {
+    const { tx, service } = setup('DISPATCHED');
+    await expect(service.adminDispatchInternalTransfer(8, { transportMode: 'THIRD_PARTY', courierName: 'GHN', trackingCode: 'NEW' }, actor)).rejects.toThrow(/requested transfer/);
+    expect(tx.internal_transfers.updateMany).not.toHaveBeenCalled();
+  });
+
+  it('explains destination-only receipt to staff who can see the source transfer', async () => {
+    const { tx, service } = setup('DISPATCHED');
+    tx.internal_transfers.findFirst.mockResolvedValueOnce(null);
+    await expect(service.adminReceiveInternalTransfer(8, actor)).rejects.toThrow(/destination facility/);
+    expect(tx.internal_transfers.updateMany).not.toHaveBeenCalled();
   });
 });
 

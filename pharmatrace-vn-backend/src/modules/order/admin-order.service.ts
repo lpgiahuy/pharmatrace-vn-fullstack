@@ -147,6 +147,13 @@ export class AdminOrderService {
         ? normalizeOrderStatus(dto.orderStatus)
         : currentStatus;
 
+      if (currentStatus !== targetStatus && ['RETURNED', 'PARTIALLY_RETURNED'].includes(targetStatus)) {
+        throw new BadRequestException('Customer returns require an approved RMA; they cannot be confirmed by changing the order status.');
+      }
+      if (targetStatus === 'COMPLETED' && currentStatus !== targetStatus) {
+        throw new BadRequestException('Only the customer can confirm receipt of this order.');
+      }
+
       if (order.prescription_review_status && order.prescription_review_status !== 'APPROVED' && !['PENDING', 'WAITING_INTERNAL_TRANSFER', 'CANCELLED'].includes(targetStatus)) {
         throw new BadRequestException('This order requires pharmacist approval before processing');
       }
@@ -180,14 +187,15 @@ export class AdminOrderService {
       if (targetStatus === "CANCELLED" && currentStatus !== targetStatus) {
         await releaseOrderReservations(tx, orderId, order.export_facility_id);
       }
-      if (targetStatus === "COMPLETED") {
-        await tx.shipments.updateMany({
-          where: { order_id: orderId },
+      if (targetStatus === "COMPLETED" && currentStatus !== targetStatus) {
+        const delivered = await tx.shipments.updateMany({
+          where: { order_id: orderId, shipping_status: 'IN_TRANSIT' },
           data: {
             shipping_status: "DELIVERED",
             actual_delivery_at: new Date(),
           },
         });
+        if (delivered.count !== 1) throw new BadRequestException('Shipment changed. Reload before confirming delivery.');
       }
 
       if (
@@ -471,7 +479,7 @@ export class AdminOrderService {
             `Order item "${item.medicine_name}" is missing medicine ID.`,
           );
         }
-        const availableForMed = boxesByMedicine.get(item.medicine_id!) || [];
+        const availableForMed = boxesByMedicine.get(item.medicine_id) || [];
         if (availableForMed.length < item.quantity) {
           throw new BadRequestException(
             `Verified packages do not match medicine "${item.medicine_name}". Required: ${item.quantity}, provided: ${availableForMed.length}.`,
@@ -636,7 +644,7 @@ export class AdminOrderService {
         data: {
           order_id: orderId,
           tracking_number: trackingNumber,
-          courier_name: dto?.courierName?.trim() || "EXPRESS_LOGISTICS",
+          courier_name: dto?.courierName?.trim().toUpperCase() || "EXPRESS_LOGISTICS",
           shipping_status: "PENDING_PICKUP",
           cod_amount: order.payment_method === "COD" ? order.total_amount : 0,
           note: dto?.shippingNote || null,

@@ -60,7 +60,7 @@ export class AuthAdminService {
     return { user: sanitizeStaff({ ...employee, role }), accessToken: token };
   }
 
-  async setupInitialAdmin(_dto: AdminSetupDto) {
-    throw new GoneException('Initial administrators must be provisioned through the database administration process');
+  setupInitialAdmin(_dto: AdminSetupDto): Promise<never> {
+    return Promise.reject(new GoneException('Initial administrators must be provisioned through the database administration process'));
   }
 }
