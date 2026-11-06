@@ -471,7 +471,7 @@ export class AdminOrderService {
             `Order item "${item.medicine_name}" is missing medicine ID.`,
           );
         }
-        const availableForMed = boxesByMedicine.get(item.medicine_id!) || [];
+        const availableForMed = boxesByMedicine.get(item.medicine_id) || [];
         if (availableForMed.length < item.quantity) {
           throw new BadRequestException(
             `Verified packages do not match medicine "${item.medicine_name}". Required: ${item.quantity}, provided: ${availableForMed.length}.`,

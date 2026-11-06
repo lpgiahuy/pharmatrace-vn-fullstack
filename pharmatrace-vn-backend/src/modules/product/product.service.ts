@@ -174,6 +174,7 @@ export class ProductService {
 
     const reqStatus = query?.status ? String(query.status).toUpperCase() : 'ACTIVE';
     if (reqStatus === 'ALL') {
+      // ALL deliberately leaves the status filter unrestricted.
     } else if (reqStatus === 'ACTIVE') {
       andConditions.push({
         status: { equals: 'ACTIVE', mode: 'insensitive' },
@@ -790,8 +791,8 @@ export class ProductService {
     });
   }
 
-  async getPackagings() {
-    return [
+  getPackagings() {
+    return Promise.resolve([
       { id: 1, unitName: 'Box', description: 'Outer cardboard packaging box' },
       { id: 2, unitName: 'Blister Pack', description: 'Foil or plastic push-through blister' },
       { id: 3, unitName: 'Bottle', description: 'Glass or plastic liquid/pill bottle' },
@@ -801,6 +802,6 @@ export class ProductService {
       { id: 7, unitName: 'Ampoule', description: 'Sealed glass injection vial' },
       { id: 8, unitName: 'Vial', description: 'Injectable powder vial' },
       { id: 9, unitName: 'Pack', description: 'Multi-item bundle or packet' },
-    ];
+    ]);
   }
 }

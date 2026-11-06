@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import {
@@ -84,7 +85,7 @@ export default function CategoriesPage() {
   const getUser = useAuthStore((state) => state.getUser);
 
   const [messageApi, contextHolder] = message.useMessage();
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [rawCats, setRawCats] = useState<Category[]>([]);
   const [cats, setCats] = useState<TreeNodeCategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,10 +100,6 @@ export default function CategoriesPage() {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedIds, setExpandedIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const isAuthenticated = mounted ? getIsAuthenticated() : false;
   const user = mounted ? getUser() : null;
@@ -131,9 +128,13 @@ export default function CategoriesPage() {
   }, [messageApi]);
 
   useEffect(() => {
-    if (mounted && isAuthenticated) {
-      fetchCategories();
-    }
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (mounted && isAuthenticated) {
+        fetchCategories();
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [mounted, isAuthenticated, fetchCategories]);
 
   const stats = useMemo(() => {
@@ -171,11 +172,13 @@ export default function CategoriesPage() {
       .filter((item): item is TreeNodeCategory => item !== null);
   }, [cats, searchQuery]);
 
-  useEffect(() => {
-    if (searchQuery.trim()) {
-      setExpandedIds(filteredParents.map((p) => p.id));
-    }
-  }, [searchQuery, filteredParents]);
+  const [previousFilteredParents, setPreviousFilteredParents] = useState(filteredParents);
+  const [previousSearchQuery, setPreviousSearchQuery] = useState(searchQuery);
+  if (previousFilteredParents !== filteredParents || previousSearchQuery !== searchQuery) {
+    setPreviousFilteredParents(filteredParents);
+    setPreviousSearchQuery(searchQuery);
+    if (searchQuery.trim()) setExpandedIds(filteredParents.map((p) => p.id));
+  }
 
   const toggleExpand = (id: number) => {
     setExpandedIds((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));

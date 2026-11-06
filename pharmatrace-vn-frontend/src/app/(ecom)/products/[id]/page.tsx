@@ -127,11 +127,14 @@ function RenderSafeContent({
     const trimmed = content.trim();
     if (trimmed === '[object Object]' || trimmed === '') return null;
     if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+      let parsed: unknown;
       try {
-        const parsed = JSON.parse(trimmed);
-        return <RenderSafeContent content={parsed} className={className} />;
+        parsed = JSON.parse(trimmed);
       } catch {
         // Fallback to text
+      }
+      if (parsed !== undefined) {
+        return <RenderSafeContent content={parsed} className={className} />;
       }
     }
     return <p className={`${className} whitespace-pre-line m-0`}>{cleanText(content)}</p>;
@@ -295,17 +298,21 @@ export default function ProductDetailPage({
 
   // Restore voted helpful review IDs from localStorage on client mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('pharmatrace_helpful_reviews');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) {
-          setVotedHelpfulIds(new Set(parsed));
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      try {
+        const stored = localStorage.getItem('pharmatrace_helpful_reviews');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            setVotedHelpfulIds(new Set(parsed));
+          }
         }
+      } catch {
+        // Ignore localStorage read error
       }
-    } catch {
-      // Ignore localStorage read error
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const loadReviews = React.useCallback(
@@ -336,43 +343,51 @@ export default function ProductDetailPage({
   );
 
   useEffect(() => {
-    if (!productId) return;
-    setLoading(true);
-    productService
-      .getProductById(productId)
-      .then((res) => {
-        if (res && res.data) {
-          setProduct(res.data);
-          if (res.data.packagingOptions && res.data.packagingOptions.length > 0) {
-            setSelectedPackagingId(res.data.packagingOptions[0].id);
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (!productId) return;
+      setLoading(true);
+      productService
+        .getProductById(productId)
+        .then((res) => {
+          if (res && res.data) {
+            setProduct(res.data);
+            if (res.data.packagingOptions && res.data.packagingOptions.length > 0) {
+              setSelectedPackagingId(res.data.packagingOptions[0].id);
+            }
+            if (res.data.medicineName) {
+              document.title = `${cleanText(res.data.medicineName)} | PharmaTrace VN`;
+            }
+            loadReviews(res.data.id || productId);
           }
-          if (res.data.medicineName) {
-            document.title = `${cleanText(res.data.medicineName)} | PharmaTrace VN`;
-          }
-          loadReviews(res.data.id || productId);
-        }
-      })
-      .catch(() => {
-        messageApi.error('Failed to load product details');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        })
+        .catch(() => {
+          messageApi.error('Failed to load product details');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 0);
+    return () => clearTimeout(timer);
   }, [productId, messageApi, loadReviews]);
 
   useEffect(() => {
-    if (!product?.id || !isAuthenticated) {
-      setIsWishlisted(false);
-      return;
-    }
-    wishlistService
-      .checkIsWishlisted(product.id)
-      .then((res) => {
-        if (res?.data) {
-          setIsWishlisted(Boolean(res.data.isWishlisted));
-        }
-      })
-      .catch(() => { });
+    // Cancel pending work when dependencies change or the component unmounts.
+    const timer = setTimeout(() => {
+      if (!product?.id || !isAuthenticated) {
+        setIsWishlisted(false);
+        return;
+      }
+      wishlistService
+        .checkIsWishlisted(product.id)
+        .then((res) => {
+          if (res?.data) {
+            setIsWishlisted(Boolean(res.data.isWishlisted));
+          }
+        })
+        .catch(() => { });
+    }, 0);
+    return () => clearTimeout(timer);
   }, [product?.id, isAuthenticated]);
 
   const handleToggleWishlist = async () => {

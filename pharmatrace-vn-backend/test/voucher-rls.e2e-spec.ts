@@ -25,7 +25,7 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
       headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
-    return { status: response.status, result: await response.json() as any };
+    return { status: response.status, result: await response.json() };
   }
   async function api(method: string, path: string, status: number, token?: string, body?: unknown) {
     const response = await request(method, path, token, body);
@@ -136,7 +136,7 @@ integration('Voucher HTTP + Prisma + PostgreSQL RLS', () => {
     await api('POST', '/admin/vouchers', 403, tokens.manager, {});
     await api('PATCH', `/admin/vouchers/${voucher}`, 403, tokens.manager, { status: 'INACTIVE' });
     await api('DELETE', `/admin/vouchers/${voucher}`, 403, tokens.manager);
-    await expect(prisma.withVoucher('manage', async () => true, { actor: managerActor() })).rejects.toThrow();
+    await expect(prisma.withVoucher('manage', () => Promise.resolve(true), { actor: managerActor() })).rejects.toThrow();
     await api('GET', '/admin/vouchers?search=TEST-VOUCHER&limit=1', 200, tokens.super);
     await api('PATCH', `/admin/vouchers/${voucher}`, 403, tokens.pharmacist, { status: 'INACTIVE' });
     await api('DELETE', `/admin/vouchers/${voucher}`, 403, tokens.pharmacist);

@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -27,7 +28,7 @@ const STANDARD_SHIPPING_FEE = 30000;
 export default function CartPage() {
   const router = useRouter();
 
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const items = useCartStore((state) => state.items);
   const selectedItemIds = useCartStore((state) => state.selectedItemIds);
   const updateQuantity = useCartStore((state) => state.updateQuantity);
@@ -48,10 +49,6 @@ export default function CartPage() {
   const [isMobileSummaryOpen, setIsMobileSummaryOpen] = useState(false);
 
   // On first mount, set mounted
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   // Fetch packaging options for products in cart if they have multiple variants
   useEffect(() => {
     if (!mounted || items.length === 0) return;

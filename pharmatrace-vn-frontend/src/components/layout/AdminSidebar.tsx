@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useHydrated } from '@/hooks/useHydrated';
+import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Layout, Menu, Drawer } from 'antd';
 import {
@@ -33,11 +34,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   const normalizedRole = (role || '').toUpperCase().replace(/[\s_-]/g, '');
   const canManageStaff = normalizedRole === 'SUPERADMIN' || normalizedRole === 'STOREMANAGER';
@@ -98,7 +95,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         (item.key !== '/admin' && pathname.startsWith(item.key))
     )?.key || '/admin';
 
-  const SidebarContent = ({ isCollapsed }: { isCollapsed: boolean }) => (
+  const renderSidebarContent = (isCollapsed: boolean) => (
     <div className="flex h-full flex-col bg-white select-none border-r border-slate-100">
       {/* Brand Header */}
       <div
@@ -163,7 +160,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         }}
         theme="light"
       >
-        <SidebarContent isCollapsed={collapsed} />
+        {renderSidebarContent(collapsed)}
       </Sider>
     );
   }
@@ -177,7 +174,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         styles={{ wrapper: { width: 240 }, body: { padding: 0 } }}
         closable={false}
       >
-        <SidebarContent isCollapsed={false} />
+        {renderSidebarContent(false)}
       </Drawer>
     );
   }
@@ -199,7 +196,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       }}
       theme="light"
     >
-      <SidebarContent isCollapsed={collapsed} />
+      {renderSidebarContent(collapsed)}
     </Sider>
   );
 };

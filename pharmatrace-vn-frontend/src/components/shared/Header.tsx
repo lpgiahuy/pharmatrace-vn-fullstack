@@ -1,5 +1,6 @@
 'use client';
 
+import { useHydrated } from '@/hooks/useHydrated';
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -40,14 +41,13 @@ export const Header: React.FC = () => {
   const [searchVal, setSearchVal] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
   const totalCartItems = useCartStore((state) => state.getTotalItems());
   const fetchServerCart = useCartStore((state) => state.fetchServerCart);
 
   useEffect(() => {
-    setMounted(true);
     categoryService.getCategories().then((res) => {
       if (res?.data) {
         setCategories(res.data.filter((c) => !c.parentId));

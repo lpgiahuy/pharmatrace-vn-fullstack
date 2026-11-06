@@ -21,7 +21,7 @@ describe('Order transaction context', () => {
   ])('rejects mismatched identity or facility for %s', async (scope, actor) => {
     const run = jest.fn();
     await expect(service.withOrder(scope as OrderOperation, run, actor as AuthActor)).rejects.toThrow();
-    expect(service.$transaction).not.toHaveBeenCalled();
+    expect(jest.spyOn(service, '$transaction')).not.toHaveBeenCalled();
     expect(run).not.toHaveBeenCalled();
   });
   it.each(['read', 'status', 'pack', 'prescription'] as const)('allows pharmacists to perform %s at their facility', async (scope) => {
@@ -37,7 +37,7 @@ describe('Order transaction context', () => {
     expect(run).not.toHaveBeenCalled();
   });
   it('clears all identity fields for internal loyalty jobs', async () => {
-    await service.withOrder('loyalty', async () => true);
+    await service.withOrder('loyalty', () => Promise.resolve(true));
     expect(tx.$queryRaw.mock.calls.slice(1).map(call => call[1])).toEqual(['loyalty', '', '', '', '']);
   });
 });

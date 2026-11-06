@@ -54,7 +54,7 @@ export class AuthUserService {
         || (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002')
         || error?.meta?.code === '23505'
         || (error?.meta?.driverAdapterError as { cause?: { originalCode?: string } } | undefined)?.cause?.originalCode === '23505'
-        || (error as any)?.originalCode === '23505'
+        || (error)?.originalCode === '23505'
         || (typeof error?.message === 'string' && error.message.includes('23505'));
 
       if (isUnique) {
