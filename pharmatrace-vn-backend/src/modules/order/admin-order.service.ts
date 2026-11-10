@@ -4,6 +4,8 @@ import {
   BadRequestException,
   ForbiddenException,
 } from "@nestjs/common";
+import { FulfillmentPolicyDto } from './dto/fulfillment-policy.dto';
+import { workflowDatabase } from "../../common/workflow-database";
 import { authActor } from "../../common/auth-identity";
 import { randomBytes } from "crypto";
 import { Prisma } from "@prisma/client";
@@ -37,6 +39,31 @@ const ALLOWED_TRANSITIONS: Record<string, string[]> = {
 export class AdminOrderService {
   constructor(private readonly prisma: PrismaService) { }
 
+  async getFulfillmentPolicies(user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, async tx => ({
+      policies: await tx.$queryRaw`SELECT p.*, f.facility_name, s.facility_name AS selling_facility_name
+        FROM public.facility_fulfillment_policy p JOIN public.facilities f ON f.id=p.facility_id
+        JOIN public.facilities s ON s.id=p.selling_facility_id ORDER BY p.facility_id`,
+      requirements: await tx.$queryRaw`SELECT r.*, m.medicine_name FROM public.medicine_transport_requirements r
+        JOIN public.medicines m ON m.id=r.medicine_id ORDER BY r.medicine_id`,
+      warehouseLinks: await tx.$queryRaw`SELECT warehouse_id,pharmacy_id FROM public.warehouse_selling_pharmacies ORDER BY warehouse_id,pharmacy_id`,
+    }));
+  }
+
+  async saveFulfillmentPolicy(id: number, dto: FulfillmentPolicyDto, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, tx => tx.$executeRaw`SELECT public.save_fulfillment_policy(${id}, ${dto.sellingFacilityId},
+      ${dto.enabled}, ${dto.opensMinute}, ${dto.closesMinute}, ${dto.weekdays}::integer[], ${dto.dailyCapacity},
+      ${dto.radiusKm}::numeric, ${dto.transportConditions.map(value => value.trim())}::text[])`);
+  }
+
+  async saveTransportRequirement(id: number, condition: string, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, tx => tx.$executeRaw`SELECT public.save_transport_requirement(${id}, ${condition.trim()}::text)`);
+  }
+
+  async setWarehouseSellingPharmacies(id: number, pharmacyIds: number[], user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, tx => tx.$executeRaw`SELECT public.set_warehouse_selling_pharmacies(${id}, ${pharmacyIds}::integer[])`);
+  }
+
   private getFacilityScope(user: CurrentUserPayload): number | null {
     const role = (user?.role || "").toString().toLowerCase().replace(/_/g, "");
 
@@ -61,7 +88,7 @@ export class AdminOrderService {
     user: CurrentUserPayload,
     operation: (tx: Prisma.TransactionClient) => Promise<T>,
   ): Promise<T> {
-    return this.prisma.withOrder('read', operation, authActor(user));
+    return workflowDatabase(this.prisma.withOrder('read', operation, authActor(user)));
   }
 
   async adminGetAllOrders(query: OrderQueryDto, user: CurrentUserPayload) {

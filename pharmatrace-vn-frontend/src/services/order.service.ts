@@ -230,6 +230,10 @@ export interface CreateOrderItemDto {
 }
 
 export interface CreateOrderDto {
+  expectedTotalAmount?: number;
+  expectedShippingFee?: number;
+  expectedFacilityId?: number;
+  expectedPlanHash?: string;
   shippingAddress: string;
   latitude?: number;
   longitude?: number;
@@ -287,6 +291,10 @@ export interface AvailableBoxInfo {
 }
 
 export const orderService = {
+  quoteOrder: async (dto: CreateOrderDto): Promise<{ success: boolean; data: { subtotalAmount: number; shippingFee: number; totalAmount: number; facilityId: number; facilityName: string; sellingFacilityId: number; sellingFacilityName: string; estimatedDeliveryLabel: string; planHash: string; transferPlan: Array<{ fromFacilityName: string; items: Array<{ medicineName: string; quantity: number; unitName: string }> }> } }> => {
+    return apiClient.post('/orders/quote', dto);
+  },
+
   // Customer: Place an order
   createOrder: async (dto: CreateOrderDto): Promise<SingleOrderResponse> => {
     return apiClient.post('/orders', dto);

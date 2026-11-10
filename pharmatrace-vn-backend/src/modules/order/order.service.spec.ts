@@ -23,8 +23,8 @@ describe("OrderService inventory reservation", () => {
   };
   const facility = {
     id: 3,
-    latitude: null,
-    longitude: null,
+    latitude: 10.77,
+    longitude: 106.70,
     inventories: [
       {
         variant_id: variant.id,
@@ -60,7 +60,7 @@ describe("OrderService inventory reservation", () => {
         updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
       internal_transfers: { create: jest.fn() },
-      $executeRaw: rawMock,
+      $executeRaw: jest.fn((sql, ...args) => sql.join('').includes('accept_fulfillment_terms') ? Promise.resolve(1) : rawMock(sql, ...args)),
       $queryRaw: jest.fn().mockResolvedValue([{ id: 1 }]),
     };
     const prisma = {
@@ -90,6 +90,7 @@ describe("OrderService inventory reservation", () => {
           prescriptions: null,
         }),
       },
+      $queryRaw: jest.fn(async () => (await prisma.facilities.findMany()).map(f => ({ facility_id: f.id, selling_facility_id: f.id, selling_facility_name: 'Selling pharmacy', radius_km: 3000, revision: 'policy-v1', requirements_revision: 'requirements-v1' }))),
       withAuth: jest.fn(run => run(prisma)),
       prepareVoucher: jest.fn().mockResolvedValue(undefined),
       withVoucher: jest.fn((_scope, run) => run(prisma)),
@@ -104,8 +105,85 @@ describe("OrderService inventory reservation", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(geocodeAddress).mockResolvedValue(null);
+    jest.mocked(geocodeAddress).mockResolvedValue({ latitude: 10.77, longitude: 106.70, precision: "house" });
   });
+
+  it('quotes without reserving inventory or creating an order', async () => {
+    const { prisma, tx } = createMocks(1);
+    const quote = await new OrderService(prisma).createOrder(customer.id, dto, true);
+    expect(quote).toMatchObject({ shippingFee: 15000, totalAmount: 115000, facilityId: 3 });
+    expect(tx.orders.create).not.toHaveBeenCalled();
+    expect(tx.$executeRaw).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['expired', '2026-04-01T00:00:00Z', '2026-04-22T00:00:00Z', 10800, 12000],
+    ['future', '2026-12-01T00:00:00Z', '2026-12-31T00:00:00Z', 10800, 12000],
+    ['missing dates', null, null, 10800, 12000],
+    ['active', '2026-11-01T00:00:00Z', '2026-11-30T00:00:00Z', 10800, 10800],
+    ['regular', null, null, 12000, 12000],
+  ])('uses the effective price for an %s sale in the delivery quote', async (
+    _name, start, end, price, expectedPrice,
+  ) => {
+    jest.useFakeTimers().setSystemTime(new Date('2026-11-10T06:00:00Z'));
+    try {
+      const { prisma, tx } = createMocks(1);
+      prisma.packaging_variants.findMany.mockResolvedValue([{
+        ...variant, price,
+        original_price: price < 12000 ? 12000 : null,
+        discount_percent: price < 12000 ? 10 : 0,
+        sale_start_date: start, sale_end_date: end,
+      } as typeof variant]);
+      const quote = await new OrderService(prisma).createOrder(customer.id, {
+        ...dto, items: [{ variantId: variant.id, quantity: 3 }],
+      }, true);
+      expect(quote).toMatchObject({
+        subtotalAmount: expectedPrice * 3,
+        totalAmount: expectedPrice * 3 + 15000,
+      });
+      expect(tx.orders.create).not.toHaveBeenCalled();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('chooses the facility covering more items before the nearer facility', async () => {
+    const { prisma } = createMocks(1);
+    const secondVariant = { ...variant, id: 12, medicine_id: 22 };
+    const thirdVariant = { ...variant, id: 13, medicine_id: 23 };
+    prisma.packaging_variants.findMany.mockResolvedValue([variant, secondVariant, thirdVariant]);
+    const stock = (variantId: number) => ({ variant_id: variantId, stock_quantity: 5, reserved_quantity: 0 });
+    prisma.facilities.findMany.mockResolvedValue([
+      { ...facility, id: 3, latitude: 10.77, longitude: 106.70, inventories: [stock(11)] },
+      { ...facility, id: 4, latitude: 10.8, longitude: 106.8, inventories: [stock(12), stock(13)] },
+    ]);
+    const quote = await new OrderService(prisma).createOrder(customer.id, {
+      ...dto, latitude: 10.77, longitude: 106.70,
+      items: [11, 12, 13].map(variantId => ({ variantId, quantity: 1 })),
+    }, true);
+
+    expect(quote).toMatchObject({ facilityId: 4, isConsolidated: true });
+  });
+
+  it('rejects a changed quote before creating the order or reserving stock', async () => {
+    const { prisma, tx } = createMocks(1);
+    await expect(new OrderService(prisma).createOrder(customer.id, { ...dto, expectedTotalAmount: 1, expectedShippingFee: 30000, expectedFacilityId: 3 }))
+      .rejects.toThrow(/quote has changed/i);
+    expect(tx.orders.create).not.toHaveBeenCalled();
+    expect(tx.$executeRaw).not.toHaveBeenCalled();
+  });
+
+  it('rejects a changed fulfillment plan before creating the order', async () => {
+    const { prisma, tx } = createMocks(1);
+    const service = new OrderService(prisma);
+    const quote = await service.createOrder(customer.id, dto, true);
+    if (!("planHash" in quote)) throw new Error("Expected quote");
+    prisma.facilities.findMany.mockResolvedValue([{ ...facility, latitude: 11.77, longitude: 106.70 }]);
+    await expect(service.createOrder(customer.id, { ...dto, latitude: 10.77, longitude: 106.70, expectedPlanHash: quote.planHash }))
+      .rejects.toThrow(/quote has changed/i);
+    expect(tx.orders.create).not.toHaveBeenCalled();
+  });
+
 
   it("atomically reserves inventory and a physical UID for a box variant", async () => {
     const { prisma, tx } = createMocks(1);
@@ -119,7 +197,7 @@ describe("OrderService inventory reservation", () => {
     expect(tx.cart_items.deleteMany).toHaveBeenCalledWith({
       where: { customer_id: customer.id, variant_id: { in: [variant.id] } },
     });
-    expect(tx.$executeRaw).toHaveBeenCalledTimes(1);
+    expect(tx.$executeRaw).toHaveBeenCalledTimes(2);
     expect(tx.medicine_boxes.updateMany).toHaveBeenCalledWith({
       where: {
         uid: { in: ["box-uid-1"] },
@@ -165,7 +243,7 @@ describe("OrderService inventory reservation", () => {
     });
   });
 
-  it("uses the nearest facility even when a farther warehouse has every item", async () => {
+  it("uses a facility with all items instead of a nearer facility without stock", async () => {
     const { prisma, tx } = createMocks(1);
     prisma.facilities.findMany.mockResolvedValue([
       { ...facility, id: 20, latitude: 21.0, longitude: 105.8 },
@@ -177,17 +255,25 @@ describe("OrderService inventory reservation", () => {
     await service.createOrder(customer.id, { ...dto, latitude: 10.775, longitude: 106.705 });
 
     expect(tx.orders.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({ export_facility_id: 10, order_status: 'WAITING_INTERNAL_TRANSFER' }),
+      data: expect.objectContaining({ export_facility_id: 20, order_status: 'PENDING' }),
     });
-    expect(tx.internal_transfers.create).toHaveBeenCalledWith({
-      data: expect.objectContaining({
-        from_facility_id: 20, to_facility_id: 10, status: 'REQUESTED',
-        items: [expect.objectContaining({ variantId: variant.id, quantity: 1 })],
-      }),
-    });
+    expect(tx.internal_transfers.create).not.toHaveBeenCalled();
     expect(tx.order_items.createMany).toHaveBeenCalledWith({
       data: [expect.objectContaining({ source_facility_id: 20, assigned_uids: [], inventory_reserved: true })],
     });
+  });
+
+  it("chooses the nearest facility among those that can fulfill the whole order", async () => {
+    const { prisma, tx } = createMocks(1);
+    prisma.facilities.findMany.mockResolvedValue([
+      { ...facility, id: 30, latitude: 21.0, longitude: 105.8 },
+      { ...facility, id: 20, latitude: 10.78, longitude: 106.70 },
+      { ...facility, id: 10, latitude: 10.775, longitude: 106.705, inventories: [] },
+    ]);
+    tx.medicine_boxes.findMany.mockResolvedValue([]);
+    await new OrderService(prisma).createOrder(customer.id, { ...dto, latitude: 10.775, longitude: 106.705 });
+    expect(tx.orders.create).toHaveBeenCalledWith({ data: expect.objectContaining({ export_facility_id: 20, order_status: 'PENDING' }) });
+    expect(tx.internal_transfers.create).not.toHaveBeenCalled();
   });
 
   it("atomically applies voucher and reward points", async () => {
@@ -202,7 +288,7 @@ describe("OrderService inventory reservation", () => {
       usedPoints: 100,
     });
 
-    expect(tx.$executeRaw).toHaveBeenCalledTimes(3);
+    expect(tx.$executeRaw).toHaveBeenCalledTimes(4);
     expect(tx.loyalty_point_logs.create).toHaveBeenCalledWith({
       data: expect.objectContaining({
         points: -100,
@@ -373,8 +459,8 @@ describe("OrderService inventory reservation", () => {
       {
         id: 1,
         facility_name: "Empty Warehouse",
-        latitude: null,
-        longitude: null,
+        latitude: 10.77,
+        longitude: 106.70,
         inventories: [],
       },
     ]);

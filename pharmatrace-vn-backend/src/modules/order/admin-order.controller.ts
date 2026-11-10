@@ -21,6 +21,7 @@ import { AdminOrderService } from "./admin-order.service";
 import { OrderCronService } from "./order-cron.service";
 import { OrderQueryDto } from "./dto/order-query.dto";
 import { UpdateOrderStatusDto } from "./dto/update-order-status.dto";
+import { FulfillmentPolicyDto, TransportRequirementDto, WarehouseSellingPharmaciesDto } from './dto/fulfillment-policy.dto';
 import { PackOrderDto } from "./dto/pack-order.dto";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../../common/guards/roles.guard";
@@ -39,6 +40,33 @@ export class AdminOrderController {
     private readonly orderService: AdminOrderService,
     private readonly orderCronService: OrderCronService,
   ) {}
+
+  @Get('fulfillment/policies')
+  @Roles('SUPER_ADMIN', 'STORE_MANAGER')
+  async fulfillmentPolicies(@CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.getFulfillmentPolicies(user) };
+  }
+
+  @Post('fulfillment/facilities/:facilityId')
+  @Roles('SUPER_ADMIN', 'STORE_MANAGER')
+  async saveFulfillmentPolicy(@Param('facilityId', ParseIntPipe) id: number, @Body() dto: FulfillmentPolicyDto, @CurrentUser() user: CurrentUserPayload) {
+    await this.orderService.saveFulfillmentPolicy(id, dto, user);
+    return { success: true };
+  }
+
+  @Post('fulfillment/medicines/:medicineId')
+  @Roles('SUPER_ADMIN')
+  async saveTransportRequirement(@Param('medicineId', ParseIntPipe) id: number, @Body() dto: TransportRequirementDto, @CurrentUser() user: CurrentUserPayload) {
+    await this.orderService.saveTransportRequirement(id, dto.condition, user);
+    return { success: true };
+  }
+
+  @Post('fulfillment/warehouses/:facilityId/selling-pharmacies')
+  @Roles('SUPER_ADMIN')
+  async setWarehouseSellingPharmacies(@Param('facilityId', ParseIntPipe) id: number, @Body() dto: WarehouseSellingPharmaciesDto, @CurrentUser() user: CurrentUserPayload) {
+    await this.orderService.setWarehouseSellingPharmacies(id, dto.pharmacyIds, user);
+    return { success: true };
+  }
 
   @Get()
   @Roles(

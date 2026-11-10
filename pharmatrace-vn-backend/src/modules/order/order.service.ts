@@ -4,14 +4,16 @@ import {
   BadRequestException,
   ForbiddenException,
 } from "@nestjs/common";
-import { randomBytes } from "crypto";
+import { createHash, randomBytes } from "crypto";
 import { Prisma, vouchers } from '@prisma/client';
 import { PrismaService } from "../../prisma/prisma.service";
+import { getVariantPrice } from '../../common/variant-price';
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrderQueryDto } from "./dto/order-query.dto";
 import {
   calculateHaversineDistance,
   calculateShippingFeeByDistance,
+  calculateEstimatedDelivery,
   FREE_SHIPPING_THRESHOLD,
   DEFAULT_SHIPPING_FEE,
 } from "./helpers/shipping-calculator.helper";
@@ -30,7 +32,7 @@ import {
 export class OrderService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async createOrder(customerId: number, dto: CreateOrderDto) {
+  async createOrder(customerId: number, dto: CreateOrderDto, quoteOnly = false) {
     const customer = await this.prisma.withAuth(tx => tx.customers.findUnique({
       where: { id: customerId },
     }), { actor: { id: customerId, type: 'customer', role: 'CUSTOMER' } });
@@ -58,6 +60,7 @@ export class OrderService {
     });
 
     const itemsToOrder: ItemToOrder[] = [];
+    const pricingTime = new Date();
 
     for (const itemDto of dto.items) {
       const variant = variants.find((v) => v.id === itemDto.variantId);
@@ -72,7 +75,7 @@ export class OrderService {
         );
       }
 
-      const unitPrice = Number(variant.price);
+      const unitPrice = getVariantPrice(variant, pricingTime).price;
       const totalPrice = unitPrice * itemDto.quantity;
       const existingItem = itemsToOrder.find((item) => item.variantId === variant.id);
       if (existingItem) {
@@ -200,6 +203,16 @@ export class OrderService {
       orderBy: { id: "asc" },
     });
 
+    const medicineIds = [...new Set(itemsToOrder.map(item => item.medicineId))].sort((a, b) => a - b);
+    const policies = await this.prisma.withOrder('read', tx => tx.$queryRaw<Array<{
+      facility_id: number; selling_facility_id: number; selling_facility_name: string;
+      radius_km: Prisma.Decimal; revision: string; requirements_revision: string;
+    }>>`SELECT * FROM public.fulfillment_options(${medicineIds}::integer[])`,
+    { id: customerId, type: 'customer', role: 'CUSTOMER' });
+    if (!hasRouteableCustomerCoords) {
+      throw new BadRequestException('Confirm an accurate delivery location before requesting a delivery quote.');
+    }
+
     const getAvailableStock = (facility: (typeof allFacilities)[0], variantId: number) => {
       const inv = facility.inventories.find((entry) => entry.variant_id === variantId);
       return inv ? Math.max(0, inv.stock_quantity - (inv.reserved_quantity ?? 0)) : 0;
@@ -213,15 +226,19 @@ export class OrderService {
           && isValidCoordinates(Number(facility.latitude), Number(facility.longitude))
           ? calculateHaversineDistance(customerCoords.latitude, customerCoords.longitude, Number(facility.latitude), Number(facility.longitude))
           : Number.POSITIVE_INFINITY,
-    }));
+    })).filter(candidate => {
+      const policy = policies.find(policy => policy.facility_id === candidate.facility.id);
+      return policy && candidate.distanceToCustomer <= Number(policy.radius_km);
+    });
     scoredFacilities.sort((a, b) =>
-      (a.distanceToCustomer - b.distanceToCustomer) || (b.coveredCount - a.coveredCount),
+      (b.coveredCount - a.coveredCount) || (a.distanceToCustomer - b.distanceToCustomer),
     );
     const primaryFacilityObj = scoredFacilities[0]?.facility;
     if (!primaryFacilityObj) {
       throw new BadRequestException("No suitable fulfillment facility found.");
     }
     const exportFacilityId = primaryFacilityObj.id;
+    const policy = policies.find(policy => policy.facility_id === exportFacilityId)!;
     const missingItems = itemsToOrder.filter((item) => getAvailableStock(primaryFacilityObj, item.variantId) < item.quantity);
 
     let orderInitialStatus = "PENDING";
@@ -259,7 +276,7 @@ export class OrderService {
       }>();
 
       for (const item of missingItems) {
-        const eligibleSources = allFacilities.filter((f) => f.id !== exportFacilityId && getAvailableStock(f, item.variantId) >= item.quantity);
+        const eligibleSources = allFacilities.filter((f) => f.id !== exportFacilityId && policies.some(policy => policy.facility_id === f.id) && getAvailableStock(f, item.variantId) >= item.quantity);
 
         if (eligibleSources.length === 0) {
           throw new BadRequestException(`Medicine "${item.medicineName}" (${item.unitName}) does not have sufficient inventory at any single source warehouse to transfer.`);
@@ -318,6 +335,54 @@ export class OrderService {
       : subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : DEFAULT_SHIPPING_FEE;
 
     const totalAmount = Math.max(0, subtotal + shippingFee - totalDiscount);
+
+    const isConsolidated = internalTransferPlan.length > 0;
+    const deliveryEstimate = calculateEstimatedDelivery(candidateDistanceKm, isConsolidated);
+    if (!deliveryEstimate.isServiceable) {
+      throw new BadRequestException('The selected shipping address is outside our delivery coverage area.');
+    }
+
+    const planHash = createHash('sha256').update(JSON.stringify({
+      facilityId: exportFacilityId,
+      policyRevision: policy.revision,
+      requirementsRevision: policy.requirements_revision,
+      sellingFacilityId: policy.selling_facility_id,
+      estimatedHours: deliveryEstimate.estimatedHours,
+      items: itemsToOrder.map(item => ({ variantId: item.variantId, quantity: item.quantity, unitPrice: item.unitPrice })).sort((a, b) => a.variantId - b.variantId),
+      shippingFee,
+      discountFromVoucher,
+      usedPoints,
+      transfers: internalTransferPlan.map(transfer => ({ source: transfer.fromFacilityId,
+        items: transfer.items.map(item => ({ variantId: item.variantId, quantity: item.quantity })).sort((a, b) => a.variantId - b.variantId),
+      })).sort((a, b) => a.source - b.source),
+    })).digest('hex');
+
+    if (quoteOnly) {
+      return {
+        subtotalAmount: subtotal,
+        shippingFee,
+        discountAmount: totalDiscount,
+        voucherDiscount: discountFromVoucher,
+        pointsDiscount: usedPoints,
+        totalAmount,
+        facilityId: exportFacilityId,
+        facilityName: primaryFacilityObj.facility_name,
+        sellingFacilityId: policy.selling_facility_id,
+        sellingFacilityName: policy.selling_facility_name,
+        distanceKm: candidateDistanceKm ? Math.round(candidateDistanceKm * 10) / 10 : null,
+        estimatedDeliveryHours: deliveryEstimate.estimatedHours,
+        estimatedDeliveryLabel: deliveryEstimate.label,
+        isConsolidated,
+        planHash,
+        transferPlan: internalTransferPlan,
+      };
+    }
+    if ((dto.expectedTotalAmount !== undefined && dto.expectedTotalAmount !== totalAmount) ||
+        (dto.expectedShippingFee !== undefined && dto.expectedShippingFee !== shippingFee) ||
+        (dto.expectedFacilityId !== undefined && dto.expectedFacilityId !== exportFacilityId) ||
+        (dto.expectedPlanHash !== undefined && dto.expectedPlanHash !== planHash)) {
+      throw new BadRequestException('Your delivery quote has changed. Review the updated quote before placing your order.');
+    }
 
     const datePart = new Date().toISOString().slice(2, 10).replace(/-/g, "");
     const orderCode = `ORD-${datePart}-${randomBytes(4).toString("hex").toUpperCase()}`;
@@ -435,6 +500,10 @@ export class OrderService {
           source_facility_id: itemSourceFacilityMap.get(item.variantId) ?? exportFacilityId,
         })),
       });
+
+      await tx.$executeRaw`SELECT public.accept_fulfillment_terms(${order.id}, ${policy.revision}::text,
+        ${policy.requirements_revision}::text, ${candidateDistanceKm}::numeric,
+        ${[...new Set(itemSourceFacilityMap.values())].sort((a, b) => a - b)}::integer[], ${medicineIds}::integer[])`;
 
       for (const transfer of internalTransferPlan) {
         await tx.internal_transfers.create({

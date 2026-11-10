@@ -9,6 +9,7 @@ import { UpdateCartQuantityDto } from './dto/update-cart-quantity.dto';
 import { SwitchCartVariantDto } from './dto/switch-cart-variant.dto';
 import { SyncCartDto } from './dto/sync-cart.dto';
 import { Prisma } from '@prisma/client';
+import { getVariantPrice } from '../../common/variant-price';
 
 export interface FormattedCartItem {
   id: string; // `${productId}-${variantId}` for UI consistency
@@ -90,14 +91,19 @@ export class CartService {
     if (!variant || !variant.medicine) return null;
 
     const m = variant.medicine;
-    const packagingOptions = (m.packaging_variants || []).map((pv: any) => ({
-      id: pv.id,
-      unitName: pv.unit_name,
-      price: Number(pv.price),
-      originalPrice: pv.original_price ? Number(pv.original_price) : null,
-      discountPercent: pv.discount_percent ?? 0,
-      isBaseUnit: Boolean(pv.is_base_unit),
-    }));
+    const now = new Date();
+    const pricing = getVariantPrice(variant, now);
+    const packagingOptions = (m.packaging_variants || []).map((pv: any) => {
+      const optionPricing = getVariantPrice(pv, now);
+      return {
+        id: pv.id,
+        unitName: pv.unit_name,
+        price: optionPricing.price,
+        originalPrice: optionPricing.originalPrice,
+        discountPercent: optionPricing.discountPercent,
+        isBaseUnit: Boolean(pv.is_base_unit),
+      };
+    });
 
     const totalStock =
       m.total_stock !== undefined && m.total_stock !== null
@@ -113,9 +119,9 @@ export class CartService {
       imageUrl: m.image_url || null,
       variantId: variant.id,
       unitName: variant.unit_name,
-      price: Number(variant.price),
-      originalPrice: variant.original_price ? Number(variant.original_price) : null,
-      discountPercent: variant.discount_percent ?? 0,
+      price: pricing.price,
+      originalPrice: pricing.originalPrice,
+      discountPercent: pricing.discountPercent,
       quantity: cartItem.quantity,
       isPrescription: Boolean(m.is_prescription),
       status: m.status,

@@ -18,6 +18,7 @@
 \i /docker-entrypoint-initdb.d/schemas/09_prescription_management.sql
 
 -- 4. Development seed (all referenced tables must exist)
+\i /docker-entrypoint-initdb.d/schemas/13_fulfillment_policy.sql
 \i /docker-entrypoint-initdb.d/seeds/01_seed_data.sql
 
 -- 5. Prescription review security
@@ -61,3 +62,6 @@
 
 -- Release voucher usage atomically when a prescription is rejected.
 \i /docker-entrypoint-initdb.d/security/prescription/prescription_voucher_release.sql
+
+-- Facility delivery policies, approved sellers and accepted checkout terms.
+\i /docker-entrypoint-initdb.d/security/logistics/fulfillment_policy.sql

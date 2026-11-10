@@ -26,6 +26,12 @@ import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current
 export class OrderController {
   constructor(private readonly orderService: OrderService) { }
 
+  @Post('quote')
+  @HttpCode(HttpStatus.OK)
+  async quoteOrder(@CurrentUser() user: CurrentUserPayload, @Body() dto: CreateOrderDto) {
+    return { success: true, data: await this.orderService.createOrder(user.id, dto, true) };
+  }
+
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
