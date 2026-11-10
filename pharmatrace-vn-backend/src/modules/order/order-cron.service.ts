@@ -9,12 +9,20 @@ export class OrderCronService {
 
   constructor(private readonly prisma: PrismaService) {}
 
+  @Cron(CronExpression.EVERY_MINUTE)
+  async expireUnpaidOrders() {
+    const rows = await this.prisma.withOrder('loyalty', tx => tx.$queryRaw<{ expired: number }[]>`
+      SELECT public.expire_unpaid_orders() AS expired
+    `);
+    if (rows[0]?.expired) this.logger.log(`Expired ${rows[0].expired} unpaid order(s).`);
+  }
+
   /**
    * Daily Cron Job: Automatically awards loyalty reward points to customers
    * after the return/refund window (default 7 days) has elapsed since order completion.
    * Runs daily at 1:00 AM.
    */
-  @Cron(CronExpression.EVERY_DAY_AT_1AM)
+  @Cron(CronExpression.EVERY_DAY_AT_1AM, { timeZone: 'Asia/Ho_Chi_Minh' })
   async handleDailyPointAwardCron() {
     this.logger.log('Starting daily loyalty points award cron job...');
     const result = await this.awardPointsForCompletedOrders();
@@ -27,37 +35,25 @@ export class OrderCronService {
    * Core logic: Scans completed orders and awards points if the return window has passed.
    * Can also be triggered manually by Admin for testing.
    *
-   * @param returnDays Optional override of the return window days (defaults to ORDER_RETURN_WINDOW_DAYS env or 7).
    */
-  async awardPointsForCompletedOrders(returnDays?: number) {
-    const days =
-      typeof returnDays === 'number'
-        ? returnDays
-        : Number(process.env.ORDER_RETURN_WINDOW_DAYS || 7);
+  async awardPointsForCompletedOrders() {
+    const days = Number(process.env.ORDER_RETURN_WINDOW_DAYS || 7);
     if (!Number.isInteger(days) || days < 0 || days > 3650) throw new BadRequestException('Invalid return window');
 
     const cutoffDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 
-    // Find orders that:
-    // 1. Have status 'COMPLETED'
-    // 2. Have a customer associated
-    // 3. Were delivered on or before cutoffDate (via shipment actual_delivery_at, or order created_at fallback)
-    // 4. Have NOT yet had an 'EARNED' loyalty point log for this order
     const eligibility: { where: Prisma.ordersWhereInput } = {
       where: {
         order_status: 'COMPLETED',
+        payment_status: 'PAID',
         customer_id: { not: null },
-        OR: [
-          {
-            shipments: {
-              actual_delivery_at: { lte: cutoffDate },
-            },
+        shipments: {
+          is: {
+            shipping_status: 'DELIVERED',
+            actual_delivery_at: { lte: cutoffDate },
+            return_category: null,
           },
-          {
-            shipments: null,
-            created_at: { lte: cutoffDate },
-          },
-        ],
+        },
         loyalty_point_logs: {
           none: { transaction_type: { in: ['EARN', 'EARNED'] } },
         },
@@ -77,15 +73,18 @@ export class OrderCronService {
     for (const order of eligibleOrders) {
       if (!order.customer_id) continue;
 
-      // 1% cashback on total amount (e.g., 100,000 VND -> 1,000 points)
-      const earnedPoints = Math.floor(Number(order.total_amount || 0) / 100);
-      if (earnedPoints <= 0) continue;
-
       try {
         const awarded = await this.prisma.withOrder('loyalty', async (tx) => {
           await tx.$queryRaw`SELECT id FROM public.orders WHERE id = ${order.id} FOR UPDATE`;
           const eligible = await tx.orders.findFirst({ where: { ...eligibility.where, id: order.id } });
-          if (!eligible) return false;
+          if (!eligible) return 0;
+          const disputes = await tx.$queryRaw<{ blocked: boolean }[]>`SELECT EXISTS (
+            SELECT FROM public.delivery_disputes WHERE order_id=${order.id} AND outcome IS DISTINCT FROM 'DELIVERED'
+          ) AS blocked`;
+          if (disputes[0]?.blocked) return 0;
+          const merchandisePaid = Math.max(0, Number(eligible.total_amount) - Number(eligible.shipping_fee || 0));
+          const earnedPoints = Math.floor(merchandisePaid / 100);
+          if (earnedPoints <= 0) return 0;
           // Increment customer reward points
           await tx.customers.update({
             where: { id: order.customer_id! },
@@ -102,24 +101,24 @@ export class OrderCronService {
               description: `Awarded ${earnedPoints} points for order #${order.order_code} after ${days}-day return window`,
             },
           });
-          return true;
+          return earnedPoints;
         });
         if (!awarded) continue;
 
-        totalPointsAwarded += earnedPoints;
+        totalPointsAwarded += awarded;
         awardedDetails.push({
           orderId: order.id,
           orderCode: order.order_code,
           customerId: order.customer_id,
-          points: earnedPoints,
+          points: awarded,
         });
 
         this.logger.log(
-          `Awarded ${earnedPoints} loyalty points to customer #${order.customer_id} for order #${order.order_code}`,
+          `Awarded ${awarded} loyalty points to customer #${order.customer_id} for order #${order.order_code}`,
         );
-      } catch (err: any) {
+      } catch (err: unknown) {
         this.logger.error(
-          `Failed to award points for order #${order.id} (${order.order_code}): ${err?.message}`,
+          `Failed to award points for order #${order.id} (${order.order_code}): ${err instanceof Error ? err.message : 'Unknown error'}`,
         );
       }
     }

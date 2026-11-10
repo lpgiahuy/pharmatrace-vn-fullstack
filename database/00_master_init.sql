@@ -1,5 +1,7 @@
 -- Master database initialization script for PharmaTrace VN
 \set ON_ERROR_STOP on
+-- This entrypoint is for empty databases only; upgrades leave this marker unset.
+\set bootstrap_current_functions true
 
 -- 1. Schemas & Tables
 \i /docker-entrypoint-initdb.d/schemas/01_core_master_tables.sql
@@ -63,5 +65,18 @@
 -- Release voucher usage atomically when a prescription is rejected.
 \i /docker-entrypoint-initdb.d/security/prescription/prescription_voucher_release.sql
 
--- Facility delivery policies, approved sellers and accepted checkout terms.
+-- Logistics tables, operations and access controls.
+
+\i /docker-entrypoint-initdb.d/security/order/cancellation_safeguards.sql
+\i /docker-entrypoint-initdb.d/security/customer/customer_cancellation_reason.sql
+\i /docker-entrypoint-initdb.d/security/order/cancel_voucher_release.sql
+
+
+
+
 \i /docker-entrypoint-initdb.d/security/logistics/fulfillment_policy.sql
+
+\i /docker-entrypoint-initdb.d/security/order/unpacked_customer_cancellation.sql
+\i /docker-entrypoint-initdb.d/security/order/order_resolution.sql
+
+\unset bootstrap_current_functions

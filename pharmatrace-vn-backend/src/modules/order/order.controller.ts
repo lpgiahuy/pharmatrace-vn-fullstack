@@ -15,6 +15,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagg
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderQueryDto } from './dto/order-query.dto';
+import { CancelOrderDto } from './dto/cancel-order.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CustomerGuard } from '../../common/guards/customer.guard';
 import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
@@ -97,12 +98,14 @@ export class OrderController {
   async cancelMyOrder(
     @CurrentUser() user: CurrentUserPayload,
     @Param('id', ParseIntPipe) orderId: number,
+    @Body() dto: CancelOrderDto,
   ) {
-    const order = await this.orderService.cancelMyOrder(user.id, orderId);
+    const order = await this.orderService.cancelMyOrder(user.id, orderId, dto);
     return {
       success: true,
       message: 'Order cancelled successfully',
       data: order,
     };
   }
+
 }

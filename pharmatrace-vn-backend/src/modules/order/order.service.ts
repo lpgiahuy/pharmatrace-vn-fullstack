@@ -10,6 +10,7 @@ import { PrismaService } from "../../prisma/prisma.service";
 import { getVariantPrice } from '../../common/variant-price';
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { OrderQueryDto } from "./dto/order-query.dto";
+import { CancelOrderDto } from "./dto/cancel-order.dto";
 import {
   calculateHaversineDistance,
   calculateShippingFeeByDistance,
@@ -321,7 +322,7 @@ export class OrderService {
         })),
       }));
 
-      orderInitialStatus = "WAITING_INTERNAL_TRANSFER";
+      orderInitialStatus = (dto.paymentMethod || 'COD') === 'COD' ? "WAITING_INTERNAL_TRANSFER" : "PENDING";
     }
 
     const exportFacility = allFacilities.find((f) => f.id === exportFacilityId);
@@ -641,13 +642,59 @@ export class OrderService {
         );
       }
 
-      return formatOrder(order);
+      let cancellationReason: string | null = null;
+      if (order.order_status === 'CANCELLED') {
+        try {
+          const staffCancel = await tx.$queryRaw<{ reason: string }[]>`
+            SELECT reason FROM public.staff_order_cancellations WHERE order_id = ${orderId} LIMIT 1
+          `;
+          if (staffCancel[0]?.reason) {
+            cancellationReason = staffCancel[0].reason;
+          }
+        } catch {
+          // ignore
+        }
+        if (!cancellationReason) {
+          try {
+            const custCancel = await tx.$queryRaw<{ reason_code: string; reason_details: string | null }[]>`
+              SELECT reason_code, reason_details FROM public.order_cancellation_reasons WHERE order_id = ${orderId} LIMIT 1
+            `;
+            if (custCancel[0]) {
+              const codeMap: Record<string, string> = {
+                CHANGED_MIND: 'Changed my mind (Tôi đổi ý / Không còn nhu cầu)',
+                ADDRESS_CHANGE: 'Change delivery address or phone (Muốn thay đổi địa chỉ / số điện thoại)',
+                OTHER: 'Other reason',
+              };
+              cancellationReason = custCancel[0].reason_details?.trim() || codeMap[custCancel[0].reason_code] || custCancel[0].reason_code;
+            }
+          } catch {
+            // ignore
+          }
+        }
+        if (!cancellationReason) {
+          try {
+            const fallbackRows = await this.prisma.$queryRaw<{ reason: string }[]>`
+              SELECT reason FROM public.staff_order_cancellations WHERE order_id = ${orderId} LIMIT 1
+            `;
+            if (fallbackRows[0]?.reason) cancellationReason = fallbackRows[0].reason;
+          } catch {
+            // ignore
+          }
+        }
+      }
+
+      return formatOrder(order, cancellationReason);
 
     }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
   }
 
-  async cancelMyOrder(customerId: number, orderId: number) {
+  async cancelMyOrder(customerId: number, orderId: number, dto: CancelOrderDto) {
+    if (!dto || !['CHANGED_MIND', 'ADDRESS_CHANGE', 'OTHER'].includes(dto.reasonCode) ||
+      (dto.reasonCode === 'OTHER' && !dto.reasonDetails?.trim())) {
+      throw new BadRequestException('Choose a cancellation reason and provide details for other reasons.');
+    }
     return this.prisma.withOrder('cancel', async (tx) => {
+      await tx.$queryRaw`SELECT id FROM public.orders WHERE id = ${orderId} FOR UPDATE`;
       const order = await tx.orders.findUnique({
         where: { id: orderId },
       });
@@ -663,12 +710,22 @@ export class OrderService {
       }
 
       const normStatus = normalizeOrderStatus(order.order_status);
-      if (!["PENDING", "WAITING_INTERNAL_TRANSFER"].includes(normStatus)) {
+      if (!["PENDING", "WAITING_INTERNAL_TRANSFER", "PROCESSING"].includes(normStatus)) {
         throw new BadRequestException(
-          `Only orders with status PENDING or WAITING_INTERNAL_TRANSFER can be cancelled. Current status is ${order.order_status}.`,
+          `Only unpacked orders can be cancelled. Current status is ${order.order_status}.`,
         );
       }
 
+      if (await tx.shipments.findFirst({ where: { order_id: orderId } })) {
+        throw new BadRequestException('Packing has already been committed. Contact customer support.');
+      }
+
+      if (order.prescription_id && order.prescription_review_status === 'APPROVED') {
+        throw new BadRequestException('Cancellation of an approved prescription requires pharmacist confirmation.');
+      }
+
+      await tx.$executeRaw`INSERT INTO public.order_cancellation_reasons (order_id, customer_id, reason_code, reason_details)
+        VALUES (${orderId}, ${customerId}, ${dto.reasonCode}, ${dto.reasonDetails?.trim() || null})`;
       const cancelled = await tx.orders.updateMany({
         where: { id: orderId, order_status: order.order_status },
         data: { order_status: "CANCELLED" },
