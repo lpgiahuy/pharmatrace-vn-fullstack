@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -653,22 +654,38 @@ export class ProductService {
       }
 
       if (dto.packagingVariants !== undefined) {
-        await tx.packaging_variants.deleteMany({
-          where: { medicine_id: id },
-        });
-        if (dto.packagingVariants && dto.packagingVariants.length > 0) {
-          await tx.packaging_variants.createMany({
-            data: dto.packagingVariants.map((pv) => ({
-              medicine_id: id,
-              unit_name: pv.unitName.trim(),
-              price: new Prisma.Decimal(pv.price),
-              original_price: pv.originalPrice ? new Prisma.Decimal(pv.originalPrice) : null,
-              discount_percent: pv.discountPercent ?? 0,
-              is_base_unit: pv.isBaseUnit ?? false,
-              sale_start_date: pv.saleStartDate ? new Date(pv.saleStartDate) : null,
-              sale_end_date: pv.saleEndDate ? new Date(pv.saleEndDate) : null,
-            })),
-          });
+        // Sync by unit name instead of delete-and-recreate: new ids would orphan order items, transfers and carts.
+        const existingVariants = await tx.packaging_variants.findMany({ where: { medicine_id: id } });
+        const byUnit = new Map(existingVariants.map((v) => [v.unit_name.trim().toLowerCase(), v]));
+        const keptIds = new Set<number>();
+        for (const pv of dto.packagingVariants || []) {
+          const data = {
+            unit_name: pv.unitName.trim(),
+            price: new Prisma.Decimal(pv.price),
+            original_price: pv.originalPrice ? new Prisma.Decimal(pv.originalPrice) : null,
+            discount_percent: pv.discountPercent ?? 0,
+            is_base_unit: pv.isBaseUnit ?? false,
+            sale_start_date: pv.saleStartDate ? new Date(pv.saleStartDate) : null,
+            sale_end_date: pv.saleEndDate ? new Date(pv.saleEndDate) : null,
+          };
+          const match = byUnit.get(data.unit_name.toLowerCase());
+          if (match && !keptIds.has(match.id)) {
+            keptIds.add(match.id);
+            await tx.packaging_variants.update({ where: { id: match.id }, data });
+          } else {
+            await tx.packaging_variants.create({ data: { medicine_id: id, ...data } });
+          }
+        }
+        const removedIds = existingVariants.filter((v) => !keptIds.has(v.id)).map((v) => v.id);
+        if (removedIds.length > 0) {
+          try {
+            await tx.packaging_variants.deleteMany({ where: { id: { in: removedIds } } });
+          } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+              throw new ConflictException('A packaging unit used by existing orders or purchase orders cannot be removed.');
+            }
+            throw error;
+          }
         }
       }
 

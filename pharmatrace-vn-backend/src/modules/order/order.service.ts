@@ -248,7 +248,7 @@ export class OrderService {
       fromFacilityId: number;
       fromFacilityName: string;
       toFacilityId: number;
-      distanceKm: number;
+      distanceKm: number | null;
       items: {
         variantId: number;
         medicineId: number;
@@ -272,7 +272,7 @@ export class OrderService {
 
       const transfersBySource = new Map<number, {
         sourceFacility: (typeof allFacilities)[0];
-        distanceKm: number;
+        distanceKm: number | null;
         items: typeof missingItems;
       }>();
 
@@ -284,16 +284,23 @@ export class OrderService {
         }
 
         const sourceCandidatesWithDistance = eligibleSources.map((sourceFac) => {
-          const distanceKm = calculateHaversineDistance(
-            Number(primaryFacilityObj.latitude),
-            Number(primaryFacilityObj.longitude),
-            Number(sourceFac.latitude),
-            Number(sourceFac.longitude),
-          );
+          // A facility without valid coordinates has an unknown distance; never measure it from (0, 0).
+          const hasCoordinates = (f: { latitude: unknown; longitude: unknown }) =>
+            f.latitude !== null && f.latitude !== undefined && f.longitude !== null && f.longitude !== undefined
+            && isValidCoordinates(Number(f.latitude), Number(f.longitude));
+          const knownCoordinates = hasCoordinates(primaryFacilityObj) && hasCoordinates(sourceFac);
+          const distanceKm: number | null = knownCoordinates
+            ? calculateHaversineDistance(
+              Number(primaryFacilityObj.latitude),
+              Number(primaryFacilityObj.longitude),
+              Number(sourceFac.latitude),
+              Number(sourceFac.longitude),
+            )
+            : null;
           return { facility: sourceFac, distanceKm };
         });
 
-        sourceCandidatesWithDistance.sort((a, b) => a.distanceKm - b.distanceKm);
+        sourceCandidatesWithDistance.sort((a, b) => (a.distanceKm ?? Number.POSITIVE_INFINITY) - (b.distanceKm ?? Number.POSITIVE_INFINITY));
         const bestSource = sourceCandidatesWithDistance[0];
 
         itemSourceFacilityMap.set(item.variantId, bestSource.facility.id);
@@ -312,7 +319,7 @@ export class OrderService {
         fromFacilityId: entry.sourceFacility.id,
         fromFacilityName: entry.sourceFacility.facility_name,
         toFacilityId: exportFacilityId,
-        distanceKm: Math.round(entry.distanceKm * 10) / 10,
+        distanceKm: entry.distanceKm === null ? null : Math.round(entry.distanceKm * 10) / 10,
         items: entry.items.map((i) => ({
           variantId: i.variantId,
           medicineId: i.medicineId,
@@ -516,7 +523,7 @@ export class OrderService {
             status: "REQUESTED",
             items: transfer.items,
             distance_km: transfer.distanceKm,
-            estimated_hours: transfer.distanceKm > 100 ? 48 : 24,
+            estimated_hours: transfer.distanceKm !== null && transfer.distanceKm > 100 ? 48 : 24,
             notes: `Internal transfer from ${transfer.fromFacilityName} to consolidate order #${orderCode}`,
           },
         });
