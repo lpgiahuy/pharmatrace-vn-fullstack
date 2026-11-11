@@ -51,6 +51,8 @@ const ROLES_OPTIONS = [
   { value: 'WAREHOUSE_MANAGER', label: 'Warehouse Manager', color: 'purple' },
   { value: 'WAREHOUSE_STAFF', label: 'Warehouse Staff', color: 'blue' },
   { value: 'PHARMACIST', label: 'Pharmacist', color: 'cyan' },
+  { value: 'ACCOUNTANT', label: 'Accountant', color: 'blue' },
+  { value: 'FINANCE_MANAGER', label: 'Finance Manager', color: 'gold' },
 ];
 
 const STATUS_OPTIONS = [
@@ -70,6 +72,9 @@ const ROLE_MAP: Record<string, { label: string; color: string }> = {
   FACTORY_WAREHOUSE_STAFF: { label: 'Factory Staff', color: 'purple' },
   FACTORYWAREHOUSESTAFF: { label: 'Factory Staff', color: 'purple' },
   PHARMACIST: { label: 'Pharmacist', color: 'cyan' },
+  ACCOUNTANT: { label: 'Accountant', color: 'blue' },
+  FINANCE_MANAGER: { label: 'Finance Manager', color: 'gold' },
+  FINANCEMANAGER: { label: 'Finance Manager', color: 'gold' },
 };
 
 const getRoleBadge = (roleStr: string) => {
@@ -266,11 +271,10 @@ export default function StaffManagementPage() {
         role: values.role,
         facilityId: values.facilityId,
         password: values.password || undefined,
-        status: values.status ? 'ACTIVE' : 'INACTIVE',
       };
 
       if (editingEmployee) {
-        await employeeService.updateEmployee(editingEmployee.id, payload);
+        await employeeService.updateEmployee(editingEmployee.id, { ...payload, status: values.status ? 'ACTIVE' : 'INACTIVE' });
         messageApi.success('Employee updated successfully');
       } else {
         await employeeService.createEmployee(payload as any);
@@ -280,7 +284,8 @@ export default function StaffManagementPage() {
       setModalOpen(false);
       fetchEmployees(pagination.current, pagination.pageSize);
     } catch (err: any) {
-      messageApi.error(err?.message || 'Failed to save employee');
+      const detail = err?.message;
+      messageApi.error(Array.isArray(detail) ? detail.join('; ') : detail || 'Failed to save employee');
     } finally {
       setSaving(false);
     }
@@ -797,9 +802,13 @@ export default function StaffManagementPage() {
             </Form.Item>
           </div>
 
-          <Form.Item label="Active Account Status" name="status" valuePropName="checked">
-            <Switch disabled={editingEmployee?.id === currentUser?.id} />
-          </Form.Item>
+          {editingEmployee ? (
+            <Form.Item label="Active Account Status" name="status" valuePropName="checked">
+              <Switch disabled={editingEmployee.id === currentUser?.id} />
+            </Form.Item>
+          ) : (
+            <p className="text-xs text-slate-500">New staff accounts are created active.</p>
+          )}
         </Form>
       </Modal>
     </>

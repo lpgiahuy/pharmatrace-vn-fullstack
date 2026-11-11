@@ -385,8 +385,12 @@ export const useCartStore = create<CartState>()(
       partialize: (state) => ({
         items: state.items,
         selectedItemIds: state.selectedItemIds,
-        appliedVoucher: state.appliedVoucher,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.appliedVoucher = null;
+        }
+      },
     },
   ),
 );

@@ -20,6 +20,7 @@ import { CreateVoucherDto } from './dto/create-voucher.dto';
 import { UpdateVoucherDto } from './dto/update-voucher.dto';
 import { VoucherQueryDto } from './dto/voucher-query.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CustomerGuard } from '../../common/guards/customer.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { CurrentUser, CurrentUserPayload } from '../../common/decorators/current-user.decorator';
@@ -46,6 +47,17 @@ export class VoucherController {
       message: result.message,
       data: result,
     };
+  }
+
+  @Get('vouchers/available')
+  @ApiBearerAuth('bearerAuth')
+  @UseGuards(JwtAuthGuard, CustomerGuard)
+  @ApiOperation({
+    summary: 'List vouchers selectable at checkout for the current customer',
+    description: 'Each voucher is flagged usable or not; a voucher already used on any of the customer\'s orders (even cancelled) is not usable.',
+  })
+  async available(@CurrentUser() user: CurrentUserPayload, @Query('subtotal') subtotal?: string) {
+    return { success: true, data: await this.voucherService.listAvailable(user, Number(subtotal) || 0) };
   }
 
   // Consumption belongs to the order transaction, never a standalone request.

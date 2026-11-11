@@ -34,8 +34,23 @@ import { useCartStore } from '@/store/useCartStore';
 import { useAuth } from '@/store/useAuthStore';
 import { orderService, PaymentMethod } from '@/services/order.service';
 import { voucherService } from '@/services/voucher.service';
+import VoucherPickerModal from '@/components/shared/VoucherPickerModal';
 import { Prescription, prescriptionService } from '@/services/prescription.service';
 import { formatCurrency } from '@/utils';
+
+const CHECKOUT_DRAFT_KEY = 'pharmatrace_checkout_draft_v1';
+
+interface CheckoutDraft {
+  recipientName: string;
+  recipientPhone: string;
+  shippingAddress: string;
+  note: string;
+  paymentMethod: PaymentMethod;
+  deliveryCoords: { latitude: number; longitude: number } | null;
+  useLoyaltyPoints: boolean;
+  pointsInput: string;
+  prescriptionId: number | null;
+}
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -61,7 +76,7 @@ export default function CheckoutPage() {
   const [deliveryCoords, setDeliveryCoords] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // Voucher state
-  const [voucherInput, setVoucherInput] = useState('');
+  const [voucherModalOpen, setVoucherModalOpen] = useState(false);
   const [voucherLoading, setVoucherLoading] = useState(false);
   const [voucherError, setVoucherError] = useState<string | null>(null);
 
@@ -71,6 +86,45 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [prescriptionId, setPrescriptionId] = useState<number | null>(null);
+
+  // Keep the form across reloads (per tab); cleared once the order is placed.
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  if (mounted && !draftLoaded) {
+    setDraftLoaded(true);
+    try {
+      const raw = sessionStorage.getItem(CHECKOUT_DRAFT_KEY);
+      const draft = raw ? (JSON.parse(raw) as CheckoutDraft) : null;
+      if (draft) {
+        if (typeof draft.recipientName === 'string') setRecipientName(draft.recipientName);
+        if (typeof draft.recipientPhone === 'string') setRecipientPhone(draft.recipientPhone);
+        if (typeof draft.shippingAddress === 'string') setShippingAddress(draft.shippingAddress);
+        if (typeof draft.note === 'string') setNote(draft.note);
+        if (draft.paymentMethod === 'COD' || draft.paymentMethod === 'BANK_TRANSFER') setPaymentMethod(draft.paymentMethod);
+        if (draft.deliveryCoords && Number.isFinite(draft.deliveryCoords.latitude) && Number.isFinite(draft.deliveryCoords.longitude)) {
+          setDeliveryCoords(draft.deliveryCoords);
+        }
+        if (typeof draft.useLoyaltyPoints === 'boolean') setUseLoyaltyPoints(draft.useLoyaltyPoints);
+        if (typeof draft.pointsInput === 'string') setPointsInput(draft.pointsInput);
+        if (typeof draft.prescriptionId === 'number') setPrescriptionId(draft.prescriptionId);
+      }
+    } catch {
+      // Unreadable or unavailable storage: start with an empty form.
+    }
+  }
+
+  useEffect(() => {
+    if (!draftLoaded) return;
+    const draft: CheckoutDraft = {
+      recipientName, recipientPhone, shippingAddress, note, paymentMethod,
+      deliveryCoords, useLoyaltyPoints, pointsInput, prescriptionId,
+    };
+    try {
+      sessionStorage.setItem(CHECKOUT_DRAFT_KEY, JSON.stringify(draft));
+    } catch {
+      // Storage unavailable; the form simply won't survive a reload.
+    }
+  }, [draftLoaded, recipientName, recipientPhone, shippingAddress, note, paymentMethod,
+    deliveryCoords, useLoyaltyPoints, pointsInput, prescriptionId]);
 
   // Delivery quote state (real-time calculated from warehouse distance and inventory)
   interface DeliveryQuote {
@@ -103,6 +157,11 @@ export default function CheckoutPage() {
     }
   }, [isAuthenticated]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Fresh checkout: always reset voucher from any previous order/session
+  useEffect(() => {
+    removeVoucherStore();
+  }, [removeVoucherStore]);
+
   // Fill profile fields when the loaded profile changes, preserving entered values.
   const [previousUser, setPreviousUser] = useState(user);
   if (previousUser !== user) {
@@ -130,6 +189,14 @@ export default function CheckoutPage() {
   const subtotal = useMemo(() => {
     return selectedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
   }, [selectedItems]);
+
+  // Derived warning when applied voucher does not meet minimum order requirement
+  const voucherInvalidNotice = useMemo(() => {
+    if (appliedVoucher && appliedVoucher.minOrderValue && subtotal > 0 && subtotal < appliedVoucher.minOrderValue) {
+      return `Voucher ${appliedVoucher.voucherCode} requires a minimum order of ${formatCurrency(appliedVoucher.minOrderValue)}.`;
+    }
+    return null;
+  }, [appliedVoucher, subtotal]);
 
   const FREE_SHIPPING_THRESHOLD = 500000;
   const STANDARD_SHIPPING_FEE = 30000;
@@ -210,7 +277,7 @@ export default function CheckoutPage() {
           recipientName: recipientName.trim() || user?.fullName || user?.name || 'Customer',
           recipientPhone: recipientPhone.trim() || user?.phone || '0901234567',
           paymentMethod,
-          voucherCode: appliedVoucher?.voucherCode || undefined,
+          voucherCode: !voucherInvalidNotice && appliedVoucher ? appliedVoucher.voucherCode : undefined,
           usedPoints: useLoyaltyPoints && effectivePointsToUse > 0 ? effectivePointsToUse : undefined,
           note: note.trim() || undefined,
           prescriptionId: prescriptionId || undefined,
@@ -241,7 +308,8 @@ export default function CheckoutPage() {
     shippingAddress,
     deliveryCoords,
     selectedItems,
-    appliedVoucher?.voucherCode,
+    appliedVoucher,
+    voucherInvalidNotice,
     useLoyaltyPoints,
     effectivePointsToUse,
     prescriptionId,
@@ -282,8 +350,8 @@ export default function CheckoutPage() {
   };
 
   // Apply voucher handler
-  const handleApplyVoucher = async () => {
-    const code = voucherInput.trim().toUpperCase();
+  const handleApplyVoucher = async (rawCode: string) => {
+    const code = rawCode.trim().toUpperCase();
     if (!code) return;
 
     setVoucherLoading(true);
@@ -301,7 +369,7 @@ export default function CheckoutPage() {
           maxDiscountAmount: res.data.maxDiscountAmount,
         });
         message.success(`Voucher ${code} applied successfully.`);
-        setVoucherInput('');
+        setVoucherModalOpen(false);
       } else {
         setVoucherError(res?.message || 'Invalid voucher code for this order.');
       }
@@ -366,7 +434,7 @@ export default function CheckoutPage() {
         recipientName: recipientName.trim(),
         recipientPhone: recipientPhone.trim(),
         paymentMethod,
-        voucherCode: appliedVoucher?.voucherCode || undefined,
+        voucherCode: !voucherInvalidNotice && appliedVoucher ? appliedVoucher.voucherCode : undefined,
         usedPoints: useLoyaltyPoints && effectivePointsToUse > 0 ? effectivePointsToUse : undefined,
         note: note.trim() || undefined,
         prescriptionId: prescriptionId || undefined,
@@ -402,7 +470,9 @@ export default function CheckoutPage() {
 
       if (res?.success && res?.data) {
         message.success('Order placed successfully.');
+        removeVoucherStore();
         removeSelectedItems();
+        try { sessionStorage.removeItem(CHECKOUT_DRAFT_KEY); } catch { /* ignore */ }
         router.push(`/account/orders?success=true&orderCode=${res.data.orderCode}`);
       } else {
         message.error(res?.message || 'Failed to place order. Please try again.');
@@ -811,57 +881,54 @@ export default function CheckoutPage() {
 
                 {/* Voucher code input section */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-medium text-gray-700 flex items-center gap-1.5">
-                      <Tag className="w-3.5 h-3.5 text-gray-500" />
-                      Voucher Code
-                    </label>
-                    {appliedVoucher && (
-                      <button
-                        type="button"
-                        onClick={removeVoucherStore}
-                        className="text-xs text-red-600 hover:underline cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
+                  <div className="text-xs font-medium text-gray-700 mb-1.5">Voucher</div>
 
                   {appliedVoucher ? (
-                    <div className="p-2.5 rounded-md bg-[#f0f7ff] border border-blue-200 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="px-1.5 py-0.5 bg-[#004996] text-white text-xs font-mono font-medium rounded">
-                          {appliedVoucher.voucherCode}
-                        </span>
-                        <span className="text-xs font-semibold text-[#004996]">
-                          -{formatCurrency(voucherDiscount)}
-                        </span>
+                    <div className="flex items-start justify-between gap-3 py-2.5 border-y border-gray-200">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 break-all">{appliedVoucher.voucherCode}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {appliedVoucher.discountType === 'PERCENT'
+                            ? `${appliedVoucher.discountValue}% off${appliedVoucher.maxDiscountAmount ? `, up to ${formatCurrency(appliedVoucher.maxDiscountAmount)}` : ''}`
+                            : `${formatCurrency(appliedVoucher.discountValue)} off`}
+                        </p>
+                        <div className="mt-1.5 flex gap-3 text-xs">
+                          <button type="button" onClick={() => setVoucherModalOpen(true)} className="text-[#004996] hover:underline cursor-pointer">
+                            Change
+                          </button>
+                          <button type="button" onClick={removeVoucherStore} className="link-danger text-gray-500 cursor-pointer">
+                            Remove
+                          </button>
+                        </div>
                       </div>
+                      <span className="text-sm font-semibold text-green-700 whitespace-nowrap">
+                        -{formatCurrency(voucherDiscount)}
+                      </span>
                     </div>
                   ) : (
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={voucherInput}
-                        onChange={(e) => setVoucherInput(e.target.value)}
-                        placeholder="Enter voucher code"
-                        className="flex-1 px-3 py-1.5 text-xs uppercase font-medium rounded-md border border-gray-300 focus:border-[#004996] focus:ring-1 focus:ring-[#004996] outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={handleApplyVoucher}
-                        disabled={voucherLoading || !voucherInput.trim()}
-                        className="px-3 py-1.5 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-200 disabled:text-gray-400 text-white text-xs font-medium rounded-md transition-colors cursor-pointer"
-                      >
-                        {voucherLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Apply'}
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setVoucherModalOpen(true)}
+                      className="w-full px-3 py-2 flex items-center justify-between text-xs font-medium rounded-md border border-dashed border-[#004996] text-[#004996] hover:bg-[#f0f7ff] transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-1.5"><Tag className="w-3.5 h-3.5" />Select or enter a voucher</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
                   )}
 
-                  {voucherError && (
+                  <VoucherPickerModal
+                    open={voucherModalOpen}
+                    subtotal={subtotal}
+                    appliedCode={appliedVoucher?.voucherCode}
+                    applying={voucherLoading}
+                    onClose={() => setVoucherModalOpen(false)}
+                    onApply={(v) => handleApplyVoucher(v.voucherCode)}
+                  />
+
+                  {(voucherError || voucherInvalidNotice) && (
                     <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
                       <AlertCircle className="w-3 h-3 shrink-0" />
-                      {voucherError}
+                      {voucherInvalidNotice || voucherError}
                     </p>
                   )}
                 </div>

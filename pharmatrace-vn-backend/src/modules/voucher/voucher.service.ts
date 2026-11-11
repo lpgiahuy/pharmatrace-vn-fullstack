@@ -146,6 +146,31 @@ export class VoucherService {
     }, { code: dto.voucherCode });
   }
 
+  // Vouchers a customer can pick at checkout, each flagged usable or not (with a reason).
+  async listAvailable(user: CurrentUserPayload, subtotal: number) {
+    const actor = authActor(user);
+    const vouchers = await this.prisma.withVoucher('available', tx => tx.vouchers.findMany({
+      orderBy: [{ end_date: 'asc' }, { id: 'desc' }],
+    }), { actor });
+    const usedRows = await this.prisma.withOrder('read', tx => tx.orders.findMany({
+      where: { customer_id: actor.id, voucher_id: { not: null } },
+      select: { voucher_id: true },
+    }), actor);
+    const used = new Set(usedRows.map(r => r.voucher_id));
+    const safeSubtotal = Number.isFinite(subtotal) && subtotal > 0 ? subtotal : 0;
+
+    // Vouchers this customer already used (even on a cancelled order) are not listed at all.
+    return vouchers.filter(v => !used.has(v.id)).map(v => {
+      const item = this.formatVoucher(v);
+      let reason: 'EXHAUSTED' | 'MIN_ORDER' | null = null;
+      if (item.usedQuantity >= item.totalQuantity) reason = 'EXHAUSTED';
+      else if (safeSubtotal < item.minOrderValue) reason = 'MIN_ORDER';
+      const raw = item.discountType === 'PERCENT' ? (safeSubtotal * item.discountValue) / 100 : item.discountValue;
+      const capped = item.maxDiscountAmount ? Math.min(raw, item.maxDiscountAmount) : raw;
+      return { ...item, usable: reason === null, reason, estimatedDiscount: Math.round(Math.min(capped, safeSubtotal)) };
+    }).filter(v => v.status === 'ACTIVE' && (!v.startDate || new Date(v.startDate) <= new Date()));
+  }
+
   async findAll(query: VoucherQueryDto | undefined, user: CurrentUserPayload) {
     return this.prisma.withVoucher('read', async tx => {
       const page = Math.max(1, Number(query?.page) || 1);

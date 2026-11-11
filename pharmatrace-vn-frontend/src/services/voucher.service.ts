@@ -14,6 +14,12 @@ export interface VoucherItem {
   status: string;
 }
 
+export interface AvailableVoucher extends VoucherItem {
+  usable: boolean;
+  reason: 'EXHAUSTED' | 'MIN_ORDER' | null;
+  estimatedDiscount: number;
+}
+
 export interface ValidateVoucherResponse {
   valid: boolean;
   voucherId: number;
@@ -34,6 +40,13 @@ export const voucherService = {
     orderSubtotal: number,
   ): Promise<{ success: boolean; data: ValidateVoucherResponse; message: string }> => {
     return apiClient.post('/vouchers/validate', { voucherCode, orderSubtotal });
+  },
+
+  // Customer: vouchers selectable at checkout (flagged usable / not usable)
+  getAvailableVouchers: async (
+    subtotal: number,
+  ): Promise<{ success: boolean; data: AvailableVoucher[] }> => {
+    return apiClient.get('/vouchers/available', { params: { subtotal } });
   },
 
   // Admin: Get all vouchers
