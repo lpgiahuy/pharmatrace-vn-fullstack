@@ -140,7 +140,7 @@ export default function ProfilePage({ portal }: { portal: 'customer' | 'admin' }
         <Alert
           type="error"
           showIcon
-          message="Profile Unavailable"
+          title="Profile Unavailable"
           description={error || 'Unable to load profile data.'}
         />
       </div>
