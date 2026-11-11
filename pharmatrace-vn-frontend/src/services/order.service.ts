@@ -56,6 +56,14 @@ export interface OrderShipment {
   deliveredAt?: string;
 }
 
+export interface OrderDeliveryDispute {
+  reason: string;
+  openedAt: string;
+  outcome: 'DELIVERED' | 'NOT_DELIVERED' | null;
+  resolutionReason: string | null;
+  resolvedAt: string | null;
+}
+
 export type OrderStatus =
   | 'PENDING'
   | 'WAITING_INTERNAL_TRANSFER'
@@ -209,6 +217,7 @@ export interface Order {
   orderItems?: OrderItem[];
   shipments?: OrderShipment[];
   shipment?: OrderShipment;
+  deliveryDispute?: OrderDeliveryDispute | null;
   internalTransfers?: InternalTransfer[];
   prescription?: any;
 }

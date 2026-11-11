@@ -449,6 +449,11 @@ function CustomerOrdersContent() {
     }
   };
 
+  // Only parcels the carrier still has in transit can be confirmed (e.g. not returned to warehouse).
+  const canConfirmReceipt = (order: Order) =>
+    formatOrderStatus(order.orderStatus) === 'SHIPPING' &&
+    String(order.shipment?.shippingStatus ?? '').toUpperCase() === 'IN_TRANSIT';
+
   const handleConfirmReceipt = async (orderId: number) => {
     setConfirmingId(orderId);
     try {
@@ -705,6 +710,11 @@ function CustomerOrdersContent() {
 
                     <div className="shrink-0 pt-0.5 text-right">
                       <OrderStatusBadge status={order.orderStatus} />
+                      {order.deliveryDispute && (
+                        <div className="mt-1 text-[11px] font-semibold text-amber-700">
+                          {order.deliveryDispute.outcome ? 'Issue resolved' : 'Issue under review'}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -835,29 +845,6 @@ function CustomerOrdersContent() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      {formatOrderStatus(order.orderStatus) === 'SHIPPING' && (
-                        <Popconfirm
-                          title="Confirm receipt"
-                          description="Have you received your package in good condition? This will complete your order."
-                          okText="Yes, I received it"
-                          cancelText="Not yet"
-                          onConfirm={() => handleConfirmReceipt(order.id)}
-                          okButtonProps={{
-                            loading: confirmingId === order.id,
-                            style: { background: '#059669', borderColor: '#059669' },
-                          }}
-                        >
-                          <button
-                            type="button"
-                            disabled={confirmingId !== null}
-                            className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs disabled:opacity-50"
-                          >
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>Received</span>
-                          </button>
-                        </Popconfirm>
-                      )}
-
                       <button
                         type="button"
                         disabled={loadingDetailId !== null}
@@ -952,6 +939,23 @@ function CustomerOrdersContent() {
               status={selectedOrder.orderStatus}
               cancellationReason={selectedOrder.cancellationReason}
             />
+
+            {selectedOrder.deliveryDispute && (
+              <div className="border border-amber-200 bg-amber-50 rounded-md p-4 space-y-1.5" role="status">
+                <div className="text-xs font-bold text-amber-900 uppercase tracking-wider">Delivery issue</div>
+                <p className="text-sm text-slate-800">{selectedOrder.deliveryDispute.reason}</p>
+                <p className="text-xs text-slate-500">Reported {formatDateTime(selectedOrder.deliveryDispute.openedAt)}</p>
+                {selectedOrder.deliveryDispute.outcome ? (
+                  <p className="text-xs text-slate-800">
+                    <strong>{selectedOrder.deliveryDispute.outcome === 'DELIVERED' ? 'Delivery confirmed' : 'Non-delivery confirmed'}:</strong>{' '}
+                    {selectedOrder.deliveryDispute.resolutionReason}
+                    {selectedOrder.deliveryDispute.resolvedAt ? ` (${formatDateTime(selectedOrder.deliveryDispute.resolvedAt)})` : ''}
+                  </p>
+                ) : (
+                  <p className="text-xs text-amber-800">Under review by customer support.</p>
+                )}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-slate-50/70 border border-slate-200 rounded-md p-4 space-y-2">
@@ -1211,7 +1215,7 @@ function CustomerOrdersContent() {
               </div>
 
               <div className="flex items-center gap-2.5">
-                {formatOrderStatus(selectedOrder.orderStatus) === 'SHIPPING' && (
+                {canConfirmReceipt(selectedOrder) && (
                   <Popconfirm
                     title="Confirm receipt"
                     description="Have you received your package in good condition? This will mark your order as completed."
@@ -1233,7 +1237,7 @@ function CustomerOrdersContent() {
                     </button>
                   </Popconfirm>
                 )}
-                {['SHIPPING', 'COMPLETED'].includes(formatOrderStatus(selectedOrder.orderStatus)) && (
+                {['SHIPPING', 'COMPLETED'].includes(formatOrderStatus(selectedOrder.orderStatus)) && !selectedOrder.deliveryDispute && (
                   <button type="button" onClick={() => setDisputeOpen(true)} className="px-4 py-2 border border-slate-300 rounded-md text-xs font-semibold cursor-pointer">
                     Report delivery issue
                   </button>

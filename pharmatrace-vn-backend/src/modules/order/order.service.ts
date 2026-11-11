@@ -637,8 +637,9 @@ export class OrderService {
         }),
       ]);
 
+      const disputes = await this.loadCustomerDisputes(tx, orders.map((o) => o.id));
       return {
-        items: orders.map((o) => formatOrder(o)),
+        items: orders.map((o) => ({ ...formatOrder(o), deliveryDispute: disputes.get(o.id) ?? null })),
         pagination: {
           page,
           limit,
@@ -708,9 +709,23 @@ export class OrderService {
         }
       }
 
-      return formatOrder(order, cancellationReason);
+      const disputes = await this.loadCustomerDisputes(tx, [order.id]);
+      return { ...formatOrder(order, cancellationReason), deliveryDispute: disputes.get(order.id) ?? null };
 
     }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
+  }
+
+  /** Customer-visible delivery dispute state (reason and outcome only; resolver identity stays internal). */
+  private async loadCustomerDisputes(tx: any, orderIds: number[]) {
+    const result = new Map<number, { reason: string; openedAt: Date; outcome: string | null; resolutionReason: string | null; resolvedAt: Date | null }>();
+    if (!orderIds.length) return result;
+    const rows = await tx.$queryRaw<Array<{ order_id: number; reason: string; opened_at: Date; outcome: string | null; resolution_reason: string | null; resolved_at: Date | null }>>`
+      SELECT order_id, reason, opened_at, outcome, resolution_reason, resolved_at
+      FROM public.delivery_disputes WHERE order_id = ANY(${orderIds}::int[])`;
+    for (const r of rows) {
+      result.set(r.order_id, { reason: r.reason, openedAt: r.opened_at, outcome: r.outcome, resolutionReason: r.resolution_reason, resolvedAt: r.resolved_at });
+    }
+    return result;
   }
 
   async confirmReceipt(customerId: number, orderId: number) {
