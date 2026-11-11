@@ -39,6 +39,7 @@
 \i /docker-entrypoint-initdb.d/security/review/review_rls.sql
 
 -- Order ownership, fulfillment facility scope, transfer projection and loyalty ledger.
+\i /docker-entrypoint-initdb.d/schemas/11_logistics_transport.sql
 \i /docker-entrypoint-initdb.d/security/order/order_rls.sql
 
 -- Voucher management, exact-code previews and order-bound consumption.
@@ -66,12 +67,26 @@
 \i /docker-entrypoint-initdb.d/security/prescription/prescription_voucher_release.sql
 
 -- Logistics tables, operations and access controls.
+\i /docker-entrypoint-initdb.d/schemas/10_logistics_operations.sql
+\i /docker-entrypoint-initdb.d/security/logistics/logistics_rls.sql
+\i /docker-entrypoint-initdb.d/security/logistics/event_identity.sql
+\i /docker-entrypoint-initdb.d/security/logistics/logistics_workflow_enhancements.sql
 
+\i /docker-entrypoint-initdb.d/security/logistics/logistics_integrity.sql
 \i /docker-entrypoint-initdb.d/security/order/cancellation_safeguards.sql
 \i /docker-entrypoint-initdb.d/security/customer/customer_cancellation_reason.sql
+\i /docker-entrypoint-initdb.d/security/logistics/transfer_manifest.sql
 \i /docker-entrypoint-initdb.d/security/order/cancel_voucher_release.sql
+\i /docker-entrypoint-initdb.d/security/inventory/quarantine_balances.sql
+\i /docker-entrypoint-initdb.d/security/logistics/transfer_reroute.sql
 
+\i /docker-entrypoint-initdb.d/security/logistics/in_transit_custody.sql
+\i /docker-entrypoint-initdb.d/security/logistics/source_manifest_assignment.sql
+\i /docker-entrypoint-initdb.d/security/logistics/transit_box_receipt.sql
+\i /docker-entrypoint-initdb.d/security/logistics/normalize_legacy_box_status.sql
+\i /docker-entrypoint-initdb.d/security/order/order_item_variant_restrict.sql
 
+\i /docker-entrypoint-initdb.d/security/logistics/transfer_discrepancy_resolution.sql
 
 
 \i /docker-entrypoint-initdb.d/security/logistics/fulfillment_policy.sql

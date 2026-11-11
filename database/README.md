@@ -629,3 +629,47 @@ Run `tests/catalog_rls_test.sql` and `test/catalog-rls.e2e-spec.ts` against disp
 `security/manufacturer/manufacturer_rls.sql` applies manufacturer policies and prevents employee assignment to external manufacturer records. New databases receive it through master initialization. `tests/manufacturer_rls_test.sql` checks permitted and denied access in a rolled-back transaction.
 
 Existing volumes do not update automatically. For an older database, prepare and test a data-specific upgrade after backing up and reviewing existing relationships. Applying the RLS script alone does not upgrade the schema or clean historical data.
+
+## Logistics operations
+
+The logistics endpoints use the existing order RLS context. New databases install `schemas/10_logistics_operations.sql` followed by `security/logistics/logistics_rls.sql` after the order policies. For an existing database, back up and test on a copy, stop backend traffic, apply the schema script and then the security script as a trusted PostgreSQL superuser, and deploy the matching backend. Do not rerun the master initialization or seed scripts on an existing volume. The SECURITY DEFINER functions intentionally require a trusted superuser owner; runtime access is limited to their narrow operations and trusts the same server-supplied actor context as order RLS.
+
+Events start when the migration is installed; it does not manufacture historical events. COD collection requires a delivered, unsettled shipment with a positive COD amount, locks it, and creates the cashbook and settlement records atomically. Shipment status and COD endpoints require super admin or store manager; pharmacists may update delivery status but cannot collect COD. A cancelled, undispatched transfer releases only its own reservations; its order remains waiting and requires an order cancellation or a separate replanning workflow. Return tracking records movement only: receiving returned items does not automatically restore sellable inventory, change the order to returned, or issue a refund; inspection and those workflows must be handled separately.
+
+Run `database/tests/logistics_test.sql` against an isolated database after both logistics scripts; it creates its own fixtures and rolls them back. It checks facility denial, duplicate COD settlement, cancellation, event history and reservation release. Also run the order RLS regression suite when changing these policies.
+
+
+## 2026-11-09 — Logistics workflow completion upgrade
+
+See [the implementation and rollout guide](LOGISTICS_WORKFLOWS.md) for NV-05/NV-06 custody and discrepancy resolution, NV-11 exceptional payments, C6 unpacked PROCESSING cancellation and NV-14 facility delivery policies.
+
+After applying the earlier Logistics prerequisites, stop the matching backend/jobs and apply the domain scripts listed in [LOGISTICS_WORKFLOWS.md](LOGISTICS_WORKFLOWS.md) as a trusted DBA. The custody script refuses active legacy dispatched/return-requested transfers without custody records; complete or physically reconcile those with the previous backend before cutover. Never reset the database volume to apply these changes.
+
+After the upgrade, dispatch removes source on-hand stock and reservations. Receipt consumes in-transit custody; source returns increase on-hand stock only after physical inspection. The older description above that source returns only release reservations applies to the earlier implementation.
+
+New delivery orders require enabled facility policies and medicine transport classifications, managed at `/admin/logistics/policies`. Fresh development initialization loads demo policies and classifications from `seeds/01_seed_data.sql`. Existing volumes do not rerun bootstrap automatically. The local application database has received the domain controls; local demo settings are described below.
+
+## 2026-11-10 — Order resolution and local upgrade
+
+`security/order/order_resolution.sql` installs staff cancellation audit, structured delivery dispute conclusions and approved cancellation refunds backed by actual cashbook payments. Apply it after `security/payment/payment_exceptions.sql` and `security/logistics/event_identity.sql`, following the logistics prerequisites. Fresh initialization includes the same controls.
+
+Standalone transfer cancellation and rerouting are blocked until delivery replanning is supported. Cancel the entire order instead. Admin completion requires a delivered shipment with PoD type, reference, recipient and delivery time. Disputes retain their original reason and record a final outcome, reason, handler and time. Open disputes and confirmed non-delivery block loyalty awards; confirmed non-delivery reverses previously earned points. Delivery confirmation restores eligibility under the existing paid-order and return-window rules.
+
+Cancellation refunds cover the full amount of a paid order cancelled before packing, without an RMA. Finance managers or super administrators approve; accountants may record the actual payment with the approved amount and a unique reference. Approval does not change payment status. Actual recording atomically creates the cashbook expense, consumes allocated exceptional funds if applicable and marks the order refunded. Retries with matching evidence return the existing record. References cannot be reused across cancellation, RMA and exceptional-payment refunds.
+
+The local `phartrace-vn-db` was backed up to `backups/pharmatrace-before-order-resolution-20261110.dump` and restored to `codex_local_upgrade_20261110` for rehearsal. The user confirmed order 145 and transfer `ITR-261029-DF0CE598` as disposable demo data. Their one-time reconciliation has completed: both are cancelled, the one reservation was released, and source stock was preserved at 2,206 at reconciliation time. No historical physical receipt or package evidence was invented. The completed data-specific script has been removed; never replay that cleanup against current data or fresh databases.
+
+Development fulfillment configuration is included in `seeds/01_seed_data.sql`: all 14 supported pharmacy/warehouse facilities, 24/7 Vietnam time, 1,000 orders/day, 100 km radius and `APPROVED_STANDARD` for 543 demo medicines. The two warehouse links use the first development pharmacy. Factory facilities are excluded. These are test settings, not production transport classifications. `schemas/13_fulfillment_policy.sql` creates the tables before the seed; `security/logistics/fulfillment_policy.sql` installs their runtime controls later. There is no separate demo configuration script. Existing local seed data was not replayed, preserving current local policies and warehouse link choices.
+
+There is no separate `upgrades` directory: schema and function changes live in `schemas/` and `security/`, development data in `seeds/`, and verification in `tests/`. Current local schema/security changes are applied without rerunning master or resetting the volume. For other existing databases, follow the domain-script order and prerequisites in [LOGISTICS_WORKFLOWS.md](LOGISTICS_WORKFLOWS.md).
+
+Folder consolidation backup: `backups/pharmatrace-before-folder-merge-20261110.dump`. Restoration and source-script application were tested separately before applying the same source scripts to local. Data-only dumps before/after matched exactly; current policies, warehouse links, orders and inventory were preserved.
+
+The matching local app serves the resolution endpoints under `/admin/orders/:id`: `/resolution`, `/dispute/resolve`, `/cancellation-refund/approve` and `/cancellation-refund/payment`. Order details display cancellation audit, dispute handling and refund evidence. Regression tests are in `src/modules/logistics/workflow-gaps.integration.spec.ts` and run with the restricted `app_user` role on a dedicated workflow database. Both production builds pass; authenticated local HTTP checks return 200, and the browser displays the demo cancellation audit. The customer-receipt SQL regression also covers the fix preventing a customer event from being relabeled as an employee when their numeric IDs collide.
+
+### Transfer receipt and variant integrity fixes
+
+- `security/logistics/transit_box_receipt.sql` adds a `medicine_boxes` policy that lets destination staff (and source staff for returns) see and update only the in-transit boxes of the transfer they are receiving, and only during the `receive` operation. In-transit boxes have no facility, so the facility-based policy alone hid them from every non-super-admin.
+- `security/logistics/normalize_legacy_box_status.sql` maps the legacy seed values `TrongKho` to `IN_STOCK` and `HopLe` to `ACTIVE`; the application and dispatch functions only recognise the English values.
+- `security/order/order_item_variant_restrict.sql` changes `order_items.variant_id` to `ON DELETE RESTRICT` so a packaging variant that is on an order can no longer be deleted (it used to be set to NULL, which stranded transfers).
+- `security/logistics/logistics_workflow_enhancements.sql` now also grants `INSERT` on `internal_transfers.variance_details` and `discrepancy_status`, which Prisma writes explicitly when checkout creates a transfer.
