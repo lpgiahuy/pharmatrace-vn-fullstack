@@ -38,6 +38,8 @@ DO $$ DECLARE affected integer; BEGIN
         UPDATE public.orders SET total_amount = 1 WHERE id = current_setting('test.order_own')::integer;
         RAISE EXCEPTION 'Customer changed total';
     EXCEPTION WHEN insufficient_privilege THEN NULL; END;
+    INSERT INTO public.order_cancellation_reasons (order_id, customer_id, reason_code)
+    SELECT id, customer_id, 'CHANGED_MIND' FROM public.orders WHERE id = current_setting('test.order_own')::integer;
     UPDATE public.orders SET order_status = 'CANCELLED' WHERE id = current_setting('test.order_own')::integer;
     BEGIN
         DELETE FROM public.orders;

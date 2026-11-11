@@ -1,6 +1,7 @@
 import { calculateEstimatedDelivery } from '../order/helpers/shipping-calculator.helper';
 import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
+import { LogisticsService } from './shipment/logistics.service';
 import { InternalTransferService } from './internal-transfer/internal-transfer.service';
 import { OrderService } from '../order/order.service';
 import { AdminOrderService } from '../order/admin-order.service';
@@ -85,6 +86,101 @@ describe('Logistics & Order Management Verification Test Matrix', () => {
     });
   });
 
+  describe('SHIP-01: Carrier Details Validation, Gated Transitions, and Customer Receipt Enforcement', () => {
+    it('blocks transition to PICKED_UP when carrier tracking number is not yet confirmed', async () => {
+      const tx = {
+        shipments: {
+          findFirst: jest.fn().mockResolvedValue({
+            id: 301,
+            shipping_status: 'PENDING_PICKUP',
+            carrier_confirmed_at: null, // carrier details unconfirmed
+          }),
+          updateMany: jest.fn(),
+        },
+        $queryRaw: jest.fn(),
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const logisticsService = new LogisticsService(prisma as never);
+
+      await expect(
+        logisticsService.changeStatus(301, { status: 'PICKED_UP' }, store1Staff)
+      ).rejects.toThrow(/actual carrier tracking number before pickup/i);
+
+      expect(tx.shipments.updateMany).not.toHaveBeenCalled();
+    });
+
+  });
+
+  describe('SHIP-02: Sequential Shipment Lifecycle and Inventory Preservation', () => {
+    it('progresses shipment statuses sequentially without redundant inventory deductions during shipping', async () => {
+      let currentStatus = 'PENDING_PICKUP';
+      let currentOrderStatus = 'PENDING_PICKUP';
+      const tx = {
+        shipments: {
+          findFirst: jest.fn().mockImplementation(() =>
+            Promise.resolve({
+              id: 401,
+              order_id: 501,
+              orders: { order_status: currentOrderStatus },
+              shipping_status: currentStatus,
+              carrier_confirmed_at: new Date(),
+            })
+          ),
+          updateMany: jest.fn().mockImplementation(({ data }) => {
+            if (data?.shipping_status) currentStatus = data.shipping_status;
+            return Promise.resolve({ count: 1 });
+          }),
+        },
+        orders: { updateMany: jest.fn().mockImplementation(({ data }) => {
+          currentOrderStatus = data.order_status;
+          return Promise.resolve({ count: 1 });
+        }) },
+        $queryRaw: jest.fn().mockResolvedValue([]),
+        $executeRaw: jest.fn(),
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const logisticsService = new LogisticsService(prisma as never);
+
+      // Step 1: Picked up by courier
+      await logisticsService.changeStatus(401, { status: 'PICKED_UP' }, store1Staff);
+      expect(currentStatus).toBe('PICKED_UP');
+      expect(currentOrderStatus).toBe('PICKED_UP');
+
+      // Step 2: In transit to recipient
+      await logisticsService.changeStatus(401, { status: 'IN_TRANSIT' }, store1Staff);
+      expect(currentStatus).toBe('IN_TRANSIT');
+      expect(currentOrderStatus).toBe('SHIPPING');
+
+      // Step 3: Customer receives delivery
+      const orderTx = { $queryRaw: jest.fn().mockResolvedValue([{ result: 'RECEIVED' }]) };
+      const orderPrisma = { withOrder: jest.fn((_op, cb) => cb(orderTx)) };
+      const orderService = new OrderService(orderPrisma as never);
+      jest.spyOn(orderService, 'getMyOrderById').mockResolvedValueOnce({ id: 501, orderStatus: 'COMPLETED' } as never);
+
+      const completedOrder = await orderService.confirmReceipt(customerUser.id, 501);
+      expect(completedOrder).toMatchObject({ id: 501, orderStatus: 'COMPLETED' });
+
+      // Verifies that shipping transitions never deduct inventory again (already deducted during packing)
+      expect(tx.$executeRaw).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('SHIP-03: Concurrent Multi-Tab Operations and Idempotency Enforcement', () => {
+    it('returns idempotent ALREADY_RECEIVED without duplicate events or stock modifications on simultaneous tabs', async () => {
+      const orderTx = {
+        $queryRaw: jest.fn().mockResolvedValueOnce([{ result: 'ALREADY_RECEIVED' }]),
+      };
+      const orderPrisma = { withOrder: jest.fn((_op, cb) => cb(orderTx)) };
+      const orderService = new OrderService(orderPrisma as never);
+      jest.spyOn(orderService, 'getMyOrderById').mockResolvedValueOnce({ id: 502, orderStatus: 'COMPLETED' } as never);
+
+      // Confirm call from duplicate tab returns existing completed order cleanly
+      const result = await orderService.confirmReceipt(customerUser.id, 502);
+      expect(result).toMatchObject({ id: 502, orderStatus: 'COMPLETED' });
+      expect(orderTx.$queryRaw).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('ORD-01: Order Data Synchronization Across Customer and Admin Views', () => {
     it('strictly matches products, packaging variants, quantities, unit prices, shipping fee, discounts, and total amount between customer portal and admin portal', async () => {
       const sampleOrderRecord = {
@@ -142,7 +238,7 @@ describe('Logistics & Order Management Verification Test Matrix', () => {
 
       const customerTx = {
         orders: { findUnique: jest.fn().mockResolvedValue(sampleOrderRecord) },
-        $queryRaw: jest.fn(),
+        $queryRaw: jest.fn().mockResolvedValue([]),
       };
       const customerPrisma = { withOrder: jest.fn((_op, cb) => cb(customerTx)) };
       const orderService = new OrderService(customerPrisma as never);
@@ -286,6 +382,248 @@ describe('Logistics & Order Management Verification Test Matrix', () => {
       await expect(
         adminOrderService.adminUpdateOrderStatus(804, { orderStatus: 'CANCELLED' }, store1Staff)
       ).rejects.toThrow(/Invalid status transition: Cannot move order from COMPLETED to CANCELLED/i);
+    });
+  });
+
+  describe('PACK-01: Package UID Validation (Format, Existence, and Product Matching)', () => {
+    const validUid = '11111111-1111-4111-8111-111111111111';
+    const baseOrder = {
+      id: 901,
+      order_code: 'ORD-901',
+      order_status: 'PROCESSING',
+      export_facility_id: 1,
+      payment_method: 'COD',
+      total_amount: 50000,
+      shipments: null,
+      order_items: [
+        {
+          id: 91,
+          medicine_id: 50,
+          medicine_name: 'Andol S Tablets',
+          unit_name: 'Box',
+          quantity: 1,
+          variant_id: 12,
+          inventory_reserved: true,
+          assigned_uids: [validUid],
+        },
+      ],
+    };
+
+    it('rejects packing request if physical package UID does not exist or is not at the export facility', async () => {
+      const tx = {
+        $queryRaw: jest.fn().mockResolvedValue([]),
+        orders: { findFirst: jest.fn().mockResolvedValue(baseOrder) },
+        medicine_boxes: {
+          // Non-existent UID returns empty array
+          findMany: jest.fn().mockResolvedValue([]),
+        },
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const adminOrderService = new AdminOrderService(prisma as never);
+
+      await expect(
+        adminOrderService.adminPackOrder(901, { boxUids: ['NON-EXISTENT-UID-999'] }, store1Staff)
+      ).rejects.toThrow(/invalid, already dispatched, or not at the export facility/i);
+    });
+
+    it('rejects packing request if scanned package UID belongs to a different medicine product', async () => {
+      const wrongMedUid = '22222222-2222-4222-8222-222222222222';
+      const tx = {
+        $queryRaw: jest.fn().mockResolvedValue([]),
+        orders: { findFirst: jest.fn().mockResolvedValue(baseOrder) },
+        medicine_boxes: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              uid: wrongMedUid,
+              status: 'IN_STOCK',
+              current_facility_id: 1,
+              batch_id: 99,
+              medicine_batches: { medicine_id: 999 }, // Mismatched medicine ID (expected 50)
+            },
+          ]),
+        },
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const adminOrderService = new AdminOrderService(prisma as never);
+
+      await expect(
+        adminOrderService.adminPackOrder(901, { boxUids: [wrongMedUid] }, store1Staff)
+      ).rejects.toThrow(/Verified packages do not match medicine "Andol S Tablets"/i);
+    });
+
+    it('rejects packing request if scanned package is reserved for another order', async () => {
+      const otherReservedUid = '33333333-3333-4333-8333-333333333333';
+      const tx = {
+        $queryRaw: jest.fn().mockResolvedValue([]),
+        orders: { findFirst: jest.fn().mockResolvedValue(baseOrder) },
+        medicine_boxes: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              uid: otherReservedUid,
+              status: 'RESERVED', // Reserved for a different order
+              current_facility_id: 1,
+              batch_id: 10,
+              medicine_batches: { medicine_id: 50 },
+            },
+          ]),
+        },
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const adminOrderService = new AdminOrderService(prisma as never);
+
+      await expect(
+        adminOrderService.adminPackOrder(901, { boxUids: [otherReservedUid] }, store1Staff)
+      ).rejects.toThrow(/A scanned package is reserved for another order/i);
+    });
+  });
+
+  describe('PACK-02: Duplicate UID Rejection and Quantity Enforcement', () => {
+    const singleItemOrder = {
+      id: 902,
+      order_code: 'ORD-902',
+      order_status: 'PROCESSING',
+      export_facility_id: 1,
+      order_items: [
+        {
+          id: 92,
+          medicine_id: 50,
+          medicine_name: 'Andol S Tablets',
+          unit_name: 'Box',
+          quantity: 2, // Requires exactly 2 boxes
+          variant_id: 12,
+          inventory_reserved: true,
+          assigned_uids: ['UID-AAA', 'UID-BBB'],
+        },
+      ],
+    };
+
+    it('rejects packing requests with duplicate UIDs in the submitted list', async () => {
+      const tx = {
+        $queryRaw: jest.fn().mockResolvedValue([]),
+        orders: { findFirst: jest.fn().mockResolvedValue(singleItemOrder) },
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const adminOrderService = new AdminOrderService(prisma as never);
+
+      // Same UID scanned twice: ['UID-AAA', 'UID-AAA']
+      await expect(
+        adminOrderService.adminPackOrder(902, { boxUids: ['UID-AAA', 'UID-AAA'] }, store1Staff)
+      ).rejects.toThrow(/Duplicate box UIDs detected in packing request/i);
+    });
+
+    it.each([
+      [['UID-AAA'], /Received 1 of 2 required UID\(s\)/i],
+      [['UID-AAA', 'UID-BBB', 'UID-CCC'], /Received 3 of 2 required UID\(s\)/i],
+    ])('rejects packing with the wrong UID count: %j', async (boxUids, error) => {
+      const tx = { $queryRaw: jest.fn().mockResolvedValue([]), orders: { findFirst: jest.fn().mockResolvedValue(singleItemOrder) } };
+      const service = new AdminOrderService({ withOrder: (_op, run) => run(tx) } as never);
+      await expect(service.adminPackOrder(902, { boxUids }, store1Staff)).rejects.toThrow(error);
+    });
+
+  });
+
+  describe('PACK-03: Concurrency Protection Against Duplicate Packing and Inventory Deduction', () => {
+    it('prevents concurrent double fulfillment and double inventory deduction on simultaneous packing attempts', async () => {
+      const targetUid = '11111111-1111-4111-8111-111111111111';
+      let executionCount = 0;
+      let orderCurrentStatus = 'PROCESSING';
+      let existingShipment: any = null;
+
+      const orderData = {
+        id: 903,
+        order_code: 'ORD-903',
+        order_status: orderCurrentStatus,
+        export_facility_id: 1,
+        payment_method: 'COD',
+        total_amount: 51600,
+        shipments: existingShipment,
+        order_items: [
+          {
+            id: 93,
+            medicine_id: 50,
+            medicine_name: 'Andol S Tablets',
+            unit_name: 'Box',
+            quantity: 1,
+            variant_id: 12,
+            inventory_reserved: true,
+            assigned_uids: [targetUid],
+          },
+        ],
+      };
+
+      const inventoryMock = {
+        stock_quantity: 10,
+        reserved_quantity: 1,
+      };
+
+      const tx = {
+        $queryRaw: jest.fn().mockResolvedValue([{ id: 903 }]),
+        orders: {
+          findFirst: jest.fn().mockImplementation(() =>
+            Promise.resolve({
+              ...orderData,
+              order_status: orderCurrentStatus,
+              shipments: existingShipment,
+            })
+          ),
+          update: jest.fn().mockImplementation(({ data }) => {
+            orderCurrentStatus = data.order_status;
+            return Promise.resolve({ ...orderData, order_status: orderCurrentStatus });
+          }),
+        },
+        medicine_boxes: {
+          findMany: jest.fn().mockResolvedValue([
+            {
+              uid: targetUid,
+              status: 'RESERVED',
+              current_facility_id: 1,
+              batch_id: 5,
+              medicine_batches: { medicine_id: 50 },
+            },
+          ]),
+          updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+        },
+        inventories: {
+          findUnique: jest.fn().mockResolvedValue(inventoryMock),
+        },
+        batches: {
+          findUnique: jest.fn().mockResolvedValue({ id: 5, remaining_quantity: 10 }),
+          update: jest.fn().mockResolvedValue({}),
+        },
+        order_items: { update: jest.fn().mockResolvedValue({}) },
+        inventory_logs: {
+          create: jest.fn().mockImplementation(() => {
+            executionCount++;
+            return Promise.resolve({ id: executionCount });
+          }),
+        },
+        shipments: {
+          create: jest.fn().mockImplementation(({ data }) => {
+            existingShipment = { id: 777, ...data };
+            return Promise.resolve(existingShipment);
+          }),
+        },
+        $executeRaw: jest.fn().mockResolvedValue(1),
+      };
+
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const adminOrderService = new AdminOrderService(prisma as never);
+
+      // Staff Member 1 completes packing successfully
+      const staff1Result = await adminOrderService.adminPackOrder(903, { boxUids: [targetUid] }, store1Staff);
+      expect(staff1Result.orderStatus).toBe('PENDING_PICKUP');
+      expect(executionCount).toBe(1); // Exactly 1 inventory deduction log created
+      expect(tx.shipments.create).toHaveBeenCalledTimes(1);
+
+      // Staff Member 2 opens same order simultaneously and submits packing
+      // Row lock and updated status check prevents duplicate packing:
+      await expect(
+        adminOrderService.adminPackOrder(903, { boxUids: [targetUid], courierName: 'J&T' }, store2Staff)
+      ).rejects.toThrow(/Only orders with status PENDING or PROCESSING can be packed/i);
+
+      // Assert: Inventory deduction was never executed a second time!
+      expect(executionCount).toBe(1);
+      expect(tx.shipments.create).toHaveBeenCalledTimes(1);
     });
   });
 });
@@ -549,6 +887,243 @@ describe('Logistics Comprehensive Workflow Matrix (Scopes 1 - 6)', () => {
           lines: [{ variantId: 5, receivedQuantity: 5, damagedQuantity: 2, missingQuantity: 1 }],
         }),
       ).rejects.toThrow(/do not sum to transferred quantity/i);
+    });
+  });
+
+  describe('Scope 3: Proof of Delivery (PoD) and customer dispute', () => {
+    it('allows authorized staff to record delivery with photo / signature proof without customer button block', async () => {
+      const tx = {
+        shipments: {
+          findFirst: jest.fn()
+            .mockResolvedValueOnce({
+              id: 401,
+              shipping_status: 'IN_TRANSIT',
+              order_id: 701,
+              orders: { id: 701, order_status: 'SHIPPING' },
+            })
+            .mockResolvedValueOnce({
+              id: 401,
+              shipping_status: 'DELIVERED',
+              proof_type: 'DELIVERY_PHOTO',
+              proof_reference: 'https://cdn.pharmatrace.vn/pod/photo-401.jpg',
+            }),
+          updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+        },
+        orders: {
+          updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+        },
+        $queryRaw: jest.fn().mockResolvedValue([]),
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const service = new LogisticsService(prisma as never);
+
+      const result = await service.confirmDeliveryWithProof(
+        401,
+        {
+          proofType: 'DELIVERY_PHOTO',
+          proofReference: 'https://cdn.pharmatrace.vn/pod/photo-401.jpg',
+          deliveredToName: 'Nguyen Van A (Recipient brother)',
+          deliveryNotes: 'Handed package to recipient family member at gate',
+        },
+        storeStaff,
+      );
+
+      expect(tx.shipments.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 401, shipping_status: 'IN_TRANSIT' },
+          data: expect.objectContaining({
+            shipping_status: 'DELIVERED',
+            proof_type: 'DELIVERY_PHOTO',
+            proof_reference: 'https://cdn.pharmatrace.vn/pod/photo-401.jpg',
+            delivered_to_name: 'Nguyen Van A (Recipient brother)',
+          }),
+        }),
+      );
+      // Order automatically transitions to COMPLETED
+      expect(tx.orders.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: 701, order_status: 'SHIPPING' },
+          data: { order_status: 'COMPLETED' },
+        }),
+      );
+      expect(result?.shipping_status).toBe('DELIVERED');
+    });
+
+    it.each(['proofType', 'proofReference', 'deliveredToName'] as const)('rejects PoD without %s', async (missing) => {
+      const prisma = { withOrder: jest.fn() };
+      const service = new LogisticsService(prisma as never);
+
+      await expect(
+        service.confirmDeliveryWithProof(
+          402,
+          {
+            proofType: 'CUSTOMER_SIGNATURE', proofReference: 'signature-402', deliveredToName: 'Nguyen Van B',
+            [missing]: '',
+          },
+          storeStaff,
+        ),
+      ).rejects.toThrow(/Proof type, proof reference, and delivered-to recipient name are required/i);
+      expect(prisma.withOrder).not.toHaveBeenCalled();
+    });
+
+    it('allows customer to submit a delivery dispute if they did not receive package', async () => {
+      const tx = {
+        shipments: {
+          findFirst: jest.fn().mockResolvedValue({
+            id: 403,
+            order_id: 702,
+            shipping_status: 'DELIVERED',
+            delivery_notes: 'Left at reception',
+            orders: { customer_id: 99, order_status: 'COMPLETED' },
+          }),
+          update: jest.fn().mockResolvedValue({ id: 403 }),
+        },
+        $queryRaw: jest.fn().mockResolvedValue([{ result: 'SUBMITTED' }]),
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const service = new LogisticsService(prisma as never);
+
+      const result = await service.disputeDelivery(
+        702,
+        99,
+        'I was not home and neighbor did not receive this delivery',
+      );
+
+      expect(prisma.withOrder).toHaveBeenCalledWith('customer_receive', expect.any(Function), expect.objectContaining({ id: 99, role: 'CUSTOMER' }));
+      expect(tx.$queryRaw).toHaveBeenCalled();
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe('Scope 4: Returns and QA disposition (failed delivery vs post-delivery RMA)', () => {
+    it('handles failed delivery return by intake into quarantine without automatic refund or resale', async () => {
+      const tx = {
+        shipments: {
+          findFirst: jest.fn().mockResolvedValue({
+            id: 501,
+            shipping_status: 'RETURN_REQUESTED',
+            tracking_number: 'TRACK-501',
+            orders: {
+              order_code: 'ORD-501',
+              export_facility_id: 1,
+              order_items: [{ id: 21, variant_id: 7, medicine_id: 30, quantity: 2, assigned_uids: [] }],
+            },
+          }),
+          update: jest.fn().mockResolvedValue({ id: 501 }),
+        },
+        inventory_logs: { create: jest.fn().mockResolvedValue({ id: 1 }) },
+        inventories: { update: jest.fn() },
+        orders: { update: jest.fn() },
+        cashbook_logs: { create: jest.fn() },
+        medicine_boxes: { updateMany: jest.fn() },
+        $executeRaw: jest.fn().mockResolvedValue(1),
+        $queryRaw: jest.fn().mockResolvedValue([]),
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const service = new LogisticsService(prisma as never);
+
+      await service.receiveReturn(501, { notes: 'Returned by carrier after 3 failed attempts', receivedLines: [{ variantId: 7, quantity: 2 }] }, warehouseStaff);
+      expect(tx.inventories.update).not.toHaveBeenCalled();
+      expect(tx.orders.update).not.toHaveBeenCalled();
+      expect(tx.cashbook_logs.create).not.toHaveBeenCalled();
+
+      expect(tx.$executeRaw.mock.calls.some(([sql]) => sql.join('').includes('record_quarantine_movement'))).toBe(true);
+      expect(tx.shipments.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            shipping_status: 'RETURNED_TO_WAREHOUSE',
+            return_qa_status: 'PENDING_INSPECTION',
+          }),
+        }),
+      );
+    });
+
+    it('performs QA disposition: passed items restocked, failed items marked as scrap', async () => {
+      const tx = {
+        shipments: {
+          findFirst: jest.fn().mockResolvedValue({
+            id: 502,
+            shipping_status: 'RETURNED_TO_WAREHOUSE',
+            return_qa_status: 'PENDING_INSPECTION',
+            tracking_number: 'TRACK-502',
+            orders: {
+              export_facility_id: 1,
+              order_items: [
+                {
+                  id: 22,
+                  variant_id: 7,
+                  medicine_id: 30,
+                  quantity: 4,
+                  assigned_uids: ['BOX-1', 'BOX-2', 'BOX-3', 'BOX-4'],
+                },
+              ],
+            },
+          }),
+          update: jest.fn().mockResolvedValue({ id: 502 }),
+        },
+        inventories: {
+          upsert: jest.fn().mockResolvedValue({ id: 70, stock_quantity: 12 }),
+        },
+        medicine_boxes: { updateMany: jest.fn().mockResolvedValue({ count: 2 }) },
+        orders: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
+        inventory_logs: { create: jest.fn().mockResolvedValue({ id: 1 }) },
+        $executeRaw: jest.fn().mockResolvedValue(1),
+        $queryRaw: jest.fn().mockImplementation((strings: TemplateStringsArray) => Promise.resolve(strings.join('').includes('shipment_return_items') ? [{ variant_id: 7, quantity: 4, box_uids: ['BOX-1', 'BOX-2', 'BOX-3', 'BOX-4'] }] : [])),
+      };
+      const prisma = { withOrder: jest.fn((_op, cb) => cb(tx)) };
+      const service = new LogisticsService(prisma as never);
+
+      // QA assesses 2 units passed (unopened seal), 2 units failed (broken seal)
+      const result = await service.dispositionReturn(
+        502,
+        {
+          decision: 'PARTIAL_RESTOCK',
+          qaNotes: '2 packs intact and refrigerated; 2 packs opened by customer',
+          lines: [
+            {
+              variantId: 7,
+              passQuantity: 2,
+              failQuantity: 2,
+              restockBoxUids: ['BOX-1', 'BOX-2'],
+              scrapBoxUids: ['BOX-3', 'BOX-4'],
+              notes: 'Passed 2 units, failed 2 units',
+            },
+          ],
+        },
+        warehouseStaff,
+      );
+
+      // Verify restocked quantity
+      expect(tx.inventories.upsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          update: expect.objectContaining({ stock_quantity: { increment: 2 } }),
+        }),
+      );
+      expect(tx.inventory_logs.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ transaction_type: 'RETURN_RESTOCK', quantity_changed: 2, previous_quantity: 10, new_quantity: 12 }),
+        }),
+      );
+      expect(tx.$executeRaw.mock.calls.some(([sql]) => sql.join('').includes('FAILED_QA'))).toBe(true);
+      expect(result?.shipping_status).toBe('RETURNED_TO_WAREHOUSE');
+    });
+  });
+
+  describe('Scope 5: COD reconciliation database boundary', () => {
+    it('submits a statement for approval without settling it directly', async () => {
+      const result = { id: 10, shipmentId: 601, status: 'PENDING' };
+      const tx = { $queryRaw: jest.fn().mockResolvedValue([{ result }]) };
+      const service = new LogisticsService({ withOrder: (_op, run) => run(tx) } as never);
+      await expect(service.reconcileCod(601, { grossAmount: 500000, courierFee: 25000, netAmount: 475000, statementReference: 'STMT-1' }, storeStaff)).resolves.toEqual(result);
+      expect(tx.$queryRaw.mock.calls[0][0].join('')).toContain('submit_cod_statement');
+    });
+
+    it.each(['SETTLED', 'DISCREPANCY_PENDING'])('returns approval result %s', async status => {
+      const result = { shipmentId: 601, status, netAmount: 475000 };
+      const tx = { $queryRaw: jest.fn().mockResolvedValue([{ result }]) };
+      const service = new LogisticsService({ withOrder: (_op, run) => run(tx) } as never);
+      await expect(service.approveCodStatement(601, 10, storeStaff)).resolves.toEqual(result);
+      expect(tx.$queryRaw.mock.calls[0][0].join('')).toContain('approve_cod_statement');
     });
   });
 

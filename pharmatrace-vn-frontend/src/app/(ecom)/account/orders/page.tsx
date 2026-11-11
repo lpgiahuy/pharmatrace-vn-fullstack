@@ -34,7 +34,7 @@ import {
   HelpCircle,
   FileText,
 } from 'lucide-react';
-import { App, Modal, Select, Spin, Tooltip } from 'antd';
+import { App, Modal, Popconfirm, Select, Spin, Tooltip } from 'antd';
 import {
   orderService,
   Order,
@@ -303,6 +303,10 @@ function CustomerOrdersContent() {
     setCancelDetails('');
     setCancelError(null);
   };
+  const [confirmingId, setConfirmingId] = useState<number | null>(null);
+  const [disputeOpen, setDisputeOpen] = useState(false);
+  const [disputeReason, setDisputeReason] = useState('');
+  const [submittingDispute, setSubmittingDispute] = useState(false);
   const [expandedOrders, setExpandedOrders] = useState<Record<number, boolean>>({});
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -442,6 +446,44 @@ function CustomerOrdersContent() {
       }
     } finally {
       setCancellingId(null);
+    }
+  };
+
+  // Only parcels the carrier still has in transit can be confirmed (e.g. not returned to warehouse).
+  const canConfirmReceipt = (order: Order) =>
+    formatOrderStatus(order.orderStatus) === 'SHIPPING' &&
+    String(order.shipment?.shippingStatus ?? '').toUpperCase() === 'IN_TRANSIT';
+
+  const handleConfirmReceipt = async (orderId: number) => {
+    setConfirmingId(orderId);
+    try {
+      const response = await orderService.confirmMyReceipt(orderId);
+      if (response.data) setSelectedOrder(response.data);
+      await reloadOrders();
+      message.success('Receipt confirmed. Thank you!');
+    } catch (error: unknown) {
+      const detail = (error as { message?: string | string[] })?.message;
+      message.error(Array.isArray(detail) ? detail.join('; ') : detail || 'Unable to confirm receipt. Refresh and try again.');
+    } finally { setConfirmingId(null); }
+  };
+
+  const handleDispute = async () => {
+    if (!selectedOrder || !disputeReason.trim()) {
+      message.error('Please describe the delivery issue.');
+      return;
+    }
+    setSubmittingDispute(true);
+    try {
+      await orderService.disputeDelivery(selectedOrder.id, disputeReason.trim());
+      message.success('Delivery issue submitted.');
+      setDisputeOpen(false);
+      setDisputeReason('');
+      await reloadOrders();
+    } catch (error: unknown) {
+      const detail = (error as { message?: string | string[] })?.message;
+      message.error(Array.isArray(detail) ? detail.join('; ') : detail || 'Unable to submit the delivery issue. Please try again.');
+    } finally {
+      setSubmittingDispute(false);
     }
   };
 
@@ -668,6 +710,11 @@ function CustomerOrdersContent() {
 
                     <div className="shrink-0 pt-0.5 text-right">
                       <OrderStatusBadge status={order.orderStatus} />
+                      {order.deliveryDispute && (
+                        <div className="mt-1 text-[11px] font-semibold text-amber-700">
+                          {order.deliveryDispute.outcome ? 'Issue resolved' : 'Issue under review'}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -798,7 +845,6 @@ function CustomerOrdersContent() {
                     </div>
 
                     <div className="flex items-center gap-2">
-
                       <button
                         type="button"
                         disabled={loadingDetailId !== null}
@@ -893,6 +939,23 @@ function CustomerOrdersContent() {
               status={selectedOrder.orderStatus}
               cancellationReason={selectedOrder.cancellationReason}
             />
+
+            {selectedOrder.deliveryDispute && (
+              <div className="border border-amber-200 bg-amber-50 rounded-md p-4 space-y-1.5" role="status">
+                <div className="text-xs font-bold text-amber-900 uppercase tracking-wider">Delivery issue</div>
+                <p className="text-sm text-slate-800">{selectedOrder.deliveryDispute.reason}</p>
+                <p className="text-xs text-slate-500">Reported {formatDateTime(selectedOrder.deliveryDispute.openedAt)}</p>
+                {selectedOrder.deliveryDispute.outcome ? (
+                  <p className="text-xs text-slate-800">
+                    <strong>{selectedOrder.deliveryDispute.outcome === 'DELIVERED' ? 'Delivery confirmed' : 'Non-delivery confirmed'}:</strong>{' '}
+                    {selectedOrder.deliveryDispute.resolutionReason}
+                    {selectedOrder.deliveryDispute.resolvedAt ? ` (${formatDateTime(selectedOrder.deliveryDispute.resolvedAt)})` : ''}
+                  </p>
+                ) : (
+                  <p className="text-xs text-amber-800">Under review by customer support.</p>
+                )}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-slate-50/70 border border-slate-200 rounded-md p-4 space-y-2">
@@ -1152,6 +1215,33 @@ function CustomerOrdersContent() {
               </div>
 
               <div className="flex items-center gap-2.5">
+                {canConfirmReceipt(selectedOrder) && (
+                  <Popconfirm
+                    title="Confirm receipt"
+                    description="Have you received your package in good condition? This will mark your order as completed."
+                    okText="Yes, I have received it"
+                    cancelText="Not yet"
+                    onConfirm={() => handleConfirmReceipt(selectedOrder.id)}
+                    okButtonProps={{
+                      loading: confirmingId === selectedOrder.id,
+                      style: { background: '#059669', borderColor: '#059669' },
+                    }}
+                  >
+                    <button
+                      type="button"
+                      disabled={confirmingId !== null}
+                      className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md text-xs font-semibold cursor-pointer disabled:opacity-50 flex items-center gap-1.5 shadow-sm transition-colors"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Confirm I received this order</span>
+                    </button>
+                  </Popconfirm>
+                )}
+                {['SHIPPING', 'COMPLETED'].includes(formatOrderStatus(selectedOrder.orderStatus)) && !selectedOrder.deliveryDispute && (
+                  <button type="button" onClick={() => setDisputeOpen(true)} className="px-4 py-2 border border-slate-300 rounded-md text-xs font-semibold cursor-pointer">
+                    Report delivery issue
+                  </button>
+                )}
                 {['PENDING', 'WAITING_INTERNAL_TRANSFER', 'PROCESSING'].includes(formatOrderStatus(selectedOrder.orderStatus)) && !selectedOrder.shipment && (
                   <button
                     type="button"
@@ -1177,6 +1267,10 @@ function CustomerOrdersContent() {
             </div>
           </div>
         )}
+      </Modal>
+      <Modal title="Report a delivery issue" open={disputeOpen} onCancel={() => { setDisputeOpen(false); setDisputeReason(''); }} onOk={handleDispute} okText="Submit issue" confirmLoading={submittingDispute}>
+        <label htmlFor="delivery-dispute-reason" className="block mb-2">Describe what happened</label>
+        <textarea id="delivery-dispute-reason" value={disputeReason} onChange={(event) => setDisputeReason(event.target.value)} rows={4} className="w-full rounded-md border border-slate-300 p-2" />
       </Modal>
 
       {/* Cancel Order Modal */}

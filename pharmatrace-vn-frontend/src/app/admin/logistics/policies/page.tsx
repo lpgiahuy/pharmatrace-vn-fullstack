@@ -112,8 +112,8 @@ export default function FulfillmentPoliciesPage() {
         description="Each dispatch/source facility needs an enabled policy, and each medicine needs a transport classification. Opening times use Vietnam time. Capacity counts today's non-cancelled orders. Unclassified products and unconfigured facilities cannot receive new orders."
       />
 
-      {invalidPolicies.length > 0 && <Alert type="warning" showIcon title="Có chính sách cần cập nhật nhà thuốc bán hàng"
-        description={`Các cơ sở sau chưa thể nhận đơn mới: ${invalidPolicies.map(p => p.facility_name).join(', ')}. Nhà thuốc phải tự bán; kho cần liên kết với nhà thuốc bán hàng đã chọn.`} />}
+      {invalidPolicies.length > 0 && <Alert type="warning" showIcon title="Some policies need a selling pharmacy update"
+        description={`These facilities cannot accept new orders yet: ${invalidPolicies.map(p => p.facility_name).join(', ')}. A pharmacy must sell for itself; a warehouse must be linked to the selected selling pharmacy.`} />}
 
       <Card title="Facility delivery policy" className="shadow-xs rounded-lg">
         <Form
@@ -123,7 +123,7 @@ export default function FulfillmentPoliciesPage() {
           initialValues={{ enabled: false }}
           className="grid grid-cols-1 gap-x-4 md:grid-cols-2 mb-6"
         >
-          <Form.Item name="facilityId" label="Cơ sở xuất hàng" rules={[{ required: true }]}>
+          <Form.Item name="facilityId" label="Dispatch facility" rules={[{ required: true }]}>
             <Select
               showSearch
               optionFilterProp="label"
@@ -153,15 +153,15 @@ export default function FulfillmentPoliciesPage() {
               }}
             />
           </Form.Item>
-          <Form.Item name="sellingFacilityId" label="Nhà thuốc bán hàng" rules={[{ required: true }]}
-            extra={selectedFacility && isPharmacy(selectedFacility) ? 'Nhà thuốc tự bán và chịu trách nhiệm cho đơn của mình.'
-              : 'Kho chỉ được xuất hàng cho nhà thuốc đã liên kết. Super Admin quản lý liên kết ở bên dưới.'}>
+          <Form.Item name="sellingFacilityId" label="Selling pharmacy" rules={[{ required: true }]}
+            extra={selectedFacility && isPharmacy(selectedFacility) ? 'A pharmacy sells for itself and is responsible for its own orders.'
+              : 'A warehouse can only dispatch for linked pharmacies. A super admin manages the links below.'}>
             <Select
               showSearch
               optionFilterProp="label"
               disabled={!selectedFacility || isPharmacy(selectedFacility)}
               options={sellerOptions.map(f => ({ value: f.id, label: f.name }))}
-              notFoundContent="Kho chưa có nhà thuốc liên kết"
+              notFoundContent="This warehouse has no linked pharmacy"
             />
           </Form.Item>
           <Form.Item name="opens" label="Opens (HH:mm)" rules={[{ required: true }, { pattern: /^([01]\d|2[0-3]):[0-5]\d$/, message: 'Use HH:mm, from 00:00 to 23:59' }]}>
@@ -197,7 +197,7 @@ export default function FulfillmentPoliciesPage() {
           <Table
             size="small"
             rowKey="facility_id"
-            scroll={{ x: 600 }}
+            scroll={{ x: 640 }}
             dataSource={policies}
             pagination={
               policies.length > 10
@@ -210,8 +210,8 @@ export default function FulfillmentPoliciesPage() {
                 : false
             }
             columns={[
-              { title: 'Cơ sở xuất hàng', dataIndex: 'facility_name' },
-              { title: 'Nhà thuốc bán hàng', dataIndex: 'selling_facility_name' },
+              { title: 'Dispatch facility', dataIndex: 'facility_name' },
+              { title: 'Selling pharmacy', dataIndex: 'selling_facility_name' },
               { title: 'Hours', render: (_, p) => `${clock(p.opens_minute)}–${clock(p.closes_minute)}` },
               { title: 'Capacity/day', dataIndex: 'daily_capacity' },
               { title: 'Status', render: (_, p) => (p.enabled ? 'Enabled' : 'Disabled') },
@@ -220,31 +220,32 @@ export default function FulfillmentPoliciesPage() {
         </div>
       </Card>
 
-      {superAdmin && <Card title="Liên kết kho – nhà thuốc bán hàng">
-        <Alert type="info" showIcon className="mb-4" title="Chỉ liên kết nhà thuốc được phép bán hàng từ kho này"
-          description="Bỏ một nhà thuốc khỏi danh sách sẽ chặn đơn mới theo liên kết đó. Thông tin trên đơn đã đặt vẫn được giữ nguyên." />
+      {superAdmin && <Card title="Warehouse – selling pharmacy links" className="shadow-xs rounded-lg">
+        <Alert type="info" showIcon className="mb-4" title="Link only pharmacies allowed to sell from this warehouse"
+          description="Removing a pharmacy from the list blocks new orders through that link. Orders already placed keep their recorded details." />
         <Form form={linkForm} layout="vertical" onFinish={saveLinks} initialValues={{ pharmacyIds: [] }}>
-          <Form.Item name="warehouseId" label="Kho xuất hàng" rules={[{ required: true }]}>
+          <Form.Item name="warehouseId" label="Dispatch warehouse" rules={[{ required: true }]}>
             <Select showSearch optionFilterProp="label" options={facilities.filter(isWarehouse).map(f => ({ value: f.id, label: f.name }))}
               onChange={id => linkForm.setFieldValue('pharmacyIds', warehouseLinks.filter(l => l.warehouse_id === id).map(l => l.pharmacy_id))} />
           </Form.Item>
-          <Form.Item name="pharmacyIds" label="Nhà thuốc được liên kết" extra="Để trống và lưu để gỡ toàn bộ liên kết của kho.">
+          <Form.Item name="pharmacyIds" label="Linked pharmacies" extra="Leave empty and save to remove every link for this warehouse.">
             <Select mode="multiple" allowClear optionFilterProp="label" options={facilities.filter(isPharmacy).map(f => ({ value: f.id, label: f.name }))} />
           </Form.Item>
-          <Button htmlType="submit" type="primary" loading={busy}>Lưu liên kết</Button>
+          <Button htmlType="submit" type="primary" loading={busy}>Save links</Button>
         </Form>
       </Card>}
 
       <Card
         title="Medicine transport classification"
         className="shadow-xs rounded-lg"
+        styles={{ header: { flexWrap: 'wrap', gap: 8, paddingBlock: 12 } }}
         extra={
           <Input.Search
             placeholder="Search medicine or condition..."
             allowClear
             value={reqSearch}
             onChange={e => setReqSearch(e.target.value)}
-            style={{ width: 260 }}
+            className="w-full sm:w-64"
           />
         }
       >
@@ -271,6 +272,7 @@ export default function FulfillmentPoliciesPage() {
         <Table
           size="small"
           rowKey="medicine_id"
+          scroll={{ x: 520 }}
           dataSource={requirements.filter(r => {
             if (!reqSearch.trim()) return true;
             const q = reqSearch.toLowerCase().trim();

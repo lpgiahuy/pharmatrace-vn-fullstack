@@ -274,6 +274,17 @@ footer span.text-white\/70 {
   color: #FFFFFF;
 }
 
+/* Text-only destructive link: neutral until hovered or focused */
+.link-danger {
+  transition: color 0.15s ease;
+}
+
+.link-danger:hover,
+.link-danger:focus-visible {
+  color: #DC2626;
+  text-decoration: underline;
+}
+
 /* Cancel / Dismiss Action Button */
 .btn-cancel,
 .btn-dismiss {
@@ -427,6 +438,26 @@ footer span.text-white\/70 {
 .ant-picker-dropdown .ant-picker-ok button,
 .ant-btn-primary {
   box-shadow: none !important;
+}
+
+/* Shipment status actions: white label in every state, lighter fill when disabled */
+.ant-btn.shipment-confirm-btn,
+.ant-btn.shipment-confirm-btn:not(:disabled):hover {
+  background-color: #059669 !important;
+  border-color: #059669 !important;
+  color: #FFFFFF !important;
+}
+
+.ant-btn.shipment-confirm-btn:not(:disabled):hover {
+  background-color: #047857 !important;
+  border-color: #047857 !important;
+}
+
+.ant-btn.shipment-confirm-btn:disabled {
+  background-color: #6EE7B7 !important;
+  border-color: #6EE7B7 !important;
+  color: #FFFFFF !important;
+  cursor: not-allowed;
 }
 
 /* Global Button Styles for Popconfirm and Modals */

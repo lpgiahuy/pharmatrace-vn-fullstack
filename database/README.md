@@ -191,6 +191,112 @@ All tables must exist before importing the seed. Review grants are explicitly re
 
 ## Maintenance Notes
 
+### Current logistics bootstrap versus existing-database upgrades
+
+`00_master_init.sql` is only for an empty database. It sets the internal psql marker
+`bootstrap_current_functions` and unsets it at the end. During this entrypoint,
+intermediate definitions are skipped:
+
+| Function | Historical definitions | Fresh bootstrap | Final source |
+| --- | --- | --- | --- |
+| `guard_order_write()` | 5 | 1 | `security/order/unpacked_customer_cancellation.sql` |
+| `reconcile_shipment_cod(integer,numeric,numeric,numeric,numeric,text,text)` | 3 | 1 | `security/payment/cod_statement_approval.sql` |
+
+The four `order_write_guard` triggers and their function privileges are installed
+from `security/order/order_write_guard_trigger.sql` after the final guard exists.
+Only the trusted bootstrap owner runs before that installation. Table DDL, other
+triggers, policies, grants and constraints still execute in their original order.
+The final COD function remains inaccessible to `app_user`; statement submission
+and approval are the supported entrypoints.
+
+This cleanup requires no migration on an existing database: function bodies and
+runtime privileges are unchanged. Do not set `bootstrap_current_functions` when
+applying security scripts or upgrades to an existing database. With the marker
+unset, each historical script retains its original function replacement and
+trigger installation behavior. Existing databases apply the domain scripts in
+the order described in [LOGISTICS_WORKFLOWS.md](LOGISTICS_WORKFLOWS.md).
+`security/logistics/in_transit_custody.sql` refuses active legacy transfers
+without physically reconciled custody. Do not use master initialization to
+update an existing volume or bypass that check.
+
+Verification uses two disposable databases: the prior bootstrap followed by the
+current domain security scripts, and the current bootstrap. Their complete schema-only
+`pg_dump` output must match after removing only the random `\restrict` /
+`\unrestrict` tokens. This compares functions, triggers, RLS policies, grants,
+indexes and constraints, not only function bodies. Run both logistics DB
+regression suites against each database. The suites allow the dedicated names
+`codex_logistics_cleanup_fresh_20261110` and
+`codex_logistics_cleanup_legacy_20261110` in addition to their original test names.
+Development seed transfers without custody are unsuitable for the upgrade test;
+remove those fixtures only in the disposable test database, never infer their
+handoff in an application database.
+
+### Order pickup status upgrade
+
+For existing databases, back up and review the order write guard, then apply `security/order/order_pickup_status.sql` as the database owner before deploying the updated backend. The upgrade replaces only the order guard function; it does not rewrite existing order or shipment statuses. Existing orders already marked `SHIPPING` retain that status and continue through the legacy shipment flow.
+
+```powershell
+docker exec -i phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/order/order_pickup_status.sql
+```
+
+### Logistics workflow enhancements upgrade
+
+Apply `security/logistics/logistics_workflow_enhancements.sql` as the database owner. It adds Proof of Delivery (PoD) columns to `shipments`, variance details and return fields to `internal_transfers`, gross/net fee breakdown and discrepancy tracking to `logistics_cod_settlements`, and updates `guard_order_write` and `transfer_order_state` to safely handle returns, transit custody, staff-recorded PoD, and partial transfers without leaking reservations or stock.
+
+```powershell
+docker exec -i phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/logistics/logistics_workflow_enhancements.sql
+```
+
+
+### Logistics integrity upgrade
+
+After the logistics workflow enhancements script, apply `security/logistics/logistics_integrity.sql` as a trusted PostgreSQL superuser before deploying the updated services. It adds source-return policies, warehouse quarantine intake permissions and atomic COD reconciliation. Pending discrepancies have a NULL cashbook reference; app_user cannot directly write settlement rows. Both collection APIs share order/shipment locks. Settled statements are immutable on retry. The COD receivable and net cash script later changes the accounting representation to net cash received plus a separate non-cash courier fee record.
+
+```powershell
+docker exec -i phartrace-vn-db psql -X -v ON_ERROR_STOP=1 -U postgres -d phartrace-vn-db -f /docker-entrypoint-initdb.d/security/logistics/logistics_integrity.sql
+```
+
+Tracked transfer discrepancies require scanned good/damaged UID lists. Remaining assigned UIDs become LOST. Good units from a discrepant line return to available destination stock; the incomplete order line is unreserved and remains waiting for resolution. Its actual good/damaged/missing UIDs are retained in `variance_details`. Source TRANSFER_OUT excludes shortages, which are recorded separately as TRANSFER_LOSS.
+
+### Cancellation safeguards upgrade
+
+After the logistics integrity script, apply `security/order/cancellation_safeguards.sql` as the database owner. It restricts customer cancellation states, requires a new reason for staff cancellation, and restricts processing cancellation to the export facility manager or super admin. Cancellation of approved prescriptions is blocked until a pharmacist confirmation workflow is available. Generic status updates cannot mark orders refunded; a separate financial approval and payment record are required. Customer cancellation reasons and both approval workflows still require implementation.
+
+After the cancellation safeguards script, apply `security/returns/return_intake_lines.sql` before deploying the updated return workflow. It records the actual received variants, quantities and UIDs. Existing returned shipments are not backfilled; their intake must be reconstructed from verified physical records before QA can proceed.
+
+Apply `security/customer/customer_cancellation_reason.sql` before deploying customer cancellation with a selected reason. It records the reason in the same transaction as the cancellation.
+
+Apply `security/payment/online_payment_gate.sql` to prevent dispatching internal transfers for unpaid online orders. This gate does not itself implement payment evidence or automatic expiration.
+
+Apply `security/payment/payment_expiration.sql` before deploying the payment expiration job. New online orders awaiting consolidation remain `PENDING` until payment; unpaid e-wallet orders expire after 15 minutes and bank transfers after 30 minutes. The job releases reservations and reverses redeemed points and voucher usage. COD and orders already in `WAITING_INTERNAL_TRANSFER` are not expired. Existing waiting orders are not rewritten by the migration.
+
+Apply `security/logistics/transfer_manifest.sql` before deploying the manifest-enabled transfer service. New dispatches require source counts and scans matching the reserved packages; existing dispatched transfers do not receive fabricated manifests.
+
+Apply `security/returns/return_refund_decision.sql` and `security/returns/refund_approval_before_payment.sql` in order before deploying the return refund workflow. Financial approval creates a pending decision without a cashbook entry; recording the actual payment requires a reference and creates the expense and any points reversal atomically. The application records external payment evidence; it does not initiate a gateway transfer.
+
+Apply `security/order/cancel_voucher_release.sql` together with the payment expiration script before deploying cancellation and expiration changes. It replaces the prescription-only voucher release trigger with one release on every transition to `CANCELLED`.
+
+Apply `security/returns/return_authorized_items.sql` before deploying post-delivery return approvals with quantities. Intake must not exceed authorized quantities. Existing post-delivery returns are not backfilled; reconcile their authorizations from verified records before intake.
+
+Apply `security/inventory/quarantine_balances.sql` before deploying quarantine movement changes. New entries record real before/after balances by facility and variant; failed QA remains in quarantine until a separate disposal or return action. Opening quarantine balances are not inferred from legacy logs. Reconcile existing quarantined stock from verified physical records before processing it through the new workflow.
+
+Apply `security/payment/disable_unverified_cod_collection.sql` before exposing COD collection. New settlements require the carrier statement workflow; the legacy collection endpoint can only return an already recorded receipt.
+
+Apply `security/payment/cancelled_payment_guard.sql` with the expiration workflow. It prevents marking a cancelled order paid; late incoming payments require separate reconciliation.
+
+Apply `security/payment/cod_receivable_and_net_cash.sql` before deploying the updated COD workflow. New delivered COD shipments create a carrier receivable; clean reconciliation records the actual net remittance in cashbook and the deducted fee separately. Existing deliveries are not backfilled: reconcile their carrier receivables from verified evidence before settlement.
+
+Apply `security/payment/online_payment_evidence.sql` before deploying the online payment evidence workflow. Accountants record the full amount and reference; finance managers approve or reject the evidence. The approval creates the cashbook receipt and marks the order paid atomically. Late, short and excess payments require separate reconciliation and are not silently applied to an order.
+
+Apply `security/payment/cod_payment_evidence.sql` before deploying payment status changes. COD orders cannot be marked paid without a settled carrier reconciliation.
+
+Apply `security/payment/cod_statement_approval.sql` and then `security/logistics/transfer_reroute.sql` before deploying their corresponding services. Rerouting is restricted to super administrators and atomically changes the order and transfer destinations only when the order has one dispatched transfer, no shipment, and all items remain reserved at its source. Other cases require return and replanning. Source-return logs use the `AVAILABLE` bucket for the change in stock less reservations; on-hand stock does not increase when a reservation is released.
+
+QA requires every returned variant, disjoint UID groups belonging to the order, and QUARANTINED custody at the export facility. Intake, source-return receipt and QA serialize before reading mutable state. The logistics pages expose inspection, halt/source return, delivery evidence, post-delivery return approval, quarantine intake, QA and carrier-statement reconciliation.
+
+Run `tests/logistics_integrity_test.sql` with psql against a disposable initialized database. For real service concurrency tests, set `LOGISTICS_TEST_DATABASE_URL` to an owner connection to a database named exactly `codex_logistics_integrity_test`, then run `npm test -- --runInBand logistics-database.integration.spec.ts` in the backend. Services connect under app_user; fixtures use the owner connection. The integration suite creates synthetic records; discard the test database afterward.
+
+
 - Keep schema changes consistent with `pharmatrace-vn-backend/prisma/schema.prisma`.
 - Prescription RLS is scoped to the current prescription workflow; this setup does not provide database-wide tenant isolation.
 - The seed contains synthetic account and personal fields alongside catalog and operational fixtures. Foreign-key triggers remain enabled during import. It is not a production provisioning script.
@@ -533,6 +639,8 @@ Remove-Item Env:ORDER_RLS_TEST_DATABASE_URL, Env:ORDER_RLS_TEST_ADMIN_URL
 The suite accepts only the localhost database named `pharmatrace_order_rls_test`; missing test variables skip the suite rather than verify integration. Do not run another suite concurrently on the same database: tests temporarily revoke ledger grants or disable FORCE to check rollback/fail-closed behavior, restoring them in finally blocks. Tests use GPS fixtures and do not call external geocoding/Cloudinary services. SQL tests roll back fixture data; HTTP tests clean up their own fixtures.
 
 ## Voucher RLS
+
+`security/voucher/voucher_rls.sql` also creates the partial unique index `orders_one_voucher_per_customer` on `orders(customer_id, voucher_id)`, so each account can use a voucher once; cancelled orders keep their `voucher_id`, so they still consume it. Reconcile existing duplicate `(customer_id, voucher_id)` rows before applying. Customers list selectable vouchers through the `available` scope.
 
 `security/voucher/voucher_rls.sql` enables and forces RLS on `vouchers`, independently of `AUTH_RLS_ENABLED`. It uses the existing `app_user`, invoker functions and an update trigger; no additional login, role membership or `SECURITY DEFINER` function is introduced.
 

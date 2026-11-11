@@ -82,6 +82,7 @@ describe("OrderService inventory reservation", () => {
       },
       facilities: { findMany: jest.fn().mockResolvedValue([facility]) },
       orders: {
+        findFirst: jest.fn().mockResolvedValue(null),
         findUnique: jest.fn().mockResolvedValue({
           id: 101,
           customer_id: customer.id,
@@ -105,7 +106,13 @@ describe("OrderService inventory reservation", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.mocked(geocodeAddress).mockResolvedValue({ latitude: 10.77, longitude: 106.70, precision: "house" });
+    jest.mocked(geocodeAddress).mockResolvedValue({
+      latitude: 10.77,
+      longitude: 106.70,
+      precision: "house",
+      matchedAddress: "38/14/14 Ao Đôi, TP.HCM",
+      provider: "photon",
+    });
   });
 
   it('quotes without reserving inventory or creating an order', async () => {
@@ -184,6 +191,21 @@ describe("OrderService inventory reservation", () => {
     expect(tx.orders.create).not.toHaveBeenCalled();
   });
 
+  it('keeps an unpaid online order pending while its internal transfers are planned', async () => {
+    const { prisma, tx } = createMocks([1, 1]);
+    const second = { ...variant, id: 12, medicine_id: 22 };
+    prisma.packaging_variants.findMany.mockResolvedValue([variant, second]);
+    prisma.facilities.findMany.mockResolvedValue([
+      { ...facility, id: 3, latitude: 10.77, longitude: 106.70, inventories: [{ variant_id: 11, stock_quantity: 5, reserved_quantity: 0 }] },
+      { ...facility, id: 4, latitude: 10.8, longitude: 106.8, inventories: [{ variant_id: 12, stock_quantity: 5, reserved_quantity: 0 }] },
+    ]);
+    await new OrderService(prisma).createOrder(customer.id, {
+      ...dto, latitude: 10.77, longitude: 106.70, paymentMethod: 'E_WALLET',
+      items: [{ variantId: 11, quantity: 1 }, { variantId: 12, quantity: 1 }],
+    });
+    expect(tx.orders.create).toHaveBeenCalledWith({ data: expect.objectContaining({ order_status: 'PENDING', payment_status: 'UNPAID' }) });
+    expect(tx.internal_transfers.create).toHaveBeenCalledWith({ data: expect.objectContaining({ status: 'REQUESTED' }) });
+  });
 
   it("atomically reserves inventory and a physical UID for a box variant", async () => {
     const { prisma, tx } = createMocks(1);
@@ -339,6 +361,21 @@ describe("OrderService inventory reservation", () => {
         voucherCode: "EXHAUSTED",
       }),
     ).rejects.toThrow("This voucher has reached its total usage limit");
+  });
+
+  it("rejects a voucher the customer already used, even on a cancelled order", async () => {
+    const { prisma, tx } = createMocks(1);
+    prisma.orders.findFirst.mockResolvedValue({ id: 7 });
+    const service = new OrderService(prisma);
+
+    await expect(
+      service.createOrder(customer.id, { ...dto, voucherCode: "DISCOUNT10" }),
+    ).rejects.toThrow("You have already used this voucher");
+    expect(prisma.orders.findFirst).toHaveBeenCalledWith({
+      where: { customer_id: customer.id, voucher_id: 99 },
+      select: { id: true },
+    });
+    expect(tx.orders.create).not.toHaveBeenCalled();
   });
 
   it("rejects the order when concurrent race condition exhausts the voucher", async () => {

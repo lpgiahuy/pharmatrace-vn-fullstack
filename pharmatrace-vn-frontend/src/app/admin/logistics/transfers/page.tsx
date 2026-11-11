@@ -2,6 +2,7 @@
 
 import { useLogisticsList } from '@/hooks/useLogisticsList';
 import { LogisticsHistory } from '@/components/logistics/LogisticsHistory';
+import { RecordCards } from '@/components/logistics/RecordCards';
 import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
@@ -54,6 +55,7 @@ export default function InternalTransfersPage() {
   const [status, setStatus] = useState<string>('');
   const [orderIdFilter, setOrderIdFilter] = useState<string>('');
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
 
   // Temporary filter state for modal
   const [tempStatus, setTempStatus] = useState<string>('');
@@ -114,12 +116,14 @@ export default function InternalTransfersPage() {
   const applyFiltersFromModal = () => {
     setStatus(tempStatus);
     setOrderIdFilter(tempOrderId);
+    setPage(1);
     setFilterModalOpen(false);
   };
 
   const resetFilters = () => {
     setStatus('');
     setOrderIdFilter('');
+    setPage(1);
     setTempStatus('');
     setTempOrderId('');
   };
@@ -303,7 +307,7 @@ export default function InternalTransfersPage() {
           {status && (
             <Tag
               closable
-              onClose={() => setStatus('')}
+              onClose={() => { setStatus(''); setPage(1); }}
               className="m-0 text-xs py-0.5 px-2 bg-slate-100 border-slate-200"
             >
               Status: {TRANSFER_STATUS_MAP[status]?.label || status}
@@ -312,7 +316,7 @@ export default function InternalTransfersPage() {
           {orderIdFilter.trim() && (
             <Tag
               closable
-              onClose={() => setOrderIdFilter('')}
+              onClose={() => { setOrderIdFilter(''); setPage(1); }}
               className="m-0 text-xs py-0.5 px-2 bg-slate-100 border-slate-200"
             >
               Order: #{orderIdFilter.trim()}
@@ -341,8 +345,38 @@ export default function InternalTransfersPage() {
         </Button>
       </div>
 
+      {/* Phones: one card per transfer instead of a horizontally scrolling table */}
+      <RecordCards
+        items={data.slice((page - 1) * 20, page * 20)}
+        loading={loading}
+        emptyText="No internal transfers match current filters"
+        page={page}
+        total={data.length}
+        pageSize={20}
+        onPageChange={setPage}
+        toCard={(row) => ({
+          key: row.id,
+          title: row.transfer_code,
+          subtitle: row.tracking_code ? `Tracking: ${row.tracking_code}` : formatDateTime(row.created_at),
+          badge: <TransferStatusBadge status={row.status} />,
+          fields: [
+            { label: 'Order', value: <Link href={`/admin/orders/${row.order_id}`} className="font-mono text-sm font-semibold text-[#004996] hover:underline">#{row.order_id}</Link> },
+            { label: 'Items', value: `${Array.isArray(row.items) ? row.items.length : 0} item(s)` },
+            { label: 'Route', wide: true, value: <>
+              <span className="font-medium text-amber-800">{row.from_facility?.facility_name || `Facility #${row.from_facility_id}`}</span>
+              <RightOutlined className="mx-1.5 text-[10px] text-slate-400" />
+              <span className="font-medium text-emerald-800">{row.to_facility?.facility_name || `Facility #${row.to_facility_id}`}</span>
+              {(row.distance_km || row.estimated_hours) && <span className="mt-0.5 block text-[11px] text-slate-500">
+                {[row.distance_km && `${row.distance_km} km`, row.estimated_hours && `est. ~${row.estimated_hours}h`].filter(Boolean).join(' · ')}
+              </span>}
+            </> },
+          ],
+          onAction: () => loadTransferDetail(row.id),
+        })}
+      />
+
       {/* Table Container */}
-      <div className="bg-white rounded-md border border-gray-200 overflow-hidden">
+      <div className="hidden md:block bg-white rounded-md border border-gray-200 overflow-hidden">
         <Table
           dataSource={data}
           columns={columns}
@@ -447,6 +481,7 @@ export default function InternalTransfersPage() {
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
         size="large"
+        styles={{ wrapper: { maxWidth: '100vw' }, body: { padding: 16 } }}
       >
         {detailLoading ? (
           <div className="flex justify-center py-20">

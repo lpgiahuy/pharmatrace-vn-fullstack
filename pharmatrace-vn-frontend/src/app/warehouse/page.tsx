@@ -4,7 +4,7 @@ import { useHydrated } from '@/hooks/useHydrated';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, Tag, Button, Descriptions } from 'antd';
-import { Warehouse, LogOut, PackageCheck } from 'lucide-react';
+import { Warehouse, LogOut, PackageCheck, Truck, ArrowRight } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { formatRole } from '@/utils';
 
@@ -51,8 +51,33 @@ export default function WarehouseDashboardPage() {
         </Button>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
-        <Card title={<div className="flex items-center gap-2"><PackageCheck className="w-5 h-5 text-blue-600" /><span>Staff Profile & Unit Info</span></div>} className="shadow-sm rounded-xl mb-6">
+      <main className="max-w-5xl mx-auto px-4 py-8 space-y-6">
+        {/* Quick Launch to Logistics Operations */}
+        <Card className="shadow-sm rounded-xl border-blue-100 bg-gradient-to-r from-blue-50/70 to-indigo-50/40">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-lg bg-[#004996] text-white flex items-center justify-center shadow-xs shrink-0">
+                <Truck className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-900 m-0">Logistics Operations & Transfers</h2>
+                <p className="text-sm text-slate-600 m-0 mt-0.5">
+                  Manage shipments, dispatch & receive internal inventory transfers for your facility.
+                </p>
+              </div>
+            </div>
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => router.push('/admin/logistics')}
+              className="!bg-[#004996] hover:!bg-[#003875] !font-medium flex items-center gap-2"
+            >
+              Open Logistics Center <ArrowRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </Card>
+
+        <Card title={<div className="flex items-center gap-2"><PackageCheck className="w-5 h-5 text-blue-600" /><span>Staff Profile & Unit Info</span></div>} className="shadow-sm rounded-xl">
           <Descriptions bordered column={1} size="middle">
             <Descriptions.Item label="Full Name">{user.fullName || user.full_name || 'Warehouse Staff'}</Descriptions.Item>
             <Descriptions.Item label="Email">{user.email}</Descriptions.Item>

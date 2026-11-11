@@ -7,8 +7,9 @@ export default function LogisticsIndexPage() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace('/admin/logistics/transfers');
+    router.replace('/admin/logistics/shipments');
   }, [router]);
 
   return null;
 }
+

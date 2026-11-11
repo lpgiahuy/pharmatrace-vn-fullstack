@@ -159,6 +159,14 @@ export class OrderService {
       }
 
       discountFromVoucher = Math.min(discountFromVoucher, subtotal);
+      // One use per account: any earlier order with this voucher counts, including cancelled ones.
+      const previousUse = await this.prisma.withOrder('read', tx => tx.orders.findFirst({
+        where: { customer_id: customerId, voucher_id: voucher.id },
+        select: { id: true },
+      }), { id: customerId, role: 'CUSTOMER', type: 'customer' });
+      if (previousUse) {
+        throw new BadRequestException('You have already used this voucher. Each voucher can only be used once per account.');
+      }
       appliedVoucherId = voucher.id;
       voucherSnapshot = voucher;
     }
@@ -586,11 +594,21 @@ export class OrderService {
       return order;
     };
 
-    const newOrder = await this.prisma.withOrder(
-      'checkout',
-      saveOrder,
-      { id: customerId, role: 'CUSTOMER', type: 'customer' },
-    );
+    let newOrder: Awaited<ReturnType<typeof saveOrder>>;
+    try {
+      newOrder = await this.prisma.withOrder(
+        'checkout',
+        saveOrder,
+        { id: customerId, role: 'CUSTOMER', type: 'customer' },
+      );
+    } catch (error) {
+      // Concurrent checkouts with the same voucher hit orders_one_voucher_per_customer.
+      if (appliedVoucherId && error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002'
+        && JSON.stringify(error.meta ?? {}).includes('voucher')) {
+        throw new BadRequestException('You have already used this voucher. Each voucher can only be used once per account.');
+      }
+      throw error;
+    }
 
     return this.getMyOrderById(customerId, newOrder.id);
   }
@@ -619,8 +637,9 @@ export class OrderService {
         }),
       ]);
 
+      const disputes = await this.loadCustomerDisputes(tx, orders.map((o) => o.id));
       return {
-        items: orders.map((o) => formatOrder(o)),
+        items: orders.map((o) => ({ ...formatOrder(o), deliveryDispute: disputes.get(o.id) ?? null })),
         pagination: {
           page,
           limit,
@@ -690,9 +709,44 @@ export class OrderService {
         }
       }
 
-      return formatOrder(order, cancellationReason);
+      const disputes = await this.loadCustomerDisputes(tx, [order.id]);
+      return { ...formatOrder(order, cancellationReason), deliveryDispute: disputes.get(order.id) ?? null };
 
     }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
+  }
+
+  /** Customer-visible delivery dispute state (reason and outcome only; resolver identity stays internal). */
+  private async loadCustomerDisputes(tx: any, orderIds: number[]) {
+    const result = new Map<number, { reason: string; openedAt: Date; outcome: string | null; resolutionReason: string | null; resolvedAt: Date | null }>();
+    if (!orderIds.length) return result;
+    const rows = await tx.$queryRaw<Array<{ order_id: number; reason: string; opened_at: Date; outcome: string | null; resolution_reason: string | null; resolved_at: Date | null }>>`
+      SELECT order_id, reason, opened_at, outcome, resolution_reason, resolved_at
+      FROM public.delivery_disputes WHERE order_id = ANY(${orderIds}::int[])`;
+    for (const r of rows) {
+      result.set(r.order_id, { reason: r.reason, openedAt: r.opened_at, outcome: r.outcome, resolutionReason: r.resolution_reason, resolvedAt: r.resolved_at });
+    }
+    return result;
+  }
+
+  async confirmReceipt(customerId: number, orderId: number) {
+    const result = await this.prisma.withOrder('customer_receive', async tx => {
+      const rows = await tx.$queryRaw<{ result: string }[]>`SELECT public.confirm_customer_receipt(${orderId}) AS result`;
+      return rows[0]?.result;
+    }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
+    if (result === 'NOT_FOUND') throw new NotFoundException('Order not found');
+    if (result !== 'RECEIVED' && result !== 'ALREADY_RECEIVED') throw new BadRequestException('Receipt can only be confirmed when your order is being shipped.');
+    return this.getMyOrderById(customerId, orderId);
+  }
+
+  async disputeDelivery(customerId: number, orderId: number, reason: string) {
+    if (!reason?.trim()) throw new BadRequestException('Dispute reason is required.');
+    const result = await this.prisma.withOrder('customer_receive', async (tx) => {
+      const rows = await tx.$queryRaw<{ result: string }[]>`SELECT public.submit_delivery_dispute(${orderId}, ${reason.trim()}) AS result`;
+      return rows[0]?.result;
+    }, { id: customerId, role: 'CUSTOMER', type: 'customer' });
+    if (result === 'NOT_FOUND') throw new NotFoundException('Order not found');
+    if (result !== 'SUBMITTED') throw new BadRequestException('Only shipped or completed orders can be disputed.');
+    return { success: true, message: 'Dispute submitted. Customer support will investigate.' };
   }
 
   async cancelMyOrder(customerId: number, orderId: number, dto: CancelOrderDto) {

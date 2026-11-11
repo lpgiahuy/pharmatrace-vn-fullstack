@@ -82,8 +82,10 @@ BEGIN
   END IF;
   RETURN NEW;
 END $$;
+-- Fires after guard_cancellation_safeguards (triggers run alphabetically): the guard must see the staff reason in NEW.note before this restores the customer's note.
 DROP TRIGGER IF EXISTS audit_staff_order_cancellation ON public.orders;
-CREATE TRIGGER audit_staff_order_cancellation BEFORE UPDATE ON public.orders
+DROP TRIGGER IF EXISTS staff_order_cancellation_audit ON public.orders;
+CREATE TRIGGER staff_order_cancellation_audit BEFORE UPDATE ON public.orders
   FOR EACH ROW EXECUTE FUNCTION public.audit_staff_order_cancellation();
 
 CREATE OR REPLACE FUNCTION public.cancel_internal_transfer(target_id integer) RETURNS boolean

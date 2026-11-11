@@ -4,8 +4,9 @@ import { useHydrated } from '@/hooks/useHydrated';
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Tabs } from 'antd';
-import { SwapOutlined } from '@ant-design/icons';
+import { CarOutlined, SwapOutlined, DollarOutlined } from '@ant-design/icons';
 import { useAuthStore } from '@/store/useAuthStore';
+import { codPermissions } from '@/utils/cod-workflow';
 
 interface LogisticsLayoutProps {
   children: React.ReactNode;
@@ -20,11 +21,16 @@ export default function LogisticsLayout({ children }: LogisticsLayoutProps) {
 
   const user = mounted ? getUser() : null;
   const role = (user?.role || '').toUpperCase().replace(/[\s_-]/g, '');
+  const canAccessCod = codPermissions(user?.role).canView;
   const isFinanceStaff = role === 'ACCOUNTANT' || role === 'FINANCEMANAGER';
 
   // Determine active tab key
-  let activeKey = '/admin/logistics/transfers';
-  if (pathname.includes('/policies')) {
+  let activeKey = '/admin/logistics/shipments';
+  if (pathname.includes('/transfers')) {
+    activeKey = '/admin/logistics/transfers';
+  } else if (pathname.includes('/cod')) {
+    activeKey = '/admin/logistics/cod';
+  } else if (pathname.includes('/policies')) {
     activeKey = '/admin/logistics/policies';
   }
 
@@ -32,10 +38,30 @@ export default function LogisticsLayout({ children }: LogisticsLayoutProps) {
     ...(!isFinanceStaff
       ? [
           {
+            key: '/admin/logistics/shipments',
+            label: (
+              <span className="flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+                <CarOutlined /> Shipments
+              </span>
+            ),
+          },
+          {
             key: '/admin/logistics/transfers',
             label: (
               <span className="flex items-center gap-1.5 text-xs sm:text-sm font-medium">
                 <SwapOutlined /> Internal Transfers
+              </span>
+            ),
+          },
+        ]
+      : []),
+    ...(canAccessCod
+      ? [
+          {
+            key: '/admin/logistics/cod',
+            label: (
+              <span className="flex items-center gap-1.5 text-xs sm:text-sm font-medium">
+                <DollarOutlined /> COD &amp; Reconciliation
               </span>
             ),
           },
@@ -63,7 +89,7 @@ export default function LogisticsLayout({ children }: LogisticsLayoutProps) {
           Logistics &amp; Warehouse Operations
         </h1>
         <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
-          Manage inter-facility stock transfers and delivery policies.
+          Manage delivery shipments, inter-facility stock transfers, and cash-on-delivery (COD) reconciliation.
         </p>
       </div>
 

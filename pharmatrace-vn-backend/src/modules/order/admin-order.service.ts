@@ -12,7 +12,9 @@ import { PrismaService } from "../../prisma/prisma.service";
 import { OrderQueryDto } from "./dto/order-query.dto";
 import { UpdateOrderStatusDto } from "./dto/update-order-status.dto";
 import { PackOrderDto } from "./dto/pack-order.dto";
+import { OnlinePaymentDto, PaymentExceptionDto, ResolvePaymentExceptionDto } from "./dto/online-payment.dto";
 import { FulfillmentPolicyDto } from './dto/fulfillment-policy.dto';
+import { ApproveCancellationRefundDto, RecordCancellationRefundDto, ResolveDeliveryDisputeDto } from './dto/order-resolution.dto';
 import { CurrentUserPayload } from "../../common/decorators/current-user.decorator";
 import {
   ORDER_DETAILS_INCLUDE,
@@ -135,6 +137,106 @@ export class AdminOrderService {
       }
 
       return { cancellations, disputes, refunds };
+    });
+  }
+
+  async resolveDeliveryDispute(id: number, dto: ResolveDeliveryDisputeDto, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, async tx => {
+      const rows = await tx.$queryRaw<{ result: Prisma.JsonObject }[]>`SELECT public.resolve_delivery_dispute(${id},${dto.outcome}::text,${dto.reason.trim()}::text) AS result`;
+      return rows[0]?.result;
+    });
+  }
+
+  async approveCancellationRefund(id: number, dto: ApproveCancellationRefundDto, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, async tx => {
+      const rows = await tx.$queryRaw<{ result: Prisma.JsonObject }[]>`SELECT public.approve_cancellation_refund(${id},${dto.amount}::numeric,${dto.paymentMethod}::text,${dto.reason.trim()}::text) AS result`;
+      return rows[0]?.result;
+    });
+  }
+
+  async recordCancellationRefund(id: number, dto: RecordCancellationRefundDto, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, async tx => {
+      const rows = await tx.$queryRaw<{ result: Prisma.JsonObject }[]>`SELECT public.record_cancellation_refund(${id},${dto.amount}::numeric,${dto.paymentReference.trim()}::text) AS result`;
+      return rows[0]?.result;
+    });
+  }
+
+  async getPaymentExceptions(id: number, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, async tx => {
+      const rows = await tx.$queryRaw<Array<any>>`
+        SELECT p.*,
+          ea.full_name AS approved_by_name,
+          coalesce((
+            SELECT jsonb_agg(jsonb_build_object(
+              'id', a.id,
+              'exception_id', a.exception_id,
+              'action', a.action,
+              'amount', a.amount,
+              'reference', a.reference,
+              'actor_id', a.actor_id,
+              'actor_name', em.full_name,
+              'reason', a.reason,
+              'created_at', a.created_at
+            ) ORDER BY a.id)
+            FROM public.payment_exception_actions a
+            LEFT JOIN public.employees em ON em.id = a.actor_id
+            WHERE a.exception_id=p.id
+          ),'[]'::jsonb) AS actions
+        FROM public.payment_exceptions p
+        LEFT JOIN public.employees ea ON ea.id = p.approved_by
+        WHERE p.order_id=${id} ORDER BY p.id
+      `;
+
+      const missingStaffIds = new Set<number>();
+      for (const p of rows) {
+        if (!p.approved_by_name && p.approved_by) missingStaffIds.add(p.approved_by);
+        if (Array.isArray(p.actions)) {
+          for (const a of p.actions) {
+            if (!a.actor_name && a.actor_id) missingStaffIds.add(a.actor_id);
+          }
+        }
+      }
+      if (missingStaffIds.size > 0) {
+        try {
+          const staffRows = await this.prisma.employees.findMany({
+            where: { id: { in: Array.from(missingStaffIds) } },
+            select: { id: true, full_name: true },
+          });
+          const staffMap = new Map(staffRows.map(s => [s.id, s.full_name]));
+          for (const p of rows) {
+            if (!p.approved_by_name && p.approved_by && staffMap.has(p.approved_by)) {
+              p.approved_by_name = staffMap.get(p.approved_by);
+            }
+            if (Array.isArray(p.actions)) {
+              for (const a of p.actions) {
+                if (!a.actor_name && a.actor_id && staffMap.has(a.actor_id)) {
+                  a.actor_name = staffMap.get(a.actor_id);
+                }
+              }
+            }
+          }
+        } catch {
+          // ignore fallback error
+        }
+      }
+
+      return rows;
+    });
+  }
+
+  async recordPaymentException(id: number, dto: PaymentExceptionDto, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, async tx => {
+      const rows = await tx.$queryRaw<{ id: number }[]>`SELECT public.record_payment_exception(${id}, ${dto.amount}::numeric,
+        ${dto.paymentMethod}::text, ${dto.paymentReference.trim()}::text, ${dto.reason.trim()}::text) AS id`;
+      return rows[0];
+    });
+  }
+
+  async resolvePaymentException(id: number, receiptId: number, dto: ResolvePaymentExceptionDto, user: CurrentUserPayload) {
+    return this.executeWithStaffContext(user, async tx => {
+      const rows = await tx.$queryRaw<{ result: Prisma.JsonObject }[]>`SELECT public.resolve_payment_exception(${id}, ${receiptId},
+        ${dto.action}::text, ${dto.amount ?? null}::numeric, ${dto.reference.trim()}::text, ${dto.reason.trim()}::text) AS result`;
+      return rows[0]?.result;
     });
   }
 
@@ -277,6 +379,95 @@ export class AdminOrderService {
     });
 
     return formatOrder(order, cancellationReason);
+  }
+
+  async getOnlinePayments(orderId: number, user: CurrentUserPayload) {
+    return this.prisma.withOrder('read', async tx => {
+      const order = await tx.orders.findFirst({ where: this.orderAccessWhere(orderId, user), select: { id: true } });
+      if (!order) throw new NotFoundException('Order not found');
+      const rows = await tx.$queryRaw<Array<{
+        id: number;
+        amount: Prisma.Decimal;
+        payment_method: string;
+        payment_reference: string;
+        status: string;
+        recorded_by: number;
+        recorded_at: Date;
+        approved_by: number | null;
+        approved_at: Date | null;
+        rejected_by: number | null;
+        rejection_reason: string | null;
+        recorded_by_name?: string | null;
+        approved_by_name?: string | null;
+        rejected_by_name?: string | null;
+      }>>`
+        SELECT
+          p.id, p.amount, p.payment_method, p.payment_reference, p.status,
+          p.recorded_by, p.recorded_at, p.approved_by, p.approved_at, p.rejected_by, p.rejection_reason,
+          er.full_name AS recorded_by_name,
+          ea.full_name AS approved_by_name,
+          ej.full_name AS rejected_by_name
+        FROM public.online_payment_receipts p
+        LEFT JOIN public.employees er ON er.id = p.recorded_by
+        LEFT JOIN public.employees ea ON ea.id = p.approved_by
+        LEFT JOIN public.employees ej ON ej.id = p.rejected_by
+        WHERE p.order_id = ${orderId} ORDER BY p.id DESC
+      `;
+
+      const missingStaffIds = new Set<number>();
+      for (const r of rows) {
+        if (!r.recorded_by_name && r.recorded_by) missingStaffIds.add(r.recorded_by);
+        if (!r.approved_by_name && r.approved_by) missingStaffIds.add(r.approved_by);
+        if (!r.rejected_by_name && r.rejected_by) missingStaffIds.add(r.rejected_by);
+      }
+      if (missingStaffIds.size > 0) {
+        try {
+          const staffRows = await this.prisma.employees.findMany({
+            where: { id: { in: Array.from(missingStaffIds) } },
+            select: { id: true, full_name: true },
+          });
+          const staffMap = new Map(staffRows.map(s => [s.id, s.full_name]));
+          for (const r of rows) {
+            if (!r.recorded_by_name && r.recorded_by && staffMap.has(r.recorded_by)) {
+              r.recorded_by_name = staffMap.get(r.recorded_by);
+            }
+            if (!r.approved_by_name && r.approved_by && staffMap.has(r.approved_by)) {
+              r.approved_by_name = staffMap.get(r.approved_by);
+            }
+            if (!r.rejected_by_name && r.rejected_by && staffMap.has(r.rejected_by)) {
+              r.rejected_by_name = staffMap.get(r.rejected_by);
+            }
+          }
+        } catch {
+          // ignore fallback error
+        }
+      }
+
+      return rows;
+    }, authActor(user));
+  }
+
+  async submitOnlinePayment(orderId: number, dto: OnlinePaymentDto, user: CurrentUserPayload) {
+    if (!dto.paymentReference?.trim() || !Number.isFinite(dto.amount) || dto.amount <= 0) throw new BadRequestException('Payment evidence is required.');
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
+      const rows = await tx.$queryRaw<{ id: number }[]>`SELECT public.submit_online_payment(${orderId}, ${dto.amount}::numeric, ${dto.paymentMethod}::text, ${dto.paymentReference.trim()}::text) AS id`;
+      return rows[0];
+    }, authActor(user)));
+  }
+
+  async approveOnlinePayment(orderId: number, receiptId: number, user: CurrentUserPayload) {
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
+      const rows = await tx.$queryRaw<{ cashbook_id: number }[]>`SELECT public.approve_online_payment(${orderId}, ${receiptId}) AS cashbook_id`;
+      return rows[0];
+    }, authActor(user)));
+  }
+
+  async rejectOnlinePayment(orderId: number, receiptId: number, reason: string, user: CurrentUserPayload) {
+    if (!reason?.trim()) throw new BadRequestException('Payment rejection reason is required.');
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
+      await tx.$executeRaw`SELECT public.reject_online_payment(${orderId}, ${receiptId}, ${reason.trim()}::text)`;
+      return { rejected: true };
+    }, authActor(user)));
   }
 
   async adminUpdateOrderStatus(orderId: number, dto: UpdateOrderStatusDto, user: CurrentUserPayload) {

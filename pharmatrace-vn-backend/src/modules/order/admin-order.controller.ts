@@ -22,7 +22,9 @@ import { OrderCronService } from "./order-cron.service";
 import { OrderQueryDto } from "./dto/order-query.dto";
 import { UpdateOrderStatusDto } from "./dto/update-order-status.dto";
 import { PackOrderDto } from "./dto/pack-order.dto";
+import { OnlinePaymentDto, RejectOnlinePaymentDto, PaymentExceptionDto, ResolvePaymentExceptionDto } from "./dto/online-payment.dto";
 import { FulfillmentPolicyDto, TransportRequirementDto, WarehouseSellingPharmaciesDto } from './dto/fulfillment-policy.dto';
+import { ApproveCancellationRefundDto, RecordCancellationRefundDto, ResolveDeliveryDisputeDto } from './dto/order-resolution.dto';
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../../common/guards/roles.guard";
 import { Roles } from "../../common/decorators/roles.decorator";
@@ -45,6 +47,24 @@ export class AdminOrderController {
   @Roles('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF', 'ACCOUNTANT', 'FINANCE_MANAGER')
   async resolution(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
     return { success: true, data: await this.orderService.getOrderResolution(id, user) };
+  }
+
+  @Post(':id/dispute/resolve')
+  @Roles('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST')
+  async resolveDispute(@Param('id', ParseIntPipe) id: number, @Body() dto: ResolveDeliveryDisputeDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.resolveDeliveryDispute(id, dto, user) };
+  }
+
+  @Post(':id/cancellation-refund/approve')
+  @Roles('SUPER_ADMIN', 'FINANCE_MANAGER')
+  async approveCancellationRefund(@Param('id', ParseIntPipe) id: number, @Body() dto: ApproveCancellationRefundDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.approveCancellationRefund(id, dto, user) };
+  }
+
+  @Post(':id/cancellation-refund/payment')
+  @Roles('SUPER_ADMIN', 'FINANCE_MANAGER', 'ACCOUNTANT')
+  async recordCancellationRefund(@Param('id', ParseIntPipe) id: number, @Body() dto: RecordCancellationRefundDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.recordCancellationRefund(id, dto, user) };
   }
 
   @Get('fulfillment/policies')
@@ -72,6 +92,24 @@ export class AdminOrderController {
   async setWarehouseSellingPharmacies(@Param('facilityId', ParseIntPipe) id: number, @Body() dto: WarehouseSellingPharmaciesDto, @CurrentUser() user: CurrentUserPayload) {
     await this.orderService.setWarehouseSellingPharmacies(id, dto.pharmacyIds, user);
     return { success: true };
+  }
+
+  @Get(':id/payment-exceptions')
+  @Roles('SUPER_ADMIN', 'ACCOUNTANT', 'FINANCE_MANAGER')
+  async paymentExceptions(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.getPaymentExceptions(id, user) };
+  }
+
+  @Post(':id/payment-exceptions')
+  @Roles('SUPER_ADMIN', 'ACCOUNTANT', 'FINANCE_MANAGER')
+  async recordPaymentException(@Param('id', ParseIntPipe) id: number, @Body() dto: PaymentExceptionDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.recordPaymentException(id, dto, user) };
+  }
+
+  @Post(':id/payment-exceptions/:receiptId/resolve')
+  @Roles('SUPER_ADMIN', 'FINANCE_MANAGER')
+  async resolvePaymentException(@Param('id', ParseIntPipe) id: number, @Param('receiptId', ParseIntPipe) receiptId: number, @Body() dto: ResolvePaymentExceptionDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.resolvePaymentException(id, receiptId, dto, user) };
   }
 
   @Get()
@@ -135,6 +173,30 @@ export class AdminOrderController {
       message: "Order details retrieved successfully",
       data: order,
     };
+  }
+
+  @Get(':id/payments')
+  @Roles('SUPER_ADMIN', 'ACCOUNTANT', 'FINANCE_MANAGER')
+  async getOnlinePayments(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.getOnlinePayments(id, user) };
+  }
+
+  @Post(':id/payments')
+  @Roles('SUPER_ADMIN', 'ACCOUNTANT', 'FINANCE_MANAGER')
+  async submitOnlinePayment(@Param('id', ParseIntPipe) id: number, @Body() dto: OnlinePaymentDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.submitOnlinePayment(id, dto, user) };
+  }
+
+  @Post(':id/payments/:paymentId/approve')
+  @Roles('SUPER_ADMIN', 'FINANCE_MANAGER')
+  async approveOnlinePayment(@Param('id', ParseIntPipe) id: number, @Param('paymentId', ParseIntPipe) paymentId: number, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.approveOnlinePayment(id, paymentId, user) };
+  }
+
+  @Post(':id/payments/:paymentId/reject')
+  @Roles('SUPER_ADMIN', 'FINANCE_MANAGER')
+  async rejectOnlinePayment(@Param('id', ParseIntPipe) id: number, @Param('paymentId', ParseIntPipe) paymentId: number, @Body() dto: RejectOnlinePaymentDto, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.rejectOnlinePayment(id, paymentId, dto.reason, user) };
   }
 
   @Patch(":id/status")
