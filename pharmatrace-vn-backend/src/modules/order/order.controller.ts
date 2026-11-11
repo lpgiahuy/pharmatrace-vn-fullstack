@@ -108,4 +108,23 @@ export class OrderController {
     };
   }
 
+  @Patch(':id/confirm-receipt')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Confirm receipt of a dispatched order' })
+  @ApiResponse({ status: 200, description: 'Receipt confirmed' })
+  @ApiResponse({ status: 400, description: 'Shipment is not in transit' })
+  async confirmReceipt(@CurrentUser() user: CurrentUserPayload, @Param('id', ParseIntPipe) orderId: number) {
+    return { success: true, message: 'Receipt confirmed', data: await this.orderService.confirmReceipt(user.id, orderId) };
+  }
+
+  @Post(':id/dispute')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Report a delivery dispute for an order' })
+  async disputeDelivery(
+    @CurrentUser() user: CurrentUserPayload,
+    @Param('id', ParseIntPipe) orderId: number,
+    @Body('reason') reason: string,
+  ) {
+    return await this.orderService.disputeDelivery(user.id, orderId, reason);
+  }
 }

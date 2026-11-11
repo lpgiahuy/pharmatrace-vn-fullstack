@@ -5,7 +5,7 @@ import { Pool } from 'pg';
 import { AuthActor, authActor } from '../common/auth-identity';
 
 export type ReviewScope = 'public' | 'customer' | 'staff' | 'moderator' | 'helpful';
-export type VoucherScope = 'validate' | 'read' | 'manage';
+export type VoucherScope = 'validate' | 'read' | 'manage' | 'available';
 export type OrderOperation = 'read' | 'checkout' | 'cancel' | 'customer_receive' | 'status' | 'pack' | 'transfer_read' | 'dispatch' | 'receive' | 'replace' | 'prescription' | 'loyalty';
 
 export interface AuthContext {
@@ -194,8 +194,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   async withVoucher<T>(scope: VoucherScope, run: (tx: Prisma.TransactionClient) => Promise<T>, context: { actor?: AuthActor; code?: string } = {}): Promise<T> {
     const actor = context.actor ? authActor(context.actor) : undefined;
     const roles = scope === 'read' ? ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST'] : ['SUPER_ADMIN'];
-    if (!['validate', 'read', 'manage'].includes(scope)
-      || (scope === 'validate' ? !!actor || !context.code?.trim() : actor?.type !== 'employee' || !roles.includes(actor.role))) {
+    const invalidActor = scope === 'validate' ? !!actor || !context.code?.trim()
+      : scope === 'available' ? actor?.type !== 'customer' || actor.role !== 'CUSTOMER'
+      : actor?.type !== 'employee' || !roles.includes(actor.role);
+    if (!['validate', 'read', 'manage', 'available'].includes(scope) || invalidActor) {
       throw new ForbiddenException('Invalid voucher access scope');
     }
     return this.$transaction(async tx => {

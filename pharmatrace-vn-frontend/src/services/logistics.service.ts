@@ -58,6 +58,82 @@ export function logisticsActorLabel(event: LogisticsEvent): string {
   return 'System';
 }
 
+export interface Shipment {
+  id: number;
+  order_id: number;
+  tracking_number: string;
+  courier_name: string;
+  carrier_confirmed_at?: string | null;
+  shipping_status: ShippingStatus;
+  picked_up_at?: string | null;
+  estimated_delivery_at?: string | null;
+  actual_delivery_at?: string | null;
+  cod_amount: number | string;
+  cod_settlement_status: CodSettlementStatus;
+  cod_settled_at?: string | null;
+  proof_type?: string | null;
+  proof_reference?: string | null;
+  delivered_to_name?: string | null;
+  delivery_notes?: string | null;
+  return_category?: string | null;
+  return_reason?: string | null;
+  return_qa_status?: string | null;
+  return_qa_notes?: string | null;
+  return_disposition?: string | null;
+  return_received_at?: string | null;
+  return_disposed_at?: string | null;
+  note?: string | null;
+  created_at: string;
+  updated_at: string;
+  orders?: {
+    id: number;
+    order_code: string;
+    recipient_name?: string;
+    recipient_phone?: string;
+    shipping_address?: string;
+    total_amount?: number;
+    order_status?: string;
+    payment_status?: string;
+    order_items?: Array<{ variant_id: number; medicine_name?: string; quantity: number; assigned_uids: string[] }>;
+  };
+  history?: LogisticsEvent[];
+  returnItems?: Array<{ variant_id: number; quantity: number; box_uids: string[] }>;
+  authorizedItems?: Array<{ variant_id: number; quantity: number; reason: string; approved_by: number; approved_at: string }>;
+  refundDecision?: { goods_value: string | number; customer_fee: string | number; refund_amount: string | number; payment_method: string; payment_reference: string | null; approved_by: number; approved_at: string; status: 'APPROVED' | 'RECORDED'; executed_by: number | null; executed_at: string | null } | null;
+  statementReviews?: Array<{
+    id: number; gross: string | number; fee: string | number; adjustment: string | number; net: string | number;
+    statement_reference: string; status: 'PENDING' | 'APPROVED' | 'DISCREPANCY_PENDING';
+    recorded_by: number; approved_by: number | null; recorded_at: string;
+  }>;
+  settlements?: Array<{
+    cashbook_id: number | null;
+    amount: number;
+    courier_fee?: number;
+    adjustment_amount?: number;
+    net_amount?: number;
+    statement_reference?: string;
+    discrepancy_amount?: number;
+    discrepancy_status?: string;
+    collected_by: string | number;
+    collected_at: string;
+  }>;
+}
+
+export interface ShipmentQuery {
+  page?: number;
+  limit?: number;
+  status?: string;
+  courier?: string;
+  from?: string;
+  to?: string;
+}
+
+export interface CodSummaryItem {
+  cod_settlement_status: CodSettlementStatus;
+  _count: { _all: number };
+  _sum: { cod_amount: number | string | null };
+}
+
 export interface InternalTransferItem {
   variantId: number;
   medicineId: number;
@@ -115,6 +191,68 @@ export interface InternalTransfer {
   history?: LogisticsEvent[];
 }
 
+export interface DeliveryProofPayload {
+  proofType: 'CUSTOMER_SIGNATURE' | 'DELIVERY_PHOTO' | 'OTP' | 'DISPATCH_NOTE' | 'STAFF_CONFIRMATION';
+  proofReference: string;
+  deliveredToName: string;
+  deliveryNotes?: string;
+  occurredAt?: string;
+}
+
+export interface RequestPostDeliveryReturnPayload {
+  reason: string;
+  lines: Array<{ variantId: number; quantity: number }>;
+}
+
+export interface ReceiveReturnPayload {
+  notes?: string;
+  receivedLines: Array<{ variantId: number; quantity: number; boxUids: string[] }>;
+}
+
+export interface ReturnDispositionLinePayload {
+  variantId: number;
+  passQuantity: number;
+  failQuantity: number;
+  restockBoxUids?: string[];
+  scrapBoxUids?: string[];
+  notes?: string;
+}
+
+export interface ReturnDispositionPayload {
+  decision: 'RESTOCK' | 'SCRAP' | 'PARTIAL_RESTOCK';
+  qaNotes: string;
+  lines: ReturnDispositionLinePayload[];
+}
+
+export interface ReturnRefundPayload {
+  goodsValue: number;
+  customerFee: number;
+  paymentMethod: 'CASH' | 'BANK_TRANSFER' | 'DEBIT_CARD' | 'E_WALLET';
+  reason: string;
+}
+
+export interface ReconcileCodPayload {
+  grossAmount: number;
+  courierFee: number;
+  adjustmentAmount?: number;
+  netAmount: number;
+  statementReference: string;
+  discrepancyNote?: string;
+}
+
+export interface ReconcileCodResponse {
+  shipmentId: number;
+  cashbookId?: number | null;
+  status: string;
+  collectedAmount?: number;
+  netAmount?: number;
+  courierFee?: number;
+  adjustmentAmount?: number;
+  discrepancyAmount?: number;
+  discrepancyStatus?: string;
+  discrepancy?: boolean;
+}
+
 export interface ReceiveTransferLinePayload {
   variantId: number;
   receivedQuantity: number;
@@ -157,6 +295,11 @@ export interface DispatchTransferPayload {
 
 export const CARRIER_OPTIONS = ['GHN', 'GHTK', 'J&T', 'VIETTEL_POST', 'VNPOST', 'BEST', 'SPX', 'NINJA_VAN', 'FLASH'].map(value => ({ value, label: value }));
 
+export const canCollectShipmentCod = (shipment: Shipment) =>
+  shipment.cod_settlement_status !== 'SETTLED' && Number(shipment.cod_amount) > 0 &&
+  (shipment.shipping_status === 'DELIVERED' ||
+    (!!shipment.actual_delivery_at && ['RETURN_REQUESTED', 'RETURN_IN_TRANSIT', 'RETURNED_TO_WAREHOUSE'].includes(shipment.shipping_status)));
+
 export interface PaginatedResponse<T> {
   success: boolean;
   data: T[];
@@ -165,6 +308,7 @@ export interface PaginatedResponse<T> {
     limit: number;
     total: number;
   };
+  summary?: CodSummaryItem[];
 }
 
 export interface SingleResponse<T> {
@@ -175,6 +319,111 @@ export interface SingleResponse<T> {
 export const logisticsService = {
   resolveDiscrepancy: (id: number, payload: { action: 'RESUPPLY' | 'ACCEPT_SHORTAGE'; sourceFacilityId?: number; reason: string; customerAgreement?: string }) =>
     apiClient.patch(`/admin/logistics/transfers/${id}/resolve-discrepancy`, payload),
+  getShipments: async (query?: ShipmentQuery): Promise<PaginatedResponse<Shipment>> => {
+    const params = new URLSearchParams();
+    if (query?.page) params.append('page', String(query.page));
+    if (query?.limit) params.append('limit', String(query.limit));
+    if (query?.status) params.append('status', query.status);
+    if (query?.courier) params.append('courier', query.courier);
+    if (query?.from) params.append('from', query.from);
+    if (query?.to) params.append('to', query.to);
+    const qs = params.toString();
+    return apiClient.get(`/admin/logistics/shipments${qs ? `?${qs}` : ''}`);
+  },
+
+  getShipment: async (id: number): Promise<SingleResponse<Shipment>> => {
+    return apiClient.get(`/admin/logistics/shipments/${id}`);
+  },
+
+  updateCarrier: (id: number, courierName: string, trackingNumber: string): Promise<SingleResponse<Shipment>> =>
+    apiClient.patch(`/admin/logistics/shipments/${id}/carrier`, { courierName, trackingNumber }),
+
+  updateShipmentStatus: async (
+    id: number,
+    status: ShippingStatus,
+    reason?: string,
+    occurredAt?: string
+  ): Promise<SingleResponse<Shipment>> => {
+    return apiClient.patch(`/admin/logistics/shipments/${id}/status`, {
+      status,
+      reason: reason?.trim() || undefined,
+      occurredAt,
+    });
+  },
+
+  confirmDeliveryWithProof: async (
+    id: number,
+    payload: DeliveryProofPayload
+  ): Promise<SingleResponse<Shipment>> => {
+    return apiClient.post(`/admin/logistics/shipments/${id}/delivery-proof`, payload);
+  },
+
+  requestReturnShipment: async (
+    id: number,
+    reason: string
+  ): Promise<SingleResponse<Shipment>> => {
+    return apiClient.post(`/admin/logistics/shipments/${id}/return`, {
+      reason: reason.trim(),
+    });
+  },
+
+  requestPostDeliveryReturn: async (
+    id: number,
+    payload: RequestPostDeliveryReturnPayload
+  ): Promise<SingleResponse<Shipment>> => {
+    return apiClient.post(`/admin/logistics/shipments/${id}/post-delivery-return`, payload);
+  },
+
+  receiveReturn: async (
+    id: number,
+    payload: ReceiveReturnPayload
+  ): Promise<SingleResponse<Shipment>> => {
+    return apiClient.post(`/admin/logistics/shipments/${id}/receive-return`, payload);
+  },
+
+  dispositionReturn: async (
+    id: number,
+    payload: ReturnDispositionPayload
+  ): Promise<SingleResponse<Shipment>> => {
+    return apiClient.post(`/admin/logistics/shipments/${id}/disposition-return`, payload);
+  },
+
+  approveReturnRefund: async (id: number, payload: ReturnRefundPayload): Promise<SingleResponse<{ id: number; status: string; refundAmount: number }>> => {
+    return apiClient.post(`/admin/logistics/shipments/${id}/refund`, payload);
+  },
+
+  recordRefundPayment: async (id: number, paymentReference: string): Promise<SingleResponse<{ id: number; cashbookId: number; refundAmount: number }>> => {
+    return apiClient.post(`/admin/logistics/shipments/${id}/refund/payment`, { paymentReference });
+  },
+
+  getCodShipments: async (query?: ShipmentQuery): Promise<PaginatedResponse<Shipment>> => {
+    const params = new URLSearchParams();
+    if (query?.page) params.append('page', String(query.page));
+    if (query?.limit) params.append('limit', String(query.limit));
+    if (query?.status) params.append('status', query.status);
+    if (query?.courier) params.append('courier', query.courier);
+    if (query?.from) params.append('from', query.from);
+    if (query?.to) params.append('to', query.to);
+    const qs = params.toString();
+    return apiClient.get(`/admin/logistics/cod${qs ? `?${qs}` : ''}`);
+  },
+
+  getCodShipment: async (id: number): Promise<SingleResponse<Shipment>> => {
+    return apiClient.get(`/admin/logistics/cod/${id}`);
+  },
+
+
+  reconcileCod: async (
+    id: number,
+    payload: ReconcileCodPayload
+  ): Promise<SingleResponse<ReconcileCodResponse>> => {
+    return apiClient.post(`/admin/logistics/cod/${id}/reconcile`, payload);
+  },
+
+  approveCodStatement: async (id: number, statementId: number): Promise<SingleResponse<ReconcileCodResponse>> => {
+    return apiClient.post(`/admin/logistics/cod/${id}/statements/${statementId}/approve`);
+  },
+
   getTransfers: async (
     orderId?: number,
     status?: string

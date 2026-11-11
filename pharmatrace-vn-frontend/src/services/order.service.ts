@@ -256,6 +256,21 @@ export interface CreateOrderDto {
   items: CreateOrderItemDto[];
 }
 
+export interface OnlinePaymentReceipt {
+  id: number;
+  amount: number | string;
+  payment_method: string;
+  payment_reference: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  recorded_by: number;
+  recorded_by_name?: string | null;
+  approved_by: number | null;
+  approved_by_name?: string | null;
+  rejected_by: number | null;
+  rejected_by_name?: string | null;
+  rejection_reason: string | null;
+}
+
 export interface OrderQueryDto {
   page?: number;
   limit?: number;
@@ -299,7 +314,21 @@ export interface AvailableBoxInfo {
   facilityId?: number | null;
 }
 
+export interface PaymentException {
+  id: number; amount: number | string; allocated: number | string; refunded: number | string;
+  payment_method: string; payment_reference: string; reason: string; approved_by: number | null;
+  approved_by_name?: string | null;
+  actions: Array<{ id: number; action: string; amount: number | string; reference: string; reason: string; actor_id: number; actor_name?: string | null }>;
+}
+
 export const orderService = {
+  getPaymentExceptions: (id: number): Promise<{ success: boolean; data: PaymentException[] }> => apiClient.get(`/admin/orders/${id}/payment-exceptions`),
+  recordPaymentException: (id: number, values: { amount: number; paymentMethod: string; paymentReference: string; reason: string }) => apiClient.post(`/admin/orders/${id}/payment-exceptions`, values),
+  resolvePaymentException: (id: number, receiptId: number, values: { action: string; amount?: number; reference: string; reason: string }) => apiClient.post(`/admin/orders/${id}/payment-exceptions/${receiptId}/resolve`, values),
+  getOnlinePayments: async (id: number): Promise<{ success: boolean; data: OnlinePaymentReceipt[] }> => apiClient.get(`/admin/orders/${id}/payments`),
+  submitOnlinePayment: async (id: number, payload: { amount: number; paymentMethod: string; paymentReference: string }): Promise<{ success: boolean }> => apiClient.post(`/admin/orders/${id}/payments`, payload),
+  approveOnlinePayment: async (id: number, paymentId: number): Promise<{ success: boolean }> => apiClient.post(`/admin/orders/${id}/payments/${paymentId}/approve`),
+  rejectOnlinePayment: async (id: number, paymentId: number, reason: string): Promise<{ success: boolean }> => apiClient.post(`/admin/orders/${id}/payments/${paymentId}/reject`, { reason }),
   quoteOrder: async (dto: CreateOrderDto): Promise<{ success: boolean; data: { subtotalAmount: number; shippingFee: number; totalAmount: number; facilityId: number; facilityName: string; sellingFacilityId: number; sellingFacilityName: string; estimatedDeliveryLabel: string; planHash: string; transferPlan: Array<{ fromFacilityName: string; items: Array<{ medicineName: string; quantity: number; unitName: string }> }> } }> => {
     return apiClient.post('/orders/quote', dto);
   },
@@ -323,7 +352,13 @@ export const orderService = {
     return apiClient.patch(`/orders/${id}/cancel`, { reasonCode, reasonDetails });
   },
 
+  disputeDelivery: async (id: number, reason: string): Promise<unknown> => {
+    return apiClient.post(`/orders/${id}/dispute`, { reason });
+  },
 
+  confirmMyReceipt: async (id: number): Promise<SingleOrderResponse> => {
+    return apiClient.patch(`/orders/${id}/confirm-receipt`);
+  },
 
   // Admin: Get all orders
   adminGetOrders: async (params?: OrderQueryDto): Promise<OrderListResponse> => {

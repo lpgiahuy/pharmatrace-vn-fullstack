@@ -70,14 +70,28 @@
 \i /docker-entrypoint-initdb.d/schemas/10_logistics_operations.sql
 \i /docker-entrypoint-initdb.d/security/logistics/logistics_rls.sql
 \i /docker-entrypoint-initdb.d/security/logistics/event_identity.sql
+\i /docker-entrypoint-initdb.d/schemas/12_customer_receipt.sql
+\i /docker-entrypoint-initdb.d/security/order/order_pickup_status.sql
 \i /docker-entrypoint-initdb.d/security/logistics/logistics_workflow_enhancements.sql
 
 \i /docker-entrypoint-initdb.d/security/logistics/logistics_integrity.sql
 \i /docker-entrypoint-initdb.d/security/order/cancellation_safeguards.sql
+\i /docker-entrypoint-initdb.d/security/returns/return_intake_lines.sql
 \i /docker-entrypoint-initdb.d/security/customer/customer_cancellation_reason.sql
+\i /docker-entrypoint-initdb.d/security/payment/online_payment_gate.sql
+\i /docker-entrypoint-initdb.d/security/payment/payment_expiration.sql
 \i /docker-entrypoint-initdb.d/security/logistics/transfer_manifest.sql
+\i /docker-entrypoint-initdb.d/security/returns/return_refund_decision.sql
+\i /docker-entrypoint-initdb.d/security/returns/refund_approval_before_payment.sql
 \i /docker-entrypoint-initdb.d/security/order/cancel_voucher_release.sql
+\i /docker-entrypoint-initdb.d/security/returns/return_authorized_items.sql
 \i /docker-entrypoint-initdb.d/security/inventory/quarantine_balances.sql
+\i /docker-entrypoint-initdb.d/security/payment/disable_unverified_cod_collection.sql
+\i /docker-entrypoint-initdb.d/security/payment/cancelled_payment_guard.sql
+\i /docker-entrypoint-initdb.d/security/payment/cod_receivable_and_net_cash.sql
+\i /docker-entrypoint-initdb.d/security/payment/online_payment_evidence.sql
+\i /docker-entrypoint-initdb.d/security/payment/cod_payment_evidence.sql
+\i /docker-entrypoint-initdb.d/security/payment/cod_statement_approval.sql
 \i /docker-entrypoint-initdb.d/security/logistics/transfer_reroute.sql
 
 \i /docker-entrypoint-initdb.d/security/logistics/in_transit_custody.sql
@@ -88,6 +102,7 @@
 
 \i /docker-entrypoint-initdb.d/security/logistics/transfer_discrepancy_resolution.sql
 
+\i /docker-entrypoint-initdb.d/security/payment/payment_exceptions.sql
 
 \i /docker-entrypoint-initdb.d/security/logistics/fulfillment_policy.sql
 

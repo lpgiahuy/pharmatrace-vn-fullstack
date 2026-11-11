@@ -76,7 +76,7 @@ GRANT EXECUTE ON FUNCTION public.transfer_order_state(integer), public.product_h
 
 REVOKE ALL ON public.orders, public.order_items, public.shipments, public.internal_transfers, public.loyalty_point_logs FROM PUBLIC, app_user;
 GRANT SELECT ON public.orders, public.order_items, public.shipments, public.internal_transfers, public.loyalty_point_logs TO app_user;
-GRANT INSERT (order_code, customer_id, export_facility_id, prescription_id, prescription_review_status,
+GRANT INSERT (order_code, customer_id, voucher_id, export_facility_id, prescription_id, prescription_review_status,
     subtotal_amount, shipping_fee, discount_amount, used_points, total_amount, payment_method, payment_status,
     order_status, shipping_address, recipient_phone, recipient_name, note, created_at) ON public.orders TO app_user;
 GRANT UPDATE (order_status, payment_status, note, prescription_review_status) ON public.orders TO app_user;

@@ -36,6 +36,8 @@ import {
 import { OrderStatusBadge } from '@/components/ui/Badge';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { OrderPackingModal } from '@/components/shared/OrderPackingModal';
+import { PaymentExceptions } from '@/components/logistics/PaymentExceptions';
+import { OnlinePaymentEvidence } from '@/components/logistics/OnlinePaymentEvidence';
 import { OrderResolution } from '@/components/logistics/OrderResolution';
 import { useAuthStore } from '@/store/useAuthStore';
 import styles from './page.module.css';
@@ -271,6 +273,8 @@ export default function AdminOrderDetailPage({ params }: Props) {
                 {order.paymentStatus === 'PAID' ? 'Paid' : order.paymentStatus === 'REFUNDED' ? 'Refunded' : 'Awaiting payment'}
               </span>
             </div>
+            {['ACCOUNTANT', 'FINANCE_MANAGER', 'SUPER_ADMIN'].includes(financeRole) && ['BANK_TRANSFER', 'E_WALLET'].includes(order.paymentMethod) && <OnlinePaymentEvidence order={order} role={financeRole} onUpdated={async () => setOrder(await orderService.getAdminById(orderId))} />}
+            {['ACCOUNTANT', 'FINANCE_MANAGER', 'SUPER_ADMIN'].includes(financeRole) && <PaymentExceptions order={order} role={financeRole} onUpdated={async () => setOrder(await orderService.getAdminById(orderId))} />}
           </section>
           <section>
             <h2>Dispatch warehouse</h2>
