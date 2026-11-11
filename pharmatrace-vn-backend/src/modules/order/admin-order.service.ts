@@ -449,25 +449,25 @@ export class AdminOrderService {
 
   async submitOnlinePayment(orderId: number, dto: OnlinePaymentDto, user: CurrentUserPayload) {
     if (!dto.paymentReference?.trim() || !Number.isFinite(dto.amount) || dto.amount <= 0) throw new BadRequestException('Payment evidence is required.');
-    return this.prisma.withOrder('read', async tx => {
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
       const rows = await tx.$queryRaw<{ id: number }[]>`SELECT public.submit_online_payment(${orderId}, ${dto.amount}::numeric, ${dto.paymentMethod}::text, ${dto.paymentReference.trim()}::text) AS id`;
       return rows[0];
-    }, authActor(user));
+    }, authActor(user)));
   }
 
   async approveOnlinePayment(orderId: number, receiptId: number, user: CurrentUserPayload) {
-    return this.prisma.withOrder('read', async tx => {
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
       const rows = await tx.$queryRaw<{ cashbook_id: number }[]>`SELECT public.approve_online_payment(${orderId}, ${receiptId}) AS cashbook_id`;
       return rows[0];
-    }, authActor(user));
+    }, authActor(user)));
   }
 
   async rejectOnlinePayment(orderId: number, receiptId: number, reason: string, user: CurrentUserPayload) {
     if (!reason?.trim()) throw new BadRequestException('Payment rejection reason is required.');
-    return this.prisma.withOrder('read', async tx => {
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
       await tx.$executeRaw`SELECT public.reject_online_payment(${orderId}, ${receiptId}, ${reason.trim()}::text)`;
       return { rejected: true };
-    }, authActor(user));
+    }, authActor(user)));
   }
 
   async adminUpdateOrderStatus(orderId: number, dto: UpdateOrderStatusDto, user: CurrentUserPayload) {

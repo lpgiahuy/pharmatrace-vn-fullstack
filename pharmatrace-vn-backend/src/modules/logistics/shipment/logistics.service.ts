@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { authActor } from '../../../common/auth-identity';
+import { workflowDatabase } from '../../../common/workflow-database';
 import { CurrentUserPayload } from '../../../common/decorators/current-user.decorator';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { ShipmentQueryDto } from './dto/shipment-query.dto';
@@ -534,7 +535,10 @@ export class LogisticsService {
         [dto.grossAmount, dto.courierFee, dto.netAmount].some(value => value < 0)) {
       throw new BadRequestException('Valid COD amounts and carrier statement reference are required.');
     }
-    return this.prisma.withOrder('read', async tx => {
+    if ([dto.grossAmount, dto.courierFee, dto.netAmount, dto.adjustmentAmount ?? 0].some(value => Math.abs(value * 100 - Math.round(value * 100)) > 1e-6)) {
+      throw new BadRequestException('COD amounts may have at most 2 decimal places.');
+    }
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
       const rows = await tx.$queryRaw<{ result: Prisma.JsonObject }[]>`
         SELECT public.submit_cod_statement(${id}, ${dto.grossAmount}::numeric, ${dto.courierFee}::numeric,
           ${dto.adjustmentAmount ?? 0}::numeric, ${dto.netAmount}::numeric,
@@ -542,14 +546,14 @@ export class LogisticsService {
       `;
       if (!rows[0]?.result) throw new BadRequestException('COD requires a delivered shipment with a positive amount.');
       return rows[0].result;
-    }, authActor(user));
+    }, authActor(user)));
   }
 
   async approveCodStatement(id: number, statementId: number, user: CurrentUserPayload) {
-    return this.prisma.withOrder('read', async tx => {
+    return workflowDatabase(this.prisma.withOrder('read', async tx => {
       const rows = await tx.$queryRaw<{ result: Prisma.JsonObject }[]>`SELECT public.approve_cod_statement(${id}, ${statementId}) AS result`;
       return rows[0].result;
-    }, authActor(user));
+    }, authActor(user)));
   }
 
   async approveReturnRefund(id: number, dto: ReturnRefundDto, user: CurrentUserPayload) {
