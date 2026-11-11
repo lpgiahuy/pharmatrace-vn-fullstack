@@ -238,7 +238,7 @@ describe('Logistics & Order Management Verification Test Matrix', () => {
 
       const customerTx = {
         orders: { findUnique: jest.fn().mockResolvedValue(sampleOrderRecord) },
-        $queryRaw: jest.fn(),
+        $queryRaw: jest.fn().mockResolvedValue([]),
       };
       const customerPrisma = { withOrder: jest.fn((_op, cb) => cb(customerTx)) };
       const orderService = new OrderService(customerPrisma as never);

@@ -65,7 +65,7 @@ describe('LogisticsService', () => {
       id: 1, shipping_status: 'RETURN_IN_TRANSIT', return_category: null,
       orders: { export_facility_id: 2, order_items: [{ variant_id: 7, quantity: 1, assigned_uids: [uid] }] },
     });
-    await expect(service.receiveReturn(1, { receivedLines: [{ variantId: 7, quantity: 1, boxUids: [uid] }] } as never, actor))
+    await expect(service.receiveReturn(1, { receivedLines: [{ variantId: 7, quantity: 1, boxUids: [uid] }] }, actor))
       .rejects.toThrow(/stop after custody move/);
     expect(boxes.updateMany).toHaveBeenCalledWith({
       where: { uid: { in: [uid] }, status: { in: expect.arrayContaining(['PACKAGED']) } },
