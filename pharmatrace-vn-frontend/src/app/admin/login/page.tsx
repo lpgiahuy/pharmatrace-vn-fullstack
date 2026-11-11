@@ -59,6 +59,9 @@ export default function AdminLoginPage() {
         'ADMIN',
         'STORE_MANAGER',
         'PHARMACIST',
+        'WAREHOUSE_STAFF',
+        'ACCOUNTANT',
+        'FINANCE_MANAGER',
       ];
 
       if (!allowedAdminRoles.includes(userRole || '')) {
@@ -69,7 +72,7 @@ export default function AdminLoginPage() {
 
       const userName = result?.user?.fullName || result?.user?.full_name || 'Manager';
       message.success(`Welcome ${userName}!`);
-      router.push('/admin');
+      router.push(['ACCOUNTANT', 'FINANCE_MANAGER'].includes(userRole || '') ? '/admin/orders' : '/admin');
     } catch (err: any) {
       message.error(err.response?.data?.message || err.message || 'Incorrect username or password!');
     }
