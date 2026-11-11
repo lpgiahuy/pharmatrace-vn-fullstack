@@ -9,6 +9,11 @@ END $$;
 
 GRANT INSERT (voucher_id) ON public.orders TO app_user;
 
+-- One use per account per voucher. Cancelled orders keep their voucher_id, so a cancelled order still burns the voucher for that customer.
+-- Fails if existing data already has duplicates; reconcile them before applying.
+CREATE UNIQUE INDEX IF NOT EXISTS orders_one_voucher_per_customer
+    ON public.orders (customer_id, voucher_id) WHERE voucher_id IS NOT NULL;
+
 REVOKE ALL ON public.vouchers FROM PUBLIC, app_user;
 GRANT SELECT ON public.vouchers TO app_user;
 GRANT INSERT (voucher_code, discount_type, discount_value, min_order_value, max_discount_amount,
@@ -35,6 +40,15 @@ LANGUAGE sql STABLE SET search_path = pg_catalog AS $$
       AND current_setting('app.current_user_role', true) = 'CUSTOMER'
       AND NULLIF(current_setting('app.current_user_id', true), '') IS NOT NULL
 $$;
+CREATE OR REPLACE FUNCTION public.voucher_available() RETURNS boolean
+LANGUAGE sql STABLE SET search_path = pg_catalog AS $$
+    SELECT current_setting('app.voucher_scope', true) = 'available'
+      AND current_setting('app.current_user_type', true) = 'customer'
+      AND current_setting('app.current_user_role', true) = 'CUSTOMER'
+      AND NULLIF(current_setting('app.current_user_id', true), '') IS NOT NULL
+$$;
+REVOKE ALL ON FUNCTION public.voucher_available() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.voucher_available() TO app_user;
 CREATE OR REPLACE FUNCTION public.voucher_terms(v public.vouchers) RETURNS boolean
 LANGUAGE sql STABLE SET search_path = pg_catalog AS $$
     SELECT char_length(btrim(v.voucher_code)) BETWEEN 1 AND 50
@@ -92,6 +106,8 @@ CREATE TRIGGER voucher_update_guard BEFORE UPDATE ON public.vouchers FOR EACH RO
 DROP POLICY IF EXISTS voucher_read ON public.vouchers;
 CREATE POLICY voucher_read ON public.vouchers FOR SELECT TO app_user USING (
     public.voucher_staff(false)
+    OR (public.voucher_available() AND status = 'ACTIVE'
+      AND (start_date IS NULL OR start_date <= now()) AND (end_date IS NULL OR end_date >= now()))
     OR (upper(btrim(voucher_code)) = current_setting('app.voucher_code', true)
       AND ((current_setting('app.voucher_scope', true) = 'validate'
           AND coalesce(current_setting('app.current_user_id', true), '') = ''
