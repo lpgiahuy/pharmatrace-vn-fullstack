@@ -20,8 +20,8 @@ CREATE OR REPLACE FUNCTION public.order_staff(unit_id integer) RETURNS boolean
 LANGUAGE sql STABLE SET search_path = pg_catalog AS $$
     SELECT current_setting('app.current_user_type', true) = 'employee'
       AND NULLIF(current_setting('app.current_user_id', true), '') IS NOT NULL
-      AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF')
-      AND (current_setting('app.current_user_role', true) = 'SUPER_ADMIN'
+      AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF', 'ACCOUNTANT', 'FINANCE_MANAGER')
+      AND (current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'ACCOUNTANT', 'FINANCE_MANAGER')
         OR unit_id = NULLIF(current_setting('app.current_unit_id', true), '')::integer)
 $$;
 CREATE OR REPLACE FUNCTION public.order_job() RETURNS boolean
