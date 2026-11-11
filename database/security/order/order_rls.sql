@@ -56,11 +56,12 @@ GRANT EXECUTE ON FUNCTION public.order_operation_allowed() TO app_user;
 
 CREATE OR REPLACE FUNCTION public.transfer_order_state(target_order integer)
 RETURNS TABLE (order_status varchar, prescription_review_status varchar)
-LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog AS $$
+LANGUAGE sql VOLATILE SECURITY DEFINER SET search_path = pg_catalog AS $$
     SELECT o.order_status, o.prescription_review_status FROM public.orders o
     WHERE o.id = target_order AND current_setting('app.order_operation', true) = 'dispatch'
       AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'STORE_MANAGER', 'WAREHOUSE_STAFF')
       AND EXISTS (SELECT FROM public.internal_transfers t WHERE t.order_id = o.id AND public.order_staff(t.from_facility_id))
+    FOR UPDATE OF o
 $$;
 CREATE OR REPLACE FUNCTION public.product_has_order_history(target_medicine integer) RETURNS boolean
 LANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog AS $$
@@ -83,16 +84,19 @@ GRANT INSERT (order_id, medicine_id, variant_id, quantity, unit_price, total_pri
     inventory_reserved, medicine_name, unit_name, source_facility_id) ON public.order_items TO app_user;
 GRANT UPDATE (assigned_uids, inventory_reserved, source_facility_id) ON public.order_items TO app_user;
 GRANT INSERT (order_id, tracking_number, courier_name, shipping_status, cod_amount, cod_settlement_status, note, created_at, updated_at) ON public.shipments TO app_user;
-GRANT UPDATE (shipping_status, actual_delivery_at, updated_at) ON public.shipments TO app_user;
+GRANT UPDATE (shipping_status, picked_up_at, actual_delivery_at, cod_settlement_status, cod_settled_at, updated_at, courier_name, tracking_number, carrier_confirmed_at) ON public.shipments TO app_user;
 GRANT INSERT (transfer_code, order_id, from_facility_id, to_facility_id, status, items, distance_km, estimated_hours, notes, created_at, updated_at)
     ON public.internal_transfers TO app_user;
-GRANT UPDATE (status, tracking_code, dispatched_at, received_at, notes, updated_at) ON public.internal_transfers TO app_user;
+GRANT UPDATE (status, tracking_code, dispatched_at, received_at, notes, updated_at, transport_mode, transport_employee_id, transport_employee_name, courier_name) ON public.internal_transfers TO app_user;
 GRANT INSERT (customer_id, order_id, transaction_type, points, description, created_at) ON public.loyalty_point_logs TO app_user;
 REVOKE ALL ON SEQUENCE public.orders_id_seq, public.order_items_id_seq, public.shipments_id_seq,
     public.internal_transfers_id_seq, public.loyalty_point_logs_id_seq FROM PUBLIC, app_user;
 GRANT USAGE ON SEQUENCE public.orders_id_seq, public.order_items_id_seq, public.shipments_id_seq,
     public.internal_transfers_id_seq, public.loyalty_point_logs_id_seq TO app_user;
 
+\if :{?bootstrap_current_functions}
+-- Fresh bootstrap installs only the final definition.
+\else
 CREATE OR REPLACE FUNCTION public.guard_order_write() RETURNS trigger
 LANGUAGE plpgsql SET search_path = pg_catalog AS $$
 DECLARE op text := current_setting('app.order_operation', true); allowed text[];
@@ -108,10 +112,15 @@ BEGIN
         ELSIF op = 'status' AND public.order_staff(OLD.export_facility_id)
             AND current_setting('app.current_user_role', true) IN ('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST') THEN
             allowed := ARRAY['order_status', 'payment_status', 'note'];
+            IF NEW.order_status = 'COMPLETED' AND OLD.order_status IS DISTINCT FROM NEW.order_status THEN
+                RAISE EXCEPTION 'Customer receipt confirmation required' USING ERRCODE = '42501';
+            END IF;
             IF NEW.order_status IS DISTINCT FROM OLD.order_status AND NOT (
                 (OLD.order_status = 'PENDING' AND NEW.order_status IN ('WAITING_INTERNAL_TRANSFER', 'PROCESSING', 'CANCELLED'))
                 OR (OLD.order_status IN ('WAITING_INTERNAL_TRANSFER', 'WAITING_TRANSFER') AND NEW.order_status IN ('PROCESSING', 'CANCELLED'))
-                OR (OLD.order_status = 'PROCESSING' AND NEW.order_status IN ('SHIPPING', 'CANCELLED'))
+                OR (OLD.order_status = 'PROCESSING' AND NEW.order_status = 'CANCELLED')
+                OR (OLD.order_status = 'PENDING_PICKUP' AND NEW.order_status = 'PICKED_UP' AND EXISTS (SELECT FROM public.shipments s WHERE s.order_id = OLD.id AND s.shipping_status = 'PICKED_UP'))
+                OR (OLD.order_status = 'PICKED_UP' AND NEW.order_status = 'SHIPPING' AND EXISTS (SELECT FROM public.shipments s WHERE s.order_id = OLD.id AND s.shipping_status = 'IN_TRANSIT'))
                 OR (OLD.order_status IN ('SHIPPING', 'IN_TRANSIT') AND NEW.order_status = 'COMPLETED')
                 OR (OLD.order_status IN ('COMPLETED', 'DELIVERED') AND NEW.order_status IN ('RETURNED', 'PARTIALLY_RETURNED'))
                 OR (OLD.order_status = 'DELIVERED' AND NEW.order_status = 'COMPLETED')
@@ -122,7 +131,7 @@ BEGIN
                 RAISE EXCEPTION 'Invalid order transition' USING ERRCODE = '42501';
             END IF;
         ELSIF op = 'pack' AND public.order_staff(OLD.export_facility_id)
-            AND OLD.order_status IN ('PENDING', 'PROCESSING') AND NEW.order_status = 'SHIPPING' THEN
+            AND OLD.order_status IN ('PENDING', 'PROCESSING') AND NEW.order_status = 'PENDING_PICKUP' THEN
             allowed := ARRAY['order_status'];
         ELSIF op = 'receive' AND public.order_staff(OLD.export_facility_id)
             AND OLD.order_status = 'WAITING_INTERNAL_TRANSFER' AND NEW.order_status = 'PROCESSING' THEN
@@ -135,7 +144,7 @@ BEGIN
                 OR (NEW.prescription_review_status = 'APPROVED' AND NEW.order_status = OLD.order_status)) THEN
             allowed := ARRAY['prescription_review_status', 'order_status'];
         END IF;
-        IF op IN ('status', 'pack', 'receive') AND NEW.order_status IN ('PROCESSING', 'SHIPPING', 'COMPLETED')
+        IF op IN ('status', 'pack', 'receive') AND NEW.order_status IN ('PROCESSING', 'PENDING_PICKUP', 'PICKED_UP', 'SHIPPING', 'COMPLETED')
             AND coalesce(NEW.prescription_review_status, 'APPROVED') <> 'APPROVED' THEN
             RAISE EXCEPTION 'Prescription approval is required' USING ERRCODE = '42501';
         END IF;
@@ -145,10 +154,22 @@ BEGIN
             allowed := ARRAY['assigned_uids', 'inventory_reserved'];
         ELSIF op IN ('pack', 'receive', 'replace') THEN allowed := ARRAY['assigned_uids', 'inventory_reserved', 'source_facility_id']; END IF;
     ELSIF TG_TABLE_NAME = 'shipments' AND op = 'status' THEN
-        allowed := ARRAY['shipping_status', 'actual_delivery_at', 'updated_at'];
+        allowed := ARRAY['shipping_status', 'picked_up_at', 'actual_delivery_at', 'cod_settlement_status', 'cod_settled_at', 'updated_at'];
+        IF NEW.shipping_status = 'DELIVERED' AND OLD.shipping_status IS DISTINCT FROM NEW.shipping_status THEN
+            RAISE EXCEPTION 'Customer receipt confirmation required' USING ERRCODE = '42501';
+        END IF;
+        IF OLD.shipping_status = 'PENDING_PICKUP' AND NEW.shipping_status = 'PENDING_PICKUP' THEN
+            allowed := allowed || ARRAY['courier_name', 'tracking_number', 'carrier_confirmed_at'];
+        END IF;
     ELSIF TG_TABLE_NAME = 'internal_transfers' THEN
         IF op = 'dispatch' AND OLD.status = 'REQUESTED' AND NEW.status = 'DISPATCHED' THEN
-            allowed := ARRAY['status', 'tracking_code', 'dispatched_at', 'updated_at'];
+            allowed := ARRAY['status', 'tracking_code', 'dispatched_at', 'updated_at', 'transport_mode', 'transport_employee_id', 'transport_employee_name', 'courier_name'];
+            IF NEW.transport_mode IS NULL THEN
+                RAISE EXCEPTION 'Transport method is required' USING ERRCODE = '42501';
+            END IF;
+            IF NEW.transport_mode = 'INTERNAL' AND NOT EXISTS (
+                SELECT FROM public.transfer_transport_staff(OLD.id) e WHERE e.id = NEW.transport_employee_id AND e.full_name = NEW.transport_employee_name
+            ) THEN RAISE EXCEPTION 'Invalid source transport employee' USING ERRCODE = '42501'; END IF;
         ELSIF op = 'receive' AND OLD.status = 'DISPATCHED' AND NEW.status = 'RECEIVED' THEN
             allowed := ARRAY['status', 'received_at', 'updated_at'];
         ELSIF op = 'replace' AND OLD.status IN ('DISPATCHED', 'REJECTED_UNFULFILLED') AND NEW.status IN ('REJECTED_UNFULFILLED', 'REPLACED') THEN
@@ -161,14 +182,8 @@ BEGIN
     END IF;
     RETURN NEW;
 END $$;
-REVOKE ALL ON FUNCTION public.guard_order_write() FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.guard_order_write() TO app_user;
-DO $$ DECLARE t text; BEGIN
-    FOREACH t IN ARRAY ARRAY['orders', 'order_items', 'shipments', 'internal_transfers'] LOOP
-        EXECUTE format('DROP TRIGGER IF EXISTS order_write_guard ON public.%I', t);
-        EXECUTE format('CREATE TRIGGER order_write_guard BEFORE UPDATE ON public.%I FOR EACH ROW EXECUTE FUNCTION public.guard_order_write()', t);
-    END LOOP;
-END $$;
+\ir order_write_guard_trigger.sql
+\endif
 
 DROP POLICY IF EXISTS prescription_order_scope_select ON public.orders;
 DROP POLICY IF EXISTS prescription_order_scope_update ON public.orders;

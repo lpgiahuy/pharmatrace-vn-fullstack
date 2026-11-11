@@ -1404,7 +1404,7 @@ export default function ProductDetailPage({
             </div>
 
             <p className="text-xs text-slate-500 mt-2 leading-relaxed italic m-0">
-              * Price includes applicable taxes. Free delivery for orders over 300.000 ₫.
+              * Price includes applicable taxes. Free delivery for orders from 500.000 ₫.
             </p>
           </div>
           {/* Stock & Category Metadata */}

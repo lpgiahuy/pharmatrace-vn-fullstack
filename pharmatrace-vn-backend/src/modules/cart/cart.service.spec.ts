@@ -20,6 +20,8 @@ describe('CartService', () => {
     price: 50000,
     original_price: 60000,
     discount_percent: 16,
+    sale_start_date: new Date('2000-01-01T00:00:00Z'),
+    sale_end_date: new Date('2100-01-01T00:00:00Z'),
     is_base_unit: true,
     medicine: {
       id: 100,

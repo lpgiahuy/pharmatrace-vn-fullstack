@@ -22,6 +22,7 @@ import { OrderCronService } from "./order-cron.service";
 import { OrderQueryDto } from "./dto/order-query.dto";
 import { UpdateOrderStatusDto } from "./dto/update-order-status.dto";
 import { PackOrderDto } from "./dto/pack-order.dto";
+import { FulfillmentPolicyDto, TransportRequirementDto, WarehouseSellingPharmaciesDto } from './dto/fulfillment-policy.dto';
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../../common/guards/roles.guard";
 import { Roles } from "../../common/decorators/roles.decorator";
@@ -40,6 +41,39 @@ export class AdminOrderController {
     private readonly orderCronService: OrderCronService,
   ) {}
 
+  @Get(':id/resolution')
+  @Roles('SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF', 'ACCOUNTANT', 'FINANCE_MANAGER')
+  async resolution(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.getOrderResolution(id, user) };
+  }
+
+  @Get('fulfillment/policies')
+  @Roles('SUPER_ADMIN', 'STORE_MANAGER')
+  async fulfillmentPolicies(@CurrentUser() user: CurrentUserPayload) {
+    return { success: true, data: await this.orderService.getFulfillmentPolicies(user) };
+  }
+
+  @Post('fulfillment/facilities/:facilityId')
+  @Roles('SUPER_ADMIN', 'STORE_MANAGER')
+  async saveFulfillmentPolicy(@Param('facilityId', ParseIntPipe) id: number, @Body() dto: FulfillmentPolicyDto, @CurrentUser() user: CurrentUserPayload) {
+    await this.orderService.saveFulfillmentPolicy(id, dto, user);
+    return { success: true };
+  }
+
+  @Post('fulfillment/medicines/:medicineId')
+  @Roles('SUPER_ADMIN')
+  async saveTransportRequirement(@Param('medicineId', ParseIntPipe) id: number, @Body() dto: TransportRequirementDto, @CurrentUser() user: CurrentUserPayload) {
+    await this.orderService.saveTransportRequirement(id, dto.condition, user);
+    return { success: true };
+  }
+
+  @Post('fulfillment/warehouses/:facilityId/selling-pharmacies')
+  @Roles('SUPER_ADMIN')
+  async setWarehouseSellingPharmacies(@Param('facilityId', ParseIntPipe) id: number, @Body() dto: WarehouseSellingPharmaciesDto, @CurrentUser() user: CurrentUserPayload) {
+    await this.orderService.setWarehouseSellingPharmacies(id, dto.pharmacyIds, user);
+    return { success: true };
+  }
+
   @Get()
   @Roles(
     "SUPER_ADMIN",
@@ -50,6 +84,8 @@ export class AdminOrderController {
     "Pharmacist",
     "WAREHOUSE_STAFF",
     "WarehouseStaff",
+    "ACCOUNTANT",
+    "FINANCE_MANAGER",
   )
   @ApiOperation({
     summary: "List all orders with status, search and pagination (Admin)",
@@ -70,119 +106,6 @@ export class AdminOrderController {
     };
   }
 
-  @Get("transfers/all")
-  @Roles(
-    "SUPER_ADMIN",
-    "SuperAdmin",
-    "STORE_MANAGER",
-    "StoreManager",
-    "PHARMACIST",
-    "Pharmacist",
-    "WAREHOUSE_STAFF",
-    "WarehouseStaff",
-  )
-  @ApiOperation({
-    summary: "List all inter-facility warehouse transfers (Admin / WMS)",
-  })
-  async getAllInternalTransfers(
-    @CurrentUser() user: CurrentUserPayload,
-    @Query("orderId") orderId?: string,
-  ) {
-    const id = orderId ? Number(orderId) : undefined;
-    const transfers = await this.orderService.adminGetInternalTransfers(
-      id,
-      user,
-    );
-    return {
-      success: true,
-      message: "Internal transfers retrieved successfully",
-      data: transfers,
-    };
-  }
-
-  @Patch("transfers/:transferId/dispatch")
-  @Roles(
-    "SUPER_ADMIN",
-    "SuperAdmin",
-    "STORE_MANAGER",
-    "StoreManager",
-    "WAREHOUSE_STAFF",
-    "WarehouseStaff",
-  )
-  @ApiOperation({
-    summary: "Mark internal transfer as dispatched from source warehouse",
-  })
-  async dispatchInternalTransfer(
-    @CurrentUser() user: CurrentUserPayload,
-    @Param("transferId", ParseIntPipe) transferId: number,
-    @Body("trackingCode") trackingCode?: string,
-  ) {
-    const transfer = await this.orderService.adminDispatchInternalTransfer(
-      transferId,
-      trackingCode,
-      user,
-    );
-    return {
-      success: true,
-      message: "Internal transfer dispatched successfully",
-      data: transfer,
-    };
-  }
-
-  @Patch("transfers/:transferId/receive")
-  @Roles(
-    "SUPER_ADMIN",
-    "SuperAdmin",
-    "STORE_MANAGER",
-    "StoreManager",
-    "WAREHOUSE_STAFF",
-    "WarehouseStaff",
-  )
-  @ApiOperation({
-    summary:
-      "Inspect and receive internal transfer at destination warehouse, updating stock and auto-progressing order",
-  })
-  async receiveInternalTransfer(
-    @CurrentUser() user: CurrentUserPayload,
-    @Param("transferId", ParseIntPipe) transferId: number,
-  ) {
-    const transfer = await this.orderService.adminReceiveInternalTransfer(
-      transferId,
-      user,
-    );
-    return {
-      success: true,
-      message:
-        "Internal transfer received and verified at destination facility. Order state updated.",
-      data: transfer,
-    };
-  }
-
-  @Patch("transfers/:transferId/reject-damaged")
-  @Roles(
-    "SUPER_ADMIN",
-    "SuperAdmin",
-    "STORE_MANAGER",
-    "StoreManager",
-    "WAREHOUSE_STAFF",
-    "WarehouseStaff",
-  )
-  @ApiOperation({ summary: "Reject damaged transfer and reserve replacement stock" })
-  async rejectDamagedInternalTransfer(
-    @CurrentUser() user: CurrentUserPayload,
-    @Param("transferId", ParseIntPipe) transferId: number,
-  ) {
-    const replacement = await this.orderService.adminRejectDamagedInternalTransfer(transferId, user);
-    const replacementCreated = replacement.status === "REQUESTED";
-    return {
-      success: true,
-      message: replacementCreated
-        ? "Damaged transfer rejected and replacement transfer created"
-        : "Damaged transfer recorded; manual replacement or order cancellation is required",
-      data: replacement,
-    };
-  }
-
   @Get(":id")
   @Roles(
     "SUPER_ADMIN",
@@ -193,6 +116,8 @@ export class AdminOrderController {
     "Pharmacist",
     "WAREHOUSE_STAFF",
     "WarehouseStaff",
+    "ACCOUNTANT",
+    "FINANCE_MANAGER",
   )
   @ApiOperation({ summary: "Get full order details by ID (Admin)" })
   @ApiResponse({
@@ -324,16 +249,14 @@ export class AdminOrderController {
   @ApiOperation({
     summary: "Manually trigger loyalty points award cron (Admin)",
     description:
-      "Scans completed orders and awards points for orders older than the return window (default 7 days). Pass ?days=0 for instant testing.",
+      "Scans eligible completed orders after the configured return window.",
   })
   @ApiResponse({
     status: 200,
     description: "Points award process executed successfully",
   })
-  async triggerPointAward(@Query("days") days?: string) {
-    const returnDays = days !== undefined ? Number(days) : undefined;
-    const result =
-      await this.orderCronService.awardPointsForCompletedOrders(returnDays);
+  async triggerPointAward() {
+    const result = await this.orderCronService.awardPointsForCompletedOrders();
     return {
       success: true,
       message: `Point award task completed. Awarded points for ${result.awardedCount} order(s).`,

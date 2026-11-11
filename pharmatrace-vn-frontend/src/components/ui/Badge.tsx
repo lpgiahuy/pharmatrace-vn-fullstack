@@ -63,6 +63,14 @@ export const OrderStatusBadge: React.FC<{
     textColor = 'text-purple-600';
     icon = '◷';
     label = 'Order Prepared';
+  } else if (norm === 'PENDING_PICKUP') {
+    textColor = 'text-amber-600';
+    icon = '◷';
+    label = 'Awaiting Pickup';
+  } else if (norm === 'PICKED_UP') {
+    textColor = 'text-blue-600';
+    icon = '◷';
+    label = 'Handed to Carrier';
   } else if (['SHIPPING', 'IN_TRANSIT'].includes(norm)) {
     textColor = 'text-blue-600';
     icon = '◷';

@@ -18,29 +18,7 @@ export const ORDER_DETAILS_INCLUDE = {
   },
 } as const satisfies Prisma.ordersInclude;
 
-export const AVAILABLE_BOX_STATUSES = [
-  "IN_STOCK",
-  "MANUFACTURED",
-];
-
-export function isBoxUnit(unitName?: string | null): boolean {
-  if (!unitName) return true;
-  const s = unitName.trim().toUpperCase();
-  const knownKeywords = [
-    "BOX",
-    "BLISTER",
-    "BOTTLE",
-    "VIAL",
-    "TUBE",
-    "PACK",
-    "SACHET",
-    "AMPOULE",
-    "PILL",
-    "TABLET",
-    "CAPSULE",
-  ];
-  return knownKeywords.some((kw) => s.includes(kw));
-}
+export { AVAILABLE_BOX_STATUSES, isBoxUnit } from "../../../common/inventory/box.helper";
 
 export function normalizeOrderStatus(status?: string | null): string {
   if (!status) return "PENDING";
@@ -61,6 +39,8 @@ export const STATUS_DB_MAPPINGS: Record<string, string[]> = {
   PENDING: ["PENDING"],
   WAITING_INTERNAL_TRANSFER: ["WAITING_INTERNAL_TRANSFER", "WAITING_TRANSFER"],
   PROCESSING: ["PROCESSING"],
+  PENDING_PICKUP: ["PENDING_PICKUP"],
+  PICKED_UP: ["PICKED_UP"],
   SHIPPING: ["SHIPPING", "IN_TRANSIT"],
   COMPLETED: ["COMPLETED", "DELIVERED"],
   CANCELLED: ["CANCELLED", "CANCELED"],
@@ -91,6 +71,49 @@ export async function releaseOrderReservations(
   orderId: number,
   facilityId: number | null,
 ): Promise<void> {
+  const getTransfers = async () => {
+    if (tx.internal_transfers?.findMany) {
+      return await tx.internal_transfers.findMany({ where: { order_id: orderId } });
+    }
+    if (tx.internal_transfers?.findFirst) {
+      const single = await tx.internal_transfers.findFirst({ where: { order_id: orderId } });
+      return single ? [single] : [];
+    }
+    return [];
+  };
+
+  const transfers = await getTransfers();
+  const dispatchedTransfers = transfers.filter((t: any) => ["DISPATCHED", "RETURN_REQUESTED"].includes(t.status));
+  const requestedTransfers = transfers.filter((t: any) => t.status === "REQUESTED");
+
+  for (const dt of dispatchedTransfers) {
+    if (dt.status === "RETURN_REQUESTED") continue;
+    if (tx.internal_transfers?.update) {
+      await tx.internal_transfers.update({
+        where: { id: dt.id },
+        data: {
+          status: "RETURN_REQUESTED",
+          return_reason: "Order cancelled while transfer was in transit. Goods must return to source for inspection.",
+          notes: `Order cancelled. Goods in transit must return to facility #${dt.from_facility_id} for physical inspection.`,
+          updated_at: new Date(),
+        },
+      });
+    }
+  }
+
+  if (requestedTransfers.length > 0 && tx.internal_transfers?.updateMany) {
+    await tx.internal_transfers.updateMany({
+      where: { id: { in: requestedTransfers.map((t: any) => t.id) } },
+      data: {
+        status: "CANCELLED",
+        notes: "Cancelled before dispatch due to order cancellation",
+        updated_at: new Date(),
+      },
+    });
+  }
+
+  const dispatchedSourceFacilities = new Set(dispatchedTransfers.map((t: any) => t.from_facility_id));
+
   const reservedItems = await tx.order_items.findMany({
     where: { order_id: orderId, inventory_reserved: true },
     select: {
@@ -107,6 +130,10 @@ export async function releaseOrderReservations(
     const targetFacilityId = item.source_facility_id ?? facilityId;
     if (!targetFacilityId) continue;
 
+    if (dispatchedSourceFacilities.has(targetFacilityId)) {
+      continue;
+    }
+
     const releasedInventoryRows = await tx.$executeRaw`
         UPDATE "inventories"
         SET "reserved_quantity" = COALESCE("reserved_quantity", 0) - ${item.quantity},
@@ -116,7 +143,7 @@ export async function releaseOrderReservations(
           AND COALESCE("reserved_quantity", 0) >= ${item.quantity}
       `;
     if (releasedInventoryRows !== 1) {
-      throw new BadRequestException("The order inventory reservation is inconsistent and could not be released.",);
+      throw new BadRequestException("The order inventory reservation is inconsistent and could not be released.");
     }
 
     if (item.assigned_uids.length > 0) {
@@ -130,28 +157,19 @@ export async function releaseOrderReservations(
       });
     }
 
-    await tx.order_items.update({
-      where: { id: item.id },
-      data: {
-        inventory_reserved: false,
-        assigned_uids: [],
-      },
-    });
+    if (tx.order_items?.update) {
+      await tx.order_items.update({
+        where: { id: item.id },
+        data: {
+          inventory_reserved: false,
+          assigned_uids: [],
+        },
+      });
+    }
   }
-
-  await tx.internal_transfers.updateMany({
-    where: {
-      order_id: orderId,
-      status: { notIn: ["RECEIVED", "CANCELLED"] },
-    },
-    data: {
-      status: "CANCELLED",
-      notes: "Cancelled automatically due to order cancellation",
-    },
-  });
 }
 
-export function formatOrder(order: any) {
+export function formatOrder(order: any, cancellationReason?: string | null) {
   const voucherDiscount = Number(order.discount_amount || 0);
   const usedPoints = Number(order.used_points || 0);
 
@@ -162,8 +180,22 @@ export function formatOrder(order: any) {
       courierName: order.shipments.courier_name,
       shippingStatus: order.shipments.shipping_status,
       codAmount: Number(order.shipments.cod_amount || 0),
+      codSettlementStatus: order.shipments.cod_settlement_status,
+      codSettledAt: order.shipments.cod_settled_at,
       shippedAt: order.shipments.shipped_at,
       deliveredAt: order.shipments.delivered_at,
+      actualDeliveryAt: order.shipments.actual_delivery_at,
+      proofType: order.shipments.proof_type,
+      proofReference: order.shipments.proof_reference,
+      deliveredToName: order.shipments.delivered_to_name,
+      deliveryNotes: order.shipments.delivery_notes,
+      returnCategory: order.shipments.return_category,
+      returnReason: order.shipments.return_reason,
+      returnQaStatus: order.shipments.return_qa_status,
+      returnQaNotes: order.shipments.return_qa_notes,
+      returnDisposition: order.shipments.return_disposition,
+      returnReceivedAt: order.shipments.return_received_at,
+      returnDisposedAt: order.shipments.return_disposed_at,
       createdAt: order.shipments.created_at,
     }
     : undefined;
@@ -216,6 +248,10 @@ export function formatOrder(order: any) {
     distanceKm: Number(t.distance_km || 0),
     estimatedHours: t.estimated_hours,
     notes: t.notes,
+    varianceDetails: t.variance_details,
+    returnReason: t.return_reason,
+    returnedAt: t.returned_at,
+    discrepancyStatus: t.discrepancy_status,
     dispatchedAt: t.dispatched_at,
     receivedAt: t.received_at,
     createdAt: t.created_at,
@@ -261,7 +297,14 @@ export function formatOrder(order: any) {
     shippingAddress: order.shipping_address,
     recipientName: order.recipient_name,
     recipientPhone: order.recipient_phone,
-    note: order.note,
+    note: (() => {
+      const resolved = cancellationReason ?? order.cancellationReason ?? order.cancellation_reason ?? null;
+      if (order.order_status === 'CANCELLED' && resolved && order.note?.trim() === resolved.trim()) {
+        return null; // legacy bug where cancellation reason was saved into order.note
+      }
+      return order.note ?? null;
+    })(),
+    cancellationReason: cancellationReason ?? order.cancellationReason ?? order.cancellation_reason ?? null,
     createdAt: order.created_at,
     customer: order.customers
       ? {

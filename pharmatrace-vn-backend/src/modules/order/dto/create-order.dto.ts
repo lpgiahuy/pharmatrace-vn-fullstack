@@ -5,6 +5,7 @@ import {
   IsIn,
   Min,
   IsInt,
+  IsNumber,
   IsArray,
   ArrayMinSize,
   ValidateNested,
@@ -29,6 +30,17 @@ export class OrderItemDto {
 }
 
 export class CreateOrderDto {
+  @IsOptional() @IsNumber() @Min(0)
+  expectedTotalAmount?: number;
+
+  @IsOptional() @IsNumber() @Min(0)
+  expectedShippingFee?: number;
+
+  @IsOptional() @IsInt() @Min(1)
+  expectedFacilityId?: number;
+
+  @IsOptional() @IsString() @MaxLength(64)
+  expectedPlanHash?: string;
   @ApiProperty({
     type: [OrderItemDto],
     description: 'List of specific items to order',

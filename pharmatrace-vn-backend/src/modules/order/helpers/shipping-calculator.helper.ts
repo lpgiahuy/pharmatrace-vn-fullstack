@@ -1,5 +1,6 @@
 export const FREE_SHIPPING_THRESHOLD = 500000;
 export const DEFAULT_SHIPPING_FEE = 30000;
+export const MAX_SERVICEABLE_DISTANCE_KM = 2500;
 
 export interface GeoCoordinates {
   latitude: number;
@@ -12,6 +13,12 @@ export interface RoutingResult {
   distanceKm: number;
   shippingFee: number;
   isFreeShipping: boolean;
+}
+
+export interface DeliveryEstimate {
+  estimatedHours: number;
+  label: string;
+  isServiceable: boolean;
 }
 
 export function calculateHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -59,4 +66,43 @@ export function calculateShippingFeeByDistance(distanceKm: number, subtotal: num
   }
 }
 
+export function calculateEstimatedDelivery(distanceKm: number | null, isConsolidated: boolean): DeliveryEstimate {
+  if (distanceKm !== null && distanceKm > MAX_SERVICEABLE_DISTANCE_KM) {
+    return {
+      estimatedHours: 0,
+      label: 'Address is outside delivery coverage area',
+      isServiceable: false,
+    };
+  }
 
+  let baseHours = 24;
+  if (distanceKm !== null && distanceKm <= 15) {
+    baseHours = 4;
+  } else if (distanceKm !== null && distanceKm <= 60) {
+    baseHours = 24;
+  } else {
+    baseHours = 48;
+  }
+
+  const totalHours = isConsolidated ? baseHours + 24 : baseHours;
+  let label = '';
+  if (isConsolidated) {
+    label = baseHours === 4
+      ? 'Estimated 26-28 hours (includes 24 hours for consolidation)'
+      : baseHours === 24
+        ? 'Estimated 2 days (includes 24 hours for consolidation)'
+        : 'Estimated 3-4 days (includes 24 hours for consolidation)';
+  } else if (baseHours <= 4) {
+    label = 'Estimated same-day delivery (2-4 hours)';
+  } else if (baseHours <= 24) {
+    label = 'Estimated 1 day';
+  } else {
+    label = 'Estimated 2-3 days';
+  }
+
+  return {
+    estimatedHours: totalHours,
+    label,
+    isServiceable: true,
+  };
+}

@@ -11428,4 +11428,21 @@ BEGIN
 END
 $$;
 
+-- Development-only fulfillment settings; these are not approved production transport requirements.
+DO $$
+DECLARE actor integer; pharmacy integer;
+BEGIN
+  SELECT id INTO STRICT actor FROM public.employees WHERE role='SUPER_ADMIN' ORDER BY id LIMIT 1;
+  SELECT id INTO STRICT pharmacy FROM public.facilities WHERE facility_type='PHARMACY' ORDER BY id LIMIT 1;
+  INSERT INTO public.warehouse_selling_pharmacies(warehouse_id,pharmacy_id,updated_by)
+    SELECT id,pharmacy,actor FROM public.facilities WHERE facility_type IN ('CENTRAL_WAREHOUSE','BRANCH_WAREHOUSE');
+  INSERT INTO public.facility_fulfillment_policy(facility_id,selling_facility_id,enabled,opens_minute,closes_minute,
+    weekdays,daily_capacity,radius_km,transport_conditions,updated_by)
+    SELECT id,CASE WHEN facility_type='PHARMACY' THEN id ELSE pharmacy END,true,0,1440,
+      ARRAY[0,1,2,3,4,5,6],1000,100,ARRAY['APPROVED_STANDARD'],actor
+    FROM public.facilities WHERE facility_type IN ('CENTRAL_WAREHOUSE','BRANCH_WAREHOUSE','PHARMACY');
+  INSERT INTO public.medicine_transport_requirements(medicine_id,condition,updated_by)
+    SELECT id,'APPROVED_STANDARD',actor FROM public.medicines;
+END $$;
+
 COMMIT;

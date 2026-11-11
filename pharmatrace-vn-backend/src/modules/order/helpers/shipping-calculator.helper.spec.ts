@@ -1,11 +1,28 @@
 import {
   calculateHaversineDistance,
   calculateShippingFeeByDistance,
+  calculateEstimatedDelivery,
   FREE_SHIPPING_THRESHOLD,
   DEFAULT_SHIPPING_FEE,
 } from './shipping-calculator.helper';
 
 describe('Shipping Calculator Helper', () => {
+  describe('calculateEstimatedDelivery', () => {
+    it.each([
+      [15, false, 4, 'Estimated same-day delivery (2-4 hours)'],
+      [15, true, 28, 'Estimated 26-28 hours (includes 24 hours for consolidation)'],
+      [30, false, 24, 'Estimated 1 day'],
+      [100, false, 48, 'Estimated 2-3 days'],
+      [60, true, 48, 'Estimated 2 days (includes 24 hours for consolidation)'],
+      [61, true, 72, 'Estimated 3-4 days (includes 24 hours for consolidation)'],
+    ])('estimates %s km with consolidation %s', (distance, consolidated, hours, label) => {
+      expect(calculateEstimatedDelivery(distance, consolidated)).toEqual({ estimatedHours: hours, label, isServiceable: true });
+    });
+
+    it('rejects distances beyond coverage', () => {
+      expect(calculateEstimatedDelivery(2501, false).isServiceable).toBe(false);
+    });
+  });
   describe('calculateHaversineDistance', () => {
     it('should return 0 when two points are identical', () => {
       const lat = 10.7769;

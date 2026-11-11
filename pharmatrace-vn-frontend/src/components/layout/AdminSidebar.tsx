@@ -71,6 +71,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       label: 'Vouchers & Promos',
     },
     ...(canManageStaff
+      ? [{ key: '/admin/logistics/policies', icon: <ShoppingOutlined style={{ fontSize: 16 }} />, label: 'Delivery policies' }]
+      : []),
+    ...(canManageStaff
       ? [
           {
             key: '/admin/staff',

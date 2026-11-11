@@ -60,6 +60,8 @@ export type OrderStatus =
   | 'PENDING'
   | 'WAITING_INTERNAL_TRANSFER'
   | 'PROCESSING'
+  | 'PENDING_PICKUP'
+  | 'PICKED_UP'
   | 'SHIPPING'
   | 'COMPLETED'
   | 'CANCELLED'
@@ -77,6 +79,8 @@ export function formatOrderStatus(status?: string): OrderStatus {
     return 'WAITING_INTERNAL_TRANSFER';
   }
   if (['PROCESSING'].includes(s)) return 'PROCESSING';
+  if (s === 'PENDING_PICKUP') return 'PENDING_PICKUP';
+  if (s === 'PICKED_UP') return 'PICKED_UP';
   if (['SHIPPING', 'IN_TRANSIT'].includes(s)) return 'SHIPPING';
   if (['COMPLETED', 'DELIVERED'].includes(s)) return 'COMPLETED';
   if (['CANCELLED', 'CANCELED'].includes(s)) return 'CANCELLED';
@@ -93,6 +97,10 @@ export function formatOrderStatusLabel(status?: string): string {
       return 'Waiting Internal Transfer (Consolidating)';
     case 'PROCESSING':
       return 'Processing';
+    case 'PENDING_PICKUP':
+      return 'Awaiting Pickup';
+    case 'PICKED_UP':
+      return 'Handed to Carrier';
     case 'SHIPPING':
       return 'In Transit';
     case 'COMPLETED':
@@ -132,7 +140,7 @@ export interface InternalTransfer {
   fromFacilityName?: string;
   toFacilityId: number;
   toFacilityName?: string;
-  status: 'REQUESTED' | 'CONFIRMED' | 'DISPATCHED' | 'RECEIVED' | 'CANCELLED' | 'REPLACED' | 'REJECTED_UNFULFILLED';
+  status: 'REQUESTED' | 'CONFIRMED' | 'DISPATCHED' | 'RECEIVED' | 'RECEIVED_WITH_DISCREPANCY' | 'RETURN_REQUESTED' | 'RETURNED_TO_SOURCE' | 'CANCELLED' | 'REPLACED' | 'REJECTED_UNFULFILLED';
   items: Array<{
     variantId: number;
     medicineId: number;
@@ -188,6 +196,7 @@ export interface Order {
   recipientName: string;
   recipientPhone: string;
   note?: string | null;
+  cancellationReason?: string | null;
   createdAt: string;
   updatedAt: string;
   customer?: {
@@ -230,6 +239,10 @@ export interface CreateOrderItemDto {
 }
 
 export interface CreateOrderDto {
+  expectedTotalAmount?: number;
+  expectedShippingFee?: number;
+  expectedFacilityId?: number;
+  expectedPlanHash?: string;
   shippingAddress: string;
   latitude?: number;
   longitude?: number;
@@ -287,6 +300,9 @@ export interface AvailableBoxInfo {
 }
 
 export const orderService = {
+  quoteOrder: async (dto: CreateOrderDto): Promise<{ success: boolean; data: { subtotalAmount: number; shippingFee: number; totalAmount: number; facilityId: number; facilityName: string; sellingFacilityId: number; sellingFacilityName: string; estimatedDeliveryLabel: string; planHash: string; transferPlan: Array<{ fromFacilityName: string; items: Array<{ medicineName: string; quantity: number; unitName: string }> }> } }> => {
+    return apiClient.post('/orders/quote', dto);
+  },
   // Customer: Place an order
   createOrder: async (dto: CreateOrderDto): Promise<SingleOrderResponse> => {
     return apiClient.post('/orders', dto);
@@ -303,9 +319,11 @@ export const orderService = {
   },
 
   // Customer: Cancel pending order
-  cancelMyOrder: async (id: number): Promise<SingleOrderResponse> => {
-    return apiClient.patch(`/orders/${id}/cancel`);
+  cancelMyOrder: async (id: number, reasonCode: 'CHANGED_MIND' | 'ADDRESS_CHANGE' | 'OTHER', reasonDetails?: string): Promise<SingleOrderResponse> => {
+    return apiClient.patch(`/orders/${id}/cancel`, { reasonCode, reasonDetails });
   },
+
+
 
   // Admin: Get all orders
   adminGetOrders: async (params?: OrderQueryDto): Promise<OrderListResponse> => {
@@ -378,22 +396,5 @@ export const orderService = {
     }
   },
 
-  // Inter-facility transfer management
-  getAllInternalTransfers: async (orderId?: number) => {
-    const url = orderId ? `/admin/orders/transfers/all?orderId=${orderId}` : '/admin/orders/transfers/all';
-    return apiClient.get(url);
-  },
-
-  dispatchInternalTransfer: async (transferId: number, trackingCode?: string) => {
-    return apiClient.patch(`/admin/orders/transfers/${transferId}/dispatch`, { trackingCode });
-  },
-
-  receiveInternalTransfer: async (transferId: number) => {
-    return apiClient.patch(`/admin/orders/transfers/${transferId}/receive`);
-  },
-
-  rejectDamagedInternalTransfer: async (transferId: number) => {
-    return apiClient.patch(`/admin/orders/transfers/${transferId}/reject-damaged`);
-  },
 };
 

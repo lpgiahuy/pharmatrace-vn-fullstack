@@ -15,7 +15,6 @@ import {
   ArrowLeft,
   Tag,
   AlertCircle,
-  Clock,
   MapPin,
   Phone,
   User,
@@ -40,7 +39,7 @@ import { formatCurrency } from '@/utils';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { message } = App.useApp();
+  const { message, modal } = App.useApp();
   const { user, isAuthenticated, isLoading: authLoading, fetchProfile } = useAuth();
 
   const mounted = useHydrated();
@@ -72,6 +71,29 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [prescriptionId, setPrescriptionId] = useState<number | null>(null);
+
+  // Delivery quote state (real-time calculated from warehouse distance and inventory)
+  interface DeliveryQuote {
+    subtotalAmount: number;
+    shippingFee: number;
+    totalAmount: number;
+    facilityId: number;
+    facilityName: string;
+    sellingFacilityId: number;
+    sellingFacilityName: string;
+    estimatedDeliveryLabel: string;
+    planHash: string;
+    transferPlan: Array<{
+      fromFacilityName: string;
+      items: Array<{
+        medicineName: string;
+        quantity: number;
+        unitName: string;
+      }>;
+    }>;
+  }
+  const [deliveryQuote, setDeliveryQuote] = useState<DeliveryQuote | null>(null);
+  const [quoteLoading, setQuoteLoading] = useState(false);
 
   // Fresh user profile fetch on mount to ensure real-time reward points
   useEffect(() => {
@@ -111,7 +133,8 @@ export default function CheckoutPage() {
 
   const FREE_SHIPPING_THRESHOLD = 500000;
   const STANDARD_SHIPPING_FEE = 30000;
-  const shippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : STANDARD_SHIPPING_FEE;
+  const fallbackShippingFee = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : STANDARD_SHIPPING_FEE;
+  const shippingFee = deliveryQuote !== null ? deliveryQuote.shippingFee : fallbackShippingFee;
 
   // Voucher discount calculation
   const voucherDiscount = useMemo(() => {
@@ -145,6 +168,92 @@ export default function CheckoutPage() {
   const pointsDiscount = effectivePointsToUse;
 
   const totalAmount = Math.max(0, subtotal + shippingFee - voucherDiscount - pointsDiscount);
+
+  // Automatically fetch real delivery quote when address/coords or order items change
+  useEffect(() => {
+    let isMounted = true;
+    const timer = setTimeout(async () => {
+      if (!isAuthenticated || selectedItems.length === 0) {
+        if (isMounted) setDeliveryQuote(null);
+        return;
+      }
+
+      const trimmedAddress = shippingAddress.trim();
+      if (!trimmedAddress || trimmedAddress.length < 6) {
+        if (isMounted) setDeliveryQuote(null);
+        return;
+      }
+
+      if (needsPrescription && !prescriptionId) {
+        if (isMounted) setDeliveryQuote(null);
+        return;
+      }
+
+      const orderItems = selectedItems
+        .filter((i) => i.variantId)
+        .map((i) => ({
+          variantId: Number(i.variantId),
+          quantity: i.quantity,
+        }));
+
+      if (orderItems.length === 0) {
+        if (isMounted) setDeliveryQuote(null);
+        return;
+      }
+
+      setQuoteLoading(true);
+      try {
+        const orderRequest = {
+          shippingAddress: trimmedAddress,
+          latitude: deliveryCoords?.latitude,
+          longitude: deliveryCoords?.longitude,
+          recipientName: recipientName.trim() || user?.fullName || user?.name || 'Customer',
+          recipientPhone: recipientPhone.trim() || user?.phone || '0901234567',
+          paymentMethod,
+          voucherCode: appliedVoucher?.voucherCode || undefined,
+          usedPoints: useLoyaltyPoints && effectivePointsToUse > 0 ? effectivePointsToUse : undefined,
+          note: note.trim() || undefined,
+          prescriptionId: prescriptionId || undefined,
+          items: orderItems,
+        };
+
+        const res = await orderService.quoteOrder(orderRequest);
+        if (isMounted && res?.success && res?.data) {
+          setDeliveryQuote(res.data);
+        }
+      } catch {
+        if (isMounted) {
+          setDeliveryQuote(null);
+        }
+      } finally {
+        if (isMounted) {
+          setQuoteLoading(false);
+        }
+      }
+    }, 300);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [
+    isAuthenticated,
+    shippingAddress,
+    deliveryCoords,
+    selectedItems,
+    appliedVoucher?.voucherCode,
+    useLoyaltyPoints,
+    effectivePointsToUse,
+    prescriptionId,
+    needsPrescription,
+    paymentMethod,
+    recipientName,
+    recipientPhone,
+    note,
+    user?.fullName,
+    user?.name,
+    user?.phone,
+  ]);
 
   // Loyalty points handlers
   const handleToggleLoyaltyPoints = (checked: boolean) => {
@@ -250,7 +359,7 @@ export default function CheckoutPage() {
 
     setSubmitting(true);
     try {
-      const res = await orderService.createOrder({
+      const orderRequest = {
         shippingAddress: shippingAddress.trim(),
         latitude: deliveryCoords?.latitude,
         longitude: deliveryCoords?.longitude,
@@ -262,7 +371,34 @@ export default function CheckoutPage() {
         note: note.trim() || undefined,
         prescriptionId: prescriptionId || undefined,
         items: orderItems,
+      };
+      const quote = await orderService.quoteOrder(orderRequest);
+      setDeliveryQuote(quote.data);
+      const accepted = await new Promise<boolean>((resolve) => {
+        modal.confirm({
+          title: 'Confirm delivery quote',
+          content: (
+            <div className="space-y-2 text-sm pt-2">
+              <p>
+                Selling pharmacy: {quote.data.sellingFacilityName}. Dispatch: {quote.data.facilityName}. {quote.data.estimatedDeliveryLabel}.
+              </p>
+              <p>
+                Shipping: {formatCurrency(quote.data.shippingFee)}. Total: {formatCurrency(quote.data.totalAmount)}.
+              </p>
+              {quote.data.transferPlan.map((transfer) => (
+                <p key={transfer.fromFacilityName} className="text-xs text-amber-700 bg-amber-50 p-2 rounded border border-amber-200">
+                  Consolidate from {transfer.fromFacilityName}: {transfer.items.map((item) => `${item.medicineName} (${item.quantity} ${item.unitName})`).join(', ')}
+                </p>
+              ))}
+            </div>
+          ),
+          okText: 'Place Order',
+          onOk: () => resolve(true),
+          onCancel: () => resolve(false),
+        });
       });
+      if (!accepted) return;
+      const res = await orderService.createOrder({ ...orderRequest, expectedTotalAmount: quote.data.totalAmount, expectedShippingFee: quote.data.shippingFee, expectedFacilityId: quote.data.facilityId, expectedPlanHash: quote.data.planHash });
 
       if (res?.success && res?.data) {
         message.success('Order placed successfully.');
@@ -455,6 +591,12 @@ export default function CheckoutPage() {
                         className="w-full pl-9 pr-3 py-2 text-sm rounded-md border border-gray-300 focus:border-[#004996] focus:ring-1 focus:ring-[#004996] outline-none transition-colors resize-none"
                       />
                     </div>
+                    {deliveryCoords && (
+                      <div className="flex items-center gap-1.5 text-[11px] text-emerald-700 mt-1.5 font-medium">
+                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                        <span>Delivery coordinates confirmed from map</span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Delivery Note */}
@@ -793,8 +935,11 @@ export default function CheckoutPage() {
                     <span className="font-medium text-gray-900">{formatCurrency(subtotal)}</span>
                   </div>
 
-                  <div className="flex justify-between text-gray-600">
-                    <span>Shipping Fee</span>
+                  <div className="flex justify-between text-gray-600 items-center">
+                    <span className="flex items-center gap-1.5">
+                      <span>{deliveryQuote ? 'Shipping Fee' : 'Estimated Shipping Fee'}</span>
+                      {quoteLoading && <Loader2 className="w-3.5 h-3.5 animate-spin text-gray-400" />}
+                    </span>
                     <span className="font-medium text-gray-900">
                       {shippingFee === 0 ? (
                         <span className="text-[#15803d] font-semibold">FREE</span>

@@ -35,6 +35,19 @@ BEGIN
     END LOOP;
     RAISE NOTICE 'PASS all 34 application table row counts';
 
+    IF (SELECT count(*) FROM public.facility_fulfillment_policy) <> 14
+        OR (SELECT count(*) FROM public.medicine_transport_requirements) <> 543
+        OR (SELECT count(*) FROM public.warehouse_selling_pharmacies) <> 2
+        OR EXISTS (SELECT FROM public.facility_fulfillment_policy p
+            WHERE NOT public.valid_selling_pharmacy(p.facility_id,p.selling_facility_id)
+                OR NOT p.enabled OR p.opens_minute<>0 OR p.closes_minute<>1440
+                OR p.weekdays<>ARRAY[0,1,2,3,4,5,6] OR p.daily_capacity<>1000 OR p.radius_km<>100
+                OR p.transport_conditions<>ARRAY['APPROVED_STANDARD'])
+        OR EXISTS (SELECT FROM public.medicine_transport_requirements WHERE condition<>'APPROVED_STANDARD') THEN
+        RAISE EXCEPTION 'Development fulfillment configuration is incomplete or invalid';
+    END IF;
+    RAISE NOTICE 'PASS development fulfillment policies, warehouse links and medicine classifications';
+
     IF to_regclass('public._prisma_migrations') IS NOT NULL
         OR to_regclass('public.medicines_backup_before_m2m') IS NOT NULL
         OR to_regclass('public.medicines_category_id_backup_v2') IS NOT NULL THEN

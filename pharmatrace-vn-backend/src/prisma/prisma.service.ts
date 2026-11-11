@@ -6,7 +6,7 @@ import { AuthActor, authActor } from '../common/auth-identity';
 
 export type ReviewScope = 'public' | 'customer' | 'staff' | 'moderator' | 'helpful';
 export type VoucherScope = 'validate' | 'read' | 'manage';
-export type OrderOperation = 'read' | 'checkout' | 'cancel' | 'status' | 'pack' | 'transfer_read' | 'dispatch' | 'receive' | 'replace' | 'prescription' | 'loyalty';
+export type OrderOperation = 'read' | 'checkout' | 'cancel' | 'customer_receive' | 'status' | 'pack' | 'transfer_read' | 'dispatch' | 'receive' | 'replace' | 'prescription' | 'loyalty';
 
 export interface AuthContext {
   actor?: AuthActor;
@@ -211,8 +211,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   async withOrder<T>(operation: OrderOperation, run: (tx: Prisma.TransactionClient) => Promise<T>, identity?: AuthActor): Promise<T> {
     const actor = identity ? authActor(identity) : undefined;
     const roles: Record<OrderOperation, string[]> = {
-      read: ['CUSTOMER', 'SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
-      checkout: ['CUSTOMER'], cancel: ['CUSTOMER'],
+      read: ['CUSTOMER', 'SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF', 'ACCOUNTANT', 'FINANCE_MANAGER'],
+      checkout: ['CUSTOMER'], cancel: ['CUSTOMER'], customer_receive: ['CUSTOMER'],
       status: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST'],
       pack: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
       transfer_read: ['SUPER_ADMIN', 'STORE_MANAGER', 'PHARMACIST', 'WAREHOUSE_STAFF'],
@@ -224,7 +224,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     if (!roles[operation] || (operation === 'loyalty' ? !!actor : !actor || !roles[operation].includes(actor.role))) {
       throw new ForbiddenException('Invalid order access scope');
     }
-    if (actor?.type === 'employee' && actor.role !== 'SUPER_ADMIN' && (!Number.isInteger(actor.facilityId) || Number(actor.facilityId) <= 0)) {
+    if (actor?.type === 'employee' && !['SUPER_ADMIN', 'ACCOUNTANT', 'FINANCE_MANAGER'].includes(actor.role) && (!Number.isInteger(actor.facilityId) || Number(actor.facilityId) <= 0)) {
       throw new ForbiddenException('Staff account is not assigned to a facility.');
     }
     return this.$transaction(async tx => {

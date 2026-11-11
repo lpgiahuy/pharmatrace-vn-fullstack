@@ -36,6 +36,7 @@ import {
 import { OrderStatusBadge } from '@/components/ui/Badge';
 import { formatCurrency, formatDateTime } from '@/utils';
 import { OrderPackingModal } from '@/components/shared/OrderPackingModal';
+import { OrderResolution } from '@/components/logistics/OrderResolution';
 import { useAuthStore } from '@/store/useAuthStore';
 import styles from './page.module.css';
 
@@ -47,7 +48,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
   const resolvedParams = use(params);
   const orderId = Number(resolvedParams.id);
   const router = useRouter();
-  const { message, modal } = App.useApp();
+  const { message } = App.useApp();
 
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -89,83 +90,12 @@ export default function AdminOrderDetailPage({ params }: Props) {
     return () => { active = false; clearTimeout(timer); };
   }, [orderId, message]);
 
-  const handleShip = async () => {
-    if (!order) return;
-    setUpdating(true);
-    try {
-      await orderService.shipOrder(order.id);
-      message.success('Delivery started.');
-      const updated = await orderService.getAdminById(order.id);
-      setOrder(updated);
-    } catch (err) {
-      message.error(err instanceof Error ? err.message : 'Failed to start delivery');
-    } finally {
-      setUpdating(false);
-    }
+  const handleDispatchTransfer = () => {
+    router.push('/admin/logistics/transfers');
   };
 
-  const handleComplete = async () => {
-    if (!order) return;
-    setUpdating(true);
-    try {
-      await orderService.completeOrder(order.id);
-      message.success('Order delivery confirmed complete.');
-      const updated = await orderService.getAdminById(order.id);
-      setOrder(updated);
-    } catch (err) {
-      message.error(err instanceof Error ? err.message : 'Failed to complete order');
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const handleDispatchTransfer = async (transferId: number) => {
-    setUpdating(true);
-    try {
-      await orderService.dispatchInternalTransfer(transferId);
-      message.success('Internal transfer marked as dispatched.');
-      const updated = await orderService.getAdminById(orderId);
-      setOrder(updated);
-    } catch (err) {
-      message.error(err instanceof Error ? err.message : 'Failed to dispatch transfer');
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const handleReceiveTransfer = async (transferId: number) => {
-    setUpdating(true);
-    try {
-      await orderService.receiveInternalTransfer(transferId);
-      message.success('Internal transfer received! Stock transferred to export hub.');
-      const updated = await orderService.getAdminById(orderId);
-      setOrder(updated);
-    } catch (err) {
-      message.error(err instanceof Error ? err.message : 'Failed to receive transfer');
-    } finally {
-      setUpdating(false);
-    }
-  };
-
-  const handleRejectDamagedTransfer = (transferId: number) => {
-    modal.confirm({
-      title: 'Reject damaged shipment?',
-      content: 'The damaged stock will be removed from available inventory. If the source has enough stock, a replacement transfer will be created automatically; otherwise the order will stay on hold for a manager to choose another warehouse or cancel it.',
-      okText: 'Reject and replace',
-      okButtonProps: { danger: true },
-      async onOk() {
-        setUpdating(true);
-        try {
-          await orderService.rejectDamagedInternalTransfer(transferId);
-          message.success('Damaged shipment recorded. Check the transfer status for the next action.');
-          setOrder(await orderService.getAdminById(orderId));
-        } catch (err) {
-          message.error(err instanceof Error ? err.message : 'Failed to replace damaged transfer');
-        } finally {
-          setUpdating(false);
-        }
-      },
-    });
+  const handleReceiveTransfer = (transferId: number) => {
+    router.push(`/admin/logistics/transfers?transferId=${transferId}`);
   };
 
   const handleOpenDetailModal = async () => {
@@ -262,7 +192,8 @@ export default function AdminOrderDetailPage({ params }: Props) {
   const items = getOrderItems(order);
   const itemsCount = getOrderItemCount(order);
   const normStatus = (order.orderStatus || '').toUpperCase();
-  const canPack = ['PENDING', 'PROCESSING'].includes(normStatus) && (!order.prescriptionReviewStatus || order.prescriptionReviewStatus === 'APPROVED');
+  const financeRole = (currentUser?.role || '').toUpperCase();
+  const canPack = !['ACCOUNTANT', 'FINANCE_MANAGER'].includes(financeRole) && ['PENDING', 'PROCESSING'].includes(normStatus) && (!order.prescriptionReviewStatus || order.prescriptionReviewStatus === 'APPROVED');
   const rxItems = items.filter((item) => item.medicine?.isPrescription);
   const hasPrescription = Boolean(order.prescriptionReview || order.prescriptionId || order.prescriptionReviewStatus || rxItems.length > 0);
   const rxStatus = order.prescriptionReview?.status || order.prescriptionReviewStatus || (hasPrescription ? 'PENDING_APPROVAL' : null);
@@ -279,8 +210,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
         </div>
         <div className={styles.actions}>
           {canPack && <AButton type="primary" icon={<ScanOutlined aria-hidden />} onClick={() => setFulfillOpen(true)}>Pack & scan QR</AButton>}
-          {(normStatus === 'PROCESSING' || normStatus === 'DADONGGOI') && <AButton loading={updating} onClick={handleShip}>Start delivery</AButton>}
-          {(normStatus === 'SHIPPING' || normStatus === 'DANGGIAO') && <AButton type="primary" loading={updating} onClick={handleComplete}>Confirm delivery</AButton>}
+          {normStatus === 'SHIPPING' && <span className="text-sm text-slate-600">Waiting for customer receipt confirmation</span>}
         </div>
       </header>
 
@@ -346,7 +276,12 @@ export default function AdminOrderDetailPage({ params }: Props) {
             <h2>Dispatch warehouse</h2>
             <p>{order.exportFacility?.facilityName || items[0]?.sourceFacilityName || 'Not assigned'}</p>
           </section>
-          {order.note && <section><h2>Order note</h2><p>{order.note}</p></section>}
+          {order.note && order.note !== order.cancellationReason && (
+            <section>
+              <h2>Customer delivery note</h2>
+              <p>{order.note}</p>
+            </section>
+          )}
         </aside>
       </div>
 
@@ -428,7 +363,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
                   icon={<EyeOutlined />}
                   loading={imageLoading}
                   onClick={handleOpenDetailModal}
-                  className="!text-xs !font-medium !text-slate-700 hover:!text-[#004996] hover:!border-[#004996] !rounded-[6px]"
+                  className="text-xs! font-medium! text-slate-700! hover:text-[#004996]! hover:border-[#004996]! rounded-md!"
                 >
                   Detail
                 </AButton>
@@ -568,7 +503,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
                             : status === 'REJECTED_UNFULFILLED'
                               ? 'Source is out of stock; choose another warehouse or cancel the order'
                               : status === 'CANCELLED'
-                                ? 'Transfer cancelled; order remains on hold'
+                                ? normStatus === 'CANCELLED' ? 'Cancelled with the entire order' : 'Legacy cancelled transfer: cancel the entire order to release remaining reservations'
                                 : 'Awaiting dispatch confirmation from source facility'}
                       </span>
                     )}
@@ -579,20 +514,14 @@ export default function AdminOrderDetailPage({ params }: Props) {
                           type="primary"
                           icon={<SendOutlined aria-hidden />}
                           loading={updating}
-                          onClick={() => handleDispatchTransfer(tf.id)}
+                          onClick={handleDispatchTransfer}
                         >
                           Dispatch Transfer
                         </AButton>
                       )}
+                      {status === 'RECEIVED_WITH_DISCREPANCY' && <AButton onClick={() => handleReceiveTransfer(tf.id)}>Resolve discrepancy</AButton>}
                       {status === 'DISPATCHED' && (
                         <>
-                          <AButton
-                            danger
-                            loading={updating}
-                            onClick={() => handleRejectDamagedTransfer(tf.id)}
-                          >
-                            Reject Damaged
-                          </AButton>
                           <AButton
                             type="primary"
                             icon={<CheckCircleOutlined aria-hidden />}
@@ -600,7 +529,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
                             onClick={() => handleReceiveTransfer(tf.id)}
                             style={{ background: '#059669', borderColor: '#059669' }}
                           >
-                            Receive & Verify at Hub
+                            Inspect & Receive at Hub
                           </AButton>
                         </>
                       )}
@@ -613,6 +542,12 @@ export default function AdminOrderDetailPage({ params }: Props) {
         </section>
       )}
 
+      {/* Order Resolution & Cancellation (Danger Zone) */}
+      <OrderResolution
+        order={order}
+        role={financeRole}
+        onUpdated={async () => setOrder(await orderService.getAdminById(orderId))}
+      />
 
       <OrderPackingModal
         open={fulfillOpen}
@@ -690,7 +625,7 @@ export default function AdminOrderDetailPage({ params }: Props) {
       >
         <div className="space-y-4 py-1">
           {rxItems.length > 0 && (
-            <div className="border border-slate-200 rounded-[6px] p-3 bg-slate-50/50">
+            <div className="border border-slate-200 rounded-md p-3 bg-slate-50/50">
               <span className="text-xs font-semibold text-slate-700 block mb-2">Prescription Items to verify:</span>
               <div className="space-y-1.5">
                 {rxItems.map((item) => (
@@ -711,11 +646,11 @@ export default function AdminOrderDetailPage({ params }: Props) {
           <div>
             <span className="text-xs font-semibold text-slate-700 block mb-2">Uploaded Prescription Image:</span>
             {imageLoading ? (
-              <div className="flex items-center justify-center py-20 border border-slate-200 rounded-[6px]">
+              <div className="flex items-center justify-center py-20 border border-slate-200 rounded-md">
                 <Spin description="Loading prescription image..." />
               </div>
             ) : prescriptionImageUrl ? (
-              <div className="flex justify-center p-3 bg-slate-50 border border-slate-200 rounded-[6px]">
+              <div className="flex justify-center p-3 bg-slate-50 border border-slate-200 rounded-md">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={prescriptionImageUrl}
@@ -724,14 +659,14 @@ export default function AdminOrderDetailPage({ params }: Props) {
                 />
               </div>
             ) : (
-              <div className="text-center py-12 text-slate-400 border border-dashed border-slate-200 rounded-[6px] text-xs">
+              <div className="text-center py-12 text-slate-400 border border-dashed border-slate-200 rounded-md text-xs">
                 No prescription image available.
               </div>
             )}
           </div>
 
           {order.prescriptionReview && (order.prescriptionReview.pharmacistName || order.prescriptionReview.note) && (
-            <div className="border border-slate-200 rounded-[6px] p-3 text-xs text-slate-600 space-y-1 bg-transparent">
+            <div className="border border-slate-200 rounded-md p-3 text-xs text-slate-600 space-y-1 bg-transparent">
               {order.prescriptionReview.pharmacistName && (
                 <div>Pharmacist: <strong className="text-slate-800">{order.prescriptionReview.pharmacistName}</strong></div>
               )}

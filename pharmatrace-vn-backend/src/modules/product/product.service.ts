@@ -11,6 +11,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { CurrentUserPayload } from '../../common/decorators/current-user.decorator';
 import { authActor } from '../../common/auth-identity';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { getVariantPrice } from '../../common/variant-price';
 
 export function formatProduct(item: any) {
   let realStock = 0;
@@ -42,58 +43,25 @@ export function formatProduct(item: any) {
           variantStock += Math.max(0, (inv.stock_quantity || 0) - (inv.reserved_quantity || 0));
         }
       }
-      const pvHasDiscount = Boolean(
-        (pv.discount_percent && Number(pv.discount_percent) > 0) ||
-        (pv.original_price && Number(pv.price) < Number(pv.original_price)),
-      );
-
-      // If a discount is configured, it is ONLY active if both sale_start_date and sale_end_date are set,
-      // and the current time is strictly within [sale_start_date, sale_end_date]
-      const isSaleActive = pvHasDiscount
-        ? Boolean(pv.sale_start_date && pv.sale_end_date) &&
-          new Date(pv.sale_start_date) <= now &&
-          new Date(pv.sale_end_date) >= now
-        : false;
-
-      const effectivePrice = (pvHasDiscount && isSaleActive)
-        ? Number(pv.price)
-        : (pv.original_price ? Number(pv.original_price) : Number(pv.price));
-      const origPrice = (pvHasDiscount && isSaleActive && pv.original_price)
-        ? Number(pv.original_price)
-        : null;
-      const discountPct = (pvHasDiscount && isSaleActive)
-        ? (pv.discount_percent ?? (origPrice && effectivePrice < origPrice ? Math.round(((origPrice - effectivePrice) / origPrice) * 100) : 0))
-        : 0;
+      const pricing = getVariantPrice(pv, now);
 
       return {
         id: pv.id,
         unitName: pv.unit_name,
-        price: effectivePrice,
-        originalPrice: origPrice,
-        discountPercent: discountPct,
+        price: pricing.price,
+        originalPrice: pricing.originalPrice,
+        discountPercent: pricing.discountPercent,
         isBaseUnit: Boolean(pv.is_base_unit),
         stock: variantStock,
         saleStartDate: pv.sale_start_date ? new Date(pv.sale_start_date).toISOString() : null,
         saleEndDate: pv.sale_end_date ? new Date(pv.sale_end_date).toISOString() : null,
-        isSaleActive,
+        isSaleActive: pricing.isSaleActive,
       };
     })
     : []);
 
-  const baseHasDiscount = Boolean(
-    baseVariant && (
-      (baseVariant.discount_percent && Number(baseVariant.discount_percent) > 0) ||
-      (baseVariant.original_price && Number(baseVariant.price) < Number(baseVariant.original_price))
-    ),
-  );
-
-  const isBaseSaleActive = baseHasDiscount
-    ? Boolean(baseVariant.sale_start_date && baseVariant.sale_end_date) &&
-      new Date(baseVariant.sale_start_date) <= now &&
-      new Date(baseVariant.sale_end_date) >= now
-    : false;
-
-  const hasVariantDiscount = Boolean(baseHasDiscount && isBaseSaleActive);
+  const basePricing = baseVariant ? getVariantPrice(baseVariant, now) : null;
+  const hasVariantDiscount = Boolean(basePricing?.isSaleActive);
 
   const unitPrice = baseVariant
     ? (baseVariant.original_price ? Number(baseVariant.original_price) : Number(baseVariant.price || 0))

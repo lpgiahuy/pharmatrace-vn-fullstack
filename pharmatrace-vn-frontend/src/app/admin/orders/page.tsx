@@ -14,6 +14,8 @@ import { formatCurrency, formatDateTime } from '@/utils';
 const ORDER_STATUS_OPTIONS = [
   { value: 'PENDING', label: 'Pending Confirmation' },
   { value: 'PROCESSING', label: 'Order Prepared / Processing' },
+  { value: 'PENDING_PICKUP', label: 'Awaiting Pickup' },
+  { value: 'PICKED_UP', label: 'Handed to Carrier' },
   { value: 'SHIPPING', label: 'In Transit' },
   { value: 'COMPLETED', label: 'Delivered' },
   { value: 'CANCELLED', label: 'Cancelled' },

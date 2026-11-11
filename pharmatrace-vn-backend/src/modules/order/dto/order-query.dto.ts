@@ -20,7 +20,7 @@ export class OrderQueryDto {
 
   @ApiPropertyOptional({
     example: 'PENDING',
-    enum: ['PENDING', 'PROCESSING', 'SHIPPING', 'COMPLETED', 'CANCELLED', 'RETURNED', 'PARTIALLY_RETURNED'],
+    enum: ['PENDING', 'PROCESSING', 'PENDING_PICKUP', 'PICKED_UP', 'SHIPPING', 'COMPLETED', 'CANCELLED', 'RETURNED', 'PARTIALLY_RETURNED'],
     description: 'Filter by order status',
   })
   @IsOptional()
