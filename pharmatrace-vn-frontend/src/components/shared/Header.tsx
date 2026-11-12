@@ -20,6 +20,7 @@ import {
   ShoppingCart,
   Package,
   FileText,
+  RotateCcw,
 } from 'lucide-react';
 import { useAuth } from '@/store/useAuthStore';
 import { useCartStore } from '@/store/useCartStore';
@@ -266,6 +267,10 @@ export const Header: React.FC = () => {
                       <Package className="w-[18px] h-[18px] text-black shrink-0 stroke-[1.8]" />
                       <span className="!text-black">My Orders</span>
                     </Link>
+                    <Link href="/account/returns" className="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-black hover:bg-slate-100 rounded-xl transition-colors">
+                      <RotateCcw className="w-[18px] h-[18px] text-black shrink-0 stroke-[1.8]" />
+                      <span className="!text-black">My Returns</span>
+                    </Link>
 
                     <Link href="/account/prescriptions" className="flex items-center gap-3 px-3.5 py-2.5 text-sm font-semibold !text-black hover:bg-slate-100 rounded-xl transition-colors">
                       <FileText className="w-[18px] h-[18px] text-black shrink-0 stroke-[1.8]" />
@@ -381,6 +386,10 @@ export const Header: React.FC = () => {
               >
                 <Package className="w-4 h-4 text-slate-600 group-hover:text-[#004996] transition-colors" />
                 <span className="!text-slate-800 group-hover:!text-[#004996]">My Orders</span>
+              </Link>
+              <Link href="/account/returns" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold !text-slate-800 hover:bg-slate-50 hover:!text-[#004996] rounded-xl transition-colors group">
+                <RotateCcw className="w-4 h-4 text-slate-600 group-hover:text-[#004996]" />
+                <span className="!text-slate-800 group-hover:!text-[#004996]">My Returns</span>
               </Link>
               <Link href="/account/prescriptions" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 text-sm font-semibold !text-slate-800 hover:bg-slate-50 hover:!text-[#004996] rounded-xl transition-colors group">
                 <FileText className="w-4 h-4 text-slate-600 group-hover:text-[#004996]" />
