@@ -17,6 +17,7 @@ import { OrderModule } from './modules/order/order.module';
 import { LogisticsModule } from './modules/logistics/logistics.module';
 import { CartModule } from './modules/cart/cart.module';
 import { PrescriptionModule } from './modules/prescription/prescription.module';
+import { ReturnsModule } from './modules/returns/returns.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -40,6 +41,7 @@ import { AppService } from './app.service';
     LogisticsModule,
     CartModule,
     PrescriptionModule,
+    ReturnsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
