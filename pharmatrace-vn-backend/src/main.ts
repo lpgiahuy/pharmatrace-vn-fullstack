@@ -4,6 +4,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
+import { HttpExceptionFilter, validationException } from "./common/errors/http-exception.filter";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -29,8 +30,10 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
+      exceptionFactory: validationException,
     }),
   );
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // 4. Swagger API Documentation
   const config = new DocumentBuilder()
