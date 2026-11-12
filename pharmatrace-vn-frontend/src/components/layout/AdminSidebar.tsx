@@ -15,6 +15,7 @@ import {
   CommentOutlined,
   ShoppingOutlined,
   CarOutlined,
+  RollbackOutlined,
 } from '@ant-design/icons';
 
 const { Sider } = Layout;
@@ -129,6 +130,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           icon: <ShoppingOutlined style={{ fontSize: 16 }} />,
           label: 'Orders & Packing',
         },
+        {
+          key: '/admin/returns',
+          icon: <RollbackOutlined style={{ fontSize: 16 }} />,
+          label: 'Returns & Exchanges',
+        },
       ]
     : [
         {
@@ -155,6 +161,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           key: '/admin/logistics',
           icon: <CarOutlined style={{ fontSize: 16 }} />,
           label: 'Logistics Operations',
+        },
+        {
+          key: '/admin/returns',
+          icon: <RollbackOutlined style={{ fontSize: 16 }} />,
+          label: 'Returns & Exchanges',
         },
         {
           key: '/admin/reviews',

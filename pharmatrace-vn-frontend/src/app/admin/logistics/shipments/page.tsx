@@ -421,7 +421,7 @@ export default function ShipmentsManagementPage() {
 
             {selectedShipment.shipping_status === 'DELIVERED' && <Alert type="info" showIcon
               title="Customer returns are managed through RMA"
-              description="The delivery history is preserved. A customer return must be approved before arranging its transport." />}
+              description={<>The delivery history is preserved. A customer return must be approved before arranging its transport. <Link href="/admin/returns" className="font-semibold">Open Returns &amp; Exchanges</Link></>} />}
             {canUpdateStatus && selectedShipment.shipping_status === 'PENDING_PICKUP' && <div className="space-y-2">
               {!selectedShipment.carrier_confirmed_at && <Alert type="warning" showIcon title="Confirm the carrier tracking before pickup"
                 description="The reference created during packing is not a confirmed carrier booking." />}
