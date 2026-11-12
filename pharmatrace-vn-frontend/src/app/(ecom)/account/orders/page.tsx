@@ -1254,6 +1254,16 @@ function CustomerOrdersContent() {
                 )}
 
                 {formatOrderStatus(selectedOrder.orderStatus) === 'COMPLETED' && (
+                  <Link
+                    href={`/account/returns/new?orderId=${selectedOrder.id}`}
+                    className="px-4 py-2 border border-slate-300 rounded-md text-xs font-semibold !text-slate-700 hover:bg-slate-50 transition-colors flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <RotateCw className="w-3.5 h-3.5" />
+                    Return items
+                  </Link>
+                )}
+
+                {formatOrderStatus(selectedOrder.orderStatus) === 'COMPLETED' && (
                   <button
                     type="button"
                     onClick={() => handleReorder(selectedOrder)}
