@@ -265,12 +265,12 @@ export default function AdminOrderDetailPage({ params }: Props) {
                 className={
                   order.paymentStatus === 'PAID'
                     ? styles.paymentStatusPaid
-                    : order.paymentStatus === 'REFUNDED'
+                    : order.paymentStatus === 'REFUNDED' || order.paymentStatus === 'PARTIALLY_REFUNDED'
                       ? styles.paymentStatusRefunded
                       : styles.paymentStatusAwaiting
                 }
               >
-                {order.paymentStatus === 'PAID' ? 'Paid' : order.paymentStatus === 'REFUNDED' ? 'Refunded' : 'Awaiting payment'}
+                {order.paymentStatus === 'PAID' ? 'Paid' : order.paymentStatus === 'PARTIALLY_REFUNDED' ? 'Partially refunded' : order.paymentStatus === 'REFUNDED' ? 'Refunded' : 'Awaiting payment'}
               </span>
             </div>
             {['ACCOUNTANT', 'FINANCE_MANAGER', 'SUPER_ADMIN'].includes(financeRole) && ['BANK_TRANSFER', 'E_WALLET'].includes(order.paymentMethod) && <OnlinePaymentEvidence order={order} role={financeRole} onUpdated={async () => setOrder(await orderService.getAdminById(orderId))} />}

@@ -77,7 +77,7 @@ export type OrderStatus =
   | 'PARTIALLY_RETURNED';
 
 export type PaymentMethod = 'COD' | 'BANK_TRANSFER' | 'E_WALLET';
-export type PaymentStatus = 'UNPAID' | 'PAID' | 'REFUNDED';
+export type PaymentStatus = 'UNPAID' | 'PAID' | 'PARTIALLY_REFUNDED' | 'REFUNDED';
 
 export function formatOrderStatus(status?: string): OrderStatus {
   if (!status) return 'PENDING';
@@ -128,6 +128,7 @@ export function formatPaymentStatus(status?: string): PaymentStatus {
   const s = status.trim().toUpperCase();
   if (['PAID'].includes(s)) return 'PAID';
   if (['UNPAID'].includes(s)) return 'UNPAID';
+  if (['PARTIALLY_REFUNDED'].includes(s)) return 'PARTIALLY_REFUNDED';
   if (['REFUNDED'].includes(s)) return 'REFUNDED';
   return 'UNPAID';
 }
@@ -238,7 +239,7 @@ export function getOrderItemCount(order?: Order | null): number {
 export function formatPaymentSummary(method?: string, status?: string): string {
   const m = formatPaymentMethod(method);
   const s = formatPaymentStatus(status);
-  const statusLabel = s === 'PAID' ? 'Paid' : s === 'REFUNDED' ? 'Refunded' : 'Pending';
+  const statusLabel = s === 'PAID' ? 'Paid' : s === 'PARTIALLY_REFUNDED' ? 'Partially refunded' : s === 'REFUNDED' ? 'Refunded' : 'Pending';
   return `${m} · ${statusLabel}`;
 }
 
