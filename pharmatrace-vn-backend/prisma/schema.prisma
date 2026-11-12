@@ -716,3 +716,82 @@ model moderation_audit_logs {
 }
 
 
+
+model return_requests {
+  id                   Int      @id @default(autoincrement())
+  code                 String   @unique
+  order_id             Int
+  customer_id          Int?
+  facility_id          Int
+  channel              String
+  resolution           String
+  return_method        String
+  status               String   @default("REQUESTED")
+  description          String?
+  pickup_address       String?
+  customer_fee         Decimal  @default(0) @db.Decimal(15, 2)
+  courier_name         String?
+  tracking_number      String?
+  staff_note           String?
+  replacement_order_id Int?     @unique
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model return_request_lines {
+  request_id          Int
+  order_item_id       Int
+  variant_id          Int
+  quantity            Int
+  reason_code         String
+  reason_note         String?
+  restricted          Boolean  @default(false)
+  exchange_variant_id Int?
+  approved_quantity   Int?
+  received_quantity   Int?
+  box_uids            String[] @default([]) @db.Uuid
+  pass_quantity       Int?
+  fail_quantity       Int?
+  mismatch_quantity   Int?
+
+  @@id([request_id, order_item_id])
+}
+
+model return_attachments {
+  id               Int      @id @default(autoincrement())
+  request_id       Int
+  image_reference  String
+  uploaded_by_type String
+  uploaded_by_id   Int
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model return_request_events {
+  id          Int      @id @default(autoincrement())
+  request_id  Int
+  action      String
+  from_status String?
+  to_status   String
+  actor_type  String?
+  actor_id    Int?
+  actor_role  String?
+  actor_name  String?
+  facility_id Int?
+  note        String?
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model return_request_refunds {
+  request_id        Int       @id
+  goods_value       Decimal   @db.Decimal(15, 2)
+  customer_fee      Decimal   @db.Decimal(15, 2)
+  refund_amount     Decimal   @db.Decimal(15, 2)
+  payment_method    String
+  payment_reference String?
+  reason            String
+  approved_by       Int
+  approved_at       DateTime  @default(now()) @db.Timestamptz(6)
+  executed_by       Int?
+  executed_at       DateTime? @db.Timestamptz(6)
+  cashbook_id       Int?      @unique
+}
